@@ -5,6 +5,9 @@ import { resolveSelection, type Datasets } from '../lib/data';
 import { formatDate } from '../lib/format';
 import { datasetFreshness, formatAge, formatUtcClock, overallFreshness, sortFreshness, type Freshness } from '../lib/freshness';
 import { useNow } from '../app/useNow';
+import type { VisitChanges } from '../app/useVisitChanges';
+import { Search } from './Search';
+import { Summary } from './Summary';
 import { BasinDetail, ChokepointDetail, PipelineDetail, StorageDetail } from './details';
 
 interface PanelProps {
@@ -15,6 +18,8 @@ interface PanelProps {
   onBack: () => void;
   data: Datasets;
   loaded: boolean;
+  failed: string[];
+  visit: VisitChanges | null;
   themePreference: ThemePreference;
   onThemePreferenceChange: (preference: ThemePreference) => void;
   searchRef: Ref<HTMLInputElement>;
@@ -69,16 +74,7 @@ export function Panel(props: PanelProps) {
         </button>
       </header>
 
-      <div className="panel__search">
-        <input
-          ref={props.searchRef}
-          type="search"
-          className="search-input"
-          placeholder="Search pipelines, chokepoints, basins, countries"
-          aria-label="Search"
-        />
-        <kbd className="search-hint" aria-hidden="true">/</kbd>
-      </div>
+      <Search data={props.data} onSelect={props.onSelect} inputRef={props.searchRef} />
 
       <div className="panel__body">
         {props.selection ? (
@@ -91,7 +87,15 @@ export function Panel(props: PanelProps) {
             now={now}
           />
         ) : (
-          <Summary freshness={freshness} loaded={props.loaded} now={now} />
+          <Summary
+            data={props.data}
+            loaded={props.loaded}
+            failed={props.failed}
+            freshness={freshness}
+            visit={props.visit}
+            now={now}
+            onSelect={props.onSelect}
+          />
         )}
       </div>
 
@@ -126,61 +130,8 @@ function FooterFreshness({ freshness, now }: { freshness: Freshness[]; now: Date
   return (
     <p className={warn ? 'freshness--warn' : 'muted'} title={warn ? 'Some data is stale or failed to update' : undefined}>
       <span className="mono">{text}</span>
-      {warn && ' · check data freshness'}
+      {warn && ' · some data stale'}
     </p>
-  );
-}
-
-function Summary({ freshness, loaded, now }: { freshness: Freshness[]; loaded: boolean; now: Date }) {
-  return (
-    <>
-      <section className="section">
-        <h2 className="section__title">Theater</h2>
-        <p>Europe, Russia, the Caspian, North Africa and the Middle East, plus the seven major oil chokepoints.</p>
-      </section>
-      <section className="section">
-        <h2 className="section__title">What changed since last visit</h2>
-        <p className="muted">Nothing to compare yet.</p>
-      </section>
-      <section className="section">
-        <h2 className="section__title">Data freshness</h2>
-        {!loaded ? (
-          <p className="muted">Loading</p>
-        ) : freshness.length === 0 ? (
-          <p className="muted">No datasets loaded yet.</p>
-        ) : (
-          <table className="table freshness">
-            <thead>
-              <tr>
-                <th>Dataset</th>
-                <th className="num">Updated</th>
-                <th className="num">Data through</th>
-              </tr>
-            </thead>
-            <tbody>
-              {freshness.map((f) => (
-                <tr key={f.id}>
-                  <td>
-                    {f.label}
-                    {f.stale && <span className="freshness__flag"> stale</span>}
-                    {f.failedAt && (
-                      <span className="freshness__flag" title={`Last fetch failed at ${f.failedAt}; showing the previous data`}>
-                        {' '}
-                        fetch failed {formatAge(f.failedAt, now)}
-                      </span>
-                    )}
-                  </td>
-                  <td className={`mono num${f.stale ? ' freshness--warn' : ''}`} title={f.fetchedAt}>
-                    {f.scheduled ? formatAge(f.fetchedAt, now) : formatDate(f.fetchedAt)}
-                  </td>
-                  <td className="mono num">{f.dataThrough ?? <span className="muted">n/a</span>}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </section>
-    </>
   );
 }
 

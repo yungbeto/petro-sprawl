@@ -52,7 +52,7 @@ const BAND_LABELS: Record<FlowBand, string> = {
   above: 'Above baseline',
 };
 
-function Band({ band }: { band: FlowBand | null }) {
+export function Band({ band }: { band: FlowBand | null }) {
   if (!band) return <span className="muted">No index</span>;
   return <span className={`band band--${band}`}>{BAND_LABELS[band]}</span>;
 }
@@ -452,6 +452,6 @@ function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-function statusLabel(status: string): string {
+export function statusLabel(status: string): string {
   return capitalize(status.replace(/_/g, ' '));
 }

@@ -17,8 +17,15 @@ async function fetchJson<T>(path: string): Promise<T | null> {
   }
 }
 
-export function useDatasets(): { data: Datasets; loaded: boolean } {
-  const [state, setState] = useState({ data: EMPTY_DATASETS, loaded: false });
+export interface DatasetsState {
+  data: Datasets;
+  loaded: boolean;
+  /** Datasets whose file didn't load; the app shows what did. */
+  failed: string[];
+}
+
+export function useDatasets(): DatasetsState {
+  const [state, setState] = useState<DatasetsState>({ data: EMPTY_DATASETS, loaded: false, failed: [] });
 
   useEffect(() => {
     let cancelled = false;
@@ -34,6 +41,7 @@ export function useDatasets(): { data: Datasets; loaded: boolean } {
       const series = [...get('chokepoint-transits'), ...get('gas-flows'), ...get('gas-storage')] as Datasets['series'];
       setState({
         loaded: true,
+        failed: results.filter((r) => r.records === null).map((r) => r.id),
         data: {
           basins: get('basins') as Datasets['basins'],
           chokepoints: get('chokepoints') as Datasets['chokepoints'],

@@ -50,3 +50,7 @@ Sixteen corridor pipelines are curated in `data/curated/pipelines-evidence.json`
 ## AGSI+
 
 - Country list and slugs checked on 2026-10-28 against the provider listing from agsi.gie.eu. Serbia isn't covered. Ireland's only site (Kinsale Southwest) is decommissioned. The UK's current data is under `GB*`; `GB` is the pre-Brexit series and is empty now.
+
+## M5
+
+- An EU-wide storage fill for the summary. AGSI+ publishes EU aggregates, but the job only fetches countries; check the aggregate endpoint and its terms before adding it, rather than averaging country percentages.

@@ -43,3 +43,4 @@ Scheduled jobs run every 6 hours in `.github/workflows/data.yml` and commit `pub
 - Pipelines are built in two steps: `import:gem` (raw GEM to `data/derived/`), then `build:curated` (curated records win). Edit `data/curated/pipelines-evidence.json`, never `public/data/pipelines.json`.
 - Measured flow evidence is derived in the browser (`withMeasuredEvidence`), not stored in `pipelines.json`.
 - MapLibre 6 loads its worker from a separate file. `src/map/MapView.tsx` imports it with `?url` and calls `setWorkerUrl`; without that, tiles never load in dev or in the build.
+- "What changed since last visit" lives in `localStorage` under `et.visits` (`src/lib/summary.ts`). To see changes locally, edit the stored `current` snapshot (older `savedAt`, a different status) and reload; the smoke test does the same.

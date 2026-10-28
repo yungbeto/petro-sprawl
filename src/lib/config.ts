@@ -88,7 +88,17 @@ export const MAP_ATTRIBUTION = [
   'Pipelines: <a href="https://globalenergymonitor.org/">Global Energy Monitor</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>)',
   'Basins: <a href="https://www.sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3">USGS</a>',
   'Chokepoints: <a href="https://portwatch.imf.org/">IMF PortWatch</a>, <a href="https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints">EIA</a>',
+  'Gas flows: <a href="https://transparency.entsog.eu/">ENTSOG</a>',
+  'Gas storage: <a href="https://agsi.gie.eu/">GIE AGSI+</a>',
+  'Countries: <a href="https://www.naturalearthdata.com/">Natural Earth</a>',
 ];
+
+/** The basemap's own credits, repeated in the panel's source list. MapLibre shows them from the style. */
+export const BASEMAP_CREDITS = [
+  { label: 'OpenFreeMap', url: 'https://openfreemap.org/' },
+  { label: 'OpenMapTiles', url: 'https://www.openmaptiles.org/' },
+  { label: 'OpenStreetMap contributors', url: 'https://www.openstreetmap.org/copyright' },
+] as const;
 
 /** IMF PortWatch daily transits. The job keeps ~400 days: 365 for the baseline plus slack. */
 export const PORTWATCH = {
@@ -152,16 +162,20 @@ export const MEASURED_FLOW = { windowDays: 7, idleShare: 0.005 } as const;
 
 /**
  * How often each dataset is expected to refresh. Scheduled datasets past `staleAfterHours`
- * are marked stale in the panel. Manual imports are never marked stale by age.
+ * are marked stale in the panel. Manual imports are never marked stale by age. `publisher` names
+ * the source in the panel's source list.
  */
-export const DATASET_FRESHNESS: Record<string, { label: string; scheduled: boolean; staleAfterHours?: number }> = {
-  'chokepoint-transits': { label: 'Chokepoint transits', scheduled: true, staleAfterHours: 18 },
-  'gas-flows': { label: 'Gas flows', scheduled: true, staleAfterHours: 36 },
-  'gas-storage': { label: 'Gas storage', scheduled: true, staleAfterHours: 36 },
-  countries: { label: 'Countries', scheduled: false },
-  pipelines: { label: 'Pipelines', scheduled: false },
-  chokepoints: { label: 'Chokepoints', scheduled: false },
-  basins: { label: 'Basins', scheduled: false },
+export const DATASET_FRESHNESS: Record<
+  string,
+  { label: string; scheduled: boolean; staleAfterHours?: number; publisher?: string }
+> = {
+  'chokepoint-transits': { label: 'Chokepoint transits', scheduled: true, staleAfterHours: 18, publisher: 'IMF PortWatch' },
+  'gas-flows': { label: 'Gas flows', scheduled: true, staleAfterHours: 36, publisher: 'ENTSOG Transparency Platform' },
+  'gas-storage': { label: 'Gas storage', scheduled: true, staleAfterHours: 36, publisher: 'GIE AGSI+' },
+  countries: { label: 'Countries', scheduled: false, publisher: 'Natural Earth' },
+  pipelines: { label: 'Pipelines', scheduled: false, publisher: 'Global Energy Monitor' },
+  chokepoints: { label: 'Chokepoints', scheduled: false, publisher: 'IMF PortWatch and EIA' },
+  basins: { label: 'Basins', scheduled: false, publisher: 'USGS' },
   disruptions: { label: 'Disruptions', scheduled: false },
 };
 
@@ -183,4 +197,19 @@ export const POINT_FOCUS_ZOOM = 6;
 export const STORAGE_KEYS = {
   theme: 'et.theme',
   panelCollapsed: 'et.panelCollapsed',
+  visits: 'et.visits',
 } as const;
+
+/**
+ * "What changed since last visit". Loads closer together than sameVisitMinutes are one visit, so a
+ * reload doesn't swallow the changes. Smaller moves than these are left out of the list.
+ */
+export const CHANGES = {
+  sameVisitMinutes: 30,
+  /** Storage fill, percentage points. */
+  storageMovePts: 2,
+  /** Measured pipeline flow as share of capacity, percentage points. */
+  flowSharePts: 15,
+} as const;
+
+export const SEARCH = { limit: 8 } as const;

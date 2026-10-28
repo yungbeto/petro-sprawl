@@ -8,6 +8,7 @@ import { readStorage, writeStorage } from '../lib/storage';
 import { useTheme } from './useTheme';
 import { useUrlState } from './useUrlState';
 import { useDatasets } from './useDatasets';
+import { useVisitChanges } from './useVisitChanges';
 import type { Selection } from './urlState';
 
 function isTypingTarget(target: EventTarget | null): boolean {
@@ -18,7 +19,8 @@ function isTypingTarget(target: EventTarget | null): boolean {
 export function App() {
   const { selection, select, back, setCamera, initialCamera } = useUrlState();
   const { preference, setPreference, theme } = useTheme();
-  const { data, loaded } = useDatasets();
+  const { data, loaded, failed } = useDatasets();
+  const visit = useVisitChanges(data, loaded, failed);
   const [collapsed, setCollapsed] = useState(() => readStorage(STORAGE_KEYS.panelCollapsed) === '1');
   const [layersOpen, setLayersOpen] = useState(true);
   // Storage fills whole countries, so it starts off unless a shared link selects a country.
@@ -31,6 +33,11 @@ export function App() {
   const [focus, setFocus] = useState<FocusRequest | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const [initialCameraOnce] = useState(initialCamera);
+
+  // A country selected from search or a summary row needs its storage fill visible.
+  useEffect(() => {
+    if (selection?.kind === 'storage') setVisibility((v) => (v.storage ? v : { ...v, storage: true }));
+  }, [selection]);
 
   const selectAndFocus = useCallback(
     (next: Selection) => {
@@ -91,6 +98,8 @@ export function App() {
         onBack={back}
         data={data}
         loaded={loaded}
+        failed={failed}
+        visit={visit}
         themePreference={preference}
         onThemePreferenceChange={setPreference}
         searchRef={searchRef}
