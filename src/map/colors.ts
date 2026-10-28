@@ -7,7 +7,7 @@ const TOKENS = {
   ink: '--map-ink',
   halo: '--map-halo',
   selection: '--map-selection',
-  operating: '--status-operating',
+  operating: '--map-pipeline-operating',
   reduced: '--status-reduced',
   offline: '--status-offline',
   unknown: '--status-unknown',

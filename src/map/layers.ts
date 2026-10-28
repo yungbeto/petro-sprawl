@@ -4,7 +4,7 @@ import type { Layer } from '@deck.gl/core';
 import type { AssetStatus, Basin, Chokepoint, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { PIPELINE_WIDTH } from '../lib/config';
+import { CHOKEPOINT_RADIUS, PIPELINE_WIDTH } from '../lib/config';
 import { chokepointRadiusPx, flowFillRadiusPx, pipelineStatus, pipelineWidthPx } from '../lib/encoding';
 import type { ChokepointFlow, FlowBand } from '../lib/flow';
 import { withAlpha } from '../lib/color';
@@ -139,8 +139,11 @@ export function buildLayers({
       getPath: (p) => p.path as [number, number][],
       getWidth: (p) => pipelineWidthPx(p.pipeline),
       getColor: (p) => {
-        const color = statusColor(pipelineStatus(p.pipeline), colors);
-        return p.pipeline.geometryApprox ? withAlpha(color, PIPELINE_WIDTH.approxAlpha) : color;
+        const status = pipelineStatus(p.pipeline);
+        const alpha =
+          (status === 'operating' ? PIPELINE_WIDTH.operatingAlpha : 1) *
+          (p.pipeline.geometryApprox ? PIPELINE_WIDTH.approxAlpha : 1);
+        return withAlpha(statusColor(status, colors), alpha);
       },
       widthUnits: 'pixels',
       widthMinPixels: 1,
@@ -149,6 +152,22 @@ export function buildLayers({
       autoHighlight: true,
       highlightColor: withAlpha(colors.selection, 0.5),
       updateTriggers: { getColor: [colors] },
+    }),
+    // Halo separates the ring from pipelines passing underneath.
+    new ScatterplotLayer<Chokepoint>({
+      id: 'chokepoint-halo',
+      data: data.chokepoints,
+      visible: visibility.chokepoints,
+      getPosition: (c) => c.point,
+      getRadius: chokepointRadiusPx,
+      radiusUnits: 'pixels',
+      stroked: true,
+      filled: true,
+      getFillColor: colors.halo,
+      getLineColor: colors.halo,
+      getLineWidth: CHOKEPOINT_RADIUS.haloPx,
+      lineWidthUnits: 'pixels',
+      updateTriggers: { getFillColor: [colors], getLineColor: [colors] },
     }),
     // Inner disk: area is flow relative to the five-year average (full ring = at baseline).
     new ScatterplotLayer<Chokepoint>({
@@ -161,7 +180,7 @@ export function buildLayers({
         return flowFillRadiusPx(chokepointRadiusPx(c), flow ? (flow.indexFiveYear ?? flow.indexTrailing) : null);
       },
       radiusUnits: 'pixels',
-      getFillColor: (c) => withAlpha(bandColor(flows.get(c.id)?.band, colors), 0.45),
+      getFillColor: (c) => withAlpha(bandColor(flows.get(c.id)?.band, colors), 0.6),
       updateTriggers: { getRadius: [flows], getFillColor: [flows, colors] },
     }),
     new ScatterplotLayer<Chokepoint>({
@@ -176,7 +195,7 @@ export function buildLayers({
       filled: true,
       getFillColor: (c) => withAlpha(colors.ink, isSelected('chokepoint', c.id) ? 0.12 : 0.03),
       getLineColor: (c) => bandColor(flows.get(c.id)?.band, colors),
-      getLineWidth: (c) => (isSelected('chokepoint', c.id) ? 3 : 1.75),
+      getLineWidth: (c) => (isSelected('chokepoint', c.id) ? 3.5 : 2.5),
       lineWidthUnits: 'pixels',
       autoHighlight: true,
       highlightColor: withAlpha(colors.ink, 0.15),

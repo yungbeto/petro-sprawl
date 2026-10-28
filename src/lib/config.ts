@@ -77,10 +77,12 @@ export const PIPELINE_WIDTH = {
   oilMbdToGasBcm: 60,
   approxFactor: 0.6,
   approxAlpha: 0.5,
+  /** Operating lines recede so chokepoints and status problems stand out. */
+  operatingAlpha: 0.55,
 } as const;
 
 /** Chokepoint ring radius: area proportional to EIA volume. px per sqrt(mb/d). */
-export const CHOKEPOINT_RADIUS = { scale: 4, minPx: 5 } as const;
+export const CHOKEPOINT_RADIUS = { scale: 4, minPx: 5, haloPx: 6 } as const;
 
 export const MAP_ATTRIBUTION = [
   'Pipelines: <a href="https://globalenergymonitor.org/">Global Energy Monitor</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>)',

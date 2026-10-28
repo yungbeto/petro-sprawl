@@ -16,7 +16,7 @@ Items that couldn't be sourced or that need a decision. See CLAUDE.md: unsourced
 ## Pipelines
 
 - **GEM rows without a route can't be drawn.** 530 gas rows and 332 oil rows worldwide have no geometry and no endpoint coordinates, so the SPEC's great-circle fallback has nothing to connect. Some are in the theater (for example Druzhba's Freundschaft 1 and 2 segments). Endpoints would need geocoding from `StartLocation` / `EndLocation`; decide in M4 alongside the curated list.
-- **`geometryApprox` covers GEM's low-accuracy routes**, not only endpoint-only lines as SPEC 5 describes, because GEM itself flags those routes as rough. Confirm that reading of the spec.
+- ~~`geometryApprox` covers GEM's low-accuracy routes.~~ Confirmed 2026-10-28; SPEC 5 updated.
 - **GEM status is a dataset claim with old dates.** It goes in as `sourceType: 'dataset'` dated by GEM's `LastUpdated` (TurkStream: 2023-08-11). Nord Stream 1 and 2 are `mothballed` in GEM, shown as idle; M4's curated evidence replaces that.
 - **GEM statuses with no match in ours:** `shelved` and `mixed status` map to `unknown`, `mothballed` to `idle`, `retired` to `offline`. Cancelled and shelved rows are not imported.
 - One gas row (`gem-p5854`) lists its country as "Kuwait-Saudi Arabia" (the former neutral zone); it's kept with that country left out.

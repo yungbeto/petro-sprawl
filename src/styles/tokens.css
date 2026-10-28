@@ -39,7 +39,7 @@
   --status-unknown: #7a7f86;
 
   /* Semantic: flow against baseline */
-  --flow-below: #c2410c;
+  --flow-below: #b1257a;
   --flow-near: #6b7079;
   --flow-above: #1f5fc4;
 
@@ -50,6 +50,7 @@
   --map-ink: #17191c;
   --map-halo: #f4f4f2cc;
   --map-selection: #17191c;
+  --map-pipeline-operating: #1d7a4b;
   --map-basin-line: #6d6a5c73;
   --map-basin-fill-hover: #6d6a5c1f;
   --map-basin-label: #5c5a4e;
@@ -72,7 +73,7 @@
     --status-offline: #f0766d;
     --status-unknown: #8d939a;
 
-    --flow-below: #f08a4b;
+    --flow-below: #f272b8;
     --flow-near: #9298a0;
     --flow-above: #6fa2ff;
 
@@ -81,7 +82,9 @@
     --map-ink: #e6e7e8;
     --map-halo: #111315cc;
     --map-selection: #e6e7e8;
-    --map-basin-line: #c4bfa866;
+    --map-pipeline-operating: #2e8a5c;
+    --map-pipeline-operating: #2e8a5c;
+  --map-basin-line: #c4bfa866;
     --map-basin-fill-hover: #c4bfa81f;
     --map-basin-label: #a8a490;
   }
@@ -103,7 +106,7 @@
   --status-offline: #f0766d;
   --status-unknown: #8d939a;
 
-  --flow-below: #f08a4b;
+  --flow-below: #f272b8;
   --flow-near: #9298a0;
   --flow-above: #6fa2ff;
 
@@ -112,6 +115,7 @@
   --map-ink: #e6e7e8;
   --map-halo: #111315cc;
   --map-selection: #e6e7e8;
+  --map-pipeline-operating: #2e8a5c;
   --map-basin-line: #c4bfa866;
   --map-basin-fill-hover: #c4bfa81f;
   --map-basin-label: #a8a490;
