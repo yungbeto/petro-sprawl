@@ -122,3 +122,14 @@ describe('toTransitSeries', () => {
     expect(dataThrough([s('2026-10-25'), s('2026-10-24')])).toBe('2026-10-24');
   });
 });
+
+import { withCause } from '../jobs/lib/http';
+
+describe('withCause', () => {
+  it('names the network cause behind a bare fetch failure', () => {
+    const err = new TypeError('fetch failed', { cause: { code: 'UND_ERR_CONNECT_TIMEOUT' } });
+    expect((withCause(err, 'ENTSOG') as Error).message).toBe('ENTSOG unreachable: UND_ERR_CONNECT_TIMEOUT');
+    const other = new Error('ENTSOG responded 500');
+    expect(withCause(other, 'ENTSOG')).toBe(other);
+  });
+});

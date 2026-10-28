@@ -5,6 +5,7 @@
 import { AGSI, agsiSeriesId } from '../src/lib/config';
 import { formatCountry } from '../src/lib/format';
 import { storageResponseSchema, toStorageSeries, type StorageRow } from './lib/agsi';
+import { withCause } from './lib/http';
 import { publishDataset, report } from './lib/output';
 import { addDays, dataThrough } from './lib/portwatch';
 import { observationSeriesSchema } from './lib/schemas';
@@ -22,7 +23,7 @@ async function fetchPage(url: string, key: string): Promise<unknown> {
       if (body.error) throw new Error(`AGSI+ error: ${body.error}${body.message ? `, ${body.message}` : ''}`);
       return body;
     } catch (err) {
-      lastError = err;
+      lastError = withCause(err, 'AGSI+');
       if (attempt < ATTEMPTS) await new Promise((r) => setTimeout(r, 2_000 * 2 ** attempt));
     }
   }

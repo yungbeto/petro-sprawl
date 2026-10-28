@@ -9,9 +9,16 @@ export async function fetchJson(url: string, { source, timeoutMs = 30_000 }: { s
       if (!response.ok) throw new Error(`${source} responded ${response.status}`);
       return await response.json();
     } catch (err) {
-      lastError = err;
+      lastError = withCause(err, source);
       if (attempt < ATTEMPTS) await new Promise((r) => setTimeout(r, 2_000 * 2 ** attempt));
     }
   }
   throw lastError;
+}
+
+/** Node's fetch reports network errors as a bare "fetch failed"; name the cause so meta and logs say what broke. */
+export function withCause(err: unknown, source: string): unknown {
+  if (!(err instanceof Error) || err.message !== 'fetch failed') return err;
+  const cause = err.cause as { code?: string; message?: string } | undefined;
+  return new Error(`${source} unreachable: ${cause?.code ?? cause?.message ?? 'network error'}`);
 }
