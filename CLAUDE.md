@@ -13,4 +13,14 @@ Read `SPEC.md` fully before starting any work. `docs/product-brief.md` explains 
 
 ## Commands
 
-Add install, dev, test and data-job commands here during M0.
+The app is not scaffolded yet. Milestone M0 in `SPEC.md` is the next build step, so there is no package install, dev server, or test suite.
+
+Node.js 22 and Python 3 are the local toolchain. Node 22 is the runtime SPEC section 8 names for the app and data jobs. Cloud Agent images already provide both, and login shells can see them on `PATH`.
+
+The only program in the repo today sorts the Reuters follow list. It uses the Python standard library and rewrites the CSV at the path you pass:
+
+```bash
+python3 scripts/classify_follows.py data/companies/reuters-follows-raw.tsv data/companies/follows-sorted.csv
+```
+
+To check the script without touching the committed file, write the CSV under `/tmp` and compare it with `data/companies/follows-sorted.csv`.
