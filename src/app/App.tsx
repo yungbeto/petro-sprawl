@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { MapView } from '../map/MapView';
+import { MapView, type FocusRequest } from '../map/MapView';
+import { LayerControl } from '../map/LayerControl';
+import type { LayerId, LayerVisibility } from '../map/layers';
 import { Panel } from '../panel/Panel';
 import { STORAGE_KEYS } from '../lib/config';
 import { readStorage, writeStorage } from '../lib/storage';
 import { useTheme } from './useTheme';
 import { useUrlState } from './useUrlState';
+import { useDatasets } from './useDatasets';
+import type { Selection } from './urlState';
 
 function isTypingTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -12,11 +16,29 @@ function isTypingTarget(target: EventTarget | null): boolean {
 }
 
 export function App() {
-  const { selection, back, setCamera, initialCamera } = useUrlState();
+  const { selection, select, back, setCamera, initialCamera } = useUrlState();
   const { preference, setPreference, theme } = useTheme();
+  const { data, loaded } = useDatasets();
   const [collapsed, setCollapsed] = useState(() => readStorage(STORAGE_KEYS.panelCollapsed) === '1');
+  const [layersOpen, setLayersOpen] = useState(true);
+  const [visibility, setVisibility] = useState<LayerVisibility>({ basins: true, pipelines: true, chokepoints: true });
+  const [focus, setFocus] = useState<FocusRequest | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const [initialCameraOnce] = useState(initialCamera);
+
+  const selectAndFocus = useCallback(
+    (next: Selection) => {
+      select(next);
+      setFocus((prev) => ({ selection: next, nonce: (prev?.nonce ?? 0) + 1 }));
+    },
+    [select],
+  );
+
+  // A shared link with a selection but no camera: frame the selection once data arrives.
+  useEffect(() => {
+    if (loaded && selection && !initialCameraOnce) setFocus({ selection, nonce: 1 });
+    // Runs once, when data first loads.
+  }, [loaded]);
 
   const toggleCollapsed = useCallback(() => {
     setCollapsed((value) => {
@@ -39,6 +61,8 @@ export function App() {
         requestAnimationFrame(() => searchRef.current?.focus());
       } else if (event.key === '[') {
         toggleCollapsed();
+      } else if (event.key === 'l' || event.key === 'L') {
+        setLayersOpen((open) => !open);
       } else if (event.key === 'Escape') {
         back();
       }
@@ -47,18 +71,42 @@ export function App() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [back, collapsed, toggleCollapsed]);
 
+  const setLayerVisible = useCallback((id: LayerId, visible: boolean) => {
+    setVisibility((v) => ({ ...v, [id]: visible }));
+  }, []);
+
   return (
     <div className="app" data-panel-collapsed={collapsed}>
       <Panel
         collapsed={collapsed}
         onToggleCollapsed={toggleCollapsed}
         selection={selection}
+        onSelect={selectAndFocus}
         onBack={back}
+        data={data}
+        loaded={loaded}
         themePreference={preference}
         onThemePreferenceChange={setPreference}
         searchRef={searchRef}
       />
-      <MapView theme={theme} initialCamera={initialCameraOnce} onCameraChange={setCamera} />
+      <MapView
+        theme={theme}
+        initialCamera={initialCameraOnce}
+        onCameraChange={setCamera}
+        data={data}
+        visibility={visibility}
+        selection={selection}
+        onSelect={selectAndFocus}
+        focus={focus}
+      >
+        <LayerControl
+          open={layersOpen}
+          onToggleOpen={() => setLayersOpen((open) => !open)}
+          visibility={visibility}
+          onChange={setLayerVisible}
+          counts={{ basins: data.basins.length, pipelines: data.pipelines.length, chokepoints: data.chokepoints.length }}
+        />
+      </MapView>
     </div>
   );
 }

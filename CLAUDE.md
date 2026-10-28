@@ -24,9 +24,14 @@ Node 22. Package manager: npm.
 | `npm run typecheck` | Typecheck only |
 | `npm test` | Unit tests (Vitest, `tests/*.test.ts`) |
 | `npx playwright test` | Smoke test (`tests/e2e/`); starts its own dev server on port 5287 |
+| `npm run import:basins` | Manual: USGS provinces from `data/raw/usgs/` to `public/data/basins.json` |
+| `npm run import:gem` | Manual: GEM gas and oil pipeline GeoJSON from `data/raw/gem/` to `public/data/pipelines.json`; skip counts in `data/reports/import-gem.json` |
+| `npm run import:chokepoints` | PortWatch locations plus EIA volumes (from `src/lib/config.ts`) to `public/data/chokepoints.json` |
 
-Data-job commands get added in M2.
+Scheduled data-job commands get added in M2.
 
 ## Gotchas
 
+- Playwright runs Chromium on the GPU on macOS (`playwright.config.ts`). Software WebGL draws the pipeline layer at about 1 fps, so camera animations never settle and URL tests time out. CI without a GPU needs another plan.
+- The dev server exposes the map as `window.__etMap` so the smoke test can click real features. Dev only.
 - MapLibre 6 loads its worker from a separate file. `src/map/MapView.tsx` imports it with `?url` and calls `setWorkerUrl`; without that, tiles never load in dev or in the build.

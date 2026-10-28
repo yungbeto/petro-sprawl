@@ -1,0 +1,41 @@
+{
+  "recordedAt": "2026-10-28",
+  "simplify": "8%",
+  "trackers": [
+    {
+      "sourceId": "gem-ggit-gas-pipelines-2025-11",
+      "file": "data/raw/gem/GEM-GGIT-Gas-Pipelines-2025-11/GEM-GGIT-Gas-Pipelines-2025-11.geojson",
+      "sha256": "c74e54eb04a70ad008cd9a82fa93875fc987389475e7a958bbeec7ebffb93eaa",
+      "rows": 4246,
+      "kept": 1249,
+      "outsideTheater": 1975,
+      "skipped": {
+        "excluded_status": 346,
+        "no_route": 530,
+        "excluded_route_type": 146
+      },
+      "unresolvedCountries": {
+        "Kuwait-Saudi Arabia": [
+          "gem-p5854"
+        ]
+      },
+      "keptWithoutLastUpdated": 8
+    },
+    {
+      "sourceId": "gem-goit-oil-ngl-pipelines-2026-06",
+      "file": "data/raw/gem/GEM-GOIT-Oil-NGL-Pipelines-2026-06-corrected/GEM-GOIT-Oil-NGL-Pipelines-2026-07-21.geojson",
+      "sha256": "bea592558dfce7ff5ff69b3b4dd485fe2f07c7989e649ac7c4da5ac3a4b8ef7b",
+      "rows": 1926,
+      "kept": 562,
+      "outsideTheater": 894,
+      "skipped": {
+        "no_route": 332,
+        "excluded_route_type": 20,
+        "excluded_status": 118
+      },
+      "unresolvedCountries": {},
+      "keptWithoutLastUpdated": 0
+    }
+  ],
+  "written": 1811
+}

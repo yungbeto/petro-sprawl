@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { STORAGE_KEYS } from '../lib/config';
 import { readStorage, writeStorage } from '../lib/storage';
 import { parseThemePreference, resolveTheme, type ThemePreference } from '../lib/theme';
@@ -18,7 +18,8 @@ export function useTheme() {
     return () => query.removeEventListener('change', onChange);
   }, []);
 
-  useEffect(() => {
+  // Layout effect so the tokens are in place before the map reads them in a passive effect.
+  useLayoutEffect(() => {
     const root = document.documentElement;
     if (preference === 'system') delete root.dataset.theme;
     else root.dataset.theme = preference;

@@ -1,12 +1,18 @@
 import type { Ref } from 'react';
 import type { Selection, SelectionKind } from '../app/urlState';
 import { THEME_PREFERENCES, type ThemePreference } from '../lib/theme';
+import { resolveSelection, type Datasets } from '../lib/data';
+import { formatDate } from '../lib/format';
+import { BasinDetail, ChokepointDetail, PipelineDetail } from './details';
 
 interface PanelProps {
   collapsed: boolean;
   onToggleCollapsed: () => void;
   selection: Selection | null;
+  onSelect: (selection: Selection) => void;
   onBack: () => void;
+  data: Datasets;
+  loaded: boolean;
   themePreference: ThemePreference;
   onThemePreferenceChange: (preference: ThemePreference) => void;
   searchRef: Ref<HTMLInputElement>;
@@ -72,14 +78,20 @@ export function Panel(props: PanelProps) {
 
       <div className="panel__body">
         {props.selection ? (
-          <DetailShell selection={props.selection} onBack={props.onBack} />
+          <Detail
+            selection={props.selection}
+            data={props.data}
+            loaded={props.loaded}
+            onSelect={props.onSelect}
+            onBack={props.onBack}
+          />
         ) : (
-          <SummaryShell />
+          <Summary data={props.data} loaded={props.loaded} />
         )}
       </div>
 
       <footer className="panel__footer">
-        <p className="muted">No datasets loaded yet</p>
+        <p className="muted">{lastUpdated(props.data)}</p>
         <div className="segmented" role="radiogroup" aria-label="Theme">
           {THEME_PREFERENCES.map((preference) => (
             <button
@@ -99,7 +111,18 @@ export function Panel(props: PanelProps) {
   );
 }
 
-function SummaryShell() {
+const DATASET_LABELS: Record<string, string> = {
+  basins: 'Basins',
+  chokepoints: 'Chokepoints',
+  pipelines: 'Pipelines',
+};
+
+function lastUpdated(data: Datasets): string {
+  const latest = data.meta.map((m) => m.fetchedAt).sort().at(-1);
+  return latest ? `Updated ${formatDate(latest)}` : 'No datasets loaded yet';
+}
+
+function Summary({ data, loaded }: { data: Datasets; loaded: boolean }) {
   return (
     <>
       <section className="section">
@@ -112,23 +135,57 @@ function SummaryShell() {
       </section>
       <section className="section">
         <h2 className="section__title">Data freshness</h2>
-        <p className="muted">No datasets loaded yet.</p>
+        {!loaded ? (
+          <p className="muted">Loading</p>
+        ) : data.meta.length === 0 ? (
+          <p className="muted">No datasets loaded yet.</p>
+        ) : (
+          <table className="table">
+            <tbody>
+              {data.meta.map((m) => (
+                <tr key={m.id}>
+                  <td>{DATASET_LABELS[m.id] ?? m.id}</td>
+                  <td className="mono num">{m.recordCount}</td>
+                  <td className="mono num">{formatDate(m.fetchedAt)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </section>
     </>
   );
 }
 
-function DetailShell({ selection, onBack }: { selection: Selection; onBack: () => void }) {
+function Detail({
+  selection,
+  data,
+  loaded,
+  onSelect,
+  onBack,
+}: {
+  selection: Selection;
+  data: Datasets;
+  loaded: boolean;
+  onSelect: (selection: Selection) => void;
+  onBack: () => void;
+}) {
+  const resolved = resolveSelection(selection, data);
   return (
     <>
       <button type="button" className="text-button" onClick={onBack} title="Back  Esc">
         <ChevronIcon direction="left" /> Back
       </button>
-      <section className="section">
-        <p className="muted">{KIND_LABELS[selection.kind]}</p>
-        <h2 className="detail__title mono">{selection.id}</h2>
-        <p className="muted">No data loaded for this item yet.</p>
-      </section>
+      {resolved?.kind === 'chokepoint' && <ChokepointDetail item={resolved.item} />}
+      {resolved?.kind === 'basin' && <BasinDetail item={resolved.item} data={data} onSelect={onSelect} />}
+      {resolved?.kind === 'pipeline' && <PipelineDetail item={resolved.item} />}
+      {!resolved && (
+        <section className="section">
+          <p className="muted">{KIND_LABELS[selection.kind]}</p>
+          <h2 className="detail__title mono">{selection.id}</h2>
+          <p className="muted">{loaded ? 'Not in the loaded data.' : 'Loading'}</p>
+        </section>
+      )}
     </>
   );
 }

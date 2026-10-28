@@ -21,6 +21,65 @@ export const BASEMAP_STYLES = {
 /** Decimal places kept when writing the camera to the URL. */
 export const CAMERA_PRECISION = { lonLat: 4, zoom: 2 } as const;
 
+/**
+ * EIA World Oil Transit Chokepoints, Table 1, 2023 column (crude oil and petroleum liquids, mb/d).
+ * Read from the page on 2026-10-28. Panama is EIA fiscal year 2023 (Oct to Sep).
+ * PortWatch ids map each chokepoint to its IMF PortWatch transit series.
+ */
+export const EIA_CHOKEPOINTS_SOURCE =
+  'https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints';
+export const EIA_REFERENCE_YEAR = 2023;
+
+export const CHOKEPOINTS = [
+  { id: 'hormuz', name: 'Strait of Hormuz', portwatchId: 'chokepoint6', eiaReferenceMbd: 21.8 },
+  { id: 'malacca', name: 'Strait of Malacca', portwatchId: 'chokepoint5', eiaReferenceMbd: 24.0 },
+  { id: 'suez', name: 'Suez Canal and SUMED', portwatchId: 'chokepoint1', eiaReferenceMbd: 8.8 },
+  { id: 'babelm', name: 'Bab el-Mandeb', portwatchId: 'chokepoint4', eiaReferenceMbd: 9.3 },
+  // PortWatch tracks the Oresund only; EIA's Danish Straits also cover the Great Belt. See TODO-research.md.
+  { id: 'danish', name: 'Danish Straits', portwatchId: 'chokepoint10', eiaReferenceMbd: 5.0 },
+  // PortWatch tracks the Bosporus; EIA reports the Turkish Straits at the Dardanelles.
+  { id: 'turkish', name: 'Turkish Straits', portwatchId: 'chokepoint3', eiaReferenceMbd: 3.5 },
+  { id: 'panama', name: 'Panama Canal', portwatchId: 'chokepoint2', eiaReferenceMbd: 2.2 },
+] as const;
+
+/** Shown in the chokepoint detail where the PortWatch series and the EIA figure measure different places. */
+export const CHOKEPOINT_NOTES: Partial<Record<string, string>> = {
+  danish: 'PortWatch counts transits through the Oresund only. EIA figures cover all Danish Straits, including the Great Belt.',
+  turkish: 'PortWatch counts transits through the Bosporus. EIA reports the Turkish Straits at the Dardanelles.',
+};
+
+/**
+ * Pipeline line width. Oil capacity is converted to a gas equivalent for sizing only:
+ * 1 mb/d of oil carries roughly the energy of 60 bcm/yr of gas. Never shown as a figure.
+ */
+export const PIPELINE_WIDTH = {
+  minPx: 1,
+  maxPx: 7,
+  /** px per sqrt(bcm/yr) */
+  scale: 0.8,
+  oilMbdToGasBcm: 60,
+  approxFactor: 0.6,
+  approxAlpha: 0.5,
+} as const;
+
+/** Chokepoint ring radius: area proportional to EIA volume. px per sqrt(mb/d). */
+export const CHOKEPOINT_RADIUS = { scale: 4, minPx: 5 } as const;
+
+export const MAP_ATTRIBUTION = [
+  'Pipelines: <a href="https://globalenergymonitor.org/">Global Energy Monitor</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>)',
+  'Basins: <a href="https://www.sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3">USGS</a>',
+  'Chokepoints: <a href="https://portwatch.imf.org/">IMF PortWatch</a>, <a href="https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints">EIA</a>',
+];
+
+/** Basemap zoom at which basin labels appear. */
+export const BASIN_LABEL_MIN_ZOOM = 4.5;
+
+/** Padding (px) when the camera fits a selected feature. */
+export const FIT_PADDING = 80;
+
+/** Zoom used when flying to a point feature. */
+export const POINT_FOCUS_ZOOM = 6;
+
 export const STORAGE_KEYS = {
   theme: 'et.theme',
   panelCollapsed: 'et.panelCollapsed',

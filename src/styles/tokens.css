@@ -45,6 +45,14 @@
 
   /* Semantic: data age */
   --data-stale: #9a6a00;
+
+  /* Map overlays (deck.gl reads these as hex, #rrggbbaa allowed) */
+  --map-ink: #17191c;
+  --map-halo: #f4f4f2cc;
+  --map-selection: #17191c;
+  --map-basin-line: #6d6a5c73;
+  --map-basin-fill-hover: #6d6a5c1f;
+  --map-basin-label: #5c5a4e;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -69,6 +77,13 @@
     --flow-above: #6fa2ff;
 
     --data-stale: #d6a838;
+
+    --map-ink: #e6e7e8;
+    --map-halo: #111315cc;
+    --map-selection: #e6e7e8;
+    --map-basin-line: #c4bfa866;
+    --map-basin-fill-hover: #c4bfa81f;
+    --map-basin-label: #a8a490;
   }
 }
 
@@ -93,4 +108,11 @@
   --flow-above: #6fa2ff;
 
   --data-stale: #d6a838;
+
+  --map-ink: #e6e7e8;
+  --map-halo: #111315cc;
+  --map-selection: #e6e7e8;
+  --map-basin-line: #c4bfa866;
+  --map-basin-fill-hover: #c4bfa81f;
+  --map-basin-label: #a8a490;
 }

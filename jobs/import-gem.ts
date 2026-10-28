@@ -1,0 +1,104 @@
+// Manual import: GEM gas and oil/NGL pipeline trackers -> public/data/pipelines.json
+// Put the trackers' GeoJSON downloads in data/raw/gem/ (paths below), then: npm run import:gem
+// Writes data/reports/import-gem.json with counts of every row skipped and why.
+
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import mapshaper from 'mapshaper';
+import type { Feature, FeatureCollection, Geometry } from 'geojson';
+import { THEATER_BOUNDS } from '../src/lib/config';
+import { boundsOf } from '../src/lib/geo';
+import type { Pipeline } from '../src/types';
+import { gemRowToPipeline, type GemRow } from './lib/gem';
+import { sha256File, writeDataset } from './lib/output';
+
+const TRACKERS = [
+  {
+    sourceId: 'gem-ggit-gas-pipelines-2025-11',
+    path: 'data/raw/gem/GEM-GGIT-Gas-Pipelines-2025-11/GEM-GGIT-Gas-Pipelines-2025-11.geojson',
+    releaseDate: '2025-11',
+  },
+  {
+    sourceId: 'gem-goit-oil-ngl-pipelines-2026-06',
+    path: 'data/raw/gem/GEM-GOIT-Oil-NGL-Pipelines-2026-06-corrected/GEM-GOIT-Oil-NGL-Pipelines-2026-07-21.geojson',
+    releaseDate: '2026-06',
+  },
+];
+const SIMPLIFY = '8%';
+const REPORT_PATH = 'data/reports/import-gem.json';
+
+const [[west, south], [east, north]] = THEATER_BOUNDS;
+function inTheater(geometry: Geometry): boolean {
+  const [[w, s], [e, n]] = boundsOf(geometry);
+  return e >= west && w <= east && n >= south && s <= north;
+}
+
+const recordedAt = new Date().toISOString().slice(0, 10);
+const pipelines: Pipeline[] = [];
+const report: Record<string, unknown> = { recordedAt, simplify: SIMPLIFY, trackers: [] };
+
+for (const tracker of TRACKERS) {
+  const collection = JSON.parse(await readFile(tracker.path, 'utf8')) as FeatureCollection<Geometry | null, GemRow>;
+  const skipped: Record<string, number> = {};
+  const unresolvedCountries: Record<string, string[]> = {};
+  let outsideTheater = 0;
+  let missingLastUpdated = 0;
+  let kept = 0;
+
+  for (const feature of collection.features) {
+    const result = gemRowToPipeline(feature.properties, feature.geometry, {
+      recordedAt,
+      releaseDate: tracker.releaseDate,
+      sourceId: tracker.sourceId,
+    });
+    if (!result.ok) {
+      skipped[result.reason] = (skipped[result.reason] ?? 0) + 1;
+      continue;
+    }
+    if (!inTheater(result.pipeline.geometry)) {
+      outsideTheater++;
+      continue;
+    }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(feature.properties.LastUpdated?.trim() ?? '')) missingLastUpdated++;
+    for (const name of result.unresolvedCountries) (unresolvedCountries[name] ??= []).push(result.pipeline.id);
+    pipelines.push(result.pipeline);
+    kept++;
+  }
+
+  (report.trackers as unknown[]).push({
+    sourceId: tracker.sourceId,
+    file: tracker.path,
+    sha256: await sha256File(tracker.path),
+    rows: collection.features.length,
+    kept,
+    outsideTheater,
+    skipped,
+    unresolvedCountries,
+    keptWithoutLastUpdated: missingLastUpdated,
+  });
+}
+
+// Simplify all lines in one pass, then put the geometry back on each record by id.
+const lines: FeatureCollection = {
+  type: 'FeatureCollection',
+  features: pipelines.map((p): Feature => ({ type: 'Feature', properties: { id: p.id }, geometry: p.geometry })),
+};
+const output = await mapshaper.applyCommands(
+  `-i in.json -simplify ${SIMPLIFY} -o out.json format=geojson precision=0.001`,
+  { 'in.json': lines },
+);
+const simplified = JSON.parse(String(output['out.json'])) as FeatureCollection<Pipeline['geometry'] | null, { id: string }>;
+const geometryById = new Map(simplified.features.map((f) => [f.properties.id, f.geometry]));
+for (const p of pipelines) p.geometry = geometryById.get(p.id) ?? p.geometry;
+
+pipelines.sort((a, b) => a.name.localeCompare(b.name));
+const meta = await writeDataset('pipelines', pipelines, {
+  sourceUrl: 'https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/',
+  sourceVersion: (report.trackers as { sourceId: string; sha256: string }[])
+    .map((t) => `${t.sourceId} sha256:${t.sha256}`)
+    .join('; '),
+  license: 'CC BY 4.0, Global Energy Monitor',
+});
+report.written = meta.recordCount;
+await mkdir('data/reports', { recursive: true });
+await writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`);
+console.log(`pipelines: wrote ${meta.recordCount}; report in ${REPORT_PATH}`);
