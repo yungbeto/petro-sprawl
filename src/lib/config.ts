@@ -22,24 +22,26 @@ export const BASEMAP_STYLES = {
 export const CAMERA_PRECISION = { lonLat: 4, zoom: 2 } as const;
 
 /**
- * EIA World Oil Transit Chokepoints, Table 1, 2023 column (crude oil and petroleum liquids, mb/d).
- * Read from the page on 2026-10-28. Panama is EIA fiscal year 2023 (Oct to Sep).
+ * EIA World Oil Transit Chokepoints, Table 1, 2024 column (crude oil and petroleum liquids, mb/d).
+ * Read from the page on 2026-10-28; 2024 is the latest full year in the table. Panama is EIA
+ * fiscal year 2024 (Oct 2023 to Sep 2024). Suez and Bab el-Mandeb are low in 2024 because
+ * tankers rerouted around the Cape of Good Hope.
  * PortWatch ids map each chokepoint to its IMF PortWatch transit series.
  */
 export const EIA_CHOKEPOINTS_SOURCE =
   'https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints';
-export const EIA_REFERENCE_YEAR = 2023;
+export const EIA_REFERENCE_YEAR = 2024;
 
 export const CHOKEPOINTS = [
-  { id: 'hormuz', name: 'Strait of Hormuz', portwatchId: 'chokepoint6', eiaReferenceMbd: 21.8 },
-  { id: 'malacca', name: 'Strait of Malacca', portwatchId: 'chokepoint5', eiaReferenceMbd: 24.0 },
-  { id: 'suez', name: 'Suez Canal and SUMED', portwatchId: 'chokepoint1', eiaReferenceMbd: 8.8 },
-  { id: 'babelm', name: 'Bab el-Mandeb', portwatchId: 'chokepoint4', eiaReferenceMbd: 9.3 },
+  { id: 'hormuz', name: 'Strait of Hormuz', portwatchId: 'chokepoint6', eiaReferenceMbd: 20.7 },
+  { id: 'malacca', name: 'Strait of Malacca', portwatchId: 'chokepoint5', eiaReferenceMbd: 22.5 },
+  { id: 'suez', name: 'Suez Canal and SUMED', portwatchId: 'chokepoint1', eiaReferenceMbd: 4.8 },
+  { id: 'babelm', name: 'Bab el-Mandeb', portwatchId: 'chokepoint4', eiaReferenceMbd: 4.1 },
   // PortWatch tracks the Oresund only; EIA's Danish Straits also cover the Great Belt. See TODO-research.md.
-  { id: 'danish', name: 'Danish Straits', portwatchId: 'chokepoint10', eiaReferenceMbd: 5.0 },
+  { id: 'danish', name: 'Danish Straits', portwatchId: 'chokepoint10', eiaReferenceMbd: 4.9 },
   // PortWatch tracks the Bosporus; EIA reports the Turkish Straits at the Dardanelles.
-  { id: 'turkish', name: 'Turkish Straits', portwatchId: 'chokepoint3', eiaReferenceMbd: 3.5 },
-  { id: 'panama', name: 'Panama Canal', portwatchId: 'chokepoint2', eiaReferenceMbd: 2.2 },
+  { id: 'turkish', name: 'Turkish Straits', portwatchId: 'chokepoint3', eiaReferenceMbd: 3.6 },
+  { id: 'panama', name: 'Panama Canal', portwatchId: 'chokepoint2', eiaReferenceMbd: 2.0 },
 ] as const;
 
 /** Shown in the chokepoint detail where the PortWatch series and the EIA figure measure different places. */

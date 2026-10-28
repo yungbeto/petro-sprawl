@@ -4,7 +4,7 @@ Items that couldn't be sourced or that need a decision. See CLAUDE.md: unsourced
 
 ## Chokepoints
 
-- **EIA reference volumes differ from SPEC section 7.** SPEC lists Hormuz 21.0, Malacca 17.2, Suez and SUMED 7.6, Bab el-Mandeb 6.2, Danish Straits 3.0, Turkish Straits 2.9, Panama 0.9 (mb/d, 2023). EIA's World Oil Transit Chokepoints page, Table 1, read 2026-10-28, gives 2023 values of 21.8, 24.0, 8.8, 9.3, 5.0, 3.5 and 2.2 (Panama by fiscal year). `src/lib/config.ts` uses the EIA page. Decide whether to keep 2023 or move to 2024 or 1H25, then update SPEC. Source: https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints
+- ~~EIA reference volumes differed from SPEC section 7.~~ Resolved 2026-10-28: using EIA's 2024 column (latest full year), SPEC updated. Note that 2024 Suez (4.8) and Bab el-Mandeb (4.1) reflect Red Sea rerouting, about half their 2023 levels.
 - **Danish Straits:** PortWatch's `chokepoint10` is the Oresund only. EIA's Danish Straits figure includes the Great Belt, where most large tankers pass. Check whether PortWatch publishes a Great Belt series; if not, the M3 flow index for this chokepoint tracks Oresund traffic only and the panel says so.
 - **Turkish Straits:** PortWatch's `chokepoint3` is the Bosporus; EIA reports the Turkish Straits at the Dardanelles. Probably the same tanker traffic, but confirm.
 

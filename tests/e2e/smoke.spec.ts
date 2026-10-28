@@ -72,7 +72,7 @@ test('hovering and clicking a chokepoint opens its detail', async ({ page }) => 
   await page.mouse.click(hormuz.x, hormuz.y);
   await expect(page).toHaveURL(/sel=chokepoint\/hormuz/);
   await expect(page.getByRole('heading', { name: 'Strait of Hormuz' })).toBeVisible();
-  await expect(page.getByLabel('Panel').getByText('21.8 mb/d')).toBeVisible();
+  await expect(page.getByLabel('Panel').getByText('20.7 mb/d')).toBeVisible();
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/hormuz.png` });
 });
 

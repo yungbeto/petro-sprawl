@@ -73,7 +73,7 @@ Scope is one theater: the oil and gas corridor connecting **Europe, Russia, the 
    - "What changed since last visit" list: status changes, flow swings, storage moves. Each row links to the asset on the map. Last visit timestamp lives in `localStorage` (wrapped in try/catch; render fine without it).
    - Data freshness for each dataset.
 2. **Pipeline detail:** name, commodity, route (from → transit → to), operator and owners, capacity, current status with its evidence (source type, statement, link, date), measured flow where available (sparkline, last 90 days, flow as share of capacity), disruption history.
-3. **Chokepoint detail:** EIA reference volume (mb/d, 2023), daily tanker transits with 7-day average against the trailing 365-day average, flow index, sparkline.
+3. **Chokepoint detail:** EIA reference volume (mb/d, 2024), daily tanker transits with 7-day average against the trailing 365-day average, flow index, sparkline.
 4. **Basin detail:** name, countries it spans, pipelines and chokepoints inside or touching it.
 5. **Storage detail (country):** fill level, trend, same date last year.
 
@@ -144,7 +144,7 @@ interface Chokepoint {
   id: string;                // 'hormuz' | 'malacca' | 'suez' | 'babelm' | 'danish' | 'turkish' | 'panama'
   name: string;
   point: [number, number];   // [lon, lat]
-  eiaReferenceMbd: number;   // EIA 2023
+  eiaReferenceMbd: number;   // EIA 2024
   transitSeriesId: string;
 }
 
@@ -190,11 +190,11 @@ interface DatasetMeta {
 | [ENTSOG Transparency Platform](https://transparency.entsog.eu/) | Physical gas flows and technical capacity at EU entry points | Public REST API, no key ([docs](https://transparency.entsog.eu/pdf/TP_REG715_Documentation_TP_API_v1.3.pdf)) | Daily | Check terms; attribute |
 | [GIE AGSI+](https://agsi.gie.eu/) | EU gas storage fill by country | REST API, free key via account ([docs](https://www.gie.eu/transparency-platform/GIE_API_documentation_v013.pdf)) | Daily | Check terms; attribute |
 | [IMF PortWatch](https://portwatch.imf.org/) | Daily vessel transits at chokepoints, by vessel type | ArcGIS FeatureServer, no key: `services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query` (use `n_tanker`) | Daily (job runs every 6h) | Check terms; attribute |
-| EIA World Oil Transit Chokepoints | Reference oil volumes per chokepoint (2023) | Static values, committed in code | Static | Public domain |
+| EIA World Oil Transit Chokepoints | Reference oil volumes per chokepoint (2024) | Static values, committed in code | Static | Public domain |
 | [USGS World Petroleum Assessment provinces](https://sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3) | Basin outlines | Shapefile (14 MB); simplify once with mapshaper, commit result | Static | Public domain |
 | Basemap: [OpenFreeMap](https://openfreemap.org/) or [Protomaps](https://protomaps.com/) | Vector tiles | No key | Static | OSM attribution |
 
-EIA reference values (mb/d, 2023): Hormuz 21.0, Malacca 17.2, Suez Canal and SUMED 7.6, Bab el-Mandeb 6.2, Danish Straits 3.0, Turkish Straits 2.9, Panama Canal 0.9.
+EIA reference values (mb/d, 2024, the latest full year in EIA's table, read 2026-10-28): Hormuz 20.7, Malacca 22.5, Suez Canal and SUMED 4.8, Bab el-Mandeb 4.1, Danish Straits 4.9, Turkish Straits 3.6, Panama Canal 2.0 (fiscal year). Suez and Bab el-Mandeb are depressed in 2024 by Red Sea rerouting. Values live in `src/lib/config.ts`.
 
 Note on units: PortWatch counts vessels, EIA measures barrels. Do not compare them directly. The chokepoint flow index compares tanker transits with their own trailing baseline; the EIA figure is shown as context for scale.
 
