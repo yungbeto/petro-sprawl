@@ -20,8 +20,11 @@ async function fetchRows(portwatchId: string, since: string): Promise<DailyRow[]
       resultRecordCount: String(PAGE_SIZE),
       f: 'json',
     });
-    const body = await fetchJson(`${PORTWATCH.dailyUrl}?${params}`, { source: 'PortWatch' });
-    if (body && typeof body === 'object' && 'error' in body) throw new Error(`PortWatch error: ${JSON.stringify(body.error)}`);
+    // ArcGIS answers 200 with an error body, sometimes transiently (seen 2026-10-28), so retry those too.
+    const body = await fetchJson(`${PORTWATCH.dailyUrl}?${params}`, {
+      source: 'PortWatch',
+      bodyError: (b) => (b && typeof b === 'object' && 'error' in b ? JSON.stringify(b.error) : null),
+    });
     const page = dailyResponseSchema.parse(body);
     rows.push(...page.features.map((f) => f.attributes));
     if (!page.exceededTransferLimit) return rows;

@@ -1,7 +1,7 @@
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { failureMeta, publishDataset, validateRecords } from '../jobs/lib/output';
 import { addDays, dataThrough, toTransitSeries } from '../jobs/lib/portwatch';
@@ -131,5 +131,23 @@ describe('withCause', () => {
     expect((withCause(err, 'ENTSOG') as Error).message).toBe('ENTSOG unreachable: UND_ERR_CONNECT_TIMEOUT');
     const other = new Error('ENTSOG responded 500');
     expect(withCause(other, 'ENTSOG')).toBe(other);
+  });
+});
+
+import { fetchJson } from '../jobs/lib/http';
+
+describe('fetchJson', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.useRealTimers();
+  });
+
+  it('retries an error body and returns the next good answer', async () => {
+    vi.useFakeTimers();
+    const replies = [{ error: { code: 400 } }, { features: [] }];
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, json: async () => replies.shift() })));
+    const pending = fetchJson('https://example.org', { source: 'X', bodyError: (b) => ((b as { error?: unknown }).error ? 'bad' : null) });
+    await vi.runAllTimersAsync();
+    await expect(pending).resolves.toEqual({ features: [] });
   });
 });
