@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { failureMeta, publishDataset, validateRecords } from '../jobs/lib/output';
-import { dataThrough, toTransitSeries } from '../jobs/lib/portwatch';
+import { addDays, dataThrough, toTransitSeries } from '../jobs/lib/portwatch';
 
 const schema = z.object({ id: z.string(), value: z.number() });
 const meta = { sourceUrl: 'https://example.org', license: 'test' };
@@ -85,29 +85,36 @@ describe('validateRecords and failureMeta', () => {
 describe('toTransitSeries', () => {
   const opts = { today: '2026-10-28', keepDays: 400, minPoints: 3, maxLagDays: 21 };
   const row = (date: string, n: number, portid = 'chokepoint6') => ({ date, portid, n_tanker: n });
+  /** One row per day for `days` days ending on `end`, all with value n. */
+  const daily = (end: string, days: number, n: number) =>
+    Array.from({ length: days }, (_, i) => row(addDays(end, -i), n));
 
-  it('sorts, dedupes by date, trims old days and ignores other chokepoints', () => {
+  it('sorts, dedupes by date, trims to keepDays and ignores other chokepoints', () => {
+    const history = daily('2025-10-01', 2400, 40);
     const series = toTransitSeries(
       'chokepoint6',
-      [row('2026-10-25', 3), row('2026-10-23', 1), row('2026-10-24', 2), row('2026-10-24', 5), row('2024-01-01', 9), row('2026-10-25', 7, 'chokepoint1')],
-      opts,
+      [...history, row('2026-10-25', 3), row('2026-10-23', 1), row('2026-10-24', 2), row('2026-10-24', 5), row('2026-10-25', 7, 'chokepoint1')],
+      { ...opts, keepDays: 10 },
     );
-    expect(series).toEqual({
-      id: 'portwatch-chokepoint6',
-      metric: 'tanker_transits',
-      unit: 'tankers/day',
-      points: [
-        { date: '2026-10-23', value: 1 },
-        { date: '2026-10-24', value: 5 },
-        { date: '2026-10-25', value: 3 },
-      ],
-    });
+    expect(series.points).toEqual([
+      { date: '2026-10-23', value: 1 },
+      { date: '2026-10-24', value: 5 },
+      { date: '2026-10-25', value: 3 },
+    ]);
+    expect(series.id).toBe('portwatch-chokepoint6');
   });
 
-  it('fails on too few days or a stalled feed', () => {
+  it('computes the five-year baseline from history before the trailing year', () => {
+    // 40/day long ago, 2/day in the most recent year: the five-year mean ignores the recent year.
+    const rows = [...daily('2025-10-25', 2200, 40), ...daily('2026-10-25', 365, 2)];
+    const series = toTransitSeries('chokepoint6', rows, opts);
+    expect(series.fiveYear).toMatchObject({ mean: 40, from: '2020-10-27', to: '2025-10-25' });
+  });
+
+  it('fails on too few days, a stalled feed, or missing history', () => {
     expect(() => toTransitSeries('chokepoint6', [row('2026-10-25', 1)], opts)).toThrow(/only 1 days/);
-    const stale = [row('2026-09-01', 1), row('2026-09-02', 1), row('2026-09-03', 1)];
-    expect(() => toTransitSeries('chokepoint6', stale, opts)).toThrow(/days old/);
+    expect(() => toTransitSeries('chokepoint6', daily('2026-09-01', 30, 1), opts)).toThrow(/days old/);
+    expect(() => toTransitSeries('chokepoint6', daily('2026-10-25', 400, 1), opts)).toThrow(/five-year/);
   });
 
   it('reports data through the earliest latest point', () => {

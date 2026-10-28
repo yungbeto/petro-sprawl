@@ -1,0 +1,36 @@
+[
+  {
+    "id": "hormuz-2026-iran-restrictions",
+    "assetKind": "chokepoint",
+    "assetId": "hormuz",
+    "startedAt": "2026-03",
+    "cause": "conflict",
+    "summary": "Iran restricts transit during the US and Israeli war on Iran. Ships need advance permission and political vetting, and permitted vessels use an Iranian-designated corridor along the northern coast under IRGC monitoring. Industry estimates cited in April put traffic nearly 95% below pre-crisis levels. Start month is when PortWatch tanker transits fell, from 43.5 a day in February to 0.9 in March.",
+    "sources": [
+      {
+        "publisher": "News On AIR (All India Radio)",
+        "title": "Maritime traffic through Strait of Hormuz remains restricted despite two-week ceasefire between Tehran & Washington",
+        "url": "https://www.newsonair.gov.in/maritime-traffic-through-strait-of-hormuz-remains-restricted-despite-two-week-ceasefire-between-tehran-washington",
+        "publishedAt": "2026-04-10"
+      }
+    ],
+    "recordedAt": "2026-10-28"
+  },
+  {
+    "id": "babelm-2026-houthi-attacks",
+    "assetKind": "chokepoint",
+    "assetId": "babelm",
+    "startedAt": "2026-08",
+    "cause": "conflict",
+    "summary": "The Houthis (Ansarallah) have declared a blockade on Saudi shipping in the Red Sea. On 2026-08-11 missiles struck the Egyptian-owned cargo ship Tihamah in the strait; Yemen's internationally recognised government blamed the Houthis and said at least six people were killed. The Houthis' Saba agency said the group attacked a Saudi ship. Start month is when PortWatch tanker transits fell, from 11.6 a day in July to 8.5 in August.",
+    "sources": [
+      {
+        "publisher": "Al Jazeera",
+        "title": "Six killed in Houthi attack on Bab al-Mandeb ship, Yemen's government says",
+        "url": "https://www.aljazeera.com/news/2026/8/12/six-killed-in-houthi-attack-on-bab-al-mandeb-ship-yemens-government-says",
+        "publishedAt": "2026-08-12"
+      }
+    ],
+    "recordedAt": "2026-10-28"
+  }
+]

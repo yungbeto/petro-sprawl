@@ -12,6 +12,21 @@ export const STALE_AFTER_DAYS = 30;
 /** Flow index bands: below < BELOW, near BELOW..ABOVE, above > ABOVE. */
 export const FLOW_INDEX_BANDS = { below: 0.85, above: 1.15 } as const;
 
+/**
+ * Chokepoint flow windows, in days. The index compares the recent average with two baselines:
+ * the trailing year (SPEC) and the five years before that, which a long disruption can't absorb
+ * within a year. The map colors by the five-year index. Each window needs a minimum of points.
+ */
+export const FLOW_WINDOWS = {
+  recentDays: 7,
+  minRecentPoints: 5,
+  trailingDays: 365,
+  minTrailingPoints: 300,
+  fiveYearDays: 5 * 365,
+  minFiveYearPoints: 1500,
+  sparklineDays: 90,
+} as const;
+
 /** Basemap vector styles, one per theme. OpenFreeMap, no key needed. */
 export const BASEMAP_STYLES = {
   light: 'https://tiles.openfreemap.org/styles/positron',
@@ -93,6 +108,7 @@ export const DATASET_FRESHNESS: Record<string, { label: string; scheduled: boole
   pipelines: { label: 'Pipelines', scheduled: false },
   chokepoints: { label: 'Chokepoints', scheduled: false },
   basins: { label: 'Basins', scheduled: false },
+  disruptions: { label: 'Disruptions', scheduled: false },
 };
 
 /** Basemap zoom at which basin labels appear. */

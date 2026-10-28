@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { DatasetMeta } from '../types';
 import { EMPTY_DATASETS, type Datasets } from '../lib/data';
 
-const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'chokepoint-transits'] as const;
+const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'chokepoint-transits', 'disruptions'] as const;
 
 async function fetchJson<T>(path: string): Promise<T | null> {
   try {
@@ -37,6 +37,7 @@ export function useDatasets(): { data: Datasets; loaded: boolean } {
           chokepoints: get('chokepoints') as Datasets['chokepoints'],
           pipelines: get('pipelines') as Datasets['pipelines'],
           series: get('chokepoint-transits') as Datasets['series'],
+          disruptions: get('disruptions') as Datasets['disruptions'],
           meta: results.flatMap((r) => (r.meta ? [r.meta] : [])),
         },
       });

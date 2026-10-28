@@ -5,7 +5,8 @@ import type { AssetStatus, Basin, Chokepoint, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
 import { PIPELINE_WIDTH } from '../lib/config';
-import { chokepointRadiusPx, pipelineStatus, pipelineWidthPx } from '../lib/encoding';
+import { chokepointRadiusPx, flowFillRadiusPx, pipelineStatus, pipelineWidthPx } from '../lib/encoding';
+import type { ChokepointFlow, FlowBand } from '../lib/flow';
 import { withAlpha } from '../lib/color';
 import type { MapColors } from './colors';
 
@@ -44,8 +45,22 @@ function pipelinePaths(pipelines: Pipeline[]): PipelinePath[] {
   );
 }
 
+function bandColor(band: FlowBand | null | undefined, colors: MapColors) {
+  switch (band) {
+    case 'below':
+      return colors.flowBelow;
+    case 'near':
+      return colors.flowNear;
+    case 'above':
+      return colors.flowAbove;
+    default:
+      return colors.ink;
+  }
+}
+
 interface BuildLayersInput {
   data: Datasets;
+  flows: Map<string, ChokepointFlow>;
   visibility: LayerVisibility;
   selection: Selection | null;
   colors: MapColors;
@@ -56,6 +71,7 @@ interface BuildLayersInput {
 
 export function buildLayers({
   data,
+  flows,
   visibility,
   selection,
   colors,
@@ -134,6 +150,20 @@ export function buildLayers({
       highlightColor: withAlpha(colors.selection, 0.5),
       updateTriggers: { getColor: [colors] },
     }),
+    // Inner disk: area is flow relative to the five-year average (full ring = at baseline).
+    new ScatterplotLayer<Chokepoint>({
+      id: 'chokepoint-flow',
+      data: data.chokepoints,
+      visible: visibility.chokepoints,
+      getPosition: (c) => c.point,
+      getRadius: (c) => {
+        const flow = flows.get(c.id);
+        return flowFillRadiusPx(chokepointRadiusPx(c), flow ? (flow.indexFiveYear ?? flow.indexTrailing) : null);
+      },
+      radiusUnits: 'pixels',
+      getFillColor: (c) => withAlpha(bandColor(flows.get(c.id)?.band, colors), 0.45),
+      updateTriggers: { getRadius: [flows], getFillColor: [flows, colors] },
+    }),
     new ScatterplotLayer<Chokepoint>({
       id: 'chokepoints',
       data: data.chokepoints,
@@ -144,13 +174,17 @@ export function buildLayers({
       radiusUnits: 'pixels',
       stroked: true,
       filled: true,
-      getFillColor: (c) => withAlpha(colors.ink, isSelected('chokepoint', c.id) ? 0.25 : 0.08),
-      getLineColor: colors.ink,
-      getLineWidth: (c) => (isSelected('chokepoint', c.id) ? 2.5 : 1.25),
+      getFillColor: (c) => withAlpha(colors.ink, isSelected('chokepoint', c.id) ? 0.12 : 0.03),
+      getLineColor: (c) => bandColor(flows.get(c.id)?.band, colors),
+      getLineWidth: (c) => (isSelected('chokepoint', c.id) ? 3 : 1.75),
       lineWidthUnits: 'pixels',
       autoHighlight: true,
-      highlightColor: withAlpha(colors.ink, 0.2),
-      updateTriggers: { getFillColor: [selection, colors], getLineColor: [colors], getLineWidth: [selection] },
+      highlightColor: withAlpha(colors.ink, 0.15),
+      updateTriggers: {
+        getFillColor: [selection, colors],
+        getLineColor: [flows, colors],
+        getLineWidth: [selection],
+      },
     }),
     new ScatterplotLayer<Chokepoint>({
       id: 'chokepoint-centers',

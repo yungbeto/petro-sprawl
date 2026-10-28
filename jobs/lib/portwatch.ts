@@ -14,17 +14,18 @@ export const dailyResponseSchema = z.object({
 
 export type DailyRow = z.infer<typeof dailyRowSchema>;
 
+import { addDays, fiveYearBaseline } from '../../src/lib/flow';
+
+export { addDays };
+
 export function daysBetween(a: string, b: string): number {
   return Math.round((Date.parse(`${b}T00:00:00Z`) - Date.parse(`${a}T00:00:00Z`)) / 86_400_000);
 }
 
-export function addDays(date: string, days: number): string {
-  return new Date(Date.parse(`${date}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
-}
-
 /**
  * Daily rows for one chokepoint to a tanker-transit series. Sorted, deduplicated by date,
- * trimmed to the last `keepDays`. Throws when the series looks broken, so the old file stays.
+ * trimmed to the last `keepDays`, with the five-year baseline computed from the full history
+ * passed in. Throws when the series looks broken, so the old file stays.
  */
 export function toTransitSeries(
   portwatchId: string,
@@ -33,18 +34,21 @@ export function toTransitSeries(
 ): ObservationSeries {
   const byDate = new Map<string, number>();
   for (const row of rows) if (row.portid === portwatchId) byDate.set(row.date, row.n_tanker);
-  const from = addDays(today, -keepDays);
-  const points = [...byDate]
-    .filter(([date]) => date >= from && date <= today)
+  const all = [...byDate]
+    .filter(([date]) => date <= today)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([date, value]) => ({ date, value }));
+  const from = addDays(today, -keepDays);
+  const points = all.filter((p) => p.date >= from);
 
   if (points.length < minPoints) throw new Error(`${portwatchId}: only ${points.length} days, expected at least ${minPoints}`);
   const latest = points.at(-1)!.date;
   const lag = daysBetween(latest, today);
   if (lag > maxLagDays) throw new Error(`${portwatchId}: latest day ${latest} is ${lag} days old`);
 
-  return { id: `portwatch-${portwatchId}`, metric: 'tanker_transits', unit: 'tankers/day', points };
+  const fiveYear = fiveYearBaseline(all, latest);
+  if (!fiveYear) throw new Error(`${portwatchId}: not enough history for the five-year baseline`);
+  return { id: `portwatch-${portwatchId}`, metric: 'tanker_transits', unit: 'tankers/day', points, fiveYear };
 }
 
 /** The date every series is complete through: the earliest of their latest points. */

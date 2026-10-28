@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
@@ -14,9 +14,10 @@ import {
 } from '../lib/config';
 import type { Theme } from '../lib/theme';
 import type { Camera, Selection } from '../app/urlState';
-import { resolveSelection, type Datasets } from '../lib/data';
+import { chokepointFlows, resolveSelection, type Datasets } from '../lib/data';
+import type { ChokepointFlow } from '../lib/flow';
 import { boundsOf } from '../lib/geo';
-import { formatCapacity, formatMbd } from '../lib/format';
+import { formatCapacity, formatIndexShare, formatMbd } from '../lib/format';
 import { buildLayers, toPicked, type LayerVisibility, type PickedObject } from './layers';
 import { readMapColors, type MapColors } from './colors';
 
@@ -49,10 +50,14 @@ interface Hover {
   y: number;
 }
 
-function tooltipFigure(picked: PickedObject): string {
+function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>): string {
   switch (picked.kind) {
-    case 'chokepoint':
-      return `${formatMbd(picked.item.eiaReferenceMbd)} · EIA ${EIA_REFERENCE_YEAR}`;
+    case 'chokepoint': {
+      const index = flows.get(picked.item.id)?.indexFiveYear;
+      return index != null
+        ? `Tankers at ${formatIndexShare(index)} of five-year average`
+        : `${formatMbd(picked.item.eiaReferenceMbd)} · EIA ${EIA_REFERENCE_YEAR}`;
+    }
     case 'basin':
       return [
         picked.item.provinceType === 'priority' ? 'Priority province' : 'Boutique province',
@@ -78,6 +83,7 @@ export function MapView(props: MapViewProps) {
   const [zoom, setZoom] = useState(0);
   const [hover, setHover] = useState<Hover | null>(null);
   const [fontsReady, setFontsReady] = useState(false);
+  const flows = useMemo(() => chokepointFlows(data), [data]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -155,6 +161,7 @@ export function MapView(props: MapViewProps) {
     overlayRef.current.setProps({
       layers: buildLayers({
         data,
+        flows,
         visibility,
         selection,
         colors,
@@ -163,7 +170,7 @@ export function MapView(props: MapViewProps) {
         fontFamily: `"${LABEL_FONT}", sans-serif`,
       }),
     });
-  }, [data, visibility, selection, colors, zoom, fontsReady]);
+  }, [data, flows, visibility, selection, colors, zoom, fontsReady]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -183,7 +190,7 @@ export function MapView(props: MapViewProps) {
       {hover && (
         <div className="map-tooltip" style={{ left: hover.x, top: hover.y }} role="tooltip">
           <span className="map-tooltip__name">{hover.picked.item.name}</span>
-          <span className="map-tooltip__figure mono">{tooltipFigure(hover.picked)}</span>
+          <span className="map-tooltip__figure mono">{tooltipFigure(hover.picked, flows)}</span>
         </div>
       )}
       {props.children}

@@ -57,3 +57,18 @@ describe('chokepointRadiusPx', () => {
     expect(chokepointRadiusPx({ ...chokepoint('panama', [0, 0]), eiaReferenceMbd: 0 })).toBe(CHOKEPOINT_RADIUS.minPx);
   });
 });
+
+import { flowFillRadiusPx, FLOW_FILL_MAX_INDEX } from '../src/lib/encoding';
+
+describe('flowFillRadiusPx', () => {
+  it('fills the ring exactly at baseline and scales area with the index', () => {
+    expect(flowFillRadiusPx(10, 1)).toBe(10);
+    expect(flowFillRadiusPx(10, 0.25)).toBe(5);
+  });
+
+  it('caps large indexes and draws nothing without one', () => {
+    expect(flowFillRadiusPx(10, 9)).toBe(flowFillRadiusPx(10, FLOW_FILL_MAX_INDEX));
+    expect(flowFillRadiusPx(10, null)).toBe(0);
+    expect(flowFillRadiusPx(10, 0)).toBe(0);
+  });
+});

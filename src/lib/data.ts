@@ -1,4 +1,5 @@
-import type { Basin, Chokepoint, DatasetMeta, ObservationSeries, Pipeline } from '../types';
+import type { Basin, Chokepoint, DatasetMeta, Disruption, ObservationSeries, Pipeline } from '../types';
+import { chokepointFlow, type ChokepointFlow } from './flow';
 import type { Selection } from '../app/urlState';
 import { lineTouchesPolygon, pointInPolygon } from './geo';
 
@@ -7,10 +8,35 @@ export interface Datasets {
   chokepoints: Chokepoint[];
   pipelines: Pipeline[];
   series: ObservationSeries[];
+  disruptions: Disruption[];
   meta: DatasetMeta[];
 }
 
-export const EMPTY_DATASETS: Datasets = { basins: [], chokepoints: [], pipelines: [], series: [], meta: [] };
+export const EMPTY_DATASETS: Datasets = {
+  basins: [],
+  chokepoints: [],
+  pipelines: [],
+  series: [],
+  disruptions: [],
+  meta: [],
+};
+
+/** Flow for every chokepoint that has a transit series, keyed by chokepoint id. */
+export function chokepointFlows(data: Datasets): Map<string, ChokepointFlow> {
+  const flows = new Map<string, ChokepointFlow>();
+  for (const c of data.chokepoints) {
+    const flow = chokepointFlow(seriesById(data, c.transitSeriesId));
+    if (flow) flows.set(c.id, flow);
+  }
+  return flows;
+}
+
+/** Disruptions for one asset, most recent start first. */
+export function disruptionsFor(data: Datasets, kind: Disruption['assetKind'], id: string): Disruption[] {
+  return data.disruptions
+    .filter((d) => d.assetKind === kind && d.assetId === id)
+    .sort((a, b) => b.startedAt.localeCompare(a.startedAt));
+}
 
 export function seriesById(data: Datasets, id: string | undefined): ObservationSeries | undefined {
   return id ? data.series.find((s) => s.id === id) : undefined;

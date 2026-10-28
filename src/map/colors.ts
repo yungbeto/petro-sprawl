@@ -11,6 +11,9 @@ const TOKENS = {
   reduced: '--status-reduced',
   offline: '--status-offline',
   unknown: '--status-unknown',
+  flowBelow: '--flow-below',
+  flowNear: '--flow-near',
+  flowAbove: '--flow-above',
 } as const;
 
 export type MapColors = Record<keyof typeof TOKENS, Rgba>;

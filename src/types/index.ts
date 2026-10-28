@@ -70,15 +70,41 @@ export interface ObservationSeries {
   unit: string;
   points: { date: string; value: number }[];
   capacity?: number;
+  /** Long-run reference computed by the job from history not kept in points. Added in M3. */
+  fiveYear?: BaselineStat;
 }
 
+export interface BaselineStat {
+  mean: number;
+  from: string;
+  to: string;
+  count: number;
+}
+
+export interface SourceRef {
+  publisher: string;
+  title: string;
+  url: string;
+  /** ISO date the source was published. */
+  publishedAt: string;
+}
+
+/**
+ * A dated, sourced account of an asset being disrupted. Extended from SPEC section 6 in M3:
+ * assetKind, a list of sources instead of one url, and recordedAt.
+ */
 export interface Disruption {
+  id: string;
+  assetKind: 'pipeline' | 'chokepoint';
   assetId: string;
+  /** ISO date or month; month when sources don't give a day. */
   startedAt: string;
   endedAt?: string;
   cause: 'sabotage' | 'sanction' | 'maintenance' | 'commercial' | 'conflict' | 'accident' | 'other';
+  /** Our own words, paraphrasing the sources. Attributes contested claims to whoever made them. */
   summary: string;
-  url?: string;
+  sources: SourceRef[];
+  recordedAt: string;
 }
 
 export interface DatasetMeta {

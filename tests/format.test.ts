@@ -14,3 +14,16 @@ describe('format', () => {
     expect(formatLonLat([-79.7672, 9.1205])).toBe('9.1205° N, 79.7672° W');
   });
 });
+
+import { formatIndex, formatIndexShare } from '../src/lib/format';
+
+describe('index formatting', () => {
+  it('shows shares as whole percents, with <1% for tiny non-zero values', () => {
+    expect(formatIndexShare(0.017)).toBe('2%');
+    expect(formatIndexShare(0.531)).toBe('53%');
+    expect(formatIndexShare(1.04)).toBe('104%');
+    expect(formatIndexShare(0.004)).toBe('<1%');
+    expect(formatIndexShare(0)).toBe('0%');
+    expect(formatIndex(0.0567)).toBe('0.06');
+  });
+});

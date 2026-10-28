@@ -73,6 +73,7 @@ test('hovering and clicking a chokepoint opens its detail', async ({ page }) => 
   await expect(page).toHaveURL(/sel=chokepoint\/hormuz/);
   await expect(page.getByRole('heading', { name: 'Strait of Hormuz' })).toBeVisible();
   await expect(page.getByLabel('Panel').getByText('20.7 mb/d')).toBeVisible();
+  await expect(page.getByRole('tooltip')).toContainText('of five-year average');
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/hormuz.png` });
 });
 
@@ -142,4 +143,25 @@ test('the panel shows data age, and flags stale or failed datasets', async ({ pa
   await expect(panel.getByRole('row', { name: /Chokepoint transits/ })).toContainText('stale');
   await expect(panel.getByRole('row', { name: /Chokepoint transits/ })).toContainText('fetch failed');
   await expect(panel.getByText('check data freshness')).toBeVisible();
+});
+
+for (const id of ['hormuz', 'malacca', 'suez', 'babelm', 'danish', 'turkish', 'panama']) {
+  test(`chokepoint ${id} shows its flow index and a 90-day sparkline`, async ({ page }) => {
+    await page.goto(`/?sel=chokepoint/${id}`);
+    const panel = page.getByLabel('Panel');
+    await expect(panel.locator('.flow-headline__figure')).toHaveText(/^(<1|\d+)%$/);
+    await expect(panel.getByText(/^(Below|Near|Above) baseline$/)).toBeVisible();
+    await expect(panel.locator('dt', { hasText: 'Trailing year' })).toBeVisible();
+    await expect(panel.getByRole('img', { name: /Daily tanker transits/ })).toBeVisible();
+    const points = await panel.locator('.sparkline__line').getAttribute('d');
+    expect(points?.split('L').length).toBeGreaterThanOrEqual(80);
+  });
+}
+
+test('Hormuz lists its sourced disruption', async ({ page }) => {
+  await page.goto('/?sel=chokepoint/hormuz');
+  const panel = page.getByLabel('Panel');
+  await expect(panel.getByRole('heading', { name: 'Disruptions' })).toBeVisible();
+  await expect(panel.getByRole('link', { name: 'News On AIR (All India Radio)' })).toBeVisible();
+  if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/hormuz-flow.png` });
 });

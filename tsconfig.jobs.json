@@ -13,5 +13,5 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["jobs", "src/types", "src/lib/config.ts", "src/lib/geo.ts", "tests/jobs.test.ts", "tests/publish.test.ts"]
+  "include": ["jobs", "src/types", "src/lib/config.ts", "src/lib/geo.ts", "src/lib/flow.ts", "tests/jobs.test.ts", "tests/publish.test.ts"]
 }

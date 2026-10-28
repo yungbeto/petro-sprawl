@@ -12,6 +12,9 @@ export const observationSeriesSchema = z.object({
   unit: z.string().min(1),
   points: z.array(z.object({ date: isoDate, value: z.number().finite() })).min(1),
   capacity: z.number().positive().optional(),
+  fiveYear: z
+    .object({ mean: z.number().nonnegative(), from: isoDate, to: isoDate, count: z.number().int().positive() })
+    .optional(),
 });
 
 export const chokepointSchema = z.object({
@@ -60,4 +63,18 @@ export const pipelineSchema = z.object({
   evidence: z.array(evidenceSchema),
   flowSeriesId: z.string().optional(),
   sources: z.array(z.string()).min(1),
+});
+
+export const disruptionSchema = z.object({
+  id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
+  assetKind: z.enum(['pipeline', 'chokepoint']),
+  assetId: z.string().min(1),
+  startedAt: isoDate,
+  endedAt: isoDate.optional(),
+  cause: z.enum(['sabotage', 'sanction', 'maintenance', 'commercial', 'conflict', 'accident', 'other']),
+  summary: z.string().min(1),
+  sources: z
+    .array(z.object({ publisher: z.string().min(1), title: z.string().min(1), url: z.string().url(), publishedAt: isoDate }))
+    .min(1),
+  recordedAt: isoDate,
 });

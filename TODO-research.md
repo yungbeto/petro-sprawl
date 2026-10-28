@@ -20,3 +20,9 @@ Items that couldn't be sourced or that need a decision. See CLAUDE.md: unsourced
 - **GEM status is a dataset claim with old dates.** It goes in as `sourceType: 'dataset'` dated by GEM's `LastUpdated` (TurkStream: 2023-08-11). Nord Stream 1 and 2 are `mothballed` in GEM, shown as idle; M4's curated evidence replaces that.
 - **GEM statuses with no match in ours:** `shelved` and `mixed status` map to `unknown`, `mothballed` to `idle`, `retired` to `offline`. Cancelled and shelved rows are not imported.
 - One gas row (`gem-p5854`) lists its country as "Kuwait-Saudi Arabia" (the former neutral zone); it's kept with that country left out.
+
+## Disruptions and reporting
+
+- Two sourced records so far (`data/curated/disruptions.json`): Hormuz, cited to News On AIR (2026-04-10), and Bab el-Mandeb, cited to Al Jazeera (2026-08-12). Both need later sources as events move: for example the IRGC closure declaration of 2026-10-26 and the IMO mine warning of 2026-10-27, which showed up only in secondary aggregators. Find primary or wire reports before adding them.
+- The International Crisis Group website returns 403 to automated requests. Its RSS feed (`https://www.crisisgroup.org/rss.xml`) works, but carries only the 10 latest items, with titles and links and no article text. The House of Commons Library briefing CBP-10636, CNBC and congress.gov (CRS R45281) also blocked automated reads.
+- The Red Sea attacks of 2023 to 2025, which explain Bab el-Mandeb and Suez running at about half their 2023 levels in 2024, have no disruption record yet.

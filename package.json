@@ -17,7 +17,8 @@
     "import:chokepoints": "tsx jobs/import-chokepoints.ts",
     "import:gem": "tsx jobs/import-gem.ts",
     "fetch:portwatch": "tsx jobs/fetch-portwatch.ts",
-    "fetch:all": "npm run fetch:portwatch"
+    "fetch:all": "npm run fetch:portwatch",
+    "build:curated": "tsx jobs/build-curated.ts"
   },
   "dependencies": {
     "@deck.gl/core": "^9.4.0",

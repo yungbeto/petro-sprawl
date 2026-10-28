@@ -6,7 +6,11 @@ import {
   EIA_CHOKEPOINTS_SOURCE,
   EIA_REFERENCE_YEAR,
 } from '../lib/config';
-import { chokepointsInBasin, pipelinesTouchingBasin, seriesById, type Datasets } from '../lib/data';
+import { chokepointsInBasin, disruptionsFor, pipelinesTouchingBasin, seriesById, type Datasets } from '../lib/data';
+import { chokepointFlow, type FlowBand } from '../lib/flow';
+import { formatIndex, formatIndexShare, formatNumber } from '../lib/format';
+import type { Disruption } from '../types';
+import { Sparkline } from './Sparkline';
 import { formatCapacity, formatLonLat, formatMbd } from '../lib/format';
 import { pipelineStatus } from '../lib/encoding';
 
@@ -38,13 +42,70 @@ function SourceLink({ href, children }: { href: string; children: ReactNode }) {
   );
 }
 
+const BAND_LABELS: Record<FlowBand, string> = {
+  below: 'Below baseline',
+  near: 'Near baseline',
+  above: 'Above baseline',
+};
+
+function Band({ band }: { band: FlowBand | null }) {
+  if (!band) return <span className="muted">No index</span>;
+  return <span className={`band band--${band}`}>{BAND_LABELS[band]}</span>;
+}
+
+function perDay(value: number | undefined): string {
+  return value === undefined ? 'n/a' : `${formatNumber(value, 1)} tankers/day`;
+}
+
 export function ChokepointDetail({ item, data }: { item: Chokepoint; data: Datasets }) {
   const note = CHOKEPOINT_NOTES[item.id];
-  const latest = seriesById(data, item.transitSeriesId)?.points.at(-1);
+  const flow = chokepointFlow(seriesById(data, item.transitSeriesId));
+  const disruptions = disruptionsFor(data, 'chokepoint', item.id);
   return (
     <>
       <Header kind="Chokepoint" name={item.name} />
+      {flow && (
+        <section className="flow-headline">
+          <p className="flow-headline__figure mono">
+            {flow.indexFiveYear !== null ? formatIndexShare(flow.indexFiveYear) : 'n/a'}
+          </p>
+          <p>
+            of the five-year average for tanker transits, last 7 days. <Band band={flow.band} />
+          </p>
+        </section>
+      )}
       <dl className="facts">
+        {flow ? (
+          <>
+            <Row label="Last 7 days">
+              <span className="mono">{perDay(flow.recent?.mean)}</span>
+              <span className="facts__aside">
+                to <span className="mono">{flow.latestDate}</span>
+              </span>
+            </Row>
+            <Row label="Trailing year">
+              <span className="mono">{perDay(flow.trailing?.mean)}</span>
+              <span className="facts__aside">
+                Index <span className="mono">{flow.indexTrailing !== null ? formatIndex(flow.indexTrailing) : 'n/a'}</span>
+              </span>
+            </Row>
+            <Row label="Five-year average">
+              <span className="mono">{perDay(flow.fiveYear?.mean)}</span>
+              {flow.fiveYear && (
+                <span className="facts__aside">
+                  <span className="mono">
+                    {flow.fiveYear.from} to {flow.fiveYear.to}
+                  </span>
+                  , index <span className="mono">{flow.indexFiveYear !== null ? formatIndex(flow.indexFiveYear) : 'n/a'}</span>
+                </span>
+              )}
+            </Row>
+          </>
+        ) : (
+          <Row label="Tanker transits">
+            <span className="muted">Not loaded yet</span>
+          </Row>
+        )}
         <Row label="EIA reference volume">
           <span className="mono">{formatMbd(item.eiaReferenceMbd)}</span>
           <span className="facts__aside">
@@ -54,25 +115,56 @@ export function ChokepointDetail({ item, data }: { item: Chokepoint; data: Datas
         </Row>
         <Row label="Location">
           <span className="mono">{formatLonLat(item.point)}</span>
-          <span className="facts__aside">IMF PortWatch</span>
-        </Row>
-        <Row label="Tanker transits">
-          {latest ? (
-            <>
-              <span className="mono">
-                {latest.value} {latest.value === 1 ? 'tanker' : 'tankers'}
-              </span>
-              <span className="facts__aside">
-                on <span className="mono">{latest.date}</span>, IMF PortWatch
-              </span>
-            </>
-          ) : (
-            <span className="muted">Not loaded yet</span>
-          )}
         </Row>
       </dl>
-      {note && <p className="note">{note}</p>}
+      {flow && (
+        <section className="section">
+          <h3 className="section__title">Daily tanker transits, last 90 days</h3>
+          <Sparkline
+            points={flow.sparkline}
+            unit="/day"
+            label={`Daily tanker transits at ${item.name}, ${flow.sparkline[0]?.date} to ${flow.latestDate}`}
+            references={[
+              ...(flow.fiveYear ? [{ value: flow.fiveYear.mean, label: 'Five-year average', style: 'dashed' as const }] : []),
+              ...(flow.trailing ? [{ value: flow.trailing.mean, label: 'Trailing year', style: 'dotted' as const }] : []),
+            ]}
+          />
+        </section>
+      )}
+      <DisruptionList disruptions={disruptions} />
+      <p className="note">
+        Transits are vessel counts from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>; the EIA
+        figure is barrels, shown for scale. The two aren't compared.
+        {note && ` ${note}`}
+      </p>
     </>
+  );
+}
+
+function DisruptionList({ disruptions }: { disruptions: Disruption[] }) {
+  if (disruptions.length === 0) return null;
+  return (
+    <section className="section">
+      <h3 className="section__title">Disruptions</h3>
+      <ul className="disruptions">
+        {disruptions.map((d) => (
+          <li key={d.id} className="disruption">
+            <p className="disruption__meta mono">
+              {d.startedAt}
+              {d.endedAt ? ` to ${d.endedAt}` : ', ongoing'} · {d.cause}
+            </p>
+            <p>{d.summary}</p>
+            <ul className="disruption__sources">
+              {d.sources.map((s) => (
+                <li key={s.url}>
+                  <SourceLink href={s.url}>{s.publisher}</SourceLink>, <span className="mono">{s.publishedAt}</span>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

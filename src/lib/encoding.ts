@@ -25,3 +25,15 @@ export function pipelineWidthPx(pipeline: Pipeline): number {
 export function chokepointRadiusPx(chokepoint: Chokepoint): number {
   return Math.max(CHOKEPOINT_RADIUS.minPx, Math.sqrt(chokepoint.eiaReferenceMbd) * CHOKEPOINT_RADIUS.scale);
 }
+
+/** Largest flow index the inner disk shows; beyond this it stays at this size. */
+export const FLOW_FILL_MAX_INDEX = 1.5;
+
+/**
+ * Inner disk radius for a chokepoint: its area is the flow index times the ring's area,
+ * so a full ring means flow at baseline. The non-color cue that pairs with the band color.
+ */
+export function flowFillRadiusPx(ringRadiusPx: number, index: number | null): number {
+  if (index === null || index <= 0) return 0;
+  return ringRadiusPx * Math.sqrt(Math.min(index, FLOW_FILL_MAX_INDEX));
+}

@@ -1,7 +1,7 @@
 // Scheduled: IMF PortWatch daily tanker transits for our seven chokepoints -> public/data/chokepoint-transits.json
 // Run: npm run fetch:portwatch
 
-import { CHOKEPOINTS, PORTWATCH } from '../src/lib/config';
+import { CHOKEPOINTS, FLOW_WINDOWS, PORTWATCH } from '../src/lib/config';
 import { publishDataset, report } from './lib/output';
 import { addDays, dailyResponseSchema, dataThrough, toTransitSeries, type DailyRow } from './lib/portwatch';
 import { observationSeriesSchema } from './lib/schemas';
@@ -45,7 +45,8 @@ async function fetchRows(portwatchId: string, since: string): Promise<DailyRow[]
 }
 
 const today = new Date().toISOString().slice(0, 10);
-const since = addDays(today, -PORTWATCH.keepDays);
+// Enough history for the five-year baseline that sits before the trailing year, plus slack.
+const since = addDays(today, -(FLOW_WINDOWS.trailingDays + FLOW_WINDOWS.fiveYearDays + 30));
 
 const result = await publishDataset({
   id: 'chokepoint-transits',
@@ -60,7 +61,7 @@ const result = await publishDataset({
       records: series,
       meta: {
         sourceUrl: PORTWATCH.dailyUrl.replace(/\/query$/, ''),
-        sourceVersion: 'IMF PortWatch Daily_Chokepoints_Data, n_tanker',
+        sourceVersion: `IMF PortWatch Daily_Chokepoints_Data, n_tanker; points from ${addDays(today, -PORTWATCH.keepDays)}, five-year baseline from history since ${since}`,
         license: 'IMF PortWatch terms (attribution)',
         dataThrough: dataThrough(series),
       },

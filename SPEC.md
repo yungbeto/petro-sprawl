@@ -73,7 +73,7 @@ Scope is one theater: the oil and gas corridor connecting **Europe, Russia, the 
    - "What changed since last visit" list: status changes, flow swings, storage moves. Each row links to the asset on the map. Last visit timestamp lives in `localStorage` (wrapped in try/catch; render fine without it).
    - Data freshness for each dataset.
 2. **Pipeline detail:** name, commodity, route (from → transit → to), operator and owners, capacity, current status with its evidence (source type, statement, link, date), measured flow where available (sparkline, last 90 days, flow as share of capacity), disruption history.
-3. **Chokepoint detail:** EIA reference volume (mb/d, 2024), daily tanker transits with 7-day average against the trailing 365-day average, flow index, sparkline.
+3. **Chokepoint detail:** EIA reference volume (mb/d, 2024), daily tanker transits with the 7-day average against two baselines: the trailing 365-day average and the five-year average before that year. Flow index for each, 90-day sparkline with both baselines drawn, and sourced disruptions. The map colors by the five-year index, because a trailing year absorbs a long disruption within twelve months (decided 2026-10-28, after Hormuz transits fell from about 43 a day to about 1 in March 2026).
 4. **Basin detail:** name, countries it spans, pipelines and chokepoints inside or touching it.
 5. **Storage detail (country):** fill level, trend, same date last year.
 
@@ -154,24 +154,37 @@ interface ObservationSeries {
   unit: string;
   points: { date: string; value: number }[];  // daily, trimmed to ~400 days
   capacity?: number;         // technical capacity in the same unit, if known
+  fiveYear?: { mean: number; from: string; to: string; count: number };  // computed by the job from full history
+}
+
+interface SourceRef {
+  publisher: string;
+  title: string;
+  url: string;
+  publishedAt: string;       // ISO date
 }
 
 interface Disruption {
+  id: string;
+  assetKind: 'pipeline' | 'chokepoint';
   assetId: string;
-  startedAt: string;
+  startedAt: string;         // ISO date, or month when sources give no day
   endedAt?: string;
   cause: 'sabotage' | 'sanction' | 'maintenance' | 'commercial' | 'conflict' | 'accident' | 'other';
-  summary: string;
-  url?: string;
+  summary: string;           // our words; contested claims attributed to who made them
+  sources: SourceRef[];      // at least one
+  recordedAt: string;
 }
 
 interface DatasetMeta {
   id: string;
-  fetchedAt: string;
+  fetchedAt: string;         // last successful run
   recordCount: number;
   sourceUrl: string;
   sourceVersion?: string;    // release date or file hash for manual imports
   license: string;
+  dataThrough?: string;      // latest observation date, for time series
+  lastAttempt?: { at: string; ok: boolean; error?: string };
 }
 ```
 
@@ -301,7 +314,7 @@ Done when: every pipeline and chokepoint in the theater is selectable, the URL r
 **M2: Data jobs and freshness.** GitHub Actions workflow, PortWatch job, DatasetMeta for every dataset, last-good-file protection, freshness in the panel.
 Done when: a scheduled run updates `public/data`, a forced failure leaves the previous file intact, and data age shows correctly.
 
-**M3: Chokepoint flow.** 7-day average versus trailing 365-day average of `n_tanker`, flow index bands, sparklines, ring encoding.
+**M3: Chokepoint flow.** 7-day average of `n_tanker` versus the trailing 365-day average and the five-year average before it, flow index bands, sparklines, ring encoding (ring color by five-year band; inner disk area proportional to the index).
 Done when: each of the seven chokepoints shows its index and a 90-day sparkline, with unit tests covering the math.
 
 **M4: Evidence and gas flows.** Curated evidence for the corridor list with citations, symmetric aging, dedup report, ENTSOG flows linked to pipelines (flow as share of capacity), AGSI+ storage layer.

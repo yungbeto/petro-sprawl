@@ -23,3 +23,13 @@ export function formatLonLat([lon, lat]: [number, number]): string {
 export function formatDate(iso: string): string {
   return iso.slice(0, 10);
 }
+
+/** Flow index as a share: 0.02 -> "2%", 0.531 -> "53%", 1.04 -> "104%". Below 1% shows "<1%". */
+export function formatIndexShare(index: number): string {
+  const pct = Math.round(index * 100);
+  return pct < 1 && index > 0 ? '<1%' : `${pct}%`;
+}
+
+export function formatIndex(index: number): string {
+  return index.toFixed(2);
+}
