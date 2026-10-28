@@ -5,8 +5,20 @@
     "assetId": "hormuz",
     "startedAt": "2026-03",
     "cause": "conflict",
-    "summary": "Iran restricts transit during the US and Israeli war on Iran. Ships need advance permission and political vetting, and permitted vessels use an Iranian-designated corridor along the northern coast under IRGC monitoring. Industry estimates cited in April put traffic nearly 95% below pre-crisis levels. Start month is when PortWatch tanker transits fell, from 43.5 a day in February to 0.9 in March.",
+    "summary": "Days after US and Israeli strikes on Iran began on 2026-02-28, Iran declared the strait closed and traffic largely halted. Ships from states Iran calls non-hostile may pass through Iranian waters, reportedly for a toll, and in May Iran set up a Persian Gulf Strait Authority to run transits. The Commons Library cites WTO estimates of a 95% drop in crude carriers and 99% in LNG carriers from 28 February to 1 June. CRS reports a US blockade of Iranian ports from 13 April, a US-Iran memorandum on 17 June that briefly lifted crossings, and renewed attacks in July after which the US said the memorandum no longer applied. Start month is when PortWatch tanker transits fell, from 43.5 a day in February to 0.9 in March.",
     "sources": [
+      {
+        "publisher": "Congressional Research Service",
+        "title": "The Strait of Hormuz: Security developments and impacts on oil, gas, and other commodities (R45281)",
+        "url": "https://www.congress.gov/crs-product/R45281",
+        "publishedAt": "2026-08-07"
+      },
+      {
+        "publisher": "House of Commons Library",
+        "title": "Israel/US-Iran conflict 2026: Reopening the Strait of Hormuz (CBP-10636)",
+        "url": "https://researchbriefings.files.parliament.uk/documents/CBP-10636/CBP-10636.pdf",
+        "publishedAt": "2026-06-08"
+      },
       {
         "publisher": "News On AIR (All India Radio)",
         "title": "Maritime traffic through Strait of Hormuz remains restricted despite two-week ceasefire between Tehran & Washington",
@@ -20,15 +32,21 @@
     "id": "babelm-2026-houthi-attacks",
     "assetKind": "chokepoint",
     "assetId": "babelm",
-    "startedAt": "2026-08",
+    "startedAt": "2026-07-20",
     "cause": "conflict",
-    "summary": "The Houthis (Ansarallah) have declared a blockade on Saudi shipping in the Red Sea. On 2026-08-11 missiles struck the Egyptian-owned cargo ship Tihamah in the strait; Yemen's internationally recognised government blamed the Houthis and said at least six people were killed. The Houthis' Saba agency said the group attacked a Saudi ship. Start month is when PortWatch tanker transits fell, from 11.6 a day in July to 8.5 in August.",
+    "summary": "On 2026-07-20 the Houthis (Ansarallah) declared a maritime embargo on Saudi Arabia, aimed at Saudi oil exports from Yanbu that had been running through the strait as Hormuz closed. CNBC reported a JMIC warning that the group had deployed missiles and drones near the strait, an EU naval mission advisory for ships linked to Israeli, US or Saudi interests to avoid the Red Sea, and Kpler data showing strait traffic down 34% the next day. On 2026-08-11 missiles struck the Egyptian-owned cargo ship Tihamah in the strait; Yemen's internationally recognised government blamed the Houthis and said at least six people were killed. PortWatch tanker transits averaged 11.6 a day in July and 8.5 in August.",
     "sources": [
       {
         "publisher": "Al Jazeera",
         "title": "Six killed in Houthi attack on Bab al-Mandeb ship, Yemen's government says",
         "url": "https://www.aljazeera.com/news/2026/8/12/six-killed-in-houthi-attack-on-bab-al-mandeb-ship-yemens-government-says",
         "publishedAt": "2026-08-12"
+      },
+      {
+        "publisher": "CNBC",
+        "title": "Houthis deploy missiles and drones to attack ships in southern Red Sea, naval group says",
+        "url": "https://www.cnbc.com/2026/07/22/houthis-red-sea-bab-el-mandeb-saudi-oil-iran.html",
+        "publishedAt": "2026-07-22"
       }
     ],
     "recordedAt": "2026-10-28"
