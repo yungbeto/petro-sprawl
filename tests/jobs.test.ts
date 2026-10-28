@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { toBasin } from '../jobs/lib/basins';
+import { mergeBasinCountries, toBasin } from '../jobs/lib/basins';
 import { buildChokepoints } from '../jobs/lib/chokepoints';
 
 const square = { type: 'Polygon' as const, coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]]] };
@@ -19,6 +19,24 @@ describe('toBasin', () => {
   it('keeps an empty dominant type as null and drops other province types', () => {
     expect(toBasin({ CODE: 1, NAME: 'X', TYPE: 'b', O_G: '', lx: 0, ly: 0 }, square)?.dominant).toBeNull();
     expect(toBasin({ CODE: 2, NAME: 'Y', TYPE: '', O_G: 'Gas', lx: 0, ly: 0 }, square)).toBeNull();
+  });
+});
+
+describe('mergeBasinCountries', () => {
+  it('merges both joins, dedupes and sorts, and reports countries without an ISO code', () => {
+    const { countries, skipped } = mergeBasinCountries([
+      { code: 2021, iso: 'SA', name: 'Saudi Arabia' },
+      { code: 2021, iso: 'BH', name: 'Bahrain' },
+      { code: 2021, iso: 'SA', name: 'Saudi Arabia' },
+      { code: 1112, iso: '-99', name: 'N. Cyprus' },
+    ]);
+    expect(countries.get(2021)).toEqual(['BH', 'SA']);
+    expect(countries.has(1112)).toBe(false);
+    expect(skipped).toEqual(['N. Cyprus']);
+  });
+
+  it('defaults a basin to no countries', () => {
+    expect(toBasin({ CODE: 3, NAME: 'Z', TYPE: 'p', O_G: '', lx: 0, ly: 0 }, square)?.countries).toEqual([]);
   });
 });
 

@@ -113,6 +113,12 @@ export const DATASET_FRESHNESS: Record<string, { label: string; scheduled: boole
   disruptions: { label: 'Disruptions', scheduled: false },
 };
 
+/**
+ * A country spans a basin when their land overlap is at least minAreaM2, or covers at least
+ * minCountryShare of the country (so small states like Bahrain count). Natural Earth 1:50m land.
+ */
+export const BASIN_COUNTRY_OVERLAP = { minAreaM2: 1e9, minCountryShare: 0.2 } as const;
+
 /** Basemap zoom at which basin labels appear. */
 export const BASIN_LABEL_MIN_ZOOM = 4.5;
 

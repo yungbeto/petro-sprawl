@@ -7,6 +7,7 @@ export const basin: Basin = {
   provinceType: 'priority',
   dominant: 'oil',
   labelPoint: [5, 5],
+  countries: ['SA'],
   geometry: {
     type: 'Polygon',
     coordinates: [[[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]]],

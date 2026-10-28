@@ -27,7 +27,7 @@ Node 22. Package manager: npm.
 | `npm run fetch:portwatch` | Scheduled: PortWatch daily tanker transits to `public/data/chokepoint-transits.json` |
 | `npm run fetch:all` | Every scheduled fetch, as the GitHub Actions workflow runs them |
 | `npm run build:curated` | Validates `data/curated/disruptions.json` and publishes it to `public/data/` |
-| `npm run import:basins` | Manual: USGS provinces from `data/raw/usgs/` to `public/data/basins.json` |
+| `npm run import:basins` | Manual: USGS provinces from `data/raw/usgs/` to `public/data/basins.json`, tagged with countries from Natural Earth in `data/raw/naturalearth/`; report in `data/reports/import-basins.json` |
 | `npm run import:gem` | Manual: GEM gas and oil pipeline GeoJSON from `data/raw/gem/` to `public/data/pipelines.json`; skip counts in `data/reports/import-gem.json` |
 | `npm run import:chokepoints` | PortWatch locations plus EIA volumes (from `src/lib/config.ts`) to `public/data/chokepoints.json` |
 

@@ -81,6 +81,8 @@ test('a basin link selects and shows its detail', async ({ page }) => {
   await page.goto('/?sel=basin/usgs-1174');
   await expect(page.getByRole('heading', { name: 'West Siberian Basin' })).toBeVisible();
   await expect(page.getByText('Priority province')).toBeVisible();
+  const panel = page.getByLabel('Panel');
+  await expect(panel.locator('dt', { hasText: 'Countries' }).locator('xpath=following-sibling::dd[1]')).toHaveText('Russia');
   // No camera in the link, so the map frames the basin and writes the camera back.
   await expect(page).toHaveURL(/at=/);
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/basin.png` });

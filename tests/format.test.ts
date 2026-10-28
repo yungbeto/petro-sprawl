@@ -27,3 +27,13 @@ describe('index formatting', () => {
     expect(formatIndex(0.0567)).toBe('0.06');
   });
 });
+
+import { formatCountry } from '../src/lib/format';
+
+describe('formatCountry', () => {
+  it('names ISO codes and passes unknown ones through', () => {
+    expect(formatCountry('SA')).toBe('Saudi Arabia');
+    expect(formatCountry('BH')).toBe('Bahrain');
+    expect(formatCountry('-99')).toBe('-99');
+  });
+});

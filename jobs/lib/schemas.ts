@@ -32,6 +32,7 @@ export const basinSchema = z.object({
   provinceType: z.enum(['priority', 'boutique']),
   dominant: z.enum(['oil', 'gas']).nullable(),
   labelPoint: lonLat,
+  countries: z.array(z.string().regex(/^[A-Z]{2}$/)),
   geometry: z.object({ type: z.enum(['Polygon', 'MultiPolygon']), coordinates: z.array(z.any()).min(1) }),
 });
 

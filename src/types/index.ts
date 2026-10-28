@@ -61,6 +61,8 @@ export interface Basin {
   dominant: 'oil' | 'gas' | null;
   /** A point guaranteed inside the polygon, for labels. [lon, lat] */
   labelPoint: [number, number];
+  /** ISO 3166-1 alpha-2 codes of countries whose land the province overlaps. Empty offshore. */
+  countries: string[];
   geometry: Polygon | MultiPolygon;
 }
 

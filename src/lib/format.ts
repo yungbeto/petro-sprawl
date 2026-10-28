@@ -19,6 +19,17 @@ export function formatLonLat([lon, lat]: [number, number]): string {
   return `${Math.abs(lat).toFixed(4)}° ${ns}, ${Math.abs(lon).toFixed(4)}° ${ew}`;
 }
 
+const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+
+/** ISO 3166-1 alpha-2 to an English name: SA -> Saudi Arabia. Unknown codes come back as given. */
+export function formatCountry(code: string): string {
+  try {
+    return regionNames.of(code) ?? code;
+  } catch {
+    return code;
+  }
+}
+
 /** ISO timestamp to 2026-10-28 (UTC). */
 export function formatDate(iso: string): string {
   return iso.slice(0, 10);

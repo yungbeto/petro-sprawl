@@ -11,7 +11,7 @@ import { chokepointFlow, type FlowBand } from '../lib/flow';
 import { formatIndex, formatIndexShare, formatNumber } from '../lib/format';
 import type { Disruption } from '../types';
 import { Sparkline } from './Sparkline';
-import { formatCapacity, formatLonLat, formatMbd } from '../lib/format';
+import { formatCapacity, formatCountry, formatLonLat, formatMbd } from '../lib/format';
 import { pipelineStatus } from '../lib/encoding';
 
 type OnSelect = (selection: Selection) => void;
@@ -178,6 +178,13 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
         <Row label="Province type">
           {item.provinceType === 'priority' ? 'Priority province' : 'Boutique province'}
         </Row>
+        <Row label="Countries">
+          {item.countries.length ? (
+            item.countries.map(formatCountry).sort().join(', ')
+          ) : (
+            <span className="muted">None on land (offshore)</span>
+          )}
+        </Row>
         <Row label="Dominant petroleum">
           {item.dominant ? capitalize(item.dominant) : <span className="muted">Not given</span>}
         </Row>
@@ -201,6 +208,7 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
         <SourceLink href="https://www.sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3">
           USGS World Petroleum Assessment 2000
         </SourceLink>
+        ; countries from <SourceLink href="https://www.naturalearthdata.com/">Natural Earth</SourceLink>
       </p>
     </>
   );
