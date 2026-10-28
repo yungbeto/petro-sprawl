@@ -16,7 +16,7 @@ The thesis: energy flows explain a lot about why international decisions are mad
 
 ## Status
 
-Pre-build. Next step: milestone M0 in `SPEC.md` (scaffold the app and basemap).
+M0 (scaffold) built, awaiting review. Next: M1 static layers in `SPEC.md`. Commands are in [`CLAUDE.md`](CLAUDE.md).
 
 ## Data credits
 

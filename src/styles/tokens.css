@@ -1,0 +1,96 @@
+/* Design tokens. Light values on :root, dark values follow the system unless a manual choice overrides. */
+
+:root {
+  color-scheme: light;
+
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-md: 14px;
+  --text-lg: 17px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  --panel-width: 400px;
+  --rail-width: 40px;
+  --radius: 4px;
+
+  /* Neutrals */
+  --bg: #f4f4f2;
+  --surface: #ffffff;
+  --surface-sunken: #f0f0ed;
+  --text: #17191c;
+  --text-muted: #5f646b;
+  --border: #dddcd7;
+  --border-strong: #b9b8b2;
+  --focus: #2b5fd9;
+
+  /* Semantic: status */
+  --status-operating: #1d7a4b;
+  --status-reduced: #a86400;
+  --status-offline: #b3261e;
+  --status-unknown: #7a7f86;
+
+  /* Semantic: flow against baseline */
+  --flow-below: #c2410c;
+  --flow-near: #6b7079;
+  --flow-above: #1f5fc4;
+
+  /* Semantic: data age */
+  --data-stale: #9a6a00;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #111315;
+    --surface: #181a1d;
+    --surface-sunken: #1f2225;
+    --text: #e6e7e8;
+    --text-muted: #9a9fa6;
+    --border: #2c2f33;
+    --border-strong: #464a50;
+    --focus: #7aa2ff;
+
+    --status-operating: #4cc38a;
+    --status-reduced: #e0a33a;
+    --status-offline: #f0766d;
+    --status-unknown: #8d939a;
+
+    --flow-below: #f08a4b;
+    --flow-near: #9298a0;
+    --flow-above: #6fa2ff;
+
+    --data-stale: #d6a838;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #111315;
+  --surface: #181a1d;
+  --surface-sunken: #1f2225;
+  --text: #e6e7e8;
+  --text-muted: #9a9fa6;
+  --border: #2c2f33;
+  --border-strong: #464a50;
+  --focus: #7aa2ff;
+
+  --status-operating: #4cc38a;
+  --status-reduced: #e0a33a;
+  --status-offline: #f0766d;
+  --status-unknown: #8d939a;
+
+  --flow-below: #f08a4b;
+  --flow-near: #9298a0;
+  --flow-above: #6fa2ff;
+
+  --data-stale: #d6a838;
+}

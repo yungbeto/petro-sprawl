@@ -1,0 +1,252 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.mono,
+kbd {
+  font-family: var(--font-mono);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+/* Layout */
+
+.app {
+  display: grid;
+  grid-template-columns: var(--panel-width) 1fr;
+  height: 100%;
+  overflow: hidden;
+}
+
+.app[data-panel-collapsed='true'] {
+  grid-template-columns: var(--rail-width) 1fr;
+}
+
+.map {
+  position: relative;
+  min-width: 0;
+  height: 100%;
+  background: var(--bg);
+}
+
+/* Panel */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+.panel--collapsed {
+  align-items: center;
+  padding-top: var(--space-3);
+}
+
+.panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-4) var(--space-3) var(--space-5);
+}
+
+.panel__title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.panel__search {
+  position: relative;
+  padding: 0 var(--space-5) var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.search-input {
+  width: 100%;
+  height: 34px;
+  padding: 0 32px 0 var(--space-3);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-input:focus-visible {
+  outline-offset: -1px;
+}
+
+.search-hint {
+  position: absolute;
+  top: 8px;
+  right: calc(var(--space-5) + 8px);
+  min-width: 18px;
+  padding: 0 4px;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  text-align: center;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+.panel__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4) var(--space-5);
+}
+
+.panel__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--text-sm);
+  border-top: 1px solid var(--border);
+}
+
+.section + .section {
+  margin-top: var(--space-5);
+}
+
+.section__title {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-md);
+  font-weight: 600;
+}
+
+.detail__title {
+  margin: var(--space-1) 0 var(--space-3);
+  font-size: var(--text-lg);
+  font-weight: 500;
+}
+
+/* Controls */
+
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--text-muted);
+  background: none;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  color: var(--text);
+  background: var(--surface-sunken);
+}
+
+.text-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-4) -6px;
+  padding: 2px 6px;
+  color: var(--text-muted);
+  background: none;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.text-button:hover {
+  color: var(--text);
+  background: var(--surface-sunken);
+}
+
+.segmented {
+  display: inline-flex;
+  padding: 2px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.segmented__option {
+  padding: 1px var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  background: none;
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.segmented__option[aria-checked='true'] {
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+/* MapLibre controls, quieted to match the panel */
+
+.maplibregl-ctrl-scale {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  border-color: var(--border-strong);
+}
+
+.maplibregl-ctrl-attrib {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+}
+
+.maplibregl-ctrl.maplibregl-ctrl-attrib {
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+}
+
+.maplibregl-ctrl-attrib a {
+  color: inherit;
+}

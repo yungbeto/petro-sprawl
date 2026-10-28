@@ -7,3 +7,5 @@ data/raw/
 .DS_Store
 *.log
 __pycache__/
+test-results/
+playwright-report/

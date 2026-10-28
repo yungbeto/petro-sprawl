@@ -13,4 +13,20 @@ Read `SPEC.md` fully before starting any work. `docs/product-brief.md` explains 
 
 ## Commands
 
-Add install, dev, test and data-job commands here during M0.
+Node 22. Package manager: npm.
+
+| Command | What it does |
+| --- | --- |
+| `npm install` | Install dependencies |
+| `npx playwright install chromium` | One-time browser download for the smoke test |
+| `npm run dev` | Dev server at http://localhost:5173 |
+| `npm run build` | Typecheck (`tsc -b`) and production build to `dist/` |
+| `npm run typecheck` | Typecheck only |
+| `npm test` | Unit tests (Vitest, `tests/*.test.ts`) |
+| `npx playwright test` | Smoke test (`tests/e2e/`); starts its own dev server on port 5287 |
+
+Data-job commands get added in M2.
+
+## Gotchas
+
+- MapLibre 6 loads its worker from a separate file. `src/map/MapView.tsx` imports it with `?url` and calls `setWorkerUrl`; without that, tiles never load in dev or in the build.
