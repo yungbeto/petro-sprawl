@@ -1,4 +1,4 @@
-import type { Basin, Chokepoint, DatasetMeta, Pipeline } from '../types';
+import type { Basin, Chokepoint, DatasetMeta, ObservationSeries, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import { lineTouchesPolygon, pointInPolygon } from './geo';
 
@@ -6,10 +6,15 @@ export interface Datasets {
   basins: Basin[];
   chokepoints: Chokepoint[];
   pipelines: Pipeline[];
+  series: ObservationSeries[];
   meta: DatasetMeta[];
 }
 
-export const EMPTY_DATASETS: Datasets = { basins: [], chokepoints: [], pipelines: [], meta: [] };
+export const EMPTY_DATASETS: Datasets = { basins: [], chokepoints: [], pipelines: [], series: [], meta: [] };
+
+export function seriesById(data: Datasets, id: string | undefined): ObservationSeries | undefined {
+  return id ? data.series.find((s) => s.id === id) : undefined;
+}
 
 export type Resolved =
   | { kind: 'pipeline'; item: Pipeline }

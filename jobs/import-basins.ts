@@ -7,7 +7,8 @@ import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 import { THEATER_BOUNDS } from '../src/lib/config';
 import type { Basin } from '../src/types';
 import { toBasin, type UsgsProvinceProps } from './lib/basins';
-import { sha256File, writeDataset } from './lib/output';
+import { publishDataset, report, sha256File } from './lib/output';
+import { basinSchema } from './lib/schemas';
 
 const RAW_DIR = 'data/raw/usgs';
 const SIMPLIFY = '6%';
@@ -22,30 +23,37 @@ const filter = [
   `this.bounds[1] <= ${north}`,
 ].join(' && ');
 
-const output = await mapshaper.applyCommands(
-  [
-    `-i ${RAW_DIR}/WEP_PRVG/WEP_PRVG.SHP`,
-    `-filter '${filter}'`,
-    `-simplify ${SIMPLIFY} keep-shapes`,
-    `-each 'lx=this.innerX, ly=this.innerY'`,
-    '-filter-fields CODE,NAME,TYPE,O_G,lx,ly',
-    '-o out.json format=geojson precision=0.001',
-  ].join(' '),
-);
-
-const collection = JSON.parse(String(output['out.json'])) as FeatureCollection<
-  Polygon | MultiPolygon,
-  UsgsProvinceProps
->;
-const basins = collection.features
-  .map((f) => toBasin(f.properties, f.geometry))
-  .filter((b): b is Basin => b !== null)
-  .sort((a, b) => a.code - b.code);
-
-const zipHash = await sha256File(`${RAW_DIR}/WEP_PRVG.zip`);
-const meta = await writeDataset('basins', basins, {
-  sourceUrl: 'https://www.sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3',
-  sourceVersion: `World Petroleum Assessment 2000 (DDS-60); WEP_PRVG.zip sha256:${zipHash}; simplified ${SIMPLIFY}`,
-  license: 'Public domain (USGS)',
+const result = await publishDataset({
+  id: 'basins',
+  schema: basinSchema,
+  produce: async () => {
+    const output = await mapshaper.applyCommands(
+      [
+        `-i ${RAW_DIR}/WEP_PRVG/WEP_PRVG.SHP`,
+        `-filter '${filter}'`,
+        `-simplify ${SIMPLIFY} keep-shapes`,
+        `-each 'lx=this.innerX, ly=this.innerY'`,
+        '-filter-fields CODE,NAME,TYPE,O_G,lx,ly',
+        '-o out.json format=geojson precision=0.001',
+      ].join(' '),
+    );
+    const collection = JSON.parse(String(output['out.json'])) as FeatureCollection<
+      Polygon | MultiPolygon,
+      UsgsProvinceProps
+    >;
+    const basins = collection.features
+      .map((f) => toBasin(f.properties, f.geometry))
+      .filter((b): b is Basin => b !== null)
+      .sort((a, b) => a.code - b.code);
+    const zipHash = await sha256File(`${RAW_DIR}/WEP_PRVG.zip`);
+    return {
+      records: basins,
+      meta: {
+        sourceUrl: 'https://www.sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3',
+        sourceVersion: `World Petroleum Assessment 2000 (DDS-60); WEP_PRVG.zip sha256:${zipHash}; simplified ${SIMPLIFY}`,
+        license: 'Public domain (USGS)',
+      },
+    };
+  },
 });
-console.log(`basins: wrote ${meta.recordCount} provinces`);
+report(result, 'basins');

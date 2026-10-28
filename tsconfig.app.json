@@ -18,5 +18,5 @@
     "noEmit": true
   },
   "include": ["src", "tests"],
-  "exclude": ["tests/e2e", "tests/jobs.test.ts"]
+  "exclude": ["tests/e2e", "tests/jobs.test.ts", "tests/publish.test.ts"]
 }

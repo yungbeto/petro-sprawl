@@ -83,9 +83,14 @@ export interface Disruption {
 
 export interface DatasetMeta {
   id: string;
+  /** When the published file was last successfully produced. */
   fetchedAt: string;
   recordCount: number;
   sourceUrl: string;
   sourceVersion?: string;
   license: string;
+  /** Latest observation date in the data, for time series. Added in M2. */
+  dataThrough?: string;
+  /** The most recent run, successful or not. A failure leaves fetchedAt and the data file unchanged. Added in M2. */
+  lastAttempt?: { at: string; ok: boolean; error?: string };
 }

@@ -6,7 +6,7 @@ import {
   EIA_CHOKEPOINTS_SOURCE,
   EIA_REFERENCE_YEAR,
 } from '../lib/config';
-import { chokepointsInBasin, pipelinesTouchingBasin, type Datasets } from '../lib/data';
+import { chokepointsInBasin, pipelinesTouchingBasin, seriesById, type Datasets } from '../lib/data';
 import { formatCapacity, formatLonLat, formatMbd } from '../lib/format';
 import { pipelineStatus } from '../lib/encoding';
 
@@ -38,8 +38,9 @@ function SourceLink({ href, children }: { href: string; children: ReactNode }) {
   );
 }
 
-export function ChokepointDetail({ item }: { item: Chokepoint }) {
+export function ChokepointDetail({ item, data }: { item: Chokepoint; data: Datasets }) {
   const note = CHOKEPOINT_NOTES[item.id];
+  const latest = seriesById(data, item.transitSeriesId)?.points.at(-1);
   return (
     <>
       <Header kind="Chokepoint" name={item.name} />
@@ -56,7 +57,18 @@ export function ChokepointDetail({ item }: { item: Chokepoint }) {
           <span className="facts__aside">IMF PortWatch</span>
         </Row>
         <Row label="Tanker transits">
-          <span className="muted">Not loaded yet</span>
+          {latest ? (
+            <>
+              <span className="mono">
+                {latest.value} {latest.value === 1 ? 'tanker' : 'tankers'}
+              </span>
+              <span className="facts__aside">
+                on <span className="mono">{latest.date}</span>, IMF PortWatch
+              </span>
+            </>
+          ) : (
+            <span className="muted">Not loaded yet</span>
+          )}
         </Row>
       </dl>
       {note && <p className="note">{note}</p>}

@@ -229,6 +229,11 @@ kbd {
   border-top: 1px solid var(--border);
 }
 
+.panel__footer p {
+  font-size: var(--text-xs);
+  white-space: nowrap;
+}
+
 .section + .section {
   margin-top: var(--space-5);
 }
@@ -370,6 +375,22 @@ a:hover {
 
 .table tr:last-child td {
   border-bottom: 1px solid var(--border);
+}
+
+.table th {
+  padding: 0 0 4px;
+  font-weight: 400;
+  color: var(--text-muted);
+  text-align: left;
+}
+
+.table th.num {
+  text-align: right;
+}
+
+.freshness__flag,
+.freshness--warn {
+  color: var(--data-stale);
 }
 
 .num {

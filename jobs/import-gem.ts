@@ -9,7 +9,8 @@ import { THEATER_BOUNDS } from '../src/lib/config';
 import { boundsOf } from '../src/lib/geo';
 import type { Pipeline } from '../src/types';
 import { gemRowToPipeline, type GemRow } from './lib/gem';
-import { sha256File, writeDataset } from './lib/output';
+import { publishDataset, report as reportResult, sha256File } from './lib/output';
+import { pipelineSchema } from './lib/schemas';
 
 const TRACKERS = [
   {
@@ -91,14 +92,24 @@ const geometryById = new Map(simplified.features.map((f) => [f.properties.id, f.
 for (const p of pipelines) p.geometry = geometryById.get(p.id) ?? p.geometry;
 
 pipelines.sort((a, b) => a.name.localeCompare(b.name));
-const meta = await writeDataset('pipelines', pipelines, {
-  sourceUrl: 'https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/',
-  sourceVersion: (report.trackers as { sourceId: string; sha256: string }[])
-    .map((t) => `${t.sourceId} sha256:${t.sha256}`)
-    .join('; '),
-  license: 'CC BY 4.0, Global Energy Monitor',
+const result = await publishDataset({
+  id: 'pipelines',
+  schema: pipelineSchema,
+  produce: async () => ({
+    records: pipelines,
+    meta: {
+      sourceUrl: 'https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/',
+      sourceVersion: (report.trackers as { sourceId: string; sha256: string }[])
+        .map((t) => `${t.sourceId} sha256:${t.sha256}`)
+        .join('; '),
+      license: 'CC BY 4.0, Global Energy Monitor',
+    },
+  }),
 });
-report.written = meta.recordCount;
-await mkdir('data/reports', { recursive: true });
-await writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`);
-console.log(`pipelines: wrote ${meta.recordCount}; report in ${REPORT_PATH}`);
+reportResult(result, 'pipelines');
+if (result.ok) {
+  report.written = result.meta.recordCount;
+  await mkdir('data/reports', { recursive: true });
+  await writeFile(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`);
+  console.log(`report in ${REPORT_PATH}`);
+}

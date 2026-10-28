@@ -15,7 +15,9 @@
     "test:watch": "vitest",
     "import:basins": "tsx jobs/import-basins.ts",
     "import:chokepoints": "tsx jobs/import-chokepoints.ts",
-    "import:gem": "tsx jobs/import-gem.ts"
+    "import:gem": "tsx jobs/import-gem.ts",
+    "fetch:portwatch": "tsx jobs/fetch-portwatch.ts",
+    "fetch:all": "npm run fetch:portwatch"
   },
   "dependencies": {
     "@deck.gl/core": "^9.4.0",

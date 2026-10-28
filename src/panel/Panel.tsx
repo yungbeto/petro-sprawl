@@ -3,6 +3,8 @@ import type { Selection, SelectionKind } from '../app/urlState';
 import { THEME_PREFERENCES, type ThemePreference } from '../lib/theme';
 import { resolveSelection, type Datasets } from '../lib/data';
 import { formatDate } from '../lib/format';
+import { datasetFreshness, formatAge, formatUtcClock, overallFreshness, sortFreshness, type Freshness } from '../lib/freshness';
+import { useNow } from '../app/useNow';
 import { BasinDetail, ChokepointDetail, PipelineDetail } from './details';
 
 interface PanelProps {
@@ -33,6 +35,8 @@ const THEME_LABELS: Record<ThemePreference, string> = {
 
 export function Panel(props: PanelProps) {
   const { collapsed, onToggleCollapsed } = props;
+  const now = useNow();
+  const freshness = sortFreshness(props.data.meta.map((m) => datasetFreshness(m, now)));
 
   if (collapsed) {
     return (
@@ -86,12 +90,12 @@ export function Panel(props: PanelProps) {
             onBack={props.onBack}
           />
         ) : (
-          <Summary data={props.data} loaded={props.loaded} />
+          <Summary freshness={freshness} loaded={props.loaded} now={now} />
         )}
       </div>
 
       <footer className="panel__footer">
-        <p className="muted">{lastUpdated(props.data)}</p>
+        <FooterFreshness freshness={freshness} now={now} />
         <div className="segmented" role="radiogroup" aria-label="Theme">
           {THEME_PREFERENCES.map((preference) => (
             <button
@@ -111,18 +115,22 @@ export function Panel(props: PanelProps) {
   );
 }
 
-const DATASET_LABELS: Record<string, string> = {
-  basins: 'Basins',
-  chokepoints: 'Chokepoints',
-  pipelines: 'Pipelines',
-};
-
-function lastUpdated(data: Datasets): string {
-  const latest = data.meta.map((m) => m.fetchedAt).sort().at(-1);
-  return latest ? `Updated ${formatDate(latest)}` : 'No datasets loaded yet';
+function FooterFreshness({ freshness, now }: { freshness: Freshness[]; now: Date }) {
+  const overall = overallFreshness(freshness);
+  if (!overall) return <p className="muted">No datasets loaded yet</p>;
+  const warn = freshness.some((f) => f.stale || f.failedAt);
+  const text = overall.scheduled
+    ? `Updated ${formatAge(overall.fetchedAt, now)} · ${formatUtcClock(overall.fetchedAt)}`
+    : `Imported ${formatDate(overall.fetchedAt)}`;
+  return (
+    <p className={warn ? 'freshness--warn' : 'muted'} title={warn ? 'Some data is stale or failed to update' : undefined}>
+      <span className="mono">{text}</span>
+      {warn && ' · check data freshness'}
+    </p>
+  );
 }
 
-function Summary({ data, loaded }: { data: Datasets; loaded: boolean }) {
+function Summary({ freshness, loaded, now }: { freshness: Freshness[]; loaded: boolean; now: Date }) {
   return (
     <>
       <section className="section">
@@ -137,16 +145,34 @@ function Summary({ data, loaded }: { data: Datasets; loaded: boolean }) {
         <h2 className="section__title">Data freshness</h2>
         {!loaded ? (
           <p className="muted">Loading</p>
-        ) : data.meta.length === 0 ? (
+        ) : freshness.length === 0 ? (
           <p className="muted">No datasets loaded yet.</p>
         ) : (
-          <table className="table">
+          <table className="table freshness">
+            <thead>
+              <tr>
+                <th>Dataset</th>
+                <th className="num">Updated</th>
+                <th className="num">Data through</th>
+              </tr>
+            </thead>
             <tbody>
-              {data.meta.map((m) => (
-                <tr key={m.id}>
-                  <td>{DATASET_LABELS[m.id] ?? m.id}</td>
-                  <td className="mono num">{m.recordCount}</td>
-                  <td className="mono num">{formatDate(m.fetchedAt)}</td>
+              {freshness.map((f) => (
+                <tr key={f.id}>
+                  <td>
+                    {f.label}
+                    {f.stale && <span className="freshness__flag"> stale</span>}
+                    {f.failedAt && (
+                      <span className="freshness__flag" title={`Last fetch failed at ${f.failedAt}; showing the previous data`}>
+                        {' '}
+                        fetch failed {formatAge(f.failedAt, now)}
+                      </span>
+                    )}
+                  </td>
+                  <td className={`mono num${f.stale ? ' freshness--warn' : ''}`} title={f.fetchedAt}>
+                    {f.scheduled ? formatAge(f.fetchedAt, now) : formatDate(f.fetchedAt)}
+                  </td>
+                  <td className="mono num">{f.dataThrough ?? <span className="muted">n/a</span>}</td>
                 </tr>
               ))}
             </tbody>
@@ -176,7 +202,7 @@ function Detail({
       <button type="button" className="text-button" onClick={onBack} title="Back  Esc">
         <ChevronIcon direction="left" /> Back
       </button>
-      {resolved?.kind === 'chokepoint' && <ChokepointDetail item={resolved.item} />}
+      {resolved?.kind === 'chokepoint' && <ChokepointDetail item={resolved.item} data={data} />}
       {resolved?.kind === 'basin' && <BasinDetail item={resolved.item} data={data} onSelect={onSelect} />}
       {resolved?.kind === 'pipeline' && <PipelineDetail item={resolved.item} />}
       {!resolved && (

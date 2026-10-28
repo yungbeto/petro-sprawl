@@ -96,9 +96,11 @@ export function MapView(props: MapViewProps) {
     map.touchZoomRotate.disableRotation();
     map.keyboard.disableRotation();
     map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
-    // A hover tooltip would point at the wrong place once the camera moves.
+    // A hover tooltip would point at the wrong place once the camera moves. Deck can also
+    // re-pick mid-flight as features pass under a still cursor, so clear again at the end.
     map.on('movestart', () => setHover(null));
     map.on('moveend', () => {
+      setHover(null);
       const center = map.getCenter();
       setZoom(map.getZoom());
       callbacksRef.current.onCameraChange({ lon: center.lng, lat: center.lat, zoom: map.getZoom() });

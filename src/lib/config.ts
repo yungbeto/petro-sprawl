@@ -71,6 +71,28 @@ export const MAP_ATTRIBUTION = [
   'Chokepoints: <a href="https://portwatch.imf.org/">IMF PortWatch</a>, <a href="https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints">EIA</a>',
 ];
 
+/** IMF PortWatch daily transits. The job keeps ~400 days: 365 for the baseline plus slack. */
+export const PORTWATCH = {
+  dailyUrl:
+    'https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query',
+  keepDays: 400,
+  /** A series with fewer points is treated as a broken fetch, not published. */
+  minPoints: 300,
+  /** Latest point older than this means the upstream feed stalled; the run fails and the old file stays. */
+  maxLagDays: 21,
+} as const;
+
+/**
+ * How often each dataset is expected to refresh. Scheduled datasets past `staleAfterHours`
+ * are marked stale in the panel. Manual imports are never marked stale by age.
+ */
+export const DATASET_FRESHNESS: Record<string, { label: string; scheduled: boolean; staleAfterHours?: number }> = {
+  'chokepoint-transits': { label: 'Chokepoint transits', scheduled: true, staleAfterHours: 18 },
+  pipelines: { label: 'Pipelines', scheduled: false },
+  chokepoints: { label: 'Chokepoints', scheduled: false },
+  basins: { label: 'Basins', scheduled: false },
+};
+
 /** Basemap zoom at which basin labels appear. */
 export const BASIN_LABEL_MIN_ZOOM = 4.5;
 

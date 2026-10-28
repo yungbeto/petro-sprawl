@@ -24,11 +24,13 @@ Node 22. Package manager: npm.
 | `npm run typecheck` | Typecheck only |
 | `npm test` | Unit tests (Vitest, `tests/*.test.ts`) |
 | `npx playwright test` | Smoke test (`tests/e2e/`); starts its own dev server on port 5287 |
+| `npm run fetch:portwatch` | Scheduled: PortWatch daily tanker transits to `public/data/chokepoint-transits.json` |
+| `npm run fetch:all` | Every scheduled fetch, as the GitHub Actions workflow runs them |
 | `npm run import:basins` | Manual: USGS provinces from `data/raw/usgs/` to `public/data/basins.json` |
 | `npm run import:gem` | Manual: GEM gas and oil pipeline GeoJSON from `data/raw/gem/` to `public/data/pipelines.json`; skip counts in `data/reports/import-gem.json` |
 | `npm run import:chokepoints` | PortWatch locations plus EIA volumes (from `src/lib/config.ts`) to `public/data/chokepoints.json` |
 
-Scheduled data-job commands get added in M2.
+Scheduled jobs run every 6 hours in `.github/workflows/data.yml` and commit `public/data` when it changes. Every job writes through `publishDataset` in `jobs/lib/output.ts`: new data must pass its zod schema or the previous file stays and the failure is recorded in `meta/<id>.json`.
 
 ## Gotchas
 

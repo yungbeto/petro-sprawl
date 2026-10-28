@@ -120,3 +120,26 @@ test('clicking a pipeline selects it and shows its detail', async ({ page, reque
   await expect(page.getByLabel('Panel').getByText('RU → TR')).toBeVisible();
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/pipeline.png` });
 });
+
+test('the panel shows data age, and flags stale or failed datasets', async ({ page }) => {
+  await page.goto('/');
+  const panel = page.getByLabel('Panel');
+  const transits = panel.getByRole('row', { name: /Chokepoint transits/ });
+  await expect(transits).toBeVisible();
+  await expect(transits).toContainText(/ago|just now/);
+  await expect(transits).toContainText(/\d{4}-\d{2}-\d{2}/);
+  await expect(panel.getByText(/^Updated .* UTC$/)).toBeVisible();
+
+  // Serve a meta file whose last good fetch is two days old and whose latest run failed.
+  await page.route('**/data/meta/chokepoint-transits.json', async (route) => {
+    const real = await (await route.fetch()).json();
+    const old = new Date(Date.now() - 2 * 86_400_000).toISOString();
+    await route.fulfill({
+      json: { ...real, fetchedAt: old, lastAttempt: { at: new Date().toISOString(), ok: false, error: 'test' } },
+    });
+  });
+  await page.reload();
+  await expect(panel.getByRole('row', { name: /Chokepoint transits/ })).toContainText('stale');
+  await expect(panel.getByRole('row', { name: /Chokepoint transits/ })).toContainText('fetch failed');
+  await expect(panel.getByText('check data freshness')).toBeVisible();
+});
