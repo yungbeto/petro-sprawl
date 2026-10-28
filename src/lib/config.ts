@@ -132,14 +132,17 @@ export const entsogSeriesId = (p: { operatorKey: string; pointKey: string; direc
 
 /**
  * GIE AGSI+ gas storage by country. Needs a free API key (AGSI_API_KEY), sent as the x-key header.
- * Countries are the storage countries in the theater; ISO codes, sent lowercased as AGSI's country slug.
+ * Countries are those in AGSI+'s provider listing (checked 2026-10-28) with live storage. Ireland's only
+ * site is decommissioned. AGSI+ uses its own country slug where it differs from the ISO code.
  */
 export const AGSI = {
   apiUrl: 'https://agsi.gie.eu/api',
   keepDays: 400,
   pageSize: 300,
   maxLagDays: 7,
-  countries: ['AT', 'BE', 'BG', 'CZ', 'DE', 'DK', 'ES', 'FR', 'GB', 'HR', 'HU', 'IT', 'LV', 'NL', 'PL', 'PT', 'RO', 'RS', 'SE', 'SK', 'UA'],
+  countries: ['AT', 'BE', 'BG', 'CZ', 'DE', 'DK', 'ES', 'FR', 'GB', 'HR', 'HU', 'IT', 'LV', 'NL', 'PL', 'PT', 'RO', 'SE', 'SK', 'UA'],
+  /** "GB" is the pre-Brexit series, empty since; current UK data is under "GB*". */
+  slugs: { GB: 'GB*' } as Record<string, string>,
 } as const;
 
 export const agsiSeriesId = (country: string) => `agsi-${country.toLowerCase()}`;

@@ -49,5 +49,4 @@ Sixteen corridor pipelines are curated in `data/curated/pipelines-evidence.json`
 
 ## AGSI+
 
-- Needs a free account and API key. The job, the storage layer and the country detail are built and tested with a fixture; nothing real is published until `AGSI_API_KEY` exists.
-- Storage countries in `AGSI.countries` (config) are from memory of AGSI+ coverage, and the country slugs are assumed to be lowercase ISO codes (`gb`, not `uk`). Check both against `/api/about?show=listing` on the first keyed run; the job's meta lists countries with no data.
+- Country list and slugs checked on 2026-10-28 against the provider listing from agsi.gie.eu. Serbia isn't covered. Ireland's only site (Kinsale Southwest) is decommissioned. The UK's current data is under `GB*`; `GB` is the pre-Brexit series and is empty now.

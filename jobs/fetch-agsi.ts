@@ -32,7 +32,8 @@ async function fetchPage(url: string, key: string): Promise<unknown> {
 async function fetchCountry(country: string, from: string, to: string, key: string): Promise<StorageRow[]> {
   const rows: StorageRow[] = [];
   for (let page = 1; ; page++) {
-    const params = new URLSearchParams({ country: country.toLowerCase(), from, to, size: String(AGSI.pageSize), page: String(page) });
+    const slug = AGSI.slugs[country] ?? country;
+    const params = new URLSearchParams({ country: slug, from, to, size: String(AGSI.pageSize), page: String(page) });
     const body = storageResponseSchema.parse(await fetchPage(`${AGSI.apiUrl}?${params}`, key));
     rows.push(...body.data);
     if (page >= body.last_page) return rows;
