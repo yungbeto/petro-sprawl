@@ -34,6 +34,8 @@ export interface Pipeline {
   operator?: string;
   owners?: { name: string; sharePct?: number }[];
   capacity?: { value: number; unit: 'bcm/yr' | 'mb/d' };
+  /** Cited source when a curated record sets the capacity; GEM capacities cite GEM. */
+  capacitySource?: SourceRef;
   geometry: LineString | MultiLineString;
   geometryApprox: boolean;
   evidence: Evidence[];
@@ -66,12 +68,22 @@ export interface Basin {
   geometry: Polygon | MultiPolygon;
 }
 
+/** A country outline, for the storage layer and search. From Natural Earth 1:50m admin-0. */
+export interface Country {
+  /** ISO 3166-1 alpha-2 */
+  id: string;
+  name: string;
+  geometry: Polygon | MultiPolygon;
+}
+
 export interface ObservationSeries {
   id: string;
   metric: 'tanker_transits' | 'gas_flow_kwh_d' | 'storage_fill_pct';
   unit: string;
   points: { date: string; value: number }[];
   capacity?: number;
+  /** Where the series is measured, for display: an ENTSOG point and operator. */
+  label?: string;
   /** Long-run reference computed by the job from history not kept in points. Added in M3. */
   fiveYear?: BaselineStat;
 }

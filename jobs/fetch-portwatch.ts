@@ -2,28 +2,12 @@
 // Run: npm run fetch:portwatch
 
 import { CHOKEPOINTS, FLOW_WINDOWS, PORTWATCH } from '../src/lib/config';
+import { fetchJson } from './lib/http';
 import { publishDataset, report } from './lib/output';
 import { addDays, dailyResponseSchema, dataThrough, toTransitSeries, type DailyRow } from './lib/portwatch';
 import { observationSeriesSchema } from './lib/schemas';
 
 const PAGE_SIZE = 1000;
-const ATTEMPTS = 3;
-
-/** ArcGIS endpoints are occasionally slow; retry with backoff before failing the run. */
-async function fetchJson(url: string): Promise<unknown> {
-  let lastError: unknown;
-  for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
-    try {
-      const response = await fetch(url, { signal: AbortSignal.timeout(30_000) });
-      if (!response.ok) throw new Error(`PortWatch responded ${response.status}`);
-      return await response.json();
-    } catch (err) {
-      lastError = err;
-      if (attempt < ATTEMPTS) await new Promise((r) => setTimeout(r, 2_000 * 2 ** attempt));
-    }
-  }
-  throw lastError;
-}
 
 async function fetchRows(portwatchId: string, since: string): Promise<DailyRow[]> {
   const rows: DailyRow[] = [];
@@ -36,7 +20,7 @@ async function fetchRows(portwatchId: string, since: string): Promise<DailyRow[]
       resultRecordCount: String(PAGE_SIZE),
       f: 'json',
     });
-    const body = await fetchJson(`${PORTWATCH.dailyUrl}?${params}`);
+    const body = await fetchJson(`${PORTWATCH.dailyUrl}?${params}`, { source: 'PortWatch' });
     if (body && typeof body === 'object' && 'error' in body) throw new Error(`PortWatch error: ${JSON.stringify(body.error)}`);
     const page = dailyResponseSchema.parse(body);
     rows.push(...page.features.map((f) => f.attributes));

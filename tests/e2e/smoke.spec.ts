@@ -105,9 +105,9 @@ test('clicking a pipeline selects it and shows its detail', async ({ page, reque
     name: string;
     geometry: { type: string; coordinates: number[][] | number[][][] };
   }[];
-  const turkstream = pipelines.find((p) => p.name === 'TurkStream Gas Pipeline · 1')!;
+  const turkstream = pipelines.find((p) => p.id === 'turkstream')!;
   const coords = (
-    turkstream.geometry.type === 'LineString' ? turkstream.geometry.coordinates : turkstream.geometry.coordinates.flat()
+    turkstream.geometry.type === 'LineString' ? turkstream.geometry.coordinates : turkstream.geometry.coordinates[0]
   ) as [number, number][];
   // The middle of the line is offshore in the Black Sea, away from other pipelines.
   const middle = coords[Math.floor(coords.length / 2)]!;
@@ -117,10 +117,13 @@ test('clicking a pipeline selects it and shows its detail', async ({ page, reque
   const point = await screenPoint(page, middle);
   await page.waitForTimeout(500);
   await page.mouse.click(point.x, point.y);
-  // TurkStream's two strings run side by side offshore, so either may be picked.
-  await expect(page).toHaveURL(/sel=pipeline\/gem-p\d+/);
-  await expect(page.getByRole('heading', { name: /^TurkStream Gas Pipeline · [12]$/ })).toBeVisible();
-  await expect(page.getByLabel('Panel').getByText('RU → TR')).toBeVisible();
+  // GEM's two strings are merged into the curated TurkStream record.
+  await expect(page).toHaveURL(/sel=pipeline\/turkstream/);
+  await expect(page.getByRole('heading', { name: 'TurkStream' })).toBeVisible();
+  const panel = page.getByLabel('Panel');
+  await expect(panel.getByText('RU → TR')).toBeVisible();
+  await expect(panel.locator('dt', { hasText: 'Measured flow' }).locator('xpath=following-sibling::dd[1]')).toContainText('GWh/d');
+  await expect(panel.getByRole('img', { name: /Daily physical gas flow for TurkStream/ })).toBeVisible();
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/pipeline.png` });
 });
 
@@ -166,4 +169,52 @@ test('Hormuz lists its sourced disruption', async ({ page }) => {
   await expect(panel.getByRole('heading', { name: 'Disruptions' })).toBeVisible();
   await expect(panel.getByRole('link', { name: 'News On AIR (All India Radio)' })).toBeVisible();
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/hormuz-flow.png` });
+});
+
+test('Nord Stream 1 shows offline with its cited evidence and the sabotage', async ({ page }) => {
+  await page.goto('/?sel=pipeline/nord-stream-1');
+  const panel = page.getByLabel('Panel');
+  const status = panel.locator('dt', { hasText: 'Status' }).locator('xpath=following-sibling::dd[1]');
+  await expect(status).toContainText('Offline');
+  await expect(status.getByRole('link', { name: /Hamburg sabotage trial/ })).toHaveAttribute('href', /aljazeera\.com/);
+  await expect(status).toContainText('2026-10-14');
+  await expect(panel.getByText(/2022-09-26, ongoing · sabotage/)).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Status history' })).toBeVisible();
+});
+
+test('Ukraine transit shows no measured flow beside the January 2025 claim', async ({ page }) => {
+  await page.goto('/?sel=pipeline/urengoy-pomary-uzhhorod');
+  const status = page.getByLabel('Panel').locator('dt', { hasText: 'Status' }).locator('xpath=following-sibling::dd[1]');
+  await expect(status).toContainText('Idle');
+  await expect(status).toContainText('Velké Kapušany');
+  await expect(status).toContainText('Latest claim, offline');
+  await expect(status).toContainText('2025-01-01');
+});
+
+test('a dated claim older than 30 days is marked unverified', async ({ page }) => {
+  await page.goto('/?sel=pipeline/druzhba-south');
+  await expect(page.getByLabel('Panel').getByText(/unverified since/)).toBeVisible();
+});
+
+test('storage fills a country and opens its detail', async ({ page }) => {
+  // Test-only series: storage needs an AGSI+ key, so the smoke test serves its own file.
+  const days = Array.from({ length: 400 }, (_, i) =>
+    new Date(Date.parse('2026-10-27T00:00:00Z') - (399 - i) * 86_400_000).toISOString().slice(0, 10),
+  );
+  const series = [
+    {
+      id: 'agsi-de',
+      metric: 'storage_fill_pct',
+      unit: '%',
+      label: 'Germany',
+      points: days.map((date, i) => ({ date, value: 40 + (i % 100) / 2 })),
+    },
+  ];
+  await page.route('**/data/gas-storage.json', (route) => route.fulfill({ json: series }));
+  await page.goto('/?sel=storage/de');
+  await expect(page.getByRole('heading', { name: 'Germany' })).toBeVisible();
+  await expect(page.getByRole('checkbox', { name: /EU gas storage/ })).toBeChecked();
+  const panel = page.getByLabel('Panel');
+  await expect(panel.locator('dt', { hasText: 'Same date last year' })).toBeVisible();
+  await expect(panel.getByRole('img', { name: /Gas storage fill in Germany/ })).toBeVisible();
 });

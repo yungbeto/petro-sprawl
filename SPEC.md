@@ -92,7 +92,7 @@ Scope is one theater: the oil and gas corridor connecting **Europe, Russia, the 
 | Basins | Polygons | Very quiet outline, faint fill on hover; label at higher zoom | USGS World Petroleum Assessment provinces (simplified) |
 | Pipelines | Lines | Width by capacity; style by status (solid = operating, dashed = reduced, dotted or faded = offline/idle, hairline = planned); measured flow shown as a brighter inner line sized to flow share | GEM inventory + curated evidence + ENTSOG flows |
 | Chokepoints | Points | Ring sized by EIA reference volume; ring segment or color by flow index (below, near, above baseline) | EIA baselines + IMF PortWatch |
-| EU gas storage | Country fills | Fill level as a sequential scale, only when the layer is on | GIE AGSI+ |
+| EU gas storage | Country fills | Fill level as a sequential scale, only when the layer is on (off by default, on when a link selects a country) | GIE AGSI+; outlines from Natural Earth 1:50m |
 | Countries | Borders, labels | Minimal | Basemap |
 | Day/night (nice to have) | Terminator | Subtle shade | Computed client-side |
 
@@ -191,7 +191,9 @@ interface DatasetMeta {
 
 **Status display rule (symmetric aging):** current status is `evidence[0]`. If its `observedAt` is older than `STALE_AFTER_DAYS` (default 30, in config), show the status with an "unverified since <date>" marker, the same way for every status value. Never silently swap the status for a different value.
 
-**Measured beats claimed:** where an observation series exists (ENTSOG flow), derive a `measured` evidence entry from the latest data and show it first, alongside the most recent sourced claim.
+**Measured beats claimed:** where an observation series exists (ENTSOG flow), derive a `measured` evidence entry from the latest data and show it first, alongside the most recent sourced claim. The 7-day mean decides it: no flow (at most 0.5% of firm technical capacity) is `idle`, since a meter shows gas isn't moving but not why; anything else is `operating`. The app derives this when it loads data, so a new day of flows needs no rebuild.
+
+**Cited claims beat dataset claims:** below measured flow, dated claims with a source (operator, regulator, government, press) rank above dataset claims (GEM), newest first within each. A dataset's date is when it last touched the row, not when anyone observed the pipeline (decided 2026-10-28, when GEM's 2023 "mothballed" row outranked the cited offline status of Nord Stream 1).
 
 ## 7. Data sources and jobs
 
@@ -224,6 +226,8 @@ Research and cite current status for each. Use `unknown` when a reliable, dated 
 - **Oil:** Druzhba (north and south branches), CPC, BTC, Kirkuk–Ceyhan, East–West (Petroline), Habshan–Fujairah, SUMED, Baltic Pipeline System 1 and 2
 
 Dedup GEM rows against curated rows by name similarity plus endpoint proximity; when they match, the curated record wins and the GEM row's name goes into `aliases`. Log every merge in a report file so it can be reviewed.
+
+As built (M4): each curated record lists its GEM rows by id, checked by hand, and may set `exclude` or turn off automatic matching for systems whose segments share a name (Druzhba). Automatic matches need name similarity of at least 0.6 (Dice on name words, numbers must agree, so "Nord Stream" never matches "Nord Stream 2") and every country of the GEM row on the curated route, which stands in for endpoint proximity. Matches that fail only the country check are logged as near misses. The report is `data/reports/dedup.json`. Merged rows become one record: combined geometry, curated name, route and evidence, GEM operator and owners, and GEM capacity unless the curated record cites its own (TurkStream's two strings).
 
 ### ENTSOG entry points to map first
 

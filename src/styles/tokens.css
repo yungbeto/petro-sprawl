@@ -51,6 +51,9 @@
   --map-halo: #f4f4f2cc;
   --map-selection: #17191c;
   --map-pipeline-operating: #1d7a4b;
+  --map-storage-low: #e3e6f466;
+  --map-storage-high: #3b4a9ccc;
+  --map-storage-line: #3b4a9c59;
   --map-basin-line: #6d6a5c73;
   --map-basin-fill-hover: #6d6a5c1f;
   --map-basin-label: #5c5a4e;
@@ -83,7 +86,13 @@
     --map-halo: #111315cc;
     --map-selection: #e6e7e8;
     --map-pipeline-operating: #2e8a5c;
+    --map-storage-low: #262c4a66;
+    --map-storage-high: #8c9eff99;
+    --map-storage-line: #8c9eff4d;
     --map-pipeline-operating: #2e8a5c;
+  --map-storage-low: #262c4a66;
+  --map-storage-high: #8c9eff99;
+  --map-storage-line: #8c9eff4d;
   --map-basin-line: #c4bfa866;
     --map-basin-fill-hover: #c4bfa81f;
     --map-basin-label: #a8a490;

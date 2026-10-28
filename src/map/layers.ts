@@ -1,22 +1,23 @@
 import { GeoJsonLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
 import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon, Position } from 'geojson';
 import type { Layer } from '@deck.gl/core';
-import type { AssetStatus, Basin, Chokepoint, Pipeline } from '../types';
+import type { AssetStatus, Basin, Chokepoint, Country, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
 import { CHOKEPOINT_RADIUS, PIPELINE_WIDTH } from '../lib/config';
-import { chokepointRadiusPx, flowFillRadiusPx, pipelineStatus, pipelineWidthPx } from '../lib/encoding';
+import { chokepointRadiusPx, flowFillRadiusPx, flowLineWidthPx, pipelineStatus, pipelineWidthPx } from '../lib/encoding';
 import type { ChokepointFlow, FlowBand } from '../lib/flow';
-import { withAlpha } from '../lib/color';
+import { mixColors, withAlpha } from '../lib/color';
 import type { MapColors } from './colors';
 
-export type LayerId = 'basins' | 'pipelines' | 'chokepoints';
+export type LayerId = 'storage' | 'basins' | 'pipelines' | 'chokepoints';
 export type LayerVisibility = Record<LayerId, boolean>;
 
 export type PickedObject =
   | { kind: 'basin'; item: Basin }
   | { kind: 'pipeline'; item: Pipeline }
-  | { kind: 'chokepoint'; item: Chokepoint };
+  | { kind: 'chokepoint'; item: Chokepoint }
+  | { kind: 'storage'; item: Country };
 
 interface PipelinePath {
   pipeline: Pipeline;
@@ -61,6 +62,10 @@ function bandColor(band: FlowBand | null | undefined, colors: MapColors) {
 interface BuildLayersInput {
   data: Datasets;
   flows: Map<string, ChokepointFlow>;
+  /** Measured flow as a share of technical capacity, by pipeline id. */
+  pipelineShares: Map<string, number>;
+  /** Latest storage fill (%) by country id. */
+  storageFills: Map<string, number>;
   visibility: LayerVisibility;
   selection: Selection | null;
   colors: MapColors;
@@ -72,6 +77,8 @@ interface BuildLayersInput {
 export function buildLayers({
   data,
   flows,
+  pipelineShares,
+  storageFills,
   visibility,
   selection,
   colors,
@@ -87,8 +94,34 @@ export function buildLayers({
   };
   const paths = pipelinePaths(data.pipelines);
   const selectedPaths = paths.filter((p) => isSelected('pipeline', p.pipeline.id));
+  const flowPaths = paths.filter((p) => (pipelineShares.get(p.pipeline.id) ?? 0) > 0);
+
+  const storageFeatures: FeatureCollection<Polygon | MultiPolygon, Country> = {
+    type: 'FeatureCollection',
+    features: data.countries
+      .filter((c) => storageFills.has(c.id))
+      .map((country) => ({ type: 'Feature', geometry: country.geometry, properties: country })),
+  };
 
   return [
+    // EU gas storage: country fill on a sequential scale, under everything else (SPEC 5).
+    new GeoJsonLayer<Country>({
+      id: 'storage',
+      data: storageFeatures,
+      visible: visibility.storage,
+      pickable: true,
+      stroked: true,
+      filled: true,
+      getFillColor: (f: Feature<Geometry, Country>) =>
+        mixColors(colors.storageLow, colors.storageHigh, (storageFills.get(f.properties.id) ?? 0) / 100),
+      getLineColor: (f: Feature<Geometry, Country>) =>
+        isSelected('storage', f.properties.id.toLowerCase()) ? colors.selection : colors.storageLine,
+      getLineWidth: (f: Feature<Geometry, Country>) => (isSelected('storage', f.properties.id.toLowerCase()) ? 2 : 0.5),
+      lineWidthUnits: 'pixels',
+      autoHighlight: true,
+      highlightColor: colors.basinFillHover,
+      updateTriggers: { getFillColor: [storageFills, colors], getLineColor: [selection, colors], getLineWidth: [selection] },
+    }),
     new GeoJsonLayer<Basin>({
       id: 'basins',
       data: basinFeatures,
@@ -152,6 +185,19 @@ export function buildLayers({
       autoHighlight: true,
       highlightColor: withAlpha(colors.selection, 0.5),
       updateTriggers: { getColor: [colors] },
+    }),
+    // Measured flow: a brighter inner line whose width is the flow's share of capacity (SPEC 5).
+    new PathLayer<PipelinePath>({
+      id: 'pipeline-flow',
+      data: flowPaths,
+      visible: visibility.pipelines,
+      getPath: (p) => p.path as [number, number][],
+      getWidth: (p) => flowLineWidthPx(pipelineWidthPx(p.pipeline), pipelineShares.get(p.pipeline.id) ?? 0),
+      getColor: colors.measuredFlow,
+      widthUnits: 'pixels',
+      capRounded: true,
+      jointRounded: true,
+      updateTriggers: { getWidth: [pipelineShares], getColor: [colors] },
     }),
     // Halo separates the ring from pipelines passing underneath.
     new ScatterplotLayer<Chokepoint>({
@@ -228,7 +274,14 @@ export function toPicked(layerId: string | undefined, object: unknown): PickedOb
       return { kind: 'pipeline', item: (object as PipelinePath).pipeline };
     case 'chokepoints':
       return { kind: 'chokepoint', item: object as Chokepoint };
+    case 'storage':
+      return { kind: 'storage', item: (object as Feature<Polygon | MultiPolygon, Country>).properties };
     default:
       return null;
   }
+}
+
+/** The id a picked item has in the URL. Country codes are uppercase ISO, URL ids lowercase. */
+export function selectionId(picked: PickedObject): string {
+  return picked.kind === 'storage' ? picked.item.id.toLowerCase() : picked.item.id;
 }

@@ -37,3 +37,12 @@ export function flowFillRadiusPx(ringRadiusPx: number, index: number | null): nu
   if (index === null || index <= 0) return 0;
   return ringRadiusPx * Math.sqrt(Math.min(index, FLOW_FILL_MAX_INDEX));
 }
+
+/**
+ * Inner line for measured flow: the outer width times the share of capacity, capped at the
+ * outer width, and never thinner than a hairline while gas is moving.
+ */
+export function flowLineWidthPx(outerPx: number, share: number): number {
+  if (share <= 0) return 0;
+  return Math.max(PIPELINE_WIDTH.minPx * 0.75, outerPx * Math.min(share, 1));
+}

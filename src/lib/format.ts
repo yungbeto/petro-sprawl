@@ -30,6 +30,11 @@ export function formatCountry(code: string): string {
   }
 }
 
+/** kWh/d to GWh/d with one decimal: 565504000 -> "565.5 GWh/d". */
+export function formatEnergyPerDay(kwhPerDay: number): string {
+  return `${formatNumber(kwhPerDay / 1e6, 1)} GWh/d`;
+}
+
 /** ISO timestamp to 2026-10-28 (UTC). */
 export function formatDate(iso: string): string {
   return iso.slice(0, 10);

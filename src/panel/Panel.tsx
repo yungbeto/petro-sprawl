@@ -5,7 +5,7 @@ import { resolveSelection, type Datasets } from '../lib/data';
 import { formatDate } from '../lib/format';
 import { datasetFreshness, formatAge, formatUtcClock, overallFreshness, sortFreshness, type Freshness } from '../lib/freshness';
 import { useNow } from '../app/useNow';
-import { BasinDetail, ChokepointDetail, PipelineDetail } from './details';
+import { BasinDetail, ChokepointDetail, PipelineDetail, StorageDetail } from './details';
 
 interface PanelProps {
   collapsed: boolean;
@@ -88,6 +88,7 @@ export function Panel(props: PanelProps) {
             loaded={props.loaded}
             onSelect={props.onSelect}
             onBack={props.onBack}
+            now={now}
           />
         ) : (
           <Summary freshness={freshness} loaded={props.loaded} now={now} />
@@ -189,10 +190,12 @@ function Detail({
   loaded,
   onSelect,
   onBack,
+  now,
 }: {
   selection: Selection;
   data: Datasets;
   loaded: boolean;
+  now: Date;
   onSelect: (selection: Selection) => void;
   onBack: () => void;
 }) {
@@ -204,7 +207,8 @@ function Detail({
       </button>
       {resolved?.kind === 'chokepoint' && <ChokepointDetail item={resolved.item} data={data} />}
       {resolved?.kind === 'basin' && <BasinDetail item={resolved.item} data={data} onSelect={onSelect} />}
-      {resolved?.kind === 'pipeline' && <PipelineDetail item={resolved.item} />}
+      {resolved?.kind === 'pipeline' && <PipelineDetail item={resolved.item} data={data} now={now} />}
+      {resolved?.kind === 'storage' && <StorageDetail item={resolved.item} data={data} />}
       {!resolved && (
         <section className="section">
           <p className="muted">{KIND_LABELS[selection.kind]}</p>

@@ -21,7 +21,13 @@ export function App() {
   const { data, loaded } = useDatasets();
   const [collapsed, setCollapsed] = useState(() => readStorage(STORAGE_KEYS.panelCollapsed) === '1');
   const [layersOpen, setLayersOpen] = useState(true);
-  const [visibility, setVisibility] = useState<LayerVisibility>({ basins: true, pipelines: true, chokepoints: true });
+  // Storage fills whole countries, so it starts off unless a shared link selects a country.
+  const [visibility, setVisibility] = useState<LayerVisibility>(() => ({
+    storage: selection?.kind === 'storage',
+    basins: true,
+    pipelines: true,
+    chokepoints: true,
+  }));
   const [focus, setFocus] = useState<FocusRequest | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const [initialCameraOnce] = useState(initialCamera);
@@ -104,7 +110,12 @@ export function App() {
           onToggleOpen={() => setLayersOpen((open) => !open)}
           visibility={visibility}
           onChange={setLayerVisible}
-          counts={{ basins: data.basins.length, pipelines: data.pipelines.length, chokepoints: data.chokepoints.length }}
+          counts={{
+            storage: data.series.filter((s) => s.metric === 'storage_fill_pct').length,
+            basins: data.basins.length,
+            pipelines: data.pipelines.length,
+            chokepoints: data.chokepoints.length,
+          }}
         />
       </MapView>
     </div>

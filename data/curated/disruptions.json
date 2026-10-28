@@ -50,5 +50,133 @@
       }
     ],
     "recordedAt": "2026-10-28"
+  },
+  {
+    "id": "nord-stream-2022-blasts",
+    "assetKind": "pipeline",
+    "assetId": "nord-stream-1",
+    "startedAt": "2022-09-26",
+    "cause": "sabotage",
+    "summary": "Underwater blasts ruptured both Nord Stream 1 pipes and one Nord Stream 2 pipe. Swedish and Danish seismic data showed two explosions; Denmark's prime minister said sabotage could not be ruled out. Reuters reported in March 2023 that the lines would be mothballed with no plan to repair them. On 14 October 2026 a former Ukrainian officer went on trial in Hamburg; German prosecutors accuse him of leading the operation for unidentified Ukrainian state entities. He and Ukraine's government deny involvement, and Russia denies blowing up the pipelines.",
+    "sources": [
+      {
+        "publisher": "NPR, via OPB",
+        "title": "Seismologists suspect explosions damaged undersea pipelines that carry Russian gas",
+        "url": "https://www.opb.org/article/2022/09/27/seismologists-suspect-explosions-damaged-undersea-pipelines-that-carry-russian-gas/",
+        "publishedAt": "2022-09-27"
+      },
+      {
+        "publisher": "Reuters, via Marine Technology News",
+        "title": "Report: Russia to mothball damaged Nord Stream gas pipelines",
+        "url": "https://www.marinetechnologynews.com/news/report-russia-mothball-damaged-626449",
+        "publishedAt": "2023-03-06"
+      },
+      {
+        "publisher": "Al Jazeera",
+        "title": "Ukrainian ex-officer goes on trial in Germany over Nord Stream blasts",
+        "url": "https://www.aljazeera.com/news/2026/10/14/ukrainian-ex-officer-goes-on-trial-in-germany-over-nord-stream-blasts",
+        "publishedAt": "2026-10-14"
+      }
+    ],
+    "recordedAt": "2026-10-28"
+  },
+  {
+    "id": "nord-stream-2-2022-blasts",
+    "assetKind": "pipeline",
+    "assetId": "nord-stream-2",
+    "startedAt": "2022-09-26",
+    "cause": "sabotage",
+    "summary": "One of Nord Stream 2's two pipes was ruptured in the September 2022 blasts that also hit Nord Stream 1; the other pipe is intact. The line had never entered service. On 14 October 2026 a former Ukrainian officer went on trial in Hamburg; German prosecutors accuse him of leading the operation for unidentified Ukrainian state entities. He and Ukraine's government deny involvement, and Russia denies blowing up the pipelines.",
+    "sources": [
+      {
+        "publisher": "NPR, via OPB",
+        "title": "Seismologists suspect explosions damaged undersea pipelines that carry Russian gas",
+        "url": "https://www.opb.org/article/2022/09/27/seismologists-suspect-explosions-damaged-undersea-pipelines-that-carry-russian-gas/",
+        "publishedAt": "2022-09-27"
+      },
+      {
+        "publisher": "Reuters, via Marine Technology News",
+        "title": "Report: Russia to mothball damaged Nord Stream gas pipelines",
+        "url": "https://www.marinetechnologynews.com/news/report-russia-mothball-damaged-626449",
+        "publishedAt": "2023-03-06"
+      },
+      {
+        "publisher": "Al Jazeera",
+        "title": "Ukrainian ex-officer goes on trial in Germany over Nord Stream blasts",
+        "url": "https://www.aljazeera.com/news/2026/10/14/ukrainian-ex-officer-goes-on-trial-in-germany-over-nord-stream-blasts",
+        "publishedAt": "2026-10-14"
+      }
+    ],
+    "recordedAt": "2026-10-28"
+  },
+  {
+    "id": "ukraine-transit-end-2025-upu",
+    "assetKind": "pipeline",
+    "assetId": "urengoy-pomary-uzhhorod",
+    "startedAt": "2025-01-01",
+    "cause": "commercial",
+    "summary": "Russian gas transit through Ukraine stopped at 07:00 Kyiv time on 1 January 2025, when the 2019 agreement between Ukraine's gas TSO and Gazprom expired and was not renewed. The TSO said flows from the Sudzha entry point to its western and southern exits stopped.",
+    "sources": [
+      {
+        "publisher": "Ukrainska Pravda",
+        "title": "Ukraine stops transiting Russian gas",
+        "url": "https://www.pravda.com.ua/eng/news/2025/01/01/7491575/",
+        "publishedAt": "2025-01-01"
+      }
+    ],
+    "recordedAt": "2026-10-28"
+  },
+  {
+    "id": "ukraine-transit-end-2025-progress",
+    "assetKind": "pipeline",
+    "assetId": "progress",
+    "startedAt": "2025-01-01",
+    "cause": "commercial",
+    "summary": "Russian gas transit through Ukraine stopped at 07:00 Kyiv time on 1 January 2025, when the 2019 agreement between Ukraine's gas TSO and Gazprom expired and was not renewed. The TSO said flows from the Sudzha entry point to its western and southern exits stopped.",
+    "sources": [
+      {
+        "publisher": "Ukrainska Pravda",
+        "title": "Ukraine stops transiting Russian gas",
+        "url": "https://www.pravda.com.ua/eng/news/2025/01/01/7491575/",
+        "publishedAt": "2025-01-01"
+      }
+    ],
+    "recordedAt": "2026-10-28"
+  },
+  {
+    "id": "druzhba-south-2026-halt",
+    "assetKind": "pipeline",
+    "assetId": "druzhba-south",
+    "startedAt": "2026-01",
+    "endedAt": "2026-04-23",
+    "cause": "conflict",
+    "summary": "Oil deliveries to Hungary and Slovakia stopped in late January 2026 after war damage to the Ukrainian section, which Ukrainian reports blamed on a Russian drone strike. Hungary and Slovakia questioned whether the shutdown was purely technical. Ukrtransnafta lifted force majeure on 21 April and MOL confirmed crude arrived on 23 April.",
+    "sources": [
+      {
+        "publisher": "Hungarian Conservative",
+        "title": "Druzhba pipeline restarts oil flow to Hungary and Slovakia",
+        "url": "https://www.hungarianconservative.com/articles/current/druzhba-pipeline-oil-resumes-hungary-slovakia/",
+        "publishedAt": "2026-04-24"
+      }
+    ],
+    "recordedAt": "2026-10-28"
+  },
+  {
+    "id": "east-west-2026-drone-strikes",
+    "assetKind": "pipeline",
+    "assetId": "east-west-crude",
+    "startedAt": "2026-09",
+    "cause": "conflict",
+    "summary": "Drone strikes, attributed by Al Jazeera to an Iraqi militia, hit the pipeline in early September 2026 and the energy ministry shut it as a precaution. Saudi Arabia's energy minister said it was back in use within five or six days and pumping 5.8 million b/d by 6 October.",
+    "sources": [
+      {
+        "publisher": "Al Jazeera",
+        "title": "Saudi Arabia says East-West pipeline pumping 5.8 million bpd",
+        "url": "https://www.aljazeera.com/economy/2026/10/6/saudi-arabia-says-east-west-pipeline-pumping-5-8-million-bpd",
+        "publishedAt": "2026-10-06"
+      }
+    ],
+    "recordedAt": "2026-10-28",
+    "endedAt": "2026-09"
   }
 ]

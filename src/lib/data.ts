@@ -1,4 +1,4 @@
-import type { Basin, Chokepoint, DatasetMeta, Disruption, ObservationSeries, Pipeline } from '../types';
+import type { Basin, Chokepoint, Country, DatasetMeta, Disruption, ObservationSeries, Pipeline } from '../types';
 import { chokepointFlow, type ChokepointFlow } from './flow';
 import type { Selection } from '../app/urlState';
 import { lineTouchesPolygon, pointInPolygon } from './geo';
@@ -7,6 +7,7 @@ export interface Datasets {
   basins: Basin[];
   chokepoints: Chokepoint[];
   pipelines: Pipeline[];
+  countries: Country[];
   series: ObservationSeries[];
   disruptions: Disruption[];
   meta: DatasetMeta[];
@@ -16,6 +17,7 @@ export const EMPTY_DATASETS: Datasets = {
   basins: [],
   chokepoints: [],
   pipelines: [],
+  countries: [],
   series: [],
   disruptions: [],
   meta: [],
@@ -45,7 +47,8 @@ export function seriesById(data: Datasets, id: string | undefined): ObservationS
 export type Resolved =
   | { kind: 'pipeline'; item: Pipeline }
   | { kind: 'chokepoint'; item: Chokepoint }
-  | { kind: 'basin'; item: Basin };
+  | { kind: 'basin'; item: Basin }
+  | { kind: 'storage'; item: Country };
 
 /** Finds the selected item in the loaded data, or null if it isn't there. */
 export function resolveSelection(selection: Selection | null, data: Datasets): Resolved | null {
@@ -62,6 +65,10 @@ export function resolveSelection(selection: Selection | null, data: Datasets): R
     case 'basin': {
       const item = data.basins.find((b) => b.id === selection.id);
       return item ? { kind: 'basin', item } : null;
+    }
+    case 'storage': {
+      const item = data.countries.find((c) => c.id.toLowerCase() === selection.id);
+      return item ? { kind: 'storage', item } : null;
     }
     default:
       return null;

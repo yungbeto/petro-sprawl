@@ -1,6 +1,7 @@
 import type { LayerId, LayerVisibility } from './layers';
 
 const LAYERS: { id: LayerId; label: string }[] = [
+  { id: 'storage', label: 'EU gas storage' },
   { id: 'basins', label: 'Basins' },
   { id: 'pipelines', label: 'Pipelines' },
   { id: 'chokepoints', label: 'Chokepoints' },

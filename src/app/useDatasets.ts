@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import type { DatasetMeta } from '../types';
 import { EMPTY_DATASETS, type Datasets } from '../lib/data';
+import { withMeasuredEvidence } from '../lib/evidence';
 
-const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'chokepoint-transits', 'disruptions'] as const;
+const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'countries', 'chokepoint-transits', 'gas-flows', 'gas-storage', 'disruptions'] as const;
 
 async function fetchJson<T>(path: string): Promise<T | null> {
   try {
@@ -30,13 +31,16 @@ export function useDatasets(): { data: Datasets; loaded: boolean } {
     ).then((results) => {
       if (cancelled) return;
       const get = (id: (typeof DATASET_IDS)[number]) => results.find((r) => r.id === id)?.records ?? [];
+      const series = [...get('chokepoint-transits'), ...get('gas-flows'), ...get('gas-storage')] as Datasets['series'];
       setState({
         loaded: true,
         data: {
           basins: get('basins') as Datasets['basins'],
           chokepoints: get('chokepoints') as Datasets['chokepoints'],
-          pipelines: get('pipelines') as Datasets['pipelines'],
-          series: get('chokepoint-transits') as Datasets['series'],
+          // Measured flow goes first in each linked pipeline's evidence, so it sets the current status.
+          pipelines: withMeasuredEvidence(get('pipelines') as Datasets['pipelines'], series),
+          countries: get('countries') as Datasets['countries'],
+          series,
           disruptions: get('disruptions') as Datasets['disruptions'],
           meta: results.flatMap((r) => (r.meta ? [r.meta] : [])),
         },

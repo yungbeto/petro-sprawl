@@ -8,12 +8,16 @@ const TOKENS = {
   halo: '--map-halo',
   selection: '--map-selection',
   operating: '--map-pipeline-operating',
+  measuredFlow: '--status-operating',
   reduced: '--status-reduced',
   offline: '--status-offline',
   unknown: '--status-unknown',
   flowBelow: '--flow-below',
   flowNear: '--flow-near',
   flowAbove: '--flow-above',
+  storageLow: '--map-storage-low',
+  storageHigh: '--map-storage-high',
+  storageLine: '--map-storage-line',
 } as const;
 
 export type MapColors = Record<keyof typeof TOKENS, Rgba>;

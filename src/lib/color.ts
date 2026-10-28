@@ -12,3 +12,9 @@ export function parseHexColor(value: string): Rgba | null {
 export function withAlpha([r, g, b, a]: Rgba, factor: number): Rgba {
   return [r, g, b, Math.round(a * factor)];
 }
+
+/** Linear mix from a (t = 0) to b (t = 1), clamped. For sequential scales. */
+export function mixColors(a: Rgba, b: Rgba, t: number): Rgba {
+  const k = Math.min(1, Math.max(0, t));
+  return a.map((v, i) => Math.round(v + (b[i]! - v) * k)) as unknown as Rgba;
+}

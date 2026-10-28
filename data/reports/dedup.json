@@ -1,0 +1,228 @@
+{
+  "recordedAt": "2026-10-28",
+  "merged": [
+    {
+      "curatedId": "nord-stream-1",
+      "rows": [
+        {
+          "gemId": "gem-p0753",
+          "gemName": "Nord Stream Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "nord-stream-2",
+      "rows": [
+        {
+          "gemId": "gem-p0752",
+          "gemName": "Nord Stream 2 Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "urengoy-pomary-uzhhorod",
+      "rows": [
+        {
+          "gemId": "gem-p0768",
+          "gemName": "Urengoy-Pomary-Uzhgorod Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "progress",
+      "rows": [
+        {
+          "gemId": "gem-p0774",
+          "gemName": "Progress Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "turkstream",
+      "rows": [
+        {
+          "gemId": "gem-p0765",
+          "gemName": "TurkStream Gas Pipeline · 1",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p1368",
+          "gemName": "TurkStream Gas Pipeline · 2",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "druzhba-south",
+      "rows": [
+        {
+          "gemId": "gem-p5134",
+          "gemName": "Druzhba Oil Pipeline · Mozyr-Uzhgorod Oil Pipeline I",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p6307",
+          "gemName": "Druzhba Oil Pipeline · Mozyr-Uzhgorod Oil Pipeline II",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p5322",
+          "gemName": "Druzhba Oil Pipeline · Southern Section: Bucany-Bratislava oil pipeline",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p5323",
+          "gemName": "Druzhba Oil Pipeline · Southern Section: Sahy-Bucany-Litvinov oil pipeline",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p5146",
+          "gemName": "Druzhba Oil Pipeline · Southern Section: Sahy-Szazhalombatta oil pipeline",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p7963",
+          "gemName": "Druzhba Oil Pipeline · Southern Section: Uzhgorod-Katov oil pipeline",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p5133",
+          "gemName": "Druzhba Oil Pipeline · Southern Section: Uzhgorod-Sahy oil pipeline",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p5137",
+          "gemName": "Druzhba Oil Pipeline · Southern Section: Uzhgorod-Szazhalombatta oil pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "kirkuk-ceyhan",
+      "rows": [
+        {
+          "gemId": "gem-p0547",
+          "gemName": "Kirkuk-Ceyhan Oil Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "east-west-crude",
+      "rows": [
+        {
+          "gemId": "gem-p0551",
+          "gemName": "East-West Crude Oil Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "yamal-europe",
+      "rows": [
+        {
+          "gemId": "gem-p0769",
+          "gemName": "Yamal-Europe Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "trans-adriatic",
+      "rows": [
+        {
+          "gemId": "gem-p0724",
+          "gemName": "Trans-Adriatic Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "transmed",
+      "rows": [
+        {
+          "gemId": "gem-p6649",
+          "gemName": "Trans-Mediterranean Gas Pipeline",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p6650",
+          "gemName": "Trans-Mediterranean Gas Pipeline · Sicily–Strait of Messina",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p6648",
+          "gemName": "Trans-Mediterranean Gas Pipeline · TTP: Phase 1",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "greenstream",
+      "rows": [
+        {
+          "gemId": "gem-p0439",
+          "gemName": "Greenstream Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "medgaz",
+      "rows": [
+        {
+          "gemId": "gem-p2055",
+          "gemName": "Medgaz Gas Pipeline · Offshore Segment (Beni Saf–Almería)",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p6647",
+          "gemName": "Medgaz Gas Pipeline · Onshore Segment (Hassi R'Mel-Mocta Douz)",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p1836",
+          "gemName": "Medgaz Gas Pipeline · Onshore Segment (Mocta Douz–Beni Saf)",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "langeled",
+      "rows": [
+        {
+          "gemId": "gem-p0704",
+          "gemName": "Langeled Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "franpipe",
+      "rows": [
+        {
+          "gemId": "gem-p0692",
+          "gemName": "Franpipe Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "zeepipe",
+      "rows": [
+        {
+          "gemId": "gem-p1770",
+          "gemName": "Zeepipe Gas Pipeline · Zeepipe I",
+          "reason": "listed"
+        }
+      ]
+    }
+  ],
+  "missing": [],
+  "conflicts": [],
+  "nearMisses": []
+}

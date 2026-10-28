@@ -12,6 +12,7 @@ export const observationSeriesSchema = z.object({
   unit: z.string().min(1),
   points: z.array(z.object({ date: isoDate, value: z.number().finite() })).min(1),
   capacity: z.number().positive().optional(),
+  label: z.string().min(1).optional(),
   fiveYear: z
     .object({ mean: z.number().nonnegative(), from: isoDate, to: isoDate, count: z.number().int().positive() })
     .optional(),
@@ -36,6 +37,13 @@ export const basinSchema = z.object({
   geometry: z.object({ type: z.enum(['Polygon', 'MultiPolygon']), coordinates: z.array(z.any()).min(1) }),
 });
 
+export const sourceRefSchema = z.object({
+  publisher: z.string().min(1),
+  title: z.string().min(1),
+  url: z.string().url(),
+  publishedAt: isoDate,
+});
+
 const evidenceSchema = z.object({
   status: z.enum(['operating', 'reduced', 'offline', 'idle', 'planned', 'under_construction', 'cancelled', 'unknown']),
   sourceType: z.enum(['operator', 'regulator', 'government', 'press', 'dataset', 'measured']),
@@ -56,6 +64,7 @@ export const pipelineSchema = z.object({
   operator: z.string().optional(),
   owners: z.array(z.object({ name: z.string(), sharePct: z.number().optional() })).optional(),
   capacity: z.object({ value: z.number().positive(), unit: z.enum(['bcm/yr', 'mb/d']) }).optional(),
+  capacitySource: sourceRefSchema.optional(),
   geometry: z.union([
     z.object({ type: z.literal('LineString'), coordinates: z.array(position).min(2) }),
     z.object({ type: z.literal('MultiLineString'), coordinates: z.array(z.array(position).min(2)).min(1) }),
@@ -74,8 +83,36 @@ export const disruptionSchema = z.object({
   endedAt: isoDate.optional(),
   cause: z.enum(['sabotage', 'sanction', 'maintenance', 'commercial', 'conflict', 'accident', 'other']),
   summary: z.string().min(1),
-  sources: z
-    .array(z.object({ publisher: z.string().min(1), title: z.string().min(1), url: z.string().url(), publishedAt: isoDate }))
-    .min(1),
+  sources: z.array(sourceRefSchema).min(1),
   recordedAt: isoDate,
+});
+
+/** A curated corridor pipeline. Its claims must link a source, and can't pose as dataset or measured. */
+export const curatedPipelineSchema = z.object({
+  id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
+  name: z.string().min(1),
+  aliases: z.array(z.string()),
+  commodity: z.enum(['gas', 'oil', 'products', 'ngl']),
+  fromCountry: z.string().regex(/^[A-Z]{2}$/),
+  toCountry: z.string().regex(/^[A-Z]{2}$/),
+  transitCountries: z.array(z.string().regex(/^[A-Z]{2}$/)),
+  gem: z.array(z.string().regex(/^gem-/)),
+  autoMatch: z.boolean().optional(),
+  exclude: z.array(z.string()).optional(),
+  capacity: z
+    .object({ value: z.number().positive(), unit: z.enum(['bcm/yr', 'mb/d']), source: sourceRefSchema })
+    .optional(),
+  evidence: z.array(
+    evidenceSchema.extend({
+      sourceType: z.enum(['operator', 'regulator', 'government', 'press']),
+      statement: z.string().min(1),
+      url: z.string().url(),
+    }),
+  ),
+});
+
+export const countrySchema = z.object({
+  id: z.string().regex(/^[A-Z]{2}$/),
+  name: z.string().min(1),
+  geometry: z.object({ type: z.enum(['Polygon', 'MultiPolygon']), coordinates: z.array(z.any()).min(1) }),
 });

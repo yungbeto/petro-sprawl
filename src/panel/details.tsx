@@ -1,17 +1,21 @@
 import type { ReactNode } from 'react';
-import type { Basin, Chokepoint, Pipeline } from '../types';
+import type { Basin, Chokepoint, Country, Evidence, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import {
   CHOKEPOINT_NOTES,
   EIA_CHOKEPOINTS_SOURCE,
   EIA_REFERENCE_YEAR,
+  MEASURED_FLOW,
+  agsiSeriesId,
 } from '../lib/config';
+import { storageSummary } from '../lib/gasStorage';
+import { ENTSOG_URL, isUnverified, latestClaim, pipelineFlow } from '../lib/evidence';
 import { chokepointsInBasin, disruptionsFor, pipelinesTouchingBasin, seriesById, type Datasets } from '../lib/data';
 import { chokepointFlow, type FlowBand } from '../lib/flow';
 import { formatIndex, formatIndexShare, formatNumber } from '../lib/format';
 import type { Disruption } from '../types';
 import { Sparkline } from './Sparkline';
-import { formatCapacity, formatCountry, formatLonLat, formatMbd } from '../lib/format';
+import { formatCapacity, formatCountry, formatEnergyPerDay, formatLonLat, formatMbd } from '../lib/format';
 import { pipelineStatus } from '../lib/encoding';
 
 type OnSelect = (selection: Selection) => void;
@@ -214,32 +218,85 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
   );
 }
 
-export function PipelineDetail({ item }: { item: Pipeline }) {
-  const evidence = item.evidence[0];
+const SOURCE_TYPE_LABELS: Record<Evidence['sourceType'], string> = {
+  operator: 'Operator',
+  regulator: 'Regulator',
+  government: 'Government',
+  press: 'Press',
+  dataset: 'Dataset',
+  measured: 'Measured',
+};
+
+function EvidenceLine({ evidence }: { evidence: Evidence }) {
+  // The date follows after a comma, so a closing full stop would double up the punctuation.
+  const statement = (evidence.statement ?? SOURCE_TYPE_LABELS[evidence.sourceType]).replace(/\.$/, '');
+  return (
+    <>
+      {SOURCE_TYPE_LABELS[evidence.sourceType]}:{' '}
+      {evidence.url ? <SourceLink href={evidence.url}>{statement}</SourceLink> : statement},{' '}
+      <span className="mono">{evidence.observedAt}</span>
+    </>
+  );
+}
+
+export function PipelineDetail({ item, data, now }: { item: Pipeline; data: Datasets; now: Date }) {
+  const status = pipelineStatus(item);
+  const current = item.evidence[0];
+  const claim = current?.sourceType === 'measured' ? latestClaim(item) : undefined;
+  const flow = pipelineFlow(seriesById(data, item.flowSeriesId));
+  const disruptions = disruptionsFor(data, 'pipeline', item.id);
   const route = [item.fromCountry, ...item.transitCountries, item.toCountry].filter(Boolean).join(' → ');
+  const curated = item.sources.includes('curated');
   return (
     <>
       <Header kind={`${capitalize(item.commodity)} pipeline`} name={item.name} />
       <dl className="facts">
+        <Row label="Status">
+          <span className={`status status--${status}`}>{statusLabel(status)}</span>
+          {isUnverified(current, now) && (
+            <span className="unverified"> · unverified since <span className="mono">{current!.observedAt}</span></span>
+          )}
+          <span className="facts__aside">{current ? <EvidenceLine evidence={current} /> : 'No sourced claim yet'}</span>
+          {claim && (
+            <span className="facts__aside">
+              Latest claim, {statusLabel(claim.status).toLowerCase()}: <EvidenceLine evidence={claim} />
+            </span>
+          )}
+        </Row>
         <Row label="Route">
           {route ? <span className="mono">{route}</span> : <span className="muted">Unknown</span>}
         </Row>
         <Row label="Capacity">
           {item.capacity ? (
-            <span className="mono">{formatCapacity(item.capacity)}</span>
+            <>
+              <span className="mono">{formatCapacity(item.capacity)}</span>
+              {item.capacitySource && (
+                <span className="facts__aside">
+                  <SourceLink href={item.capacitySource.url}>{item.capacitySource.publisher}</SourceLink>,{' '}
+                  <span className="mono">{item.capacitySource.publishedAt}</span>
+                </span>
+              )}
+            </>
           ) : (
             <span className="muted">Unknown</span>
           )}
         </Row>
-        <Row label="Status">
-          <span className={`status status--${pipelineStatus(item)}`}>{statusLabel(pipelineStatus(item))}</span>
-          {evidence ? (
-            <span className="facts__aside">
-              {evidence.url ? <SourceLink href={evidence.url}>{evidence.statement ?? evidence.sourceType}</SourceLink> : (evidence.statement ?? evidence.sourceType)}
-              , <span className="mono">{evidence.observedAt}</span>
-            </span>
+        <Row label="Measured flow">
+          {flow?.recentMean != null ? (
+            <>
+              <span className="mono">{formatEnergyPerDay(flow.recentMean)}</span>
+              <span className="facts__aside">
+                {MEASURED_FLOW.windowDays}-day mean to <span className="mono">{flow.latestDate}</span>
+                {flow.share !== null && (
+                  <>
+                    , <span className="mono">{formatIndexShare(flow.share)}</span> of technical capacity
+                  </>
+                )}
+                {flow.label && `, at ${flow.label}`}
+              </span>
+            </>
           ) : (
-            <span className="facts__aside">No sourced claim yet</span>
+            <span className="muted">{item.flowSeriesId ? 'Not loaded yet' : 'Not measured'}</span>
           )}
         </Row>
         {item.operator && <Row label="Operator">{item.operator}</Row>}
@@ -253,13 +310,108 @@ export function PipelineDetail({ item }: { item: Pipeline }) {
             ))}
           </Row>
         )}
-        <Row label="Measured flow">
-          <span className="muted">Not loaded yet</span>
-        </Row>
       </dl>
+      {flow && flow.sparkline.length > 1 && (
+        <section className="section">
+          <h3 className="section__title">Daily physical flow, last 90 days</h3>
+          <Sparkline
+            points={flow.sparkline.map((p) => ({ date: p.date, value: p.value / 1e6 }))}
+            unit=" GWh/d"
+            label={`Daily physical gas flow for ${item.name}, ${flow.sparkline[0]?.date} to ${flow.latestDate}`}
+            references={
+              flow.capacity ? [{ value: flow.capacity / 1e6, label: 'Technical capacity', style: 'dashed' as const }] : []
+            }
+          />
+        </section>
+      )}
+      <DisruptionList disruptions={disruptions} />
+      {item.evidence.length > 1 && (
+        <section className="section">
+          <h3 className="section__title">Status history</h3>
+          <ul className="evidence">
+            {item.evidence.map((e, i) => (
+              <li key={i}>
+                <span className={`status status--${e.status}`}>{statusLabel(e.status)}</span>{' '}
+                <span className="facts__aside">
+                  <EvidenceLine evidence={e} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       {item.geometryApprox && <p className="note">Route is approximate. The source marks it as low accuracy.</p>}
       <p className="source">
-        <SourceLink href="https://globalenergymonitor.org/">Global Energy Monitor</SourceLink>, CC BY 4.0
+        Route and inventory: <SourceLink href="https://globalenergymonitor.org/">Global Energy Monitor</SourceLink>, CC BY
+        4.0{curated && '; status evidence curated from the sources linked above'}
+        {flow && (
+          <>
+            ; flows: <SourceLink href={ENTSOG_URL}>ENTSOG Transparency Platform</SourceLink>
+          </>
+        )}
+      </p>
+    </>
+  );
+}
+
+export function StorageDetail({ item, data }: { item: Country; data: Datasets }) {
+  const summary = storageSummary(seriesById(data, agsiSeriesId(item.id)));
+  const pct = (value: number) => `${formatNumber(value, 1)}%`;
+  return (
+    <>
+      <Header kind="Gas storage" name={item.name} />
+      {summary ? (
+        <>
+          <section className="flow-headline">
+            <p className="flow-headline__figure mono">{pct(summary.fill)}</p>
+            <p>
+              of working gas volume in storage on <span className="mono">{summary.latestDate}</span>.
+            </p>
+          </section>
+          <dl className="facts">
+            <Row label="Last 7 days">
+              {summary.change7d !== null ? (
+                <span className="mono">
+                  {summary.change7d >= 0 ? '+' : '−'}
+                  {formatNumber(Math.abs(summary.change7d), 1)} pts
+                </span>
+              ) : (
+                <span className="muted">n/a</span>
+              )}
+            </Row>
+            <Row label="Same date last year">
+              {summary.lastYear ? (
+                <>
+                  <span className="mono">{pct(summary.lastYear.fill)}</span>
+                  <span className="facts__aside">
+                    <span className="mono">{summary.lastYear.date}</span>, now{' '}
+                    <span className="mono">
+                      {summary.fill >= summary.lastYear.fill ? '+' : '−'}
+                      {formatNumber(Math.abs(summary.fill - summary.lastYear.fill), 1)} pts
+                    </span>
+                  </span>
+                </>
+              ) : (
+                <span className="muted">n/a</span>
+              )}
+            </Row>
+          </dl>
+          <section className="section">
+            <h3 className="section__title">Storage fill, last 12 months</h3>
+            <Sparkline
+              points={summary.year}
+              unit="%"
+              label={`Gas storage fill in ${item.name}, ${summary.year[0]?.date} to ${summary.latestDate}`}
+              references={summary.lastYear ? [{ value: summary.lastYear.fill, label: 'Same date last year', style: 'dashed' as const }] : []}
+            />
+          </section>
+        </>
+      ) : (
+        <p className="muted">No storage data for this country.</p>
+      )}
+      <p className="source">
+        <SourceLink href="https://agsi.gie.eu/">GIE AGSI+</SourceLink>; fill is gas in storage as a share of working gas
+        volume.
       </p>
     </>
   );

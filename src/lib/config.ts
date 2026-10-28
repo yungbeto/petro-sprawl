@@ -101,12 +101,61 @@ export const PORTWATCH = {
   maxLagDays: 21,
 } as const;
 
+/** Curated-to-GEM dedup: smallest name similarity (Dice on name words) that counts as a match. */
+export const DEDUP = { minNameSimilarity: 0.6 } as const;
+
+/**
+ * ENTSOG physical flows, one series per operator, point and direction, linked to a pipeline.
+ * Point keys checked against the platform's operatorpointdirections on 2026-10-28.
+ */
+export const ENTSOG = {
+  apiUrl: 'https://transparency.entsog.eu/api/v1/operationaldatas',
+  keepDays: 400,
+  /** A run fails, keeping the last good file, if a series' latest day is older than this. */
+  maxLagDays: 7,
+  points: [
+    { pipelineId: 'turkstream', operatorKey: 'BG-TSO-0001', pointKey: 'ITP-00549', direction: 'entry', label: 'Strandzha 2, entry into Bulgaria (European line only)' },
+    { pipelineId: 'trans-adriatic', operatorKey: 'IT-TSO-0001', pointKey: 'ITP-00008', direction: 'entry', label: 'Melendugno, entry into Italy' },
+    { pipelineId: 'transmed', operatorKey: 'IT-TSO-0001', pointKey: 'ITP-00093', direction: 'entry', label: 'Mazara del Vallo, entry into Italy' },
+    { pipelineId: 'greenstream', operatorKey: 'IT-TSO-0001', pointKey: 'ITP-00074', direction: 'entry', label: 'Gela, entry into Italy' },
+    { pipelineId: 'medgaz', operatorKey: 'ES-TSO-0006', pointKey: 'ITP-00048', direction: 'entry', label: 'Almería, entry into Spain' },
+    { pipelineId: 'yamal-europe', operatorKey: 'DE-TSO-0001', pointKey: 'ITP-00096', direction: 'entry', label: 'Mallnow, entry into Germany' },
+    { pipelineId: 'urengoy-pomary-uzhhorod', operatorKey: 'SK-TSO-0001', pointKey: 'ITP-00117', direction: 'entry', label: 'Velké Kapušany, entry into Slovakia' },
+    { pipelineId: 'langeled', operatorKey: 'UK-TSO-0001', pointKey: 'ITP-00091', direction: 'entry', label: 'Easington, entry into Great Britain' },
+    { pipelineId: 'franpipe', operatorKey: 'FR-TSO-0003', pointKey: 'ITP-00045', direction: 'entry', label: 'Dunkerque, entry into France' },
+    { pipelineId: 'zeepipe', operatorKey: 'BE-TSO-0001', pointKey: 'ITP-00106', direction: 'entry', label: 'Zeebrugge ZPT, entry into Belgium' },
+  ],
+} as const;
+
+export const entsogSeriesId = (p: { operatorKey: string; pointKey: string; direction: string }) =>
+  `entsog-${p.pointKey}-${p.operatorKey}-${p.direction}`.toLowerCase();
+
+/**
+ * GIE AGSI+ gas storage by country. Needs a free API key (AGSI_API_KEY), sent as the x-key header.
+ * Countries are the storage countries in the theater; ISO codes, sent lowercased as AGSI's country slug.
+ */
+export const AGSI = {
+  apiUrl: 'https://agsi.gie.eu/api',
+  keepDays: 400,
+  pageSize: 300,
+  maxLagDays: 7,
+  countries: ['AT', 'BE', 'BG', 'CZ', 'DE', 'DK', 'ES', 'FR', 'GB', 'HR', 'HU', 'IT', 'LV', 'NL', 'PL', 'PT', 'RO', 'RS', 'SE', 'SK', 'UA'],
+} as const;
+
+export const agsiSeriesId = (country: string) => `agsi-${country.toLowerCase()}`;
+
+/** Measured flow: a 7-day mean at or below this share of technical capacity counts as no flow. */
+export const MEASURED_FLOW = { windowDays: 7, idleShare: 0.005 } as const;
+
 /**
  * How often each dataset is expected to refresh. Scheduled datasets past `staleAfterHours`
  * are marked stale in the panel. Manual imports are never marked stale by age.
  */
 export const DATASET_FRESHNESS: Record<string, { label: string; scheduled: boolean; staleAfterHours?: number }> = {
   'chokepoint-transits': { label: 'Chokepoint transits', scheduled: true, staleAfterHours: 18 },
+  'gas-flows': { label: 'Gas flows', scheduled: true, staleAfterHours: 36 },
+  'gas-storage': { label: 'Gas storage', scheduled: true, staleAfterHours: 36 },
+  countries: { label: 'Countries', scheduled: false },
   pipelines: { label: 'Pipelines', scheduled: false },
   chokepoints: { label: 'Chokepoints', scheduled: false },
   basins: { label: 'Basins', scheduled: false },

@@ -1,0 +1,372 @@
+[
+  {
+    "id": "nord-stream-1",
+    "name": "Nord Stream 1",
+    "aliases": [
+      "Nord Stream"
+    ],
+    "commodity": "gas",
+    "fromCountry": "RU",
+    "toCountry": "DE",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0753"
+    ],
+    "evidence": [
+      {
+        "status": "offline",
+        "sourceType": "press",
+        "statement": "Reporting on the Hamburg sabotage trial: three of the four Nord Stream strings were ruptured in the September 2022 blasts (Al Jazeera).",
+        "url": "https://www.aljazeera.com/news/2026/10/14/ukrainian-ex-officer-goes-on-trial-in-germany-over-nord-stream-blasts",
+        "observedAt": "2026-10-14",
+        "recordedAt": "2026-10-28"
+      },
+      {
+        "status": "offline",
+        "sourceType": "press",
+        "statement": "Both pipes were ruptured by the September 2022 blasts; Reuters sources said there was no plan to repair them and the lines would be mothballed. It had been shut since late August 2022.",
+        "url": "https://www.marinetechnologynews.com/news/report-russia-mothball-damaged-626449",
+        "observedAt": "2023-03-06",
+        "recordedAt": "2026-10-28"
+      },
+      {
+        "status": "offline",
+        "sourceType": "press",
+        "statement": "Leaks on Nord Stream 1 and 2 after seismic data showed two underwater blasts; neither line was carrying gas at the time (NPR).",
+        "url": "https://www.opb.org/article/2022/09/27/seismologists-suspect-explosions-damaged-undersea-pipelines-that-carry-russian-gas/",
+        "observedAt": "2022-09-27",
+        "recordedAt": "2026-10-28"
+      }
+    ]
+  },
+  {
+    "id": "nord-stream-2",
+    "name": "Nord Stream 2",
+    "aliases": [],
+    "commodity": "gas",
+    "fromCountry": "RU",
+    "toCountry": "DE",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0752"
+    ],
+    "evidence": [
+      {
+        "status": "idle",
+        "sourceType": "press",
+        "statement": "Reporting on the Hamburg sabotage trial: Nord Stream 2 was built but never opened (Al Jazeera).",
+        "url": "https://www.aljazeera.com/news/2026/10/14/ukrainian-ex-officer-goes-on-trial-in-germany-over-nord-stream-blasts",
+        "observedAt": "2026-10-14",
+        "recordedAt": "2026-10-28"
+      },
+      {
+        "status": "idle",
+        "sourceType": "press",
+        "statement": "Completed in September 2021 but never came online after German regulators refused certification; one of its two pipes was ruptured in September 2022 and one is intact (Reuters).",
+        "url": "https://www.marinetechnologynews.com/news/report-russia-mothball-damaged-626449",
+        "observedAt": "2023-03-06",
+        "recordedAt": "2026-10-28"
+      }
+    ]
+  },
+  {
+    "id": "urengoy-pomary-uzhhorod",
+    "name": "Urengoy–Pomary–Uzhhorod (Brotherhood)",
+    "aliases": [
+      "Brotherhood",
+      "Bratstvo",
+      "Urengoy-Pomary-Uzhgorod"
+    ],
+    "commodity": "gas",
+    "fromCountry": "RU",
+    "toCountry": "SK",
+    "transitCountries": [
+      "UA"
+    ],
+    "gem": [
+      "gem-p0768"
+    ],
+    "evidence": [
+      {
+        "status": "offline",
+        "sourceType": "operator",
+        "statement": "Ukraine's gas TSO stopped transporting Russian gas from the Sudzha entry point at 07:00 Kyiv time on 1 January 2025, when its agreement with Gazprom expired.",
+        "url": "https://www.pravda.com.ua/eng/news/2025/01/01/7491575/",
+        "observedAt": "2025-01-01",
+        "recordedAt": "2026-10-28"
+      }
+    ]
+  },
+  {
+    "id": "progress",
+    "name": "Progress (Yamburg–Western border)",
+    "aliases": [
+      "Progress Gas Pipeline"
+    ],
+    "commodity": "gas",
+    "fromCountry": "RU",
+    "toCountry": "UA",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0774"
+    ],
+    "evidence": [
+      {
+        "status": "offline",
+        "sourceType": "operator",
+        "statement": "Ukraine's gas TSO stopped transporting Russian gas from the Sudzha entry point at 07:00 Kyiv time on 1 January 2025, when its agreement with Gazprom expired.",
+        "url": "https://www.pravda.com.ua/eng/news/2025/01/01/7491575/",
+        "observedAt": "2025-01-01",
+        "recordedAt": "2026-10-28"
+      }
+    ]
+  },
+  {
+    "id": "turkstream",
+    "name": "TurkStream",
+    "aliases": [
+      "Turkish Stream"
+    ],
+    "commodity": "gas",
+    "fromCountry": "RU",
+    "toCountry": "TR",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0765",
+      "gem-p1368"
+    ],
+    "capacity": {
+      "value": 31.5,
+      "unit": "bcm/yr",
+      "source": {
+        "publisher": "Interfax",
+        "title": "Gas pumped via TurkStream European line increases 21% in March",
+        "url": "https://interfax.com/newsroom/top-stories/116906/",
+        "publishedAt": "2026-04-01"
+      }
+    },
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "The European line carried about 1.7 bcm in March 2026, 97% of its capacity, per European transmission data reported by Interfax.",
+        "url": "https://interfax.com/newsroom/top-stories/116906/",
+        "observedAt": "2026-04-01",
+        "recordedAt": "2026-10-28"
+      }
+    ]
+  },
+  {
+    "id": "druzhba-south",
+    "name": "Druzhba (southern branch)",
+    "aliases": [
+      "Druzhba South",
+      "Friendship pipeline"
+    ],
+    "commodity": "oil",
+    "fromCountry": "BY",
+    "toCountry": "HU",
+    "transitCountries": [
+      "UA",
+      "SK",
+      "CZ"
+    ],
+    "gem": [
+      "gem-p5134",
+      "gem-p6307",
+      "gem-p7963",
+      "gem-p5133",
+      "gem-p5137",
+      "gem-p5322",
+      "gem-p5323",
+      "gem-p5146"
+    ],
+    "autoMatch": false,
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Deliveries to Hungary and Slovakia restarted after a halt of nearly three months from late January 2026; Ukrtransnafta lifted force majeure on 21 April and MOL confirmed crude had arrived.",
+        "url": "https://www.hungarianconservative.com/articles/current/druzhba-pipeline-oil-resumes-hungary-slovakia/",
+        "observedAt": "2026-04-24",
+        "recordedAt": "2026-10-28"
+      }
+    ]
+  },
+  {
+    "id": "kirkuk-ceyhan",
+    "name": "Kirkuk–Ceyhan",
+    "aliases": [
+      "Iraq-Turkey Pipeline",
+      "ITP"
+    ],
+    "commodity": "oil",
+    "fromCountry": "IQ",
+    "toCountry": "TR",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0547"
+    ],
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Crude allocated for export through the Kirkuk system rose to about 250,000 b/d, with pumping to Ceyhan steady, a North Oil Company source told Shafaq News.",
+        "url": "https://shafaq.com/en/Economy/Iraq-increases-Kirkuk-oil-exports-to-250K-bpd",
+        "observedAt": "2026-09-28",
+        "recordedAt": "2026-10-28"
+      }
+    ]
+  },
+  {
+    "id": "east-west-crude",
+    "name": "East–West Crude (Petroline)",
+    "aliases": [
+      "Petroline",
+      "East-West Pipeline"
+    ],
+    "commodity": "oil",
+    "fromCountry": "SA",
+    "toCountry": "SA",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0551"
+    ],
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "government",
+        "statement": "Saudi Arabia's energy minister said the pipeline was back up to 5.8 million b/d after drone strikes in early September; its maximum is 7 million b/d (Al Jazeera).",
+        "url": "https://www.aljazeera.com/economy/2026/10/6/saudi-arabia-says-east-west-pipeline-pumping-5-8-million-bpd",
+        "observedAt": "2026-10-06",
+        "recordedAt": "2026-10-28"
+      }
+    ]
+  },
+  {
+    "id": "yamal-europe",
+    "name": "Yamal–Europe",
+    "aliases": [],
+    "commodity": "gas",
+    "fromCountry": "RU",
+    "toCountry": "DE",
+    "transitCountries": [
+      "BY",
+      "PL"
+    ],
+    "gem": [
+      "gem-p0769"
+    ],
+    "evidence": []
+  },
+  {
+    "id": "trans-adriatic",
+    "name": "Trans Adriatic Pipeline (TAP)",
+    "aliases": [
+      "TAP",
+      "Trans-Adriatic Gas Pipeline"
+    ],
+    "commodity": "gas",
+    "fromCountry": "GR",
+    "toCountry": "IT",
+    "transitCountries": [
+      "AL"
+    ],
+    "gem": [
+      "gem-p0724"
+    ],
+    "exclude": [
+      "gem-p2236"
+    ],
+    "evidence": []
+  },
+  {
+    "id": "transmed",
+    "name": "Transmed (Enrico Mattei)",
+    "aliases": [
+      "Trans-Mediterranean Gas Pipeline",
+      "Enrico Mattei"
+    ],
+    "commodity": "gas",
+    "fromCountry": "DZ",
+    "toCountry": "IT",
+    "transitCountries": [
+      "TN"
+    ],
+    "gem": [
+      "gem-p6648",
+      "gem-p6649",
+      "gem-p6650"
+    ],
+    "autoMatch": false,
+    "evidence": []
+  },
+  {
+    "id": "greenstream",
+    "name": "Greenstream",
+    "aliases": [],
+    "commodity": "gas",
+    "fromCountry": "LY",
+    "toCountry": "IT",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0439"
+    ],
+    "evidence": []
+  },
+  {
+    "id": "medgaz",
+    "name": "Medgaz",
+    "aliases": [],
+    "commodity": "gas",
+    "fromCountry": "DZ",
+    "toCountry": "ES",
+    "transitCountries": [],
+    "gem": [
+      "gem-p2055",
+      "gem-p6647",
+      "gem-p1836"
+    ],
+    "evidence": []
+  },
+  {
+    "id": "langeled",
+    "name": "Langeled",
+    "aliases": [],
+    "commodity": "gas",
+    "fromCountry": "NO",
+    "toCountry": "GB",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0704"
+    ],
+    "evidence": []
+  },
+  {
+    "id": "franpipe",
+    "name": "Franpipe",
+    "aliases": [],
+    "commodity": "gas",
+    "fromCountry": "NO",
+    "toCountry": "FR",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0692"
+    ],
+    "evidence": []
+  },
+  {
+    "id": "zeepipe",
+    "name": "Zeepipe",
+    "aliases": [],
+    "commodity": "gas",
+    "fromCountry": "NO",
+    "toCountry": "BE",
+    "transitCountries": [],
+    "gem": [
+      "gem-p1770"
+    ],
+    "autoMatch": false,
+    "evidence": []
+  }
+]

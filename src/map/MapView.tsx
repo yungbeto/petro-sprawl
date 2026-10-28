@@ -14,11 +14,13 @@ import {
 } from '../lib/config';
 import type { Theme } from '../lib/theme';
 import type { Camera, Selection } from '../app/urlState';
-import { chokepointFlows, resolveSelection, type Datasets } from '../lib/data';
+import { chokepointFlows, resolveSelection, seriesById, type Datasets } from '../lib/data';
+import { pipelineFlow } from '../lib/evidence';
+import { storageFills } from '../lib/gasStorage';
 import type { ChokepointFlow } from '../lib/flow';
 import { boundsOf } from '../lib/geo';
-import { formatCapacity, formatIndexShare, formatMbd } from '../lib/format';
-import { buildLayers, toPicked, type LayerVisibility, type PickedObject } from './layers';
+import { formatCapacity, formatIndexShare, formatMbd, formatNumber } from '../lib/format';
+import { buildLayers, selectionId, toPicked, type LayerVisibility, type PickedObject } from './layers';
 import { readMapColors, type MapColors } from './colors';
 
 // MapLibre finds its worker relative to its own module URL, which Vite's dependency
@@ -50,7 +52,7 @@ interface Hover {
   y: number;
 }
 
-function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>): string {
+function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>, fills: Map<string, number>): string {
   switch (picked.kind) {
     case 'chokepoint': {
       const index = flows.get(picked.item.id)?.indexFiveYear;
@@ -67,6 +69,10 @@ function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>)
         .join(' · ');
     case 'pipeline':
       return picked.item.capacity ? formatCapacity(picked.item.capacity) : 'Capacity unknown';
+    case 'storage': {
+      const fill = fills.get(picked.item.id);
+      return fill != null ? `Storage ${formatNumber(fill, 1)}% full` : 'No storage data';
+    }
   }
 }
 
@@ -84,6 +90,15 @@ export function MapView(props: MapViewProps) {
   const [hover, setHover] = useState<Hover | null>(null);
   const [fontsReady, setFontsReady] = useState(false);
   const flows = useMemo(() => chokepointFlows(data), [data]);
+  const pipelineShares = useMemo(() => {
+    const shares = new Map<string, number>();
+    for (const p of data.pipelines) {
+      const share = pipelineFlow(seriesById(data, p.flowSeriesId))?.share;
+      if (share != null) shares.set(p.id, share);
+    }
+    return shares;
+  }, [data]);
+  const fills = useMemo(() => storageFills(data.series, data.countries), [data]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -123,7 +138,7 @@ export function MapView(props: MapViewProps) {
       },
       onClick: (info) => {
         const picked = toPicked(info.layer?.id, info.object);
-        if (picked) callbacksRef.current.onSelect({ kind: picked.kind, id: picked.item.id });
+        if (picked) callbacksRef.current.onSelect({ kind: picked.kind, id: selectionId(picked) });
       },
     });
     map.addControl(overlay);
@@ -162,6 +177,8 @@ export function MapView(props: MapViewProps) {
       layers: buildLayers({
         data,
         flows,
+        pipelineShares,
+        storageFills: fills,
         visibility,
         selection,
         colors,
@@ -170,7 +187,7 @@ export function MapView(props: MapViewProps) {
         fontFamily: `"${LABEL_FONT}", sans-serif`,
       }),
     });
-  }, [data, flows, visibility, selection, colors, zoom, fontsReady]);
+  }, [data, flows, pipelineShares, fills, visibility, selection, colors, zoom, fontsReady]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -190,7 +207,7 @@ export function MapView(props: MapViewProps) {
       {hover && (
         <div className="map-tooltip" style={{ left: hover.x, top: hover.y }} role="tooltip">
           <span className="map-tooltip__name">{hover.picked.item.name}</span>
-          <span className="map-tooltip__figure mono">{tooltipFigure(hover.picked, flows)}</span>
+          <span className="map-tooltip__figure mono">{tooltipFigure(hover.picked, flows, fills)}</span>
         </div>
       )}
       {props.children}

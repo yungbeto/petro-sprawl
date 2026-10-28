@@ -25,10 +25,13 @@ Node 22. Package manager: npm.
 | `npm test` | Unit tests (Vitest, `tests/*.test.ts`) |
 | `npx playwright test` | Smoke test (`tests/e2e/`); starts its own dev server on port 5287 |
 | `npm run fetch:portwatch` | Scheduled: PortWatch daily tanker transits to `public/data/chokepoint-transits.json` |
+| `npm run fetch:entsog` | Scheduled: ENTSOG physical flows and technical capacity at the points in `ENTSOG.points` to `public/data/gas-flows.json` |
+| `npm run fetch:agsi` | Scheduled: AGSI+ storage fill by country to `public/data/gas-storage.json`. Needs `AGSI_API_KEY` in `.env` (and as an Actions secret) |
 | `npm run fetch:all` | Every scheduled fetch, as the GitHub Actions workflow runs them |
-| `npm run build:curated` | Validates `data/curated/disruptions.json` and publishes it to `public/data/` |
+| `npm run build:curated` | Validates `data/curated/`; publishes disruptions, and merges the curated corridor pipelines with GEM rows into `public/data/pipelines.json`; merge log in `data/reports/dedup.json` |
 | `npm run import:basins` | Manual: USGS provinces from `data/raw/usgs/` to `public/data/basins.json`, tagged with countries from Natural Earth in `data/raw/naturalearth/`; report in `data/reports/import-basins.json` |
-| `npm run import:gem` | Manual: GEM gas and oil pipeline GeoJSON from `data/raw/gem/` to `public/data/pipelines.json`; skip counts in `data/reports/import-gem.json` |
+| `npm run import:countries` | Manual: Natural Earth country outlines in the theater to `public/data/countries.json` (storage layer) |
+| `npm run import:gem` | Manual: GEM gas and oil pipeline GeoJSON from `data/raw/gem/` to `data/derived/gem-pipelines.json`; skip counts in `data/reports/import-gem.json`. Run `build:curated` after it |
 | `npm run import:chokepoints` | PortWatch locations plus EIA volumes (from `src/lib/config.ts`) to `public/data/chokepoints.json` |
 
 Scheduled jobs run every 6 hours in `.github/workflows/data.yml` and commit `public/data` when it changes. Every job writes through `publishDataset` in `jobs/lib/output.ts`: new data must pass its zod schema or the previous file stays and the failure is recorded in `meta/<id>.json`.
@@ -37,4 +40,6 @@ Scheduled jobs run every 6 hours in `.github/workflows/data.yml` and commit `pub
 
 - Playwright runs Chromium on the GPU on macOS (`playwright.config.ts`). Software WebGL draws the pipeline layer at about 1 fps, so camera animations never settle and URL tests time out. CI without a GPU needs another plan.
 - The dev server exposes the map as `window.__etMap` so the smoke test can click real features. Dev only.
+- Pipelines are built in two steps: `import:gem` (raw GEM to `data/derived/`), then `build:curated` (curated records win). Edit `data/curated/pipelines-evidence.json`, never `public/data/pipelines.json`.
+- Measured flow evidence is derived in the browser (`withMeasuredEvidence`), not stored in `pipelines.json`.
 - MapLibre 6 loads its worker from a separate file. `src/map/MapView.tsx` imports it with `?url` and calls `setWorkerUrl`; without that, tiles never load in dev or in the build.

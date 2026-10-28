@@ -1,4 +1,5 @@
-// Manual import: GEM gas and oil/NGL pipeline trackers -> public/data/pipelines.json
+// Manual import: GEM gas and oil/NGL pipeline trackers -> data/derived/gem-pipelines.json
+// npm run build:curated then merges these rows with the curated corridor records into public/data/pipelines.json.
 // Put the trackers' GeoJSON downloads in data/raw/gem/ (paths below), then: npm run import:gem
 // Writes data/reports/import-gem.json with counts of every row skipped and why.
 
@@ -93,7 +94,8 @@ for (const p of pipelines) p.geometry = geometryById.get(p.id) ?? p.geometry;
 
 pipelines.sort((a, b) => a.name.localeCompare(b.name));
 const result = await publishDataset({
-  id: 'pipelines',
+  id: 'gem-pipelines',
+  dataDir: 'data/derived',
   schema: pipelineSchema,
   produce: async () => ({
     records: pipelines,
@@ -106,7 +108,7 @@ const result = await publishDataset({
     },
   }),
 });
-reportResult(result, 'pipelines');
+reportResult(result, 'gem-pipelines');
 if (result.ok) {
   report.written = result.meta.recordCount;
   await mkdir('data/reports', { recursive: true });

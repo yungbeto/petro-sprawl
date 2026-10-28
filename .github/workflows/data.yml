@@ -20,6 +20,8 @@ jobs:
   fetch:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      AGSI_API_KEY: ${{ secrets.AGSI_API_KEY }}
     steps:
       - uses: actions/checkout@v7
 
@@ -35,6 +37,18 @@ jobs:
         continue-on-error: true
         run: npm run fetch:portwatch
 
+      - name: ENTSOG gas flows
+        id: entsog
+        continue-on-error: true
+        run: npm run fetch:entsog
+
+      # Skipped until the AGSI_API_KEY secret exists.
+      - name: AGSI+ gas storage
+        id: agsi
+        if: env.AGSI_API_KEY != ''
+        continue-on-error: true
+        run: npm run fetch:agsi
+
       - name: Commit changed data
         run: |
           git config user.name "github-actions[bot]"
@@ -48,7 +62,7 @@ jobs:
           fi
 
       - name: Fail if any fetch failed
-        if: steps.portwatch.outcome == 'failure'
+        if: steps.portwatch.outcome == 'failure' || steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure'
         run: |
           echo "::error::One or more fetch jobs failed; previous data was kept. See the step logs above."
           exit 1
