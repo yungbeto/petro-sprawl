@@ -332,3 +332,31 @@ test('the summary is ready within two seconds on a warm cache', async ({ page })
   await expect(page.getByRole('heading', { name: 'Chokepoints' })).toBeVisible();
   expect(Date.now() - start).toBeLessThan(2000);
 });
+
+test('a filter chip lists its matches, lives in the URL, and Esc clears it', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Theater' })).toBeVisible();
+  const chip = page.getByRole('toolbar', { name: 'Filters' }).getByRole('button', { name: /Offline or idle/ });
+  await chip.click();
+  await expect(chip).toHaveAttribute('aria-pressed', 'true');
+  await expect(page).toHaveURL(/f=offline/);
+  const panel = page.getByLabel('Panel', { exact: true });
+  await expect(panel.getByRole('heading', { name: 'Offline or idle' })).toBeVisible();
+
+  // A match opens its detail; back returns to the list, then to the summary.
+  await panel.getByRole('button', { name: /Nord Stream 1/ }).click();
+  await expect(page).toHaveURL(/sel=pipeline\/nord-stream-1/);
+  await expect(page).toHaveURL(/f=offline/);
+  await page.keyboard.press('Escape');
+  await expect(panel.getByRole('heading', { name: 'Offline or idle' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page).not.toHaveURL(/f=/);
+  await expect(page.getByRole('heading', { name: 'Theater' })).toBeVisible();
+
+  // A shared link opens straight onto the list.
+  await page.goto('/?f=below-baseline');
+  await expect(panel.getByRole('heading', { name: 'Below baseline' })).toBeVisible();
+  await expect(panel.getByRole('button', { name: /Strait of Hormuz/ })).toBeVisible();
+  await panel.getByRole('button', { name: 'Clear' }).click();
+  await expect(page).not.toHaveURL(/f=/);
+});

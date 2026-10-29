@@ -20,6 +20,7 @@ import { storageFills } from '../lib/gasStorage';
 import type { ChokepointFlow } from '../lib/flow';
 import { boundsOf } from '../lib/geo';
 import { formatCapacity, formatIndexShare, formatMbd, formatNumber } from '../lib/format';
+import type { FilterMatches } from '../lib/filters';
 import { buildLayers, selectionId, toPicked, type LayerVisibility, type PickedObject } from './layers';
 import { readMapColors, type MapColors } from './colors';
 
@@ -41,6 +42,8 @@ interface MapViewProps {
   data: Datasets;
   visibility: LayerVisibility;
   selection: Selection | null;
+  /** Assets matching the active quick filter; everything else fades. Null shows all. */
+  highlight: FilterMatches | null;
   onSelect: (selection: Selection) => void;
   focus: FocusRequest | null;
   children?: ReactNode;
@@ -77,7 +80,7 @@ function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>,
 }
 
 export function MapView(props: MapViewProps) {
-  const { theme, initialCamera, data, visibility, selection, focus } = props;
+  const { theme, initialCamera, data, visibility, selection, highlight, focus } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const overlayRef = useRef<MapboxOverlay | null>(null);
@@ -181,13 +184,14 @@ export function MapView(props: MapViewProps) {
         storageFills: fills,
         visibility,
         selection,
+        highlight,
         colors,
         zoom,
         basinLabelMinZoom: fontsReady ? BASIN_LABEL_MIN_ZOOM : Infinity,
         fontFamily: `"${LABEL_FONT}", sans-serif`,
       }),
     });
-  }, [data, flows, pipelineShares, fills, visibility, selection, colors, zoom, fontsReady]);
+  }, [data, flows, pipelineShares, fills, visibility, selection, highlight, colors, zoom, fontsReady]);
 
   useEffect(() => {
     const map = mapRef.current;

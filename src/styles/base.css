@@ -881,3 +881,68 @@ a:hover {
 .count-list li {
   display: contents;
 }
+
+/* Quick filter chips: a row over the map, right of the search bar, clear of the layer control. */
+.chips {
+  position: absolute;
+  top: var(--space-3);
+  left: calc(var(--panel-width) + var(--space-3));
+  right: calc(200px + 2 * var(--space-3));
+  z-index: 2;
+  display: flex;
+  gap: var(--space-2);
+  padding: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.app[data-panel-collapsed='true'] .chips {
+  left: calc(var(--panel-width) + var(--space-2));
+}
+
+.chip {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-2);
+  height: 32px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.1);
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--border-strong);
+}
+
+.chip[aria-pressed='true'] {
+  color: var(--surface);
+  background: var(--text);
+  border-color: var(--text);
+}
+
+.chip__count {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.chip[aria-pressed='true'] .chip__count {
+  color: inherit;
+  opacity: 0.75;
+}
+
+.filter-list__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.filter-list__header .text-button {
+  margin: 0 -6px 0 0;
+}

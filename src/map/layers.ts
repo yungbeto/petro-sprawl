@@ -4,7 +4,8 @@ import type { Layer } from '@deck.gl/core';
 import type { AssetStatus, Basin, Chokepoint, Country, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { CHOKEPOINT_RADIUS, PIPELINE_WIDTH } from '../lib/config';
+import { CHOKEPOINT_RADIUS, FILTERS, PIPELINE_WIDTH } from '../lib/config';
+import type { FilterMatches } from '../lib/filters';
 import { chokepointRadiusPx, flowFillRadiusPx, flowLineWidthPx, pipelineStatus, pipelineWidthPx } from '../lib/encoding';
 import type { ChokepointFlow, FlowBand } from '../lib/flow';
 import { mixColors, withAlpha } from '../lib/color';
@@ -68,6 +69,7 @@ interface BuildLayersInput {
   storageFills: Map<string, number>;
   visibility: LayerVisibility;
   selection: Selection | null;
+  highlight: FilterMatches | null;
   colors: MapColors;
   zoom: number;
   basinLabelMinZoom: number;
@@ -81,12 +83,18 @@ export function buildLayers({
   storageFills,
   visibility,
   selection,
+  highlight,
   colors,
   zoom,
   basinLabelMinZoom,
   fontFamily,
 }: BuildLayersInput): Layer[] {
   const isSelected = (kind: Selection['kind'], id: string) => selection?.kind === kind && selection.id === id;
+  // A quick filter fades whatever it doesn't match; the selection always stays at full strength.
+  const pipelineFade = (id: string) =>
+    !highlight || highlight.pipelines.has(id) || isSelected('pipeline', id) ? 1 : FILTERS.fadeAlpha;
+  const chokepointFade = (id: string) =>
+    !highlight || highlight.chokepoints.has(id) || isSelected('chokepoint', id) ? 1 : FILTERS.fadeAlpha;
 
   const basinFeatures: FeatureCollection<Polygon | MultiPolygon, Basin> = {
     type: 'FeatureCollection',
@@ -94,7 +102,7 @@ export function buildLayers({
   };
   const paths = pipelinePaths(data.pipelines);
   const selectedPaths = paths.filter((p) => isSelected('pipeline', p.pipeline.id));
-  const flowPaths = paths.filter((p) => (pipelineShares.get(p.pipeline.id) ?? 0) > 0);
+  const flowPaths = paths.filter((p) => (pipelineShares.get(p.pipeline.id) ?? 0) > 0 && pipelineFade(p.pipeline.id) === 1);
 
   const storageFeatures: FeatureCollection<Polygon | MultiPolygon, Country> = {
     type: 'FeatureCollection',
@@ -175,7 +183,8 @@ export function buildLayers({
         const status = pipelineStatus(p.pipeline);
         const alpha =
           (status === 'operating' ? PIPELINE_WIDTH.operatingAlpha : 1) *
-          (p.pipeline.geometryApprox ? PIPELINE_WIDTH.approxAlpha : 1);
+          (p.pipeline.geometryApprox ? PIPELINE_WIDTH.approxAlpha : 1) *
+          pipelineFade(p.pipeline.id);
         return withAlpha(statusColor(status, colors), alpha);
       },
       widthUnits: 'pixels',
@@ -184,7 +193,7 @@ export function buildLayers({
       jointRounded: true,
       autoHighlight: true,
       highlightColor: withAlpha(colors.selection, 0.5),
-      updateTriggers: { getColor: [colors] },
+      updateTriggers: { getColor: [colors, highlight, selection] },
     }),
     // Measured flow: a brighter inner line whose width is the flow's share of capacity (SPEC 5).
     new PathLayer<PipelinePath>({
@@ -226,8 +235,8 @@ export function buildLayers({
         return flowFillRadiusPx(chokepointRadiusPx(c), flow ? (flow.indexFiveYear ?? flow.indexTrailing) : null);
       },
       radiusUnits: 'pixels',
-      getFillColor: (c) => withAlpha(bandColor(flows.get(c.id)?.band, colors), 0.6),
-      updateTriggers: { getRadius: [flows], getFillColor: [flows, colors] },
+      getFillColor: (c) => withAlpha(bandColor(flows.get(c.id)?.band, colors), 0.6 * chokepointFade(c.id)),
+      updateTriggers: { getRadius: [flows], getFillColor: [flows, colors, highlight, selection] },
     }),
     new ScatterplotLayer<Chokepoint>({
       id: 'chokepoints',
@@ -240,14 +249,14 @@ export function buildLayers({
       stroked: true,
       filled: true,
       getFillColor: (c) => withAlpha(colors.ink, isSelected('chokepoint', c.id) ? 0.12 : 0.03),
-      getLineColor: (c) => bandColor(flows.get(c.id)?.band, colors),
+      getLineColor: (c) => withAlpha(bandColor(flows.get(c.id)?.band, colors), chokepointFade(c.id)),
       getLineWidth: (c) => (isSelected('chokepoint', c.id) ? 3.5 : 2.5),
       lineWidthUnits: 'pixels',
       autoHighlight: true,
       highlightColor: withAlpha(colors.ink, 0.15),
       updateTriggers: {
         getFillColor: [selection, colors],
-        getLineColor: [flows, colors],
+        getLineColor: [flows, colors, highlight, selection],
         getLineWidth: [selection],
       },
     }),

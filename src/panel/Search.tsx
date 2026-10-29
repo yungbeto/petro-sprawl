@@ -51,7 +51,7 @@ export function Search({ data, onSelect, inputRef }: SearchProps) {
         ref={inputRef}
         type="search"
         className="search-input"
-        placeholder="Search pipelines, chokepoints, basins, countries"
+        placeholder="Search pipelines, chokepoints, places"
         aria-label="Search"
         role="combobox"
         aria-expanded={showList}

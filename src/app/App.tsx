@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MapView, type FocusRequest } from '../map/MapView';
 import { LayerControl } from '../map/LayerControl';
 import type { LayerId, LayerVisibility } from '../map/layers';
 import { Panel, PanelIcon } from '../panel/Panel';
 import { Search } from '../panel/Search';
+import { FilterChips } from '../map/FilterChips';
+import { FILTER_IDS, filterMatches, matchCount, type FilterId, type FilterMatches } from '../lib/filters';
 import { useTheme } from './useTheme';
 import { useUrlState } from './useUrlState';
 import { useDatasets } from './useDatasets';
@@ -16,7 +18,7 @@ function isTypingTarget(target: EventTarget | null): boolean {
 }
 
 export function App() {
-  const { selection, select, back, setCamera, initialCamera } = useUrlState();
+  const { selection, select, filter, setFilter, back, setCamera, initialCamera } = useUrlState();
   const { preference, setPreference, theme } = useTheme();
   const { data, loaded, failed } = useDatasets();
   const visit = useVisitChanges(data, loaded, failed);
@@ -53,6 +55,21 @@ export function App() {
     if (loaded && selection && !initialCameraOnce) setFocus({ selection, nonce: 1 });
     // Runs once, when data first loads.
   }, [loaded]);
+
+  // Every filter's matches up front: the chips show counts, and switching is instant.
+  const allMatches = useMemo(() => {
+    const now = new Date();
+    return Object.fromEntries(FILTER_IDS.map((id) => [id, filterMatches(id, data, now)])) as Record<FilterId, FilterMatches>;
+  }, [data]);
+  const matches = filter ? allMatches[filter] : null;
+
+  const changeFilter = useCallback(
+    (next: FilterId | null) => {
+      setFilter(next);
+      if (next) setCollapsed(false);
+    },
+    [setFilter],
+  );
 
   const toggleCollapsed = useCallback(() => setCollapsed((value) => !value), []);
 
@@ -100,6 +117,11 @@ export function App() {
         )}
         <Search data={data} onSelect={selectAndFocus} inputRef={searchRef} />
       </div>
+      <FilterChips
+        active={filter}
+        counts={Object.fromEntries(FILTER_IDS.map((id) => [id, matchCount(allMatches[id])])) as Record<FilterId, number>}
+        onChange={changeFilter}
+      />
       <Panel
         collapsed={collapsed}
         onToggleCollapsed={toggleCollapsed}
@@ -110,6 +132,9 @@ export function App() {
         loaded={loaded}
         failed={failed}
         visit={visit}
+        filter={filter}
+        matches={matches}
+        onClearFilter={() => setFilter(null)}
         themePreference={preference}
         onThemePreferenceChange={setPreference}
       />
@@ -120,6 +145,7 @@ export function App() {
         data={data}
         visibility={visibility}
         selection={selection}
+        highlight={matches}
         onSelect={selectAndFocus}
         focus={focus}
       >

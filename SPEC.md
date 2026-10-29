@@ -84,6 +84,7 @@ Scope is one theater: the oil and gas corridor connecting **Europe, Russia, the 
 - **Click:** select it, fly the camera to fit, open its detail in the panel.
 - **Back / Esc:** return to the previous panel state. Selection and camera are in the URL (shareable, reloadable).
 - **Search:** type-ahead across pipelines, chokepoints, basins and countries.
+- **Quick filters:** a row of chips over the map: offline or idle, below baseline, unverified claims, metered flow, gas, oil, each with its match count. One at a time; matches stay at full strength on the map, the rest fade, and the panel lists the matches in place of the summary. The filter is in the URL (`f=`), and Back or Esc clears it (decided 2026-10-28, after Google Maps' category chips).
 - **Keyboard:** `/` focuses search, `Esc` goes back, `L` toggles the layer control, `[` minimizes or reopens the panel.
 
 ## 5. Map layers

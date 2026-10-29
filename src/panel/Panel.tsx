@@ -6,6 +6,8 @@ import { datasetFreshness, formatAge, formatUtcClock, overallFreshness, sortFres
 import { useNow } from '../app/useNow';
 import type { VisitChanges } from '../app/useVisitChanges';
 import { Summary } from './Summary';
+import { FilterList } from './FilterList';
+import type { FilterId, FilterMatches } from '../lib/filters';
 import { BasinDetail, ChokepointDetail, PipelineDetail, StorageDetail } from './details';
 
 interface PanelProps {
@@ -18,6 +20,9 @@ interface PanelProps {
   loaded: boolean;
   failed: string[];
   visit: VisitChanges | null;
+  filter: FilterId | null;
+  matches: FilterMatches | null;
+  onClearFilter: () => void;
   themePreference: ThemePreference;
   onThemePreferenceChange: (preference: ThemePreference) => void;
 }
@@ -65,6 +70,14 @@ export function Panel(props: PanelProps) {
             onSelect={props.onSelect}
             onBack={props.onBack}
             now={now}
+          />
+        ) : props.filter && props.matches ? (
+          <FilterList
+            filter={props.filter}
+            matches={props.matches}
+            data={props.data}
+            onSelect={props.onSelect}
+            onClear={props.onClearFilter}
           />
         ) : (
           <Summary

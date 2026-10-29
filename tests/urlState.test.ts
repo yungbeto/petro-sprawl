@@ -50,8 +50,17 @@ describe('serializeUrlState', () => {
     expect(search).toBe('?sel=basin/west-siberian&at=30.1235,50.9877,4.26');
     expect(parseUrlState(search)).toEqual({
       selection: state.selection,
+      filter: null,
       camera: { lon: 30.1235, lat: 50.9877, zoom: 4.26 },
     });
+  });
+
+  it('carries a known filter and ignores unknown ones', () => {
+    const search = serializeUrlState({ selection: null, filter: 'below-baseline', camera: null });
+    expect(search).toBe('?f=below-baseline');
+    expect(parseUrlState(search).filter).toBe('below-baseline');
+    expect(parseUrlState('?f=nonsense').filter).toBeNull();
+    expect(serializeUrlState({ selection: null, filter: null, camera: null }, '?f=gas')).toBe('');
   });
 
   it('returns an empty string for an empty state', () => {

@@ -1,7 +1,8 @@
 // URL is the source of truth for selection and camera.
-// Format: ?sel=<kind>/<id>&at=<lon>,<lat>,<zoom>
+// Format: ?sel=<kind>/<id>&f=<filter>&at=<lon>,<lat>,<zoom>
 
 import { CAMERA_PRECISION } from '../lib/config';
+import { parseFilter, type FilterId } from '../lib/filters';
 
 export const SELECTION_KINDS = ['pipeline', 'chokepoint', 'basin', 'storage'] as const;
 export type SelectionKind = (typeof SELECTION_KINDS)[number];
@@ -19,6 +20,8 @@ export interface Camera {
 
 export interface UrlState {
   selection: Selection | null;
+  /** The active quick filter. Absent from older links, which is the same as none. */
+  filter?: FilterId | null;
   camera: Camera | null;
 }
 
@@ -49,6 +52,7 @@ export function parseUrlState(search: string): UrlState {
   const params = new URLSearchParams(search);
   return {
     selection: parseSelection(params.get('sel')),
+    filter: parseFilter(params.get('f')),
     camera: parseCamera(params.get('at')),
   };
 }
@@ -63,6 +67,8 @@ export function serializeUrlState(state: UrlState, base = ''): string {
   const params = new URLSearchParams(base);
   if (state.selection) params.set('sel', `${state.selection.kind}/${state.selection.id}`);
   else params.delete('sel');
+  if (state.filter) params.set('f', state.filter);
+  else params.delete('f');
   if (state.camera) params.set('at', formatCamera(state.camera));
   else params.delete('at');
   // Keep "/" and "," readable in the address bar.

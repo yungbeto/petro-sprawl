@@ -212,3 +212,6 @@ export const CHANGES = {
 } as const;
 
 export const SEARCH = { limit: 8 } as const;
+
+/** Quick filters: how faint non-matching assets get, and how many matches the panel lists. */
+export const FILTERS = { fadeAlpha: 0.12, listLimit: 300 } as const;
