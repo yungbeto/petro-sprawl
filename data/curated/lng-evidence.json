@@ -72,5 +72,26 @@
         "recordedAt": "2026-10-29"
       }
     ]
+  },
+  {
+    "id": "gem-t100000130601-export",
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Satellite images showed a tanker docked at Das Island on 2 September and another nearby; ADNOC appears to keep loading LNG, with tankers crossing Hormuz with transponders off. Gulf LNG exports remain far below pre-war levels (Bloomberg, via Energy Connects).",
+        "url": "https://www.energyconnects.com/news/gas-lng/2026/september/adnoc-keeps-loading-lng-on-tankers-despite-hormuz-disruption/",
+        "observedAt": "2026-09-04",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "reduced",
+        "sourceType": "operator",
+        "statement": "ADNOC Gas made temporary adjustments to its LNG production in response to shipping disruption in the Strait of Hormuz, and is handling commitments deal by deal (Reuters, via Baird Maritime).",
+        "url": "https://www.bairdmaritime.com/shipping/tankers/gas/adnoc-gas-adjusts-lng-output-amid-strait-of-hormuz-disruptions",
+        "observedAt": "2026-03-23",
+        "recordedAt": "2026-10-29"
+      }
+    ]
   }
 ]

@@ -405,5 +405,34 @@
       }
     ],
     "recordedAt": "2026-10-29"
+  },
+  {
+    "id": "das-island-2026-hormuz",
+    "assetKind": "lng",
+    "assetId": "gem-t100000130601-export",
+    "startedAt": "2026-03",
+    "cause": "conflict",
+    "summary": "Das Island sits inside the Gulf, so every cargo must cross the Strait of Hormuz. In March 2026 ADNOC Gas temporarily adjusted its LNG production because of the disruption there. Its exports and liquids sales fell 53% year on year in the second quarter. Loadings continued in September, with tankers crossing the strait with transponders off.",
+    "sources": [
+      {
+        "publisher": "Baird Maritime",
+        "title": "ADNOC Gas adjusts LNG output amid Strait of Hormuz disruptions",
+        "url": "https://www.bairdmaritime.com/shipping/tankers/gas/adnoc-gas-adjusts-lng-output-amid-strait-of-hormuz-disruptions",
+        "publishedAt": "2026-03-23"
+      },
+      {
+        "publisher": "Enterprise",
+        "title": "Adnoc Gas' profit halved on Hormuz disruptions",
+        "url": "https://enterpriseam.com/logistics/2026/08/11/adnoc-gas-profit-halved-on-hormuz-disruptions-so-its-planning-an-lng-export-route-that-skips-the-strait-entirely/",
+        "publishedAt": "2026-08-11"
+      },
+      {
+        "publisher": "Energy Connects",
+        "title": "Adnoc keeps loading LNG on tankers despite Hormuz disruption",
+        "url": "https://www.energyconnects.com/news/gas-lng/2026/september/adnoc-keeps-loading-lng-on-tankers-despite-hormuz-disruption/",
+        "publishedAt": "2026-09-04"
+      }
+    ],
+    "recordedAt": "2026-10-29"
   }
 ]

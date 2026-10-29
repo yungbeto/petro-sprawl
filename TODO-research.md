@@ -31,10 +31,11 @@ Items that couldn't be sourced or that need a decision. See CLAUDE.md: unsourced
   - Reports on 2026-10-28 that QatarEnergy extended force majeure to the end of 2026 came only through aggregators (OilPrice via ua.news); find the primary before adding it.
   - GEM groups the South site's trains as S(1) T1-2, S(2) T3-5, S(3) T6-7, so Trains 4 and 6 can't be marked on their own units; the units table stays GEM's, with a note.
   - The National (2026-04-09) gives 12.8 mtpa lost and the South site cut from 36 to 24 mtpa; GEM lists the South site at 36.3 mtpa.
-- **Next LNG terminals to curate:** Das Island (UAE, inside Hormuz), and the import terminals Europe leans on.
+- **Next LNG terminals:** the import terminals Europe leans on. GIE's ALSI publishes daily send-out and inventory per terminal with the AGSI key (checked 2026-10-29), which would give them measured status rather than hand-cited claims; ALSI facilities need mapping to GEM terminal ids.
 - East London LNG Terminal (proposed) has no country in GEM's file; it's imported with the country left empty.
 - 48 live units have no capacity in GEM's mtpa column. A terminal whose units all lack it shows capacity "Unknown"; one with some known shows only the known part.
 - GEM sometimes places units of one project apart; the terminal sits at its first unit with the terminal's status.
+- **Das Island (2026-10-29).** `operating` on Bloomberg's satellite report of loadings on 2 September (via Energy Connects), so it shows as unverified. ADNOC Gas's March statement only says it "adjusted" LNG production and gives no Das-specific volume; its 53% fall in second-quarter exports and liquids sales covers the whole company, not Das alone. Nothing fetchable on October loadings.
 
 ## Disruptions and reporting
 
