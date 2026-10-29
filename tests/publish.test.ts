@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import { failureMeta, publishDataset, validateRecords } from '../jobs/lib/output';
+import { eachWithFallback, failureMeta, publishDataset, validateRecords } from '../jobs/lib/output';
 import { addDays, dailyResponseSchema, dataThrough, dateWindows, toTransitSeries } from '../jobs/lib/portwatch';
 
 const schema = z.object({ id: z.string(), value: z.number() });
@@ -196,5 +196,51 @@ describe('fetchJson', () => {
     const pending = fetchJson('https://example.org', { source: 'X', bodyError: (b) => ((b as { error?: unknown }).error ? 'bad' : null) });
     await vi.runAllTimersAsync();
     await expect(pending).resolves.toEqual({ features: [] });
+  });
+});
+
+describe('eachWithFallback', () => {
+  const previous = (item: string) => (item === 'b' ? [`old ${item}`] : []);
+  const name = (item: string) => item;
+
+  it('tries a failure once more, then keeps its previous records and says so', async () => {
+    const calls = new Map<string, number>();
+    const fetch = async (item: string) => {
+      calls.set(item, (calls.get(item) ?? 0) + 1);
+      // c fails once and answers the second time; b always fails.
+      if (item === 'b' || (item === 'c' && calls.get(item) === 1)) throw new Error(`${item} down`);
+      return [`new ${item}`];
+    };
+    const { records, warning } = await eachWithFallback(['a', 'b', 'c'], { name, fetch, previous });
+    expect(records).toEqual(['new a', 'old b', 'new c']);
+    expect(warning).toBe('1 of 3 failed. b (previous kept): b down');
+    expect(calls.get('b')).toBe(2);
+  });
+
+  it('names an item with no previous records as missing', async () => {
+    const fetch = async (item: string) => (item === 'a' ? Promise.reject(new Error('down')) : [`new ${item}`]);
+    expect((await eachWithFallback(['a', 'b'], { name, fetch, previous })).warning).toBe('1 of 2 failed. a (missing): down');
+  });
+
+  it('throws when nothing could be fetched, so the whole previous file stays', async () => {
+    await expect(eachWithFallback(['a', 'b'], { name, fetch: () => Promise.reject(new Error('down')), previous })).rejects.toThrow('down');
+  });
+});
+
+describe('publishDataset with a warning', () => {
+  it('publishes the data and records the attempt as failed', async () => {
+    const result = await publishDataset({
+      id: 'demo',
+      schema,
+      dataDir: dir,
+      now: clock('2026-10-28T12:00:00Z'),
+      produce: async () => ({ records: [{ id: 'a', value: 1 }], meta, warning: '1 of 2 failed' }),
+    });
+    expect(result).toMatchObject({ ok: true, warning: '1 of 2 failed' });
+    expect(await read('demo.json')).toEqual([{ id: 'a', value: 1 }]);
+    expect(await read('meta/demo.json')).toMatchObject({
+      fetchedAt: '2026-10-28T12:00:00.000Z',
+      lastAttempt: { ok: false, error: '1 of 2 failed' },
+    });
   });
 });

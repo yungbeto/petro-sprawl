@@ -3,9 +3,9 @@
 // exports at the ports in PORT_CALLS -> public/data/port-calls.json. Both fields come from one query.
 // Run: npm run fetch:portwatch
 
-import { CHOKEPOINTS, FLOW_WINDOWS, PORT_CALLS, PORTWATCH, portExportsSeriesId, tankerCargoSeriesId } from '../src/lib/config';
+import { CHOKEPOINTS, FLOW_WINDOWS, PORT_CALLS, PORTWATCH, portCallsSeriesId, portExportsSeriesId, tankerCargoSeriesId } from '../src/lib/config';
 import { fetchJson } from './lib/http';
-import { publishDataset, report } from './lib/output';
+import { eachWithFallback, publishDataset, readPublished, report } from './lib/output';
 import {
   addDays,
   dailyResponseSchema,
@@ -15,6 +15,7 @@ import {
   type DailyRow,
 } from './lib/portwatch';
 import { observationSeriesSchema } from './lib/schemas';
+import type { ObservationSeries } from '../src/types';
 
 // One row per day, so a 1,000-day window fits one response and needs no paging. Each query
 // costs 12 to 17 s whatever its size, so fewer, larger windows are faster. No ordering or
@@ -64,23 +65,30 @@ const transits = await publishDataset({
   id: 'chokepoint-transits',
   schema: observationSeriesSchema,
   produce: async () => {
-    const series = [];
-    for (const chokepoint of CHOKEPOINTS) {
-      const rows = await fetchRows(CHOKEPOINT_LAYER, chokepoint.portwatchId, since, today);
-      console.log(`${chokepoint.portwatchId}: ${rows.length} rows`);
-      series.push(toTransitSeries(chokepoint.portwatchId, rows, { today, ...PORTWATCH }));
-      series.push(
-        toTransitSeries(chokepoint.portwatchId, rows, {
-          today,
-          ...PORTWATCH,
-          metric: 'tanker_cargo_t',
-          field: 'capacity_tanker',
-          unit: 't/day',
-          id: tankerCargoSeriesId(chokepoint.portwatchId),
-        }),
-      );
-    }
+    // A chokepoint PortWatch won't answer keeps its previous series, so one bad query doesn't cost all seven.
+    const previous = await readPublished<ObservationSeries>('chokepoint-transits');
+    const { records: series, warning } = await eachWithFallback(CHOKEPOINTS, {
+      name: (c) => c.portwatchId,
+      // Transits use the same `portwatch-<id>` form as port calls.
+      previous: (c) => previous.filter((s) => [portCallsSeriesId(c.portwatchId), tankerCargoSeriesId(c.portwatchId)].includes(s.id)),
+      fetch: async (chokepoint) => {
+        const rows = await fetchRows(CHOKEPOINT_LAYER, chokepoint.portwatchId, since, today);
+        console.log(`${chokepoint.portwatchId}: ${rows.length} rows`);
+        return [
+          toTransitSeries(chokepoint.portwatchId, rows, { today, ...PORTWATCH }),
+          toTransitSeries(chokepoint.portwatchId, rows, {
+            today,
+            ...PORTWATCH,
+            metric: 'tanker_cargo_t',
+            field: 'capacity_tanker',
+            unit: 't/day',
+            id: tankerCargoSeriesId(chokepoint.portwatchId),
+          }),
+        ];
+      },
+    });
     return {
+      warning,
       records: series,
       meta: {
         sourceUrl: PORTWATCH.dailyUrl.replace(/\/query$/, ''),
@@ -97,23 +105,28 @@ const portCalls = await publishDataset({
   id: 'port-calls',
   schema: observationSeriesSchema,
   produce: async () => {
-    const series = [];
-    for (const port of PORT_CALLS.ports) {
-      const rows = await fetchRows(PORT_LAYER, port.portwatchId, since, today);
-      console.log(`${port.portwatchId}: ${rows.length} rows`);
-      const common = { today, ...PORTWATCH, label: port.name };
-      series.push(toTransitSeries(port.portwatchId, rows, { ...common, metric: 'tanker_port_calls', field: 'portcalls_tanker' }));
-      series.push(
-        toTransitSeries(port.portwatchId, rows, {
-          ...common,
-          metric: 'tanker_exports_t',
-          field: 'export_tanker',
-          unit: 't/day',
-          id: portExportsSeriesId(port.portwatchId),
-        }),
-      );
-    }
+    const previous = await readPublished<ObservationSeries>('port-calls');
+    const { records: series, warning } = await eachWithFallback(PORT_CALLS.ports, {
+      name: (p) => p.portwatchId,
+      previous: (p) => previous.filter((s) => [portCallsSeriesId(p.portwatchId), portExportsSeriesId(p.portwatchId)].includes(s.id)),
+      fetch: async (port) => {
+        const rows = await fetchRows(PORT_LAYER, port.portwatchId, since, today);
+        console.log(`${port.portwatchId}: ${rows.length} rows`);
+        const common = { today, ...PORTWATCH, label: port.name };
+        return [
+          toTransitSeries(port.portwatchId, rows, { ...common, metric: 'tanker_port_calls', field: 'portcalls_tanker' }),
+          toTransitSeries(port.portwatchId, rows, {
+            ...common,
+            metric: 'tanker_exports_t',
+            field: 'export_tanker',
+            unit: 't/day',
+            id: portExportsSeriesId(port.portwatchId),
+          }),
+        ];
+      },
+    });
     return {
+      warning,
       records: series,
       meta: {
         sourceUrl: PORT_CALLS.dailyUrl.replace(/\/query$/, ''),
