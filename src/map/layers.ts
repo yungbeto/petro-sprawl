@@ -61,12 +61,49 @@ const DIAMOND = {
   mask: true,
 };
 
+/**
+ * Remembers the last result by argument identity. Layer data must keep its identity between rebuilds,
+ * or deck.gl regenerates every attribute (and re-tessellates polygons) on each hover or pan.
+ */
+function memoLast<A extends unknown[], T>(build: (...args: A) => T): (...args: A) => T {
+  let last: { args: A; value: T } | null = null;
+  return (...args) => {
+    if (!last || args.length !== last.args.length || args.some((a, i) => a !== last!.args[i])) last = { args, value: build(...args) };
+    return last.value;
+  };
+}
+
+const basinCollection = memoLast(
+  (basins: Basin[]): FeatureCollection<Polygon | MultiPolygon, Basin> => ({
+    type: 'FeatureCollection',
+    features: basins.map((basin) => ({ type: 'Feature', geometry: basin.geometry, properties: basin })),
+  }),
+);
+
+const storageCollection = memoLast(
+  (countries: Country[], fills: Map<string, number>): FeatureCollection<Polygon | MultiPolygon, Country> => ({
+    type: 'FeatureCollection',
+    features: countries.filter((c) => fills.has(c.id)).map((country) => ({ type: 'Feature', geometry: country.geometry, properties: country })),
+  }),
+);
+
+const pathsCache = new WeakMap<Pipeline[], PipelinePath[]>();
+
+/**
+ * One path per line of each pipeline. Cached per pipelines array: the same array keeps deck.gl from
+ * re-uploading every vertex to the GPU each time the layers are rebuilt (on hover, pan or selection).
+ */
 function pipelinePaths(pipelines: Pipeline[]): PipelinePath[] {
-  return pipelines.flatMap((pipeline) =>
-    pipeline.geometry.type === 'LineString'
-      ? [{ pipeline, path: pipeline.geometry.coordinates }]
-      : pipeline.geometry.coordinates.map((path) => ({ pipeline, path })),
-  );
+  let paths = pathsCache.get(pipelines);
+  if (!paths) {
+    paths = pipelines.flatMap((pipeline) =>
+      pipeline.geometry.type === 'LineString'
+        ? [{ pipeline, path: pipeline.geometry.coordinates }]
+        : pipeline.geometry.coordinates.map((path) => ({ pipeline, path })),
+    );
+    pathsCache.set(pipelines, paths);
+  }
+  return paths;
 }
 
 function bandColor(band: FlowBand | null | undefined, colors: MapColors) {
@@ -125,21 +162,13 @@ export function buildLayers({
     !highlight || highlight.terminals.has(id) || isSelected('terminal', id) ? 1 : FILTERS.fadeAlpha;
   const importTerminals = data.lngTerminals.filter((t) => t.facility === 'import');
 
-  const basinFeatures: FeatureCollection<Polygon | MultiPolygon, Basin> = {
-    type: 'FeatureCollection',
-    features: data.basins.map((basin) => ({ type: 'Feature', geometry: basin.geometry, properties: basin })),
-  };
+  const basinFeatures = basinCollection(data.basins);
   const paths = pipelinePaths(data.pipelines);
   const selectedPaths = paths.filter((p) => isSelected('pipeline', p.pipeline.id));
   const hoveredPaths = paths.filter((p) => p.pipeline.id === hoveredPipelineId);
   const flowPaths = paths.filter((p) => (pipelineShares.get(p.pipeline.id) ?? 0) > 0 && pipelineFade(p.pipeline.id) === 1);
 
-  const storageFeatures: FeatureCollection<Polygon | MultiPolygon, Country> = {
-    type: 'FeatureCollection',
-    features: data.countries
-      .filter((c) => storageFills.has(c.id))
-      .map((country) => ({ type: 'Feature', geometry: country.geometry, properties: country })),
-  };
+  const storageFeatures = storageCollection(data.countries, storageFills);
 
   return [
     // EU gas storage: country fill on a sequential scale, under everything else (SPEC 5).

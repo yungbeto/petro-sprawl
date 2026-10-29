@@ -12,6 +12,8 @@
         if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
       } catch (e) {}
     </script>
+    <!-- The largest dataset starts downloading with the code, not after it runs (src/app/useDatasets.ts). -->
+    <link rel="preload" href="%BASE_URL%data/pipelines.json" as="fetch" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
