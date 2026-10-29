@@ -1,10 +1,12 @@
-// Scheduled: EIA crude supply by PADD for "Where is my oil from?" (SPEC M6) -> public/data/oil-origins.json.
-// Imports by country of origin, receipts from other PADDs by mode, refinery input and field production,
-// monthly in thousand barrels, plus refinery count and capacity. Needs EIA_API_KEY (free at
-// eia.gov/opendata): in .env locally, as a secret in GitHub Actions.
+// Scheduled: EIA supply by PADD for "Where is my oil from?" (SPEC M6 and M7), monthly in thousand barrels.
+// -> public/data/oil-origins.json: crude imports by country of origin, receipts from other PADDs by mode,
+//    refinery input and field production, plus refinery count and capacity.
+// -> public/data/fuel-origins.json: gasoline, diesel and jet fuel used in each PADD (product supplied),
+//    received from other PADDs and imported by country, with fuel ethanol beside gasoline.
+// Needs EIA_API_KEY (free at eia.gov/opendata): in .env locally, as a secret in GitHub Actions.
 // Run: npm run fetch:eia
 
-import { EIA, PADDS, type PaddId } from '../src/lib/config';
+import { ETHANOL_PRODUCT, EIA, FUELS, PADDS, type PaddId } from '../src/lib/config';
 import type { OilOriginRegion } from '../src/types';
 import {
   eiaResponseSchema,
@@ -12,17 +14,18 @@ import {
   productionByPadd,
   receiptsByPadd,
   refineryInputByPadd,
+  toFuelRegions,
   toRegions,
   type EiaRow,
 } from './lib/eia';
 import { fetchJson } from './lib/http';
 import { publishDataset, report } from './lib/output';
-import { oilOriginRegionSchema } from './lib/schemas';
+import { fuelOriginRegionSchema, oilOriginRegionSchema } from './lib/schemas';
 
 const key = process.env.EIA_API_KEY;
 if (!key) throw new Error('EIA_API_KEY is not set: add it to .env locally, or as an Actions secret');
 
-/** Every row of one route for crude oil, paged. The key goes in the query string, as EIA requires. */
+/** Every row of one route, paged. The key goes in the query string, as EIA requires. */
 async function rows(route: string, facets: Record<string, string[]>, frequency = 'monthly', start?: string): Promise<EiaRow[]> {
   const out: EiaRow[] = [];
   for (let offset = 0; ; offset += EIA.pageSize) {
@@ -91,3 +94,32 @@ const result = await publishDataset({
   },
 });
 report(result, 'oil-origins');
+
+const fuelProducts = [...new Set([...FUELS.flatMap((f) => f.products), ETHANOL_PRODUCT])];
+const fuels = await publishDataset({
+  id: 'fuel-origins',
+  schema: fuelOriginRegionSchema,
+  produce: async () => {
+    const product = { product: fuelProducts };
+    const [supplied, imports, total, pipeline, tankerBarge, rail] = await Promise.all([
+      rows('petroleum/cons/psup', { product: FUELS.map((f) => f.supplied), duoarea: PADDS.map((p) => p.eia) }, 'monthly', start),
+      rows('petroleum/move/impcp', { ...product, process: ['IM0'] }, 'monthly', start),
+      rows('petroleum/move/ptb', product, 'monthly', start),
+      rows('petroleum/move/pipe', product, 'monthly', start),
+      rows('petroleum/move/tb', product, 'monthly', start),
+      rows('petroleum/move/rail', product, 'monthly', start),
+    ]);
+    const records = toFuelRegions({ supplied, imports, receipts: { total, pipeline, tankerBarge, rail } }, { months: EIA.months });
+    const periods = records[0]?.months.map((m) => m.period) ?? [];
+    return {
+      records,
+      meta: {
+        sourceUrl: 'https://www.eia.gov/opendata/',
+        sourceVersion: `EIA API v2: petroleum/cons/psup, move/impcp (IM0), move/ptb, pipe, tb, rail (${fuelProducts.join(', ')}, MBBL); ${periods[0]} to ${periods.at(-1)}`,
+        license: 'Public domain (U.S. Energy Information Administration)',
+        dataThrough: periods.at(-1),
+      },
+    };
+  },
+});
+report(fuels, 'fuel-origins');

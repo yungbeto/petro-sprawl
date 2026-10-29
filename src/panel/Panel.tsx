@@ -1,4 +1,5 @@
 import type { Selection, SelectionKind } from '../app/urlState';
+import type { RegionFuel } from '../lib/config';
 import { resolveSelection, type Datasets } from '../lib/data';
 import { formatDate } from '../lib/format';
 import { formatAge, formatUtcClock, overallFreshness, type Freshness } from '../lib/freshness';
@@ -13,7 +14,10 @@ interface PanelProps {
   collapsed: boolean;
   onToggleCollapsed: () => void;
   selection: Selection | null;
-  onSelect: (selection: Selection) => void;
+  onSelect: (selection: Selection, fuel?: RegionFuel) => void;
+  /** The open region's fuel, and switching it in place. */
+  fuel: RegionFuel;
+  onFuel: (fuel: RegionFuel) => void;
   data: Datasets;
   loaded: boolean;
   failed: string[];
@@ -65,6 +69,8 @@ export function Panel(props: PanelProps) {
             data={props.data}
             loaded={props.loaded}
             onSelect={props.onSelect}
+            fuel={props.fuel}
+            onFuel={props.onFuel}
             now={now}
           />
         ) : props.filter && props.matches ? (
@@ -121,13 +127,17 @@ function Detail({
   data,
   loaded,
   onSelect,
+  fuel,
+  onFuel,
   now,
 }: {
   selection: Selection;
   data: Datasets;
   loaded: boolean;
   now: Date;
-  onSelect: (selection: Selection) => void;
+  onSelect: (selection: Selection, fuel?: RegionFuel) => void;
+  fuel: RegionFuel;
+  onFuel: (fuel: RegionFuel) => void;
 }) {
   const resolved = resolveSelection(selection, data);
   return (
@@ -138,7 +148,7 @@ function Detail({
       {resolved?.kind === 'storage' && <StorageDetail item={resolved.item} data={data} />}
       {resolved?.kind === 'lng' && <LngDetail item={resolved.item} data={data} now={now} />}
       {resolved?.kind === 'terminal' && <OilTerminalDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
-      {resolved?.kind === 'region' && <RegionDetail item={resolved.item} data={data} onSelect={onSelect} />}
+      {resolved?.kind === 'region' && <RegionDetail item={resolved.item} data={data} onSelect={onSelect} fuel={fuel} onFuel={onFuel} />}
       {!resolved && (
         <section className="section">
           <p className="muted">{KIND_LABELS[selection.kind]}</p>

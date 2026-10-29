@@ -11,6 +11,7 @@ import { useNow } from './useNow';
 import { AppMenu, type MenuSection } from './AppMenu';
 import { datasetFreshness, sortFreshness } from '../lib/freshness';
 import { useUrlState } from './useUrlState';
+import type { RegionFuel } from '../lib/config';
 import { useDatasets } from './useDatasets';
 import { resolveSelection } from '../lib/data';
 import { useVisitChanges } from './useVisitChanges';
@@ -22,7 +23,7 @@ function isTypingTarget(target: EventTarget | null): boolean {
 }
 
 export function App() {
-  const { selection, select, filter, setFilter, back, setCamera, initialCamera } = useUrlState();
+  const { selection, select, fuel, setFuel, filter, setFilter, back, setCamera, initialCamera } = useUrlState();
   const { preference, setPreference, theme } = useTheme();
   const { data, loaded, failed } = useDatasets();
   const visit = useVisitChanges(data, loaded, failed);
@@ -49,8 +50,8 @@ export function App() {
   }, [selection]);
 
   const selectAndFocus = useCallback(
-    (next: Selection) => {
-      select(next);
+    (next: Selection, nextFuel?: RegionFuel) => {
+      select(next, nextFuel);
       setCollapsed(false);
       setFocus((prev) => ({ selection: next, nonce: (prev?.nonce ?? 0) + 1 }));
     },
@@ -174,7 +175,9 @@ export function App() {
           onToggleCollapsed={toggleCollapsed}
           selection={selection}
           onSelect={selectAndFocus}
-            data={data}
+          fuel={fuel}
+          onFuel={setFuel}
+          data={data}
           loaded={loaded}
           failed={failed}
           visit={visit}
@@ -193,6 +196,7 @@ export function App() {
           data={data}
           visibility={visibility}
           selection={selection}
+          fuel={fuel}
           highlight={matches}
           onSelect={selectAndFocus}
           focus={focus}

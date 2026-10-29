@@ -8,9 +8,14 @@ import {
   EIA_REFERENCE_YEAR,
   FILTERS,
   MEASURED_FLOW,
+  FUELS,
   PADDS,
   PADD_SOURCE,
+  REGION_FUELS,
+  REGION_FUEL_LABELS,
   agsiSeriesId,
+  type FuelId,
+  type RegionFuel,
   tankerCargoSeriesId,
 } from '../lib/config';
 import { storageSummary } from '../lib/gasStorage';
@@ -19,6 +24,7 @@ import {
   chokepointFlows,
   chokepointsInBasin,
   disruptionsFor,
+  fuelOriginsFor,
   originsFor,
   lngTerminalsInBasin,
   pipelineDisruptions,
@@ -41,8 +47,10 @@ import { lngStatus, pipelineAge, pipelineStatus, shareCoverage, terminalStatus }
 import { filterRows, type FilterRow } from '../lib/filters';
 import { chokepointRows } from '../lib/summary';
 import { AssetIcon, COMMODITY_PIPELINE } from './AssetIcon';
+import type { OriginRow } from '../lib/oilOrigins';
 
-type OnSelect = (selection: Selection) => void;
+/** A region can open on a given fuel (M7); everything else ignores it. */
+type OnSelect = (selection: Selection, fuel?: RegionFuel) => void;
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -1122,16 +1130,154 @@ function millionsPerDay(barrels: number): string {
   return formatNumber(barrels / 1e6, 2);
 }
 
-/** "Where is my oil from?" for one PADD (SPEC M6): shares of the crude flowing in, and the chokepoints on its routes. */
-export function RegionDetail({ item, data, onSelect }: { item: OilOriginRegion; data: Datasets; onSelect: OnSelect }) {
-  const origins = originsFor(data, item);
+/**
+ * "Where is my oil from?" for one PADD: the fuel it uses (SPEC M7) or the crude its refineries run
+ * (M6), switched in place.
+ */
+export function RegionDetail({
+  item,
+  data,
+  onSelect,
+  fuel,
+  onFuel,
+}: {
+  item: OilOriginRegion;
+  data: Datasets;
+  onSelect: OnSelect;
+  fuel: RegionFuel;
+  onFuel: (fuel: RegionFuel) => void;
+}) {
   const padd = PADDS.find((p) => p.id === item.id);
   const states = padd ? [...padd.states] : [];
   const stateList = states.length > 1 ? `${states.slice(0, -1).join(', ')} and ${states.at(-1)}` : (states[0] ?? '');
-  const flows = chokepointFlows(data);
   return (
     <>
       <Header kind="US fuel region" name={item.name} icon={<AssetIcon kind="region" large />} lede={stateList} />
+      <div className="fuel-switch" role="group" aria-label="Fuel">
+        {REGION_FUELS.map((f) => (
+          <button key={f} type="button" className="chip" aria-pressed={f === fuel} onClick={() => onFuel(f)}>
+            {REGION_FUEL_LABELS[f]}
+          </button>
+        ))}
+      </div>
+      {fuel === 'crude' ? (
+        <CrudeOrigins item={item} data={data} onSelect={onSelect} />
+      ) : (
+        <FuelOriginsView item={item} fuel={fuel} data={data} onSelect={onSelect} />
+      )}
+    </>
+  );
+}
+
+/** Ranked origins with share bars. Another region's row opens that region on crude. */
+function OriginList({ rows, onRegion }: { rows: OriginRow[]; onRegion: (id: string) => void }) {
+  return (
+    <ol className="origins">
+      {rows.map((row) => {
+        const body = (
+          <>
+            <span className="origins__head">
+              <span className="origins__label">{row.label}</span>
+              <span className="origins__share mono">{formatShare(row.share)}</span>
+            </span>
+            <span className="origins__bar" aria-hidden="true">
+              <span className={`origins__fill origins__fill--${row.kind}`} style={{ width: `${Math.max(row.share * 100, 0.5)}%` }} />
+            </span>
+            {row.detail && <span className="origins__detail">{row.detail}</span>}
+          </>
+        );
+        return (
+          <li key={row.key}>
+            {row.kind === 'region' && row.padd ? (
+              <button type="button" className="origins__row origins__row--link" onClick={() => onRegion(row.padd!)}>
+                {body}
+              </button>
+            ) : (
+              <div className="origins__row">{body}</div>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+/** M7: where the gasoline, diesel or jet fuel the region used came from. */
+function FuelOriginsView({ item, fuel, data, onSelect }: { item: OilOriginRegion; fuel: FuelId; data: Datasets; onSelect: OnSelect }) {
+  const origins = fuelOriginsFor(data, item.id, fuel);
+  const label = REGION_FUEL_LABELS[fuel].toLowerCase();
+  const eia = PADDS.find((p) => p.id === item.id)?.eia ?? 'R10';
+  if (!origins) return <p className="muted">Not enough months of EIA data loaded for this fuel yet.</p>;
+  return (
+    <>
+      <p className="section__lede region__caveat">
+        Where the {label} used in the region comes from, over the 12 months to <span className="mono">{monthLabel(origins.to)}</span>.
+        Fuel from different refineries mixes in pipelines and terminals, so this is the region's picture, not any one station's.
+      </p>
+      <Stats>
+        <Stat label="Used" value={millionsPerDay(origins.suppliedPerDay)} unit="million b/d" aside="EIA product supplied" />
+        <Stat
+          label="Came in"
+          value={`${Math.round((origins.inflowPerDay / origins.suppliedPerDay) * 100)}%`}
+          aside="of that, from other regions or abroad"
+        />
+      </Stats>
+      <section className="section">
+        <h3 className="section__title">Where it comes from</h3>
+        {origins.basis === 'inflow' && (
+          <p className="note">More flowed in than the region used, so it passes some on. The shares are of what flowed in.</p>
+        )}
+        <OriginList rows={origins.rows} onRegion={(id) => onSelect({ kind: 'region', id }, 'crude')} />
+        <p className="note">Another region opens on its crude: what its refineries run on.</p>
+      </section>
+      <p className="source">
+        Monthly EIA data from <span className="mono">{monthLabel(origins.from)}</span> to{' '}
+        <span className="mono">{monthLabel(origins.to)}</span>:{' '}
+        {fuelSeries(eia, fuel).map(([text, href], i) => (
+          <span key={href}>
+            {i > 0 && ', '}
+            <SourceLink href={href}>{text}</SourceLink>
+          </span>
+        ))}
+        .{' '}
+        {fuel === 'gasoline' &&
+          'Gasoline counts finished gasoline and blending components, which most gasoline moves as before terminals finish it. Ethanol is blended in the region and shows on its own. '}
+        What's left after receipts and imports is the region's own refining and blending plus changes in stocks, so it is
+        not a measured flow. Regions as <SourceLink href={PADD_SOURCE}>EIA defines them</SourceLink>. Arcs on the map are
+        schematic.
+      </p>
+    </>
+  );
+}
+
+/** EIA data pages behind a fuel view (all checked to exist): use, movements between regions, imports. */
+function fuelSeries(eia: string, fuel: FuelId): [string, string][] {
+  const products = FUELS.find((f) => f.id === fuel)!.products.map((p) => p.toLowerCase());
+  const padd = eia.toLowerCase();
+  const base = 'https://www.eia.gov/dnav/pet';
+  const withEthanol = fuel === 'gasoline' ? [...products, 'epooxe'] : products;
+  return [
+    ['product supplied', `${base}/pet_cons_psup_dc_${padd}_mbbl_m.htm`],
+    ...withEthanol.map((p): [string, string] => [`${PRODUCT_NAMES[p] ?? p} movements`, `${base}/pet_move_ptb_a_${p}_tnr_mbbl_m.htm`]),
+    ...withEthanol.map((p): [string, string] => [`${PRODUCT_NAMES[p] ?? p} imports`, `${base}/pet_move_impcp_a2_${padd}_${p}_im0_mbbl_m.htm`]),
+  ];
+}
+
+const PRODUCT_NAMES: Record<string, string> = {
+  epm0f: 'gasoline',
+  epobg: 'blending component',
+  epd0: 'distillate',
+  epjk: 'jet fuel',
+  epooxe: 'ethanol',
+};
+
+/** M6: where the crude flowing into the region comes from, and the chokepoints on its routes. */
+function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: Datasets; onSelect: OnSelect }) {
+  const origins = originsFor(data, item);
+  const padd = PADDS.find((p) => p.id === item.id);
+  const flows = chokepointFlows(data);
+  return (
+    <>
       {!origins ? (
         <p className="muted">Not enough months of EIA data loaded for this region yet.</p>
       ) : (
@@ -1162,33 +1308,7 @@ export function RegionDetail({ item, data, onSelect }: { item: OilOriginRegion; 
           </Stats>
           <section className="section">
             <h3 className="section__title">Where it comes from</h3>
-            <ol className="origins">
-              {origins.rows.map((row) => {
-                const body = (
-                  <>
-                    <span className="origins__head">
-                      <span className="origins__label">{row.label}</span>
-                      <span className="origins__share mono">{formatShare(row.share)}</span>
-                    </span>
-                    <span className="origins__bar" aria-hidden="true">
-                      <span className={`origins__fill origins__fill--${row.kind}`} style={{ width: `${Math.max(row.share * 100, 0.5)}%` }} />
-                    </span>
-                    {row.detail && <span className="origins__detail">{row.detail}</span>}
-                  </>
-                );
-                return (
-                  <li key={row.key}>
-                    {row.kind === 'region' && row.padd ? (
-                      <button type="button" className="origins__row origins__row--link" onClick={() => onSelect({ kind: 'region', id: row.padd! })}>
-                        {body}
-                      </button>
-                    ) : (
-                      <div className="origins__row">{body}</div>
-                    )}
-                  </li>
-                );
-              })}
-            </ol>
+            <OriginList rows={origins.rows} onRegion={(id) => onSelect({ kind: 'region', id }, 'crude')} />
           </section>
           {origins.exposure.length > 0 && (
             <section className="section">

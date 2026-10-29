@@ -7,6 +7,7 @@ import {
   type Selection,
 } from './urlState';
 import type { FilterId } from '../lib/filters';
+import { DEFAULT_REGION_FUEL, type RegionFuel } from '../lib/config';
 
 // Marks history entries this app pushed, so "back" only steps within the app.
 const PUSHED = 'etPushed';
@@ -22,23 +23,34 @@ function currentState() {
 export function useUrlState() {
   const [selection, setSelection] = useState<Selection | null>(() => currentState().selection);
   const [filter, setFilterState] = useState<FilterId | null>(() => currentState().filter ?? null);
+  const [fuel, setFuelState] = useState<RegionFuel>(() => currentState().fuel ?? DEFAULT_REGION_FUEL);
 
   useEffect(() => {
     const onPopState = () => {
       const state = currentState();
       setSelection(state.selection);
       setFilterState(state.filter ?? null);
+      setFuelState(state.fuel ?? DEFAULT_REGION_FUEL);
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
-  const select = useCallback((next: Selection | null) => {
+  /** Opens a selection; a region opens on `fuel`, the default unless given. */
+  const select = useCallback((next: Selection | null, nextFuel: RegionFuel = DEFAULT_REGION_FUEL) => {
     const state = currentState();
-    if (sameSelection(state.selection, next)) return;
-    const search = serializeUrlState({ ...state, selection: next }, window.location.search);
+    if (sameSelection(state.selection, next) && (state.fuel ?? DEFAULT_REGION_FUEL) === nextFuel) return;
+    const search = serializeUrlState({ ...state, selection: next, fuel: nextFuel }, window.location.search);
     window.history.pushState({ [PUSHED]: true }, '', urlFor(search));
     setSelection(next);
+    setFuelState(nextFuel);
+  }, []);
+
+  /** Switches the open region's fuel in place: a view choice, not a new step for Back. */
+  const setFuel = useCallback((next: RegionFuel) => {
+    const state = currentState();
+    window.history.replaceState(window.history.state, '', urlFor(serializeUrlState({ ...state, fuel: next }, window.location.search)));
+    setFuelState(next);
   }, []);
 
   /**
@@ -77,5 +89,5 @@ export function useUrlState() {
     window.history.replaceState(window.history.state, '', urlFor(search));
   }, []);
 
-  return { selection, select, filter, setFilter, back, setCamera, initialCamera: currentState().camera };
+  return { selection, select, fuel, setFuel, filter, setFilter, back, setCamera, initialCamera: currentState().camera };
 }

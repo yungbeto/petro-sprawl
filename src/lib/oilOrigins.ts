@@ -5,9 +5,10 @@ import type { ChokepointId, OilOriginRegion, OilRoute, OilTerminal, PaddRef, UsL
 import { EIA, PADDS } from './config';
 
 export interface OriginRow {
-  /** "country/SAU", "region/padd-2", "own" or "other". */
+  /** "country/SAU", "region/padd-2", "own", "ethanol" or "other". */
   key: string;
-  kind: 'country' | 'region' | 'own' | 'other';
+  /** "ethanol" is fuel ethanol blended into a region's gasoline (M7). */
+  kind: 'country' | 'region' | 'own' | 'ethanol' | 'other';
   label: string;
   /** How it arrives or where it's pumped, when EIA or a curated route says. */
   detail: string | null;
@@ -39,12 +40,12 @@ export interface RegionOrigins {
   routes: OilRoute[];
 }
 
-const daysInMonth = (period: string) => {
+export const daysInMonth = (period: string) => {
   const [y, m] = period.split('-').map(Number);
   return new Date(Date.UTC(y!, m!, 0)).getUTCDate();
 };
 
-const pct = (part: number, whole: number) => `${Math.round((part / whole) * 100)}%`;
+export const pct = (part: number, whole: number) => `${Math.round((part / whole) * 100)}%`;
 
 /** "Texas (56%), New Mexico (23%) and federal offshore, Gulf of America (20%)": the biggest few, in order. */
 function areaList(areas: { name: string; kbbl: number }[], total: number, max = 3): string {
@@ -52,13 +53,13 @@ function areaList(areas: { name: string; kbbl: number }[], total: number, max = 
   return parts.length > 1 ? `${parts.slice(0, -1).join(', ')} and ${parts.at(-1)}` : (parts[0] ?? '');
 }
 
-function sumBy<T>(items: T[], key: (t: T) => string, value: (t: T) => number): Map<string, number> {
+export function sumBy<T>(items: T[], key: (t: T) => string, value: (t: T) => number): Map<string, number> {
   const out = new Map<string, number>();
   for (const item of items) out.set(key(item), (out.get(key(item)) ?? 0) + value(item));
   return out;
 }
 
-const MODES = [
+export const MODES = [
   ['pipeline', 'pipeline'],
   ['tankerBarge', 'tanker and barge'],
   ['rail', 'rail'],
@@ -231,7 +232,7 @@ export interface OriginArc {
  * Schematic arcs into the region: from each country's label point, or another region's hub, to this
  * region's hub. They show where crude comes from, not the path a tanker or pipeline takes.
  */
-export function originArcs(origins: RegionOrigins, regionId: PaddRef, lookup: Pick<UsLookup, 'hubs' | 'countryPoints'>): OriginArc[] {
+export function originArcs(origins: Pick<RegionOrigins, 'rows'>, regionId: PaddRef, lookup: Pick<UsLookup, 'hubs' | 'countryPoints'>): OriginArc[] {
   const to = lookup.hubs[regionId];
   if (!to) return [];
   return origins.rows.flatMap((row): OriginArc[] => {

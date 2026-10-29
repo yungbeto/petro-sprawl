@@ -232,6 +232,26 @@ export const oilOriginRegionSchema = z.object({
     .optional(),
 });
 
+const importsList = z.array(z.object({ code: z.string().regex(/^[A-Z]{3}$/), name: z.string().min(1), kbbl }));
+const receiptsList = z.array(z.object({ from: paddRef, kbbl, pipeline: kbbl, tankerBarge: kbbl, rail: kbbl }));
+
+export const fuelOriginRegionSchema = z.object({
+  id: z.string().regex(/^padd-[1-5]\/(gasoline|diesel|jet)$/),
+  region: paddRef,
+  fuel: z.enum(['gasoline', 'diesel', 'jet']),
+  months: z
+    .array(
+      z.object({
+        period: z.string().regex(/^\d{4}-\d{2}$/),
+        supplied: kbbl,
+        imports: importsList,
+        receipts: receiptsList,
+        ethanol: z.object({ receipts: receiptsList, imports: importsList }).optional(),
+      }),
+    )
+    .min(12),
+});
+
 export const usLookupSchema = z.object({
   states: z.array(z.string().min(1)).min(50),
   zipRanges: z.array(z.tuple([z.number().int().min(0), z.number().int().max(99999), z.number().int().min(0)])).min(50),

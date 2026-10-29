@@ -120,3 +120,9 @@ Thirty-two corridor pipelines are curated in `data/curated/pipelines-evidence.js
 - Canadian crude could be drawn along the GEM cross-border pipelines into each PADD instead of a straight arc.
 - Over the 12 months, West Coast refineries ran more crude (1.98 million b/d) than flowed in (1.93). Stock draws would explain it, but that isn't checked; the panel's caption says "stocks and other inputs" rather than implying a surplus.
 
+## M7: where is my fuel from?
+
+- Fuel imports have no cited routes, so refined fuels show no chokepoints. Imports into the West Coast (jet fuel from Korea and others) are the likeliest to pass one; that would need routes for the exporting refineries' ports.
+- The gasoline remainder ("made in the region or drawn from stocks") also absorbs ethanol stock changes and any blending of other components (butane, for example). It is small on the East Coast (7%) and large where refineries are local.
+- Renewable diesel and biodiesel move separately (`EPOORD`); they aren't in distillate, so they're left out of "diesel and heating oil". Worth a row on the West Coast, where renewable diesel is a real share.
+

@@ -295,6 +295,30 @@ export const EIA = {
   minShare: 0.01,
 } as const;
 
+/**
+ * Refined fuels for "Where is my fuel from?" (SPEC M7), by EIA product code. Most gasoline moves
+ * between regions and is imported as blending components, finished at terminals, so gasoline counts
+ * both; `supplied` is the product whose "product supplied" is the region's use.
+ */
+export const FUELS = [
+  { id: 'gasoline', label: 'Gasoline', products: ['EPM0F', 'EPOBG'], supplied: 'EPM0F' },
+  { id: 'diesel', label: 'Diesel and heating oil', products: ['EPD0'], supplied: 'EPD0' },
+  { id: 'jet', label: 'Jet fuel', products: ['EPJK'], supplied: 'EPJK' },
+] as const;
+export type FuelId = (typeof FUELS)[number]['id'];
+/** Fuel ethanol: blended into gasoline in the region, so it counts as part of gasoline's supply. */
+export const ETHANOL_PRODUCT = 'EPOOXE';
+/** What the region view shows: a refined fuel, or the crude its refineries run (M6). Gasoline first. */
+export const REGION_FUELS = ['gasoline', 'diesel', 'jet', 'crude'] as const;
+export type RegionFuel = (typeof REGION_FUELS)[number];
+export const DEFAULT_REGION_FUEL: RegionFuel = 'gasoline';
+export const REGION_FUEL_LABELS: Record<RegionFuel, string> = {
+  gasoline: 'Gasoline',
+  diesel: 'Diesel and heating oil',
+  jet: 'Jet fuel',
+  crude: 'Crude',
+};
+
 export const DATASET_FRESHNESS: Record<
   string,
   { label: string; scheduled: boolean; staleAfterHours?: number; publisher?: string }
@@ -312,6 +336,7 @@ export const DATASET_FRESHNESS: Record<
   basins: { label: 'Basins', scheduled: false, publisher: 'USGS' },
   disruptions: { label: 'Disruptions', scheduled: false },
   'oil-origins': { label: 'US crude origins', scheduled: true, staleAfterHours: 72, publisher: 'EIA' },
+  'fuel-origins': { label: 'US fuel origins', scheduled: true, staleAfterHours: 72, publisher: 'EIA' },
   'oil-routes': { label: 'Oil export routes', scheduled: false },
   'us-lookup': { label: 'US places', scheduled: false, publisher: 'U.S. Census Bureau, EIA and Natural Earth' },
 };

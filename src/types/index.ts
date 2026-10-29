@@ -257,6 +257,27 @@ export interface OilOriginRegion {
   capacity?: { asOf: string; refineries: number; barrelsPerCalendarDay: number };
 }
 
+/** One month of a PADD's supply of one refined fuel, in thousand barrels (EIA). */
+export interface FuelMonth {
+  period: string;
+  /** EIA "product supplied": what the region used. */
+  supplied: number;
+  /** Imports into the region, by country. */
+  imports: CrudeMonth['imports'];
+  /** Received from other PADDs, with the split by mode. */
+  receipts: CrudeMonth['receipts'];
+  /** Gasoline only: fuel ethanol received from other PADDs and imported, blended in the region. */
+  ethanol?: { receipts: CrudeMonth['receipts']; imports: CrudeMonth['imports'] };
+}
+
+export interface FuelOriginRegion {
+  /** "padd-1/gasoline". */
+  id: string;
+  region: PaddRef;
+  fuel: 'gasoline' | 'diesel' | 'jet';
+  months: FuelMonth[];
+}
+
 /** Lookup tables for "Where is my oil from?": built once by import:us-lookup, read in the browser only. */
 export interface UsLookup {
   /** State names; zipRanges point into this list. */

@@ -1,11 +1,12 @@
 import { z } from 'zod';
-import { EIA, PADDS, type PaddId } from '../../src/lib/config';
-import type { CrudeMonth, OilOriginRegion } from '../../src/types';
+import { ETHANOL_PRODUCT, EIA, FUELS, PADDS, type PaddId } from '../../src/lib/config';
+import type { CrudeMonth, FuelMonth, FuelOriginRegion, OilOriginRegion } from '../../src/types';
 
 /** One row of an EIA API v2 `data` response. Values come as strings or numbers, or null when withheld. */
 export const eiaRowSchema = z.object({
   period: z.string(),
   duoarea: z.string(),
+  product: z.string().optional(),
   'area-name': z.string().nullable(),
   'series-description': z.string(),
   units: z.string(),
@@ -39,8 +40,17 @@ function put<T>(map: ByPeriod<T>, padd: PaddId, period: string, init: () => T): 
 }
 
 /**
- * Crude imports by PADD of processing (`move/impcp`, process IP0), by country. Group rows (OPEC,
- * Persian Gulf and the like) are dropped; each PADD-month's countries must add up to its total.
+ * "... from Democratic Republic of the Congo of Crude Oil (Thousand Barrels)" -> the country. Greedy,
+ * so a name with "of" in it survives; product names don't contain " of ".
+ */
+export function partnerName(description: string): string | null {
+  return description.match(/ from (.+) of [^()]+?(?: \(Thousand|$)/)?.[1] ?? null;
+}
+
+/**
+ * Imports by PADD (`move/impcp`) for one product, by country: crude by PADD of processing (IP0), fuels
+ * by PADD of entry (IM0). Group rows (OPEC, Persian Gulf and the like) are dropped; each PADD-month's
+ * countries must add up to its total.
  */
 export function importsByPadd(rows: EiaRow[]): ByPeriod<CrudeMonth['imports']> {
   const out: ByPeriod<CrudeMonth['imports']> = new Map();
@@ -55,7 +65,7 @@ export function importsByPadd(rows: EiaRow[]): ByPeriod<CrudeMonth['imports']> {
       put(out, padd, r.period, () => []);
       continue;
     }
-    const name = r['series-description'].match(/ from (.+?) of Crude Oil/)?.[1];
+    const name = partnerName(r['series-description']);
     if (!/^[A-Z]{3}$/.test(r['area-name'] ?? '') || !name || r.kbbl === 0) continue;
     put(out, padd, r.period, () => []).push({ code: r['area-name']!, name, kbbl: r.kbbl });
   }
@@ -97,7 +107,7 @@ export function receiptsByPadd(
   return out;
 }
 
-/** Refinery and blender net input of crude (`pnp/inpt`) by PADD. */
+/** Refinery and blender net input of crude (`pnp/inpt`), or product supplied (`cons/psup`), by PADD. */
 export function refineryInputByPadd(rows: EiaRow[]): ByPeriod<number> {
   const out: ByPeriod<number> = new Map();
   for (const r of volumes(rows)) {
@@ -160,5 +170,92 @@ export function toRegions(
     };
     const cap = capacity?.get(padd.id);
     return cap ? { ...region, capacity: cap } : region;
+  });
+}
+
+/** Rows split by EIA product code, so each product's totals are checked on their own. */
+function byProduct(rows: EiaRow[]): Map<string, EiaRow[]> {
+  const out = new Map<string, EiaRow[]>();
+  for (const r of rows) out.set(r.product ?? '', [...(out.get(r.product ?? '') ?? []), r]);
+  return out;
+}
+
+/** Sums per-product imports or receipts into one list per PADD-month, keyed by country or source PADD. */
+function merge<T extends { kbbl: number }>(maps: ByPeriod<T[]>[], key: (t: T) => string, add: (a: T, b: T) => T): ByPeriod<T[]> {
+  const out: ByPeriod<T[]> = new Map();
+  for (const map of maps) {
+    for (const [padd, periods] of map) {
+      for (const [period, list] of periods) {
+        const target = put(out, padd, period, () => []);
+        for (const item of list) {
+          const at = target.findIndex((t) => key(t) === key(item));
+          if (at < 0) target.push({ ...item });
+          else target[at] = add(target[at]!, item);
+        }
+      }
+    }
+  }
+  for (const periods of out.values()) for (const list of periods.values()) list.sort((a, b) => b.kbbl - a.kbbl);
+  return out;
+}
+
+type Imports = CrudeMonth['imports'];
+type Receipts = CrudeMonth['receipts'];
+
+/** Imports of several products (gasoline and its blending components, say) as one list per PADD-month. */
+export function importsOf(rows: EiaRow[], products: readonly string[]): ByPeriod<Imports> {
+  const split = byProduct(rows);
+  return merge(
+    products.map((p) => importsByPadd(split.get(p) ?? [])),
+    (i) => i.code,
+    (a, b) => ({ ...a, kbbl: a.kbbl + b.kbbl }),
+  );
+}
+
+/** Receipts of several products from other PADDs as one list per PADD-month, with the mode splits summed. */
+export function receiptsOf(rows: { total: EiaRow[]; pipeline: EiaRow[]; tankerBarge: EiaRow[]; rail: EiaRow[] }, products: readonly string[]): ByPeriod<Receipts> {
+  const only = (list: EiaRow[], p: string) => list.filter((r) => r.product === p);
+  return merge(
+    products.map((p) => receiptsByPadd({ total: only(rows.total, p), pipeline: only(rows.pipeline, p), tankerBarge: only(rows.tankerBarge, p), rail: only(rows.rail, p) })),
+    (r) => r.from,
+    (a, b) => ({ ...a, kbbl: a.kbbl + b.kbbl, pipeline: a.pipeline + b.pipeline, tankerBarge: a.tankerBarge + b.tankerBarge, rail: a.rail + b.rail }),
+  );
+}
+
+/**
+ * One record per PADD and fuel, for the months where every PADD reports what it used (product
+ * supplied) and some PADD reports receipts. Imports may be empty: a region can import none of a fuel.
+ * Gasoline carries fuel ethanol on the side, since ethanol is blended into it in the region.
+ */
+export function toFuelRegions(
+  rows: { supplied: EiaRow[]; imports: EiaRow[]; receipts: { total: EiaRow[]; pipeline: EiaRow[]; tankerBarge: EiaRow[]; rail: EiaRow[] } },
+  { months }: { months: number },
+): FuelOriginRegion[] {
+  const reported = (map: ByPeriod<unknown>) => new Set([...map.values()].flatMap((m) => [...m.keys()]));
+  const ethanolImports = importsOf(rows.imports, [ETHANOL_PRODUCT]);
+  const ethanolReceipts = receiptsOf(rows.receipts, [ETHANOL_PRODUCT]);
+  return FUELS.flatMap((fuel) => {
+    const supplied = refineryInputByPadd(rows.supplied.filter((r) => r.product === fuel.supplied));
+    const imports = importsOf(rows.imports, fuel.products);
+    const receipts = receiptsOf(rows.receipts, fuel.products);
+    const receiptMonths = reported(receipts);
+    const complete = [...reported(supplied)]
+      .filter((p) => receiptMonths.has(p) && PADDS.every((padd) => supplied.get(padd.id)?.has(p)))
+      .sort()
+      .slice(-months);
+    return PADDS.map((padd): FuelOriginRegion => ({
+      id: `${padd.id}/${fuel.id}`,
+      region: padd.id,
+      fuel: fuel.id,
+      months: complete.map((period): FuelMonth => ({
+        period,
+        supplied: supplied.get(padd.id)!.get(period)!,
+        imports: imports.get(padd.id)?.get(period) ?? [],
+        receipts: receipts.get(padd.id)?.get(period) ?? [],
+        ...(fuel.id === 'gasoline'
+          ? { ethanol: { receipts: ethanolReceipts.get(padd.id)?.get(period) ?? [], imports: ethanolImports.get(padd.id)?.get(period) ?? [] } }
+          : {}),
+      })),
+    }));
   });
 }

@@ -1,7 +1,7 @@
 // URL is the source of truth for selection and camera.
-// Format: ?sel=<kind>/<id>&f=<filter>&at=<lon>,<lat>,<zoom>
+// Format: ?sel=<kind>/<id>&fuel=<fuel>&f=<filter>&at=<lon>,<lat>,<zoom>
 
-import { CAMERA_PRECISION } from '../lib/config';
+import { CAMERA_PRECISION, DEFAULT_REGION_FUEL, REGION_FUELS, type RegionFuel } from '../lib/config';
 import { parseFilter, type FilterId } from '../lib/filters';
 
 export const SELECTION_KINDS = ['pipeline', 'chokepoint', 'basin', 'storage', 'lng', 'terminal', 'region'] as const;
@@ -22,6 +22,8 @@ export interface UrlState {
   selection: Selection | null;
   /** The active quick filter. Absent from older links, which is the same as none. */
   filter?: FilterId | null;
+  /** The fuel a region view shows. Left out of the URL for the default. */
+  fuel?: RegionFuel;
   camera: Camera | null;
 }
 
@@ -48,11 +50,16 @@ export function parseCamera(value: string | null): Camera | null {
   return { lon, lat, zoom };
 }
 
+export function parseFuel(value: string | null): RegionFuel {
+  return (REGION_FUELS as readonly string[]).includes(value ?? '') ? (value as RegionFuel) : DEFAULT_REGION_FUEL;
+}
+
 export function parseUrlState(search: string): UrlState {
   const params = new URLSearchParams(search);
   return {
     selection: parseSelection(params.get('sel')),
     filter: parseFilter(params.get('f')),
+    fuel: parseFuel(params.get('fuel')),
     camera: parseCamera(params.get('at')),
   };
 }
@@ -67,6 +74,8 @@ export function serializeUrlState(state: UrlState, base = ''): string {
   const params = new URLSearchParams(base);
   if (state.selection) params.set('sel', `${state.selection.kind}/${state.selection.id}`);
   else params.delete('sel');
+  if (state.selection?.kind === 'region' && state.fuel && state.fuel !== DEFAULT_REGION_FUEL) params.set('fuel', state.fuel);
+  else params.delete('fuel');
   if (state.filter) params.set('f', state.filter);
   else params.delete('f');
   if (state.camera) params.set('at', formatCamera(state.camera));

@@ -423,7 +423,9 @@ Done when: a region opens on gasoline, with diesel, jet fuel and crude a click a
 
 **Why.** M6 follows crude to a region's refineries, but much of the fuel a region burns is refined somewhere else. Over the twelve months to July 2026 the East Coast's refineries ran about 0.8 million b/d of crude. In July alone the region used about 3.1 million b/d of gasoline, and about 2.1 million b/d of gasoline and blending components arrived from the Gulf Coast by pipeline, tanker and barge. For most readers the honest first answer is "your gasoline was mostly refined on the Gulf Coast", then "from this crude".
 
-**Products.** Gasoline (finished motor gasoline `EPM0F` plus gasoline blending components `EPOBG`, since most gasoline moves as components and is finished at terminals), distillate fuel oil as "diesel and heating oil" (`EPD0`), and kerosene-type jet fuel (`EPJK`). Fuel ethanol (`EPOOXE`) is shown as its own row under gasoline, because the ethanol in a gallon is mostly made in the Midwest and arrives by rail, separately from the gasoline.
+**Products.** Gasoline (finished motor gasoline `EPM0F` plus gasoline blending components `EPOBG`, since most gasoline moves as components and is finished at terminals), distillate fuel oil as "diesel and heating oil" (`EPD0`), and kerosene-type jet fuel (`EPJK`). Fuel ethanol (`EPOOXE`) is shown as its own row under gasoline, because the ethanol in a gallon is mostly made in the Midwest and arrives by rail, separately from the gasoline. EIA publishes no product supplied for ethanol by PADD, so ethanol counts in gasoline's inflow and the share is of finished gasoline used, which includes the ethanol blended into it.
+
+**As built.** The data is `public/data/fuel-origins.json`, one record per PADD and fuel, written by `fetch:eia` beside `oil-origins.json`. Over the twelve months to July 2026 no region and fuel needed the "shares of what flowed in" fallback.
 
 **Sources (EIA API v2, the same key and job as M6):**
 
@@ -462,6 +464,5 @@ Done when: a region opens on gasoline, with diesel, jet fuel and crude a click a
 - Dark and light are both built; which should be the default when the system has no preference?
 - `STALE_AFTER_DAYS`: is 30 the right default for curated evidence?
 - M6 decided: shares over the trailing 12 months; the 300 largest US cities in search; refined fuel from other regions left out of the first version.
-- M7: should gasoline be the default fuel in the region view (recommended: it's what most people mean by "my oil"), or crude, as now?
-- M7: is diesel and heating oil together, as EIA reports distillate, clear enough, or should the label say only diesel?
+- M7 decided: the region view opens on gasoline; distillate is labelled "Diesel and heating oil".
 - Later: news sources and story placement (asset, then company, then place, then country), and matching companies to assets via GEM's ownership tracker.

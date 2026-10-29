@@ -545,27 +545,34 @@ test('the search bar titles what is open, and its × closes back to the previous
   await expect(page.getByRole('region', { name: 'Overview' })).toBeVisible();
 });
 
-test('where is my oil from: a ZIP code or state opens its fuel region and its chokepoints', async ({ page }) => {
+test('where is my oil from: a ZIP code opens its region on gasoline, with crude and its chokepoints a click away', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Where is my oil from?' })).toBeVisible();
   const search = page.getByRole('combobox', { name: 'Search' });
   await search.fill('90012');
   await expect(page.getByRole('option').first()).toContainText('West Coast region');
   await page.keyboard.press('Enter');
-  // Only the region goes in the URL, never the ZIP code.
+  // Only the region goes in the URL, never the ZIP code; gasoline is the default, so no fuel either.
   await expect(page).toHaveURL(/sel=region\/padd-5/);
   expect(page.url()).not.toContain('90012');
-  await expect(page.getByRole('heading', { name: 'West Coast' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Where it comes from' })).toBeVisible();
+  expect(page.url()).not.toContain('fuel=');
+  const panel = page.getByLabel('Panel', { exact: true });
+  await expect(panel.getByRole('heading', { name: 'West Coast' })).toBeVisible();
+  await expect(panel.getByRole('button', { name: 'Gasoline' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(panel.getByText('Made in the region or drawn from stocks')).toBeVisible();
 
-  // A chokepoint on the way opens the chokepoint.
-  await page.getByRole('button', { name: /^Strait of Hormuz/ }).click();
+  // Crude shows the chokepoints on cited routes; one opens the chokepoint.
+  await panel.getByRole('button', { name: 'Crude' }).click();
+  await expect(page).toHaveURL(/fuel=crude/);
+  await panel.getByRole('button', { name: /^Strait of Hormuz/ }).click();
   await expect(page).toHaveURL(/sel=chokepoint\/hormuz/);
+  expect(page.url()).not.toContain('fuel=');
 
-  // A state finds its region too, and another region's row opens that region.
-  await search.fill('ohio');
-  await page.getByRole('option', { name: /^Ohio US state/ }).click();
-  await expect(page).toHaveURL(/sel=region\/padd-2/);
-  await page.getByRole('button', { name: /^Gulf Coast/ }).click();
-  await expect(page).toHaveURL(/sel=region\/padd-3/);
+  // A state finds its region too; another region's row opens that region on crude.
+  await search.fill('new york');
+  await page.getByRole('option', { name: /^New York US state/ }).click();
+  await expect(page).toHaveURL(/sel=region\/padd-1/);
+  await panel.getByRole('button', { name: /^Gulf Coast/ }).click();
+  await expect(page).toHaveURL(/sel=region\/padd-3.*fuel=crude/);
+  await expect(panel.getByRole('button', { name: 'Crude' })).toHaveAttribute('aria-pressed', 'true');
 });

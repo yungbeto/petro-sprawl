@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { areaName, importsByPadd, productionByPadd, receiptsByPadd, refineryInputByPadd, toRegions, type EiaRow } from '../jobs/lib/eia';
+import { areaName, importsByPadd, importsOf, partnerName, productionByPadd, receiptsByPadd, refineryInputByPadd, toFuelRegions, toRegions, type EiaRow } from '../jobs/lib/eia';
 import { largestCities, paddHubs, placeName, zctaStates, zipRanges } from '../jobs/lib/us-lookup';
 import { PADDS } from '../src/lib/config';
 
@@ -63,6 +63,48 @@ describe('EIA crude rows', () => {
     expect(regions.map((r) => r.id)).toEqual(['padd-1', 'padd-2', 'padd-3', 'padd-4', 'padd-5']);
     expect(regions[0]!.months.map((m) => m.period)).toEqual(['2026-06', '2026-07']);
     expect(regions[2]!.months[1]).toMatchObject({ refineryInput: 100, imports: [], receipts: [{ from: 'padd-2', kbbl: 5 }] });
+  });
+});
+
+describe('EIA fuel rows', () => {
+  it('reads the country from a description, even one with "of" in its name', () => {
+    expect(partnerName('East Coast (PADD 1) Imports from Canada of Gasoline Blending Components (Thousand Barrels)')).toBe('Canada');
+    expect(partnerName('Gulf Coast (PADD 3) Imports by PADD of Processing from Democratic Republic of the Congo of Crude Oil (Thousand Barrels)')).toBe(
+      'Democratic Republic of the Congo',
+    );
+  });
+
+  it('adds gasoline and its blending components, each checked against its own total', () => {
+    const imp = (product: string, duoarea: string, value: number, area: string) =>
+      row(duoarea, value, `East Coast (PADD 1) Imports from ${area === 'PADD 1' ? 'All Countries' : area === 'CAN' ? 'Canada' : 'Norway'} of X (Thousand Barrels)`, { product, 'area-name': area });
+    const rows = [
+      imp('EPM0F', 'R10-Z00', 5, 'PADD 1'),
+      imp('EPM0F', 'R10-NCA', 5, 'CAN'),
+      imp('EPOBG', 'R10-Z00', 30, 'PADD 1'),
+      imp('EPOBG', 'R10-NCA', 10, 'CAN'),
+      imp('EPOBG', 'R10-NNO', 20, 'NOR'),
+    ];
+    expect(importsOf(rows, ['EPM0F', 'EPOBG']).get('padd-1')?.get('2026-07')).toEqual([
+      { code: 'NOR', name: 'Norway', kbbl: 20 },
+      { code: 'CAN', name: 'Canada', kbbl: 15 },
+    ]);
+  });
+
+  it('builds one record per PADD and fuel, with ethanol beside gasoline', () => {
+    const supplied = PADDS.flatMap((p) => ['EPM0F', 'EPD0', 'EPJK'].map((product) => row(p.eia, 100, 'supplied', { product })));
+    const total = [
+      row('R10-R30', 60, 'gasoline', { product: 'EPOBG' }),
+      row('R10-R30', 5, 'finished', { product: 'EPM0F' }),
+      row('R10-R20', 9, 'ethanol', { product: 'EPOOXE' }),
+      row('R10-R30', 40, 'diesel', { product: 'EPD0' }),
+      row('R10-R30', 30, 'jet', { product: 'EPJK' }),
+    ];
+    const records = toFuelRegions({ supplied, imports: [], receipts: { total, pipeline: [], tankerBarge: [], rail: [] } }, { months: 12 });
+    expect(records.map((r) => r.id)).toHaveLength(15);
+    const gasoline = records.find((r) => r.id === 'padd-1/gasoline')!;
+    expect(gasoline.months[0]).toMatchObject({ period: '2026-07', supplied: 100, receipts: [{ from: 'padd-3', kbbl: 65 }] });
+    expect(gasoline.months[0]!.ethanol?.receipts).toMatchObject([{ from: 'padd-2', kbbl: 9 }]);
+    expect(records.find((r) => r.id === 'padd-1/diesel')!.months[0]!.ethanol).toBeUndefined();
   });
 });
 

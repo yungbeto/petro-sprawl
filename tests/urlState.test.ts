@@ -51,8 +51,18 @@ describe('serializeUrlState', () => {
     expect(parseUrlState(search)).toEqual({
       selection: state.selection,
       filter: null,
+      fuel: 'gasoline',
       camera: { lon: 30.1235, lat: 50.9877, zoom: 4.26 },
     });
+  });
+
+  it('keeps a region fuel other than gasoline, and only on a region', () => {
+    const region = { kind: 'region' as const, id: 'padd-1' };
+    expect(serializeUrlState({ selection: region, fuel: 'diesel', camera: null })).toBe('?sel=region/padd-1&fuel=diesel');
+    expect(serializeUrlState({ selection: region, fuel: 'gasoline', camera: null })).toBe('?sel=region/padd-1');
+    expect(serializeUrlState({ selection: { kind: 'basin', id: 'permian' }, fuel: 'crude', camera: null })).toBe('?sel=basin/permian');
+    expect(parseUrlState('?sel=region/padd-1&fuel=crude').fuel).toBe('crude');
+    expect(parseUrlState('?sel=region/padd-1&fuel=kerosene').fuel).toBe('gasoline');
   });
 
   it('carries a known filter and ignores unknown ones', () => {

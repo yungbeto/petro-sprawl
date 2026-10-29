@@ -13,7 +13,8 @@ import {
 } from '../lib/config';
 import type { Theme } from '../lib/theme';
 import type { Camera, Selection } from '../app/urlState';
-import { chokepointFlows, originsFor, regionHighlight, resolveSelection, seriesById, type Datasets } from '../lib/data';
+import { chokepointFlows, fuelOriginsFor, originsFor, regionHighlight, resolveSelection, seriesById, type Datasets } from '../lib/data';
+import type { RegionFuel } from '../lib/config';
 import { originArcs, type OriginArc } from '../lib/oilOrigins';
 import { pipelineFlow } from '../lib/evidence';
 import { storageFills } from '../lib/gasStorage';
@@ -44,6 +45,8 @@ interface MapViewProps {
   data: Datasets;
   visibility: LayerVisibility;
   selection: Selection | null;
+  /** The fuel an open region shows: its arcs follow it. */
+  fuel: RegionFuel;
   /** Assets matching the active quick filter; everything else fades. Null shows all. */
   highlight: FilterMatches | null;
   onSelect: (selection: Selection) => void;
@@ -98,7 +101,7 @@ function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>,
 const NO_ARCS: OriginArc[] = [];
 
 export function MapView(props: MapViewProps) {
-  const { theme, initialCamera, data, visibility, selection, highlight, focus } = props;
+  const { theme, initialCamera, data, visibility, selection, fuel, highlight, focus } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const overlayRef = useRef<MapboxOverlay | null>(null);
@@ -193,13 +196,18 @@ export function MapView(props: MapViewProps) {
     map.setStyle(BASEMAP_STYLES[theme], { diff: false });
   }, [theme]);
 
-  // A region view draws its origin arcs and keeps only the chokepoints and terminals on its routes bright.
+  // A region view draws the arcs for its fuel. On crude it keeps the chokepoints and terminals on cited
+  // routes bright; refined fuels have no routes yet, so everything else dims.
   const regionView = useMemo(() => {
     const resolved = selection?.kind === 'region' ? resolveSelection(selection, data) : null;
     if (resolved?.kind !== 'region' || !data.usLookup) return null;
+    if (fuel !== 'crude') {
+      const origins = fuelOriginsFor(data, resolved.item.id, fuel);
+      return origins ? { arcs: originArcs(origins, resolved.item.id, data.usLookup), highlight: regionHighlight(null) } : null;
+    }
     const origins = originsFor(data, resolved.item);
     return origins ? { arcs: originArcs(origins, resolved.item.id, data.usLookup), highlight: regionHighlight(origins) } : null;
-  }, [selection, data]);
+  }, [selection, fuel, data]);
 
   // An id, not the hover itself, so moving along one pipeline doesn't rebuild the layers.
   const hoveredPipelineId = hover?.picked.kind === 'pipeline' ? hover.picked.item.id : null;
@@ -239,6 +247,16 @@ export function MapView(props: MapViewProps) {
     }
     // Only a new focus request moves the camera, not data or selection changes.
   }, [focus]);
+
+  // Switching a region's fuel changes its arcs (gasoline is mostly domestic, crude global), so reframe.
+  const framedFuel = useRef(fuel);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (framedFuel.current === fuel) return;
+    framedFuel.current = fuel;
+    const points = regionView?.arcs.flatMap((a) => [a.from, a.to]) ?? [];
+    if (map && points.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: points }), { padding: FIT_PADDING, maxZoom: 5 });
+  }, [fuel, regionView]);
 
   return (
     <div className="map" role="region" aria-label="Map">

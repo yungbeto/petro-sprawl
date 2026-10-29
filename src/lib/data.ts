@@ -4,6 +4,7 @@ import type {
   Country,
   DatasetMeta,
   Disruption,
+  FuelOriginRegion,
   LngTerminal,
   ObservationSeries,
   OilOriginRegion,
@@ -15,7 +16,8 @@ import type {
 import { chokepointFlow, type ChokepointFlow } from './flow';
 import type { FilterMatches } from './filters';
 import { regionOrigins, type RegionOrigins } from './oilOrigins';
-import { PORT_CALLS, portCallsSeriesId, portExportsSeriesId } from './config';
+import { fuelOrigins, type FuelOrigins } from './fuelOrigins';
+import { PORT_CALLS, portCallsSeriesId, portExportsSeriesId, type FuelId } from './config';
 import type { Selection } from '../app/urlState';
 import { lineTouchesPolygon, pointInPolygon } from './geo';
 
@@ -30,6 +32,8 @@ export interface Datasets {
   disruptions: Disruption[];
   /** "Where is my oil from?": EIA crude supply by PADD, curated export routes and the US lookup tables. */
   oilOrigins: OilOriginRegion[];
+  /** "Where is my fuel from?" (M7): gasoline, diesel and jet fuel by PADD. */
+  fuelOrigins: FuelOriginRegion[];
   oilRoutes: OilRoute[];
   usLookup: UsLookup | null;
   meta: DatasetMeta[];
@@ -45,6 +49,7 @@ export const EMPTY_DATASETS: Datasets = {
   series: [],
   disruptions: [],
   oilOrigins: [],
+  fuelOrigins: [],
   oilRoutes: [],
   usLookup: null,
   meta: [],
@@ -185,6 +190,12 @@ export function pipelinesTouchingBasin(basin: Basin, pipelines: Pipeline[]): Pip
 /** A region's crude origins, with the routes and terminals the data names. */
 export function originsFor(data: Datasets, region: OilOriginRegion): RegionOrigins | null {
   return regionOrigins(region, { routes: data.oilRoutes, terminals: data.oilTerminals });
+}
+
+/** Where one region's gasoline, diesel or jet fuel comes from. */
+export function fuelOriginsFor(data: Datasets, region: string, fuel: FuelId): FuelOrigins | null {
+  const record = data.fuelOrigins.find((r) => r.id === `${region}/${fuel}`);
+  return record ? fuelOrigins(record) : null;
 }
 
 /** What a region view keeps at full strength on the map: chokepoints and terminals on its routes. */
