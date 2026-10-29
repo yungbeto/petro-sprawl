@@ -13,6 +13,8 @@ interface SparklineProps {
   references: ReferenceLine[];
   unit: string;
   label: string;
+  /** How the caption shows the maximum; whole numbers by default. */
+  format?: (value: number) => string;
 }
 
 const WIDTH = 352;
@@ -20,7 +22,7 @@ const HEIGHT = 72;
 const PAD_TOP = 4;
 
 /** Hand-rolled SVG line with horizontal reference lines. Y axis starts at zero. */
-export function Sparkline({ points, references, unit, label }: SparklineProps) {
+export function Sparkline({ points, references, unit, label, format = (v) => String(Math.round(v)) }: SparklineProps) {
   if (points.length < 2) return <p className="muted">Not enough data for a chart.</p>;
   const max = Math.max(...points.map((p) => p.value), ...references.map((r) => r.value), 1) * 1.05;
   const x = (i: number) => (i / (points.length - 1)) * WIDTH;
@@ -48,7 +50,7 @@ export function Sparkline({ points, references, unit, label }: SparklineProps) {
       <figcaption className="sparkline__caption mono">
         <span>{first.date}</span>
         <span>
-          max {Math.round(max / 1.05)} {unit}
+          max {format(max / 1.05)} {unit}
         </span>
         <span>{last.date}</span>
       </figcaption>

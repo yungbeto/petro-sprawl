@@ -75,6 +75,13 @@ describe('portCallsFor', () => {
   it('finds the loaded port series for a pipeline', () => {
     expect(portCallsFor(withSeries, 'btc', ports).map((c) => [c.port, c.flow.latestDate])).toEqual([['Ceyhan', '2026-10-30']]);
     expect(portCallsFor(withSeries, 'kirkuk-ceyhan', ports)).toHaveLength(1);
+    // No export series loaded: the calls still show.
+    expect(portCallsFor(withSeries, 'btc', ports)[0]?.exports).toBeNull();
+    const withExports = {
+      ...withSeries,
+      series: [...withSeries.series, { id: 'portwatch-port162-exports', metric: 'tanker_exports_t' as const, unit: 't/day', points }],
+    };
+    expect(portCallsFor(withExports, 'btc', ports)[0]?.exports?.recent?.mean).toBe(4);
   });
 
   it('is empty for pipelines without a port or before the series loads', () => {

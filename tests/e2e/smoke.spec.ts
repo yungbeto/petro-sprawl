@@ -332,6 +332,7 @@ test('a pipeline ending at a reported port shows its tanker calls', async ({ pag
   const panel = page.getByLabel('Panel');
   await expect(panel.getByRole('heading', { name: 'Tanker calls at Fujairah, last 90 days' })).toBeVisible();
   await expect(panel.getByText(/not flow on this pipeline/)).toBeVisible();
+  await expect(panel.getByText(/Estimated exports by tanker: [\d,.]+ (million )?t per day/)).toBeVisible();
 });
 
 test('an oil terminal opens with its claim, disruptions and route to sea', async ({ page }) => {

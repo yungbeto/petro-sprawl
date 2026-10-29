@@ -346,6 +346,11 @@ kbd {
   text-wrap: pretty;
 }
 
+/* A second reading under a chart, such as estimated exports below port calls. */
+.sparkline + .section__lede {
+  margin-top: var(--space-3);
+}
+
 .section__lede .band {
   margin-left: var(--space-1);
 }

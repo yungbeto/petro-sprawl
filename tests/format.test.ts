@@ -38,3 +38,13 @@ describe('formatCountry', () => {
     expect(formatCountry('-99')).toBe('-99');
   });
 });
+
+import { formatTonnes } from '../src/lib/format';
+
+describe('formatTonnes', () => {
+  it('rounds a modelled estimate to millions or thousands', () => {
+    expect(formatTonnes(2_148_000)).toBe('2.1 million t');
+    expect(formatTonnes(61_234)).toBe('61,000 t');
+    expect(formatTonnes(640)).toBe('640 t');
+  });
+});

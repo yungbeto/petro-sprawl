@@ -1,9 +1,9 @@
-// Scheduled: IMF PortWatch daily tanker transits for our seven chokepoints -> public/data/chokepoint-transits.json,
-// and daily tanker port calls at the ports in PORT_CALLS -> public/data/port-calls.json
+// Scheduled: IMF PortWatch daily tanker transits and estimated tanker cargo (metric tons) for our seven
+// chokepoints -> public/data/chokepoint-transits.json, and daily tanker port calls and estimated tanker
+// exports at the ports in PORT_CALLS -> public/data/port-calls.json. Both fields come from one query.
 // Run: npm run fetch:portwatch
 
-import type { z } from 'zod';
-import { CHOKEPOINTS, FLOW_WINDOWS, PORT_CALLS, PORTWATCH } from '../src/lib/config';
+import { CHOKEPOINTS, FLOW_WINDOWS, PORT_CALLS, PORTWATCH, portExportsSeriesId, tankerCargoSeriesId } from '../src/lib/config';
 import { fetchJson } from './lib/http';
 import { publishDataset, report } from './lib/output';
 import {
@@ -11,7 +11,6 @@ import {
   dailyResponseSchema,
   dataThrough,
   dateWindows,
-  portCallsResponseSchema,
   toTransitSeries,
   type DailyRow,
 } from './lib/portwatch';
@@ -24,19 +23,19 @@ const WINDOW_DAYS = 1000;
 
 interface Layer {
   url: string;
-  field: string;
-  schema: z.ZodType<{ features: { attributes: DailyRow }[]; exceededTransferLimit?: boolean | undefined }>;
+  fields: readonly string[];
 }
 
-const CHOKEPOINT_LAYER: Layer = { url: PORTWATCH.dailyUrl, field: 'n_tanker', schema: dailyResponseSchema };
-const PORT_LAYER: Layer = { url: PORT_CALLS.dailyUrl, field: 'portcalls_tanker', schema: portCallsResponseSchema };
+const CHOKEPOINT_LAYER: Layer = { url: PORTWATCH.dailyUrl, fields: ['n_tanker', 'capacity_tanker'] };
+const PORT_LAYER: Layer = { url: PORT_CALLS.dailyUrl, fields: ['portcalls_tanker', 'export_tanker'] };
 
 async function fetchRows(layer: Layer, portwatchId: string, since: string, until: string): Promise<DailyRow[]> {
   const rows: DailyRow[] = [];
+  const schema = dailyResponseSchema(layer.fields);
   for (const [from, to] of dateWindows(since, until, WINDOW_DAYS)) {
     const params = new URLSearchParams({
       where: `portid='${portwatchId}' AND date >= DATE '${from}' AND date <= DATE '${to}'`,
-      outFields: `date,portid,${layer.field}`,
+      outFields: `date,portid,${layer.fields.join(',')}`,
       resultRecordCount: '1000',
       f: 'json',
     });
@@ -48,7 +47,7 @@ async function fetchRows(layer: Layer, portwatchId: string, since: string, until
       attempts: PORTWATCH.attempts,
       bodyError: (b) => (b && typeof b === 'object' && 'error' in b ? JSON.stringify(b.error) : null),
     });
-    const page = layer.schema.parse(body);
+    const page = schema.parse(body);
     if (page.exceededTransferLimit) throw new Error(`PortWatch returned more than one page for ${portwatchId} ${from} to ${to}`);
     rows.push(...page.features.map((f) => f.attributes));
   }
@@ -58,7 +57,8 @@ async function fetchRows(layer: Layer, portwatchId: string, since: string, until
 const today = new Date().toISOString().slice(0, 10);
 // Enough history for the five-year baseline that sits before the trailing year, plus slack.
 const since = addDays(today, -(FLOW_WINDOWS.trailingDays + FLOW_WINDOWS.fiveYearDays + 30));
-const license = 'IMF PortWatch terms (attribution)';
+// PortWatch asks to be cited as "Sources: UN Global Platform; IMF PortWatch".
+const license = 'IMF PortWatch terms (attribution); AIS data from the UN Global Platform';
 
 const transits = await publishDataset({
   id: 'chokepoint-transits',
@@ -69,12 +69,22 @@ const transits = await publishDataset({
       const rows = await fetchRows(CHOKEPOINT_LAYER, chokepoint.portwatchId, since, today);
       console.log(`${chokepoint.portwatchId}: ${rows.length} rows`);
       series.push(toTransitSeries(chokepoint.portwatchId, rows, { today, ...PORTWATCH }));
+      series.push(
+        toTransitSeries(chokepoint.portwatchId, rows, {
+          today,
+          ...PORTWATCH,
+          metric: 'tanker_cargo_t',
+          field: 'capacity_tanker',
+          unit: 't/day',
+          id: tankerCargoSeriesId(chokepoint.portwatchId),
+        }),
+      );
     }
     return {
       records: series,
       meta: {
         sourceUrl: PORTWATCH.dailyUrl.replace(/\/query$/, ''),
-        sourceVersion: `IMF PortWatch Daily_Chokepoints_Data, n_tanker; points from ${addDays(today, -PORTWATCH.keepDays)}, five-year baseline from history since ${since}`,
+        sourceVersion: `IMF PortWatch Daily_Chokepoints_Data, n_tanker and capacity_tanker; points from ${addDays(today, -PORTWATCH.keepDays)}, five-year baseline from history since ${since}`,
         license,
         dataThrough: dataThrough(series),
       },
@@ -91,13 +101,23 @@ const portCalls = await publishDataset({
     for (const port of PORT_CALLS.ports) {
       const rows = await fetchRows(PORT_LAYER, port.portwatchId, since, today);
       console.log(`${port.portwatchId}: ${rows.length} rows`);
-      series.push(toTransitSeries(port.portwatchId, rows, { today, ...PORTWATCH, metric: 'tanker_port_calls', label: port.name }));
+      const common = { today, ...PORTWATCH, label: port.name };
+      series.push(toTransitSeries(port.portwatchId, rows, { ...common, metric: 'tanker_port_calls', field: 'portcalls_tanker' }));
+      series.push(
+        toTransitSeries(port.portwatchId, rows, {
+          ...common,
+          metric: 'tanker_exports_t',
+          field: 'export_tanker',
+          unit: 't/day',
+          id: portExportsSeriesId(port.portwatchId),
+        }),
+      );
     }
     return {
       records: series,
       meta: {
         sourceUrl: PORT_CALLS.dailyUrl.replace(/\/query$/, ''),
-        sourceVersion: `IMF PortWatch Daily_Ports_Data, portcalls_tanker; points from ${addDays(today, -PORTWATCH.keepDays)}, five-year baseline from history since ${since}`,
+        sourceVersion: `IMF PortWatch Daily_Ports_Data, portcalls_tanker and export_tanker; points from ${addDays(today, -PORTWATCH.keepDays)}, five-year baseline from history since ${since}`,
         license,
         dataThrough: dataThrough(series),
       },

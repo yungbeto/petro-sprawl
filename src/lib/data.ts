@@ -1,6 +1,6 @@
 import type { Basin, Chokepoint, Country, DatasetMeta, Disruption, LngTerminal, ObservationSeries, OilTerminal, Pipeline } from '../types';
 import { chokepointFlow, type ChokepointFlow } from './flow';
-import { PORT_CALLS, portCallsSeriesId } from './config';
+import { PORT_CALLS, portCallsSeriesId, portExportsSeriesId } from './config';
 import type { Selection } from '../app/urlState';
 import { lineTouchesPolygon, pointInPolygon } from './geo';
 
@@ -41,6 +41,14 @@ export function chokepointFlows(data: Datasets): Map<string, ChokepointFlow> {
 export interface PortCalls {
   port: string;
   flow: ChokepointFlow;
+  /** PortWatch's estimate of tanker exports in metric tons, when loaded. */
+  exports: ChokepointFlow | null;
+}
+
+/** Tanker calls and estimated exports at one PortWatch port, or null before the calls load. */
+export function portCallsAt(data: Datasets, portwatchId: string, port: string): PortCalls | null {
+  const flow = chokepointFlow(seriesById(data, portCallsSeriesId(portwatchId)));
+  return flow ? { port, flow, exports: chokepointFlow(seriesById(data, portExportsSeriesId(portwatchId))) } : null;
 }
 
 /** Tanker port calls at the ports a pipeline ends at, for those PortWatch reports and that have loaded. */
@@ -51,8 +59,8 @@ export function portCallsFor(
 ): PortCalls[] {
   return ports.flatMap((port) => {
     if (!port.pipelineIds.includes(pipelineId)) return [];
-    const flow = chokepointFlow(seriesById(data, portCallsSeriesId(port.portwatchId)));
-    return flow ? [{ port: port.name, flow }] : [];
+    const calls = portCallsAt(data, port.portwatchId, port.name);
+    return calls ? [calls] : [];
   });
 }
 

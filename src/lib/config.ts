@@ -138,6 +138,12 @@ export const PORT_CALLS = {
 } as const;
 
 export const portCallsSeriesId = (portwatchId: string) => `portwatch-${portwatchId}`;
+/**
+ * PortWatch's estimates of cargo in metric tons: each tanker's payload, judged from its draft, times
+ * its deadweight tonnage. Modelled from AIS, not measured; "tanker" includes products and chemicals.
+ */
+export const tankerCargoSeriesId = (portwatchId: string) => `portwatch-${portwatchId}-cargo`;
+export const portExportsSeriesId = (portwatchId: string) => `portwatch-${portwatchId}-exports`;
 
 /** Curated-to-GEM dedup: smallest name similarity (Dice on name words) that counts as a match. */
 export const DEDUP = { minNameSimilarity: 0.6 } as const;

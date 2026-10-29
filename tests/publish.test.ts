@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { failureMeta, publishDataset, validateRecords } from '../jobs/lib/output';
-import { addDays, dataThrough, dateWindows, portCallsResponseSchema, toTransitSeries } from '../jobs/lib/portwatch';
+import { addDays, dailyResponseSchema, dataThrough, dateWindows, toTransitSeries } from '../jobs/lib/portwatch';
 
 const schema = z.object({ id: z.string(), value: z.number() });
 const meta = { sourceUrl: 'https://example.org', license: 'test' };
@@ -84,7 +84,7 @@ describe('validateRecords and failureMeta', () => {
 
 describe('toTransitSeries', () => {
   const opts = { today: '2026-10-28', keepDays: 400, minPoints: 3, maxLagDays: 21 };
-  const row = (date: string, n: number, portid = 'chokepoint6') => ({ date, portid, n_tanker: n });
+  const row = (date: string, n: number, portid = 'chokepoint6') => ({ date, portid, values: { n_tanker: n } });
   /** One row per day for `days` days ending on `end`, all with value n. */
   const daily = (end: string, days: number, n: number) =>
     Array.from({ length: days }, (_, i) => row(addDays(end, -i), n));
@@ -104,18 +104,34 @@ describe('toTransitSeries', () => {
     expect(series.id).toBe('portwatch-chokepoint6');
   });
 
-  it('builds port call series from Daily_Ports_Data rows', () => {
-    const page = portCallsResponseSchema.parse({
-      features: daily('2026-10-25', 2400, 4).map((r) => ({ attributes: { date: r.date, portid: 'port362', portcalls_tanker: r.n_tanker } })),
+  it('builds port call and export series from one set of Daily_Ports_Data rows', () => {
+    const page = dailyResponseSchema(['portcalls_tanker', 'export_tanker']).parse({
+      features: daily('2026-10-25', 2400, 4).map((r) => ({
+        attributes: { date: r.date, portid: 'port362', portcalls_tanker: 4, export_tanker: 61234.5 },
+      })),
     });
-    const series = toTransitSeries('port362', page.features.map((f) => f.attributes), {
+    const rows = page.features.map((f) => f.attributes);
+    const calls = toTransitSeries('port362', rows, { ...opts, metric: 'tanker_port_calls', field: 'portcalls_tanker', label: 'Fujairah' });
+    expect(calls).toMatchObject({ id: 'portwatch-port362', metric: 'tanker_port_calls', label: 'Fujairah', unit: 'tankers/day' });
+    expect(calls.points.at(-1)).toEqual({ date: '2026-10-25', value: 4 });
+    expect(calls.fiveYear?.mean).toBe(4);
+    const exports = toTransitSeries('port362', rows, {
       ...opts,
-      metric: 'tanker_port_calls',
-      label: 'Fujairah',
+      metric: 'tanker_exports_t',
+      field: 'export_tanker',
+      unit: 't/day',
+      id: 'portwatch-port362-exports',
     });
-    expect(series).toMatchObject({ id: 'portwatch-port362', metric: 'tanker_port_calls', label: 'Fujairah', unit: 'tankers/day' });
-    expect(series.points.at(-1)).toEqual({ date: '2026-10-25', value: 4 });
-    expect(series.fiveYear?.mean).toBe(4);
+    expect(exports).toMatchObject({ id: 'portwatch-port362-exports', unit: 't/day' });
+    expect(exports.fiveYear?.mean).toBeCloseTo(61234.5);
+  });
+
+  it('rejects rows missing a requested field or with a negative value', () => {
+    const schema = dailyResponseSchema(['n_tanker', 'capacity_tanker']);
+    expect(() => schema.parse({ features: [{ attributes: { date: '2026-10-25', portid: 'chokepoint6', n_tanker: 3 } }] })).toThrow();
+    expect(() =>
+      schema.parse({ features: [{ attributes: { date: '2026-10-25', portid: 'chokepoint6', n_tanker: 3, capacity_tanker: -1 } }] }),
+    ).toThrow();
   });
 
   it('computes the five-year baseline from history before the trailing year', () => {

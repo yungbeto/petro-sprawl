@@ -9,7 +9,7 @@ import {
   FILTERS,
   MEASURED_FLOW,
   agsiSeriesId,
-  portCallsSeriesId,
+  tankerCargoSeriesId,
 } from '../lib/config';
 import { storageSummary } from '../lib/gasStorage';
 import { ALSI_URL, ENTSOG_URL, isUnverified, latestClaim, pipelineFlow } from '../lib/evidence';
@@ -19,6 +19,7 @@ import {
   lngTerminalsInBasin,
   pipelineDisruptions,
   pipelinesTouchingBasin,
+  portCallsAt,
   portCallsFor,
   seriesById,
   terminalsForPipeline,
@@ -27,8 +28,8 @@ import {
   systemSections,
   type Datasets,
 } from '../lib/data';
-import { chokepointFlow, type FlowBand } from '../lib/flow';
-import { formatIndex, formatIndexShare, formatNumber } from '../lib/format';
+import { chokepointFlow, type ChokepointFlow, type FlowBand } from '../lib/flow';
+import { formatIndex, formatIndexShare, formatNumber, formatTonnes } from '../lib/format';
 import type { Disruption } from '../types';
 import { Sparkline } from './Sparkline';
 import { formatCapacity, formatCountry, formatEnergyPerDay, formatLonLat, formatMbd } from '../lib/format';
@@ -125,6 +126,7 @@ export function ChokepointDetail({ item, data, onSelect }: { item: Chokepoint; d
   const note = CHOKEPOINT_NOTES[item.id];
   const terminals = oilTerminalRows(terminalsViaChokepoint(data, item.id));
   const flow = chokepointFlow(seriesById(data, item.transitSeriesId));
+  const cargo = chokepointFlow(seriesById(data, tankerCargoSeriesId(item.transitSeriesId.replace(/^portwatch-/, ''))));
   const disruptions = disruptionsFor(data, 'chokepoint', item.id);
   return (
     <>
@@ -172,6 +174,14 @@ export function ChokepointDetail({ item, data, onSelect }: { item: Chokepoint; d
               ]}
             />
           </section>
+          {cargo && (
+            <TonnesSection
+              title="Estimated tanker cargo, last 90 days"
+              flow={cargo}
+              noun="carried through"
+              label={`Estimated daily tanker cargo through ${item.name}`}
+            />
+          )}
         </>
       ) : (
         <p className="muted">Tanker transits not loaded yet.</p>
@@ -193,8 +203,9 @@ export function ChokepointDetail({ item, data, onSelect }: { item: Chokepoint; d
         </Row>
       </Facts>
       <p className="source">
-        Transits are vessel counts from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>; the EIA
-        figure is barrels, shown for scale. The two aren't compared.
+        Transits are vessel counts from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>, and cargo
+        is PortWatch's estimate from each tanker's draft and size, in metric tons of any liquid cargo. The EIA figure is
+        barrels, shown for scale. They aren't compared.
         {note && ` ${note}`}
       </p>
     </>
@@ -206,7 +217,7 @@ export function ChokepointDetail({ item, data, onSelect }: { item: Chokepoint; d
  * be loading oil from elsewhere, and more than one pipeline can end at the same port.
  */
 function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: boolean }) {
-  const { port, flow } = calls;
+  const { port, flow, exports } = calls;
   return (
     <section className="section">
       <h3 className="section__title">Tanker calls at {port}, last 90 days</h3>
@@ -229,10 +240,53 @@ function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: bo
           ...(flow.trailing ? [{ value: flow.trailing.mean, label: 'Trailing year', style: 'dotted' as const }] : []),
         ]}
       />
+      {exports?.recent && (
+        <p className="section__lede">
+          Estimated exports by tanker: <span className="mono">{formatTonnes(exports.recent.mean)}</span> per day
+          {exports.indexFiveYear !== null && (
+            <>
+              , <span className="mono">{formatIndexShare(exports.indexFiveYear)}</span> of the five-year average
+            </>
+          )}
+          .
+        </p>
+      )}
       <p className="note">
         Calls by tankers of any cargo, from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>.{' '}
         {terminal ? 'They count all tanker traffic at the port, not crude loadings.' : 'They show traffic at the port, not flow on this pipeline.'}
+        {exports?.recent && ' Exports are PortWatch\'s estimate from the change in each tanker\'s draft, in metric tons of any liquid cargo.'}
       </p>
+    </section>
+  );
+}
+
+/** A PortWatch tonnage estimate: the 7-day level against the five-year average, and 90 days of it. */
+function TonnesSection({ title, flow, noun, label }: { title: string; flow: ChokepointFlow; noun: string; label: string }) {
+  return (
+    <section className="section">
+      <h3 className="section__title">{title}</h3>
+      {flow.recent && (
+        <p className="section__lede">
+          <span className="mono">{formatTonnes(flow.recent.mean)}</span> {noun} per day over the 7 days to{' '}
+          <span className="mono">{flow.latestDate}</span>
+          {flow.indexFiveYear !== null && (
+            <>
+              , <span className="mono">{formatIndexShare(flow.indexFiveYear)}</span> of the five-year average
+            </>
+          )}
+          . <Band band={flow.band} />
+        </p>
+      )}
+      <Sparkline
+        points={flow.sparkline}
+        unit="/day"
+        format={formatTonnes}
+        label={`${label}, ${flow.sparkline[0]?.date} to ${flow.latestDate}`}
+        references={[
+          ...(flow.fiveYear ? [{ value: flow.fiveYear.mean, label: 'Five-year average', style: 'dashed' as const }] : []),
+          ...(flow.trailing ? [{ value: flow.trailing.mean, label: 'Trailing year', style: 'dotted' as const }] : []),
+        ]}
+      />
     </section>
   );
 }
@@ -858,7 +912,7 @@ export function OilTerminalDetail({ item, data, now, onSelect }: { item: OilTerm
   const status = terminalStatus(item);
   const current = item.evidence[0];
   const disruptions = disruptionsFor(data, 'terminal', item.id);
-  const flow = item.portwatchId ? chokepointFlow(seriesById(data, portCallsSeriesId(item.portwatchId))) : null;
+  const calls = item.portwatchId ? portCallsAt(data, item.portwatchId, item.name) : null;
   const none = new Set<string>();
   const pipelineRows = filterRows({ pipelines: new Set(item.pipelineIds), chokepoints: none, lng: none, terminals: none }, data);
   const chokepointRowsOut = filterRows({ pipelines: none, chokepoints: new Set(item.exitVia), lng: none, terminals: none }, data);
@@ -905,7 +959,7 @@ export function OilTerminalDetail({ item, data, now, onSelect }: { item: OilTerm
         />
         <Stat label="Pipelines" value={String(item.pipelineIds.length)} aside="ending here" />
       </Stats>
-      {flow && <PortCallsSection calls={{ port: item.name, flow }} terminal />}
+      {calls && <PortCallsSection calls={calls} terminal />}
       <DisruptionList disruptions={disruptions} />
       {item.evidence.length > 1 && (
         <section className="section">

@@ -177,7 +177,7 @@ export interface Country {
 
 export interface ObservationSeries {
   id: string;
-  metric: 'tanker_transits' | 'tanker_port_calls' | 'gas_flow_kwh_d' | 'storage_fill_pct' | 'lng_sendout_kwh_d';
+  metric: 'tanker_transits' | 'tanker_port_calls' | 'tanker_cargo_t' | 'tanker_exports_t' | 'gas_flow_kwh_d' | 'storage_fill_pct' | 'lng_sendout_kwh_d';
   unit: string;
   points: { date: string; value: number }[];
   capacity?: number;

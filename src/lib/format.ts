@@ -51,3 +51,10 @@ export function formatIndexShare(index: number): string {
 export function formatIndex(index: number): string {
   return index.toFixed(2);
 }
+
+/** Metric tons, rounded for a modelled estimate: 2148000 -> "2.1 million t", 61234 -> "61,000 t". */
+export function formatTonnes(tonnes: number): string {
+  if (tonnes >= 1e6) return `${formatNumber(tonnes / 1e6, 1)} million t`;
+  if (tonnes >= 1e3) return `${(Math.round(tonnes / 1e3) * 1e3).toLocaleString('en-US')} t`;
+  return `${Math.round(tonnes).toLocaleString('en-US')} t`;
+}

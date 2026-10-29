@@ -24,7 +24,7 @@ Node 22. Package manager: npm.
 | `npm run typecheck` | Typecheck only |
 | `npm test` | Unit tests (Vitest, `tests/*.test.ts`) |
 | `npx playwright test` | Smoke test (`tests/e2e/`); starts its own dev server on port 5287 |
-| `npm run fetch:portwatch` | Scheduled: PortWatch daily tanker transits to `public/data/chokepoint-transits.json`, and tanker port calls at the ports in `PORT_CALLS` to `public/data/port-calls.json` |
+| `npm run fetch:portwatch` | Scheduled: PortWatch daily tanker transits and estimated tanker cargo (metric tons) to `public/data/chokepoint-transits.json`, and tanker port calls and estimated exports at the ports in `PORT_CALLS` to `public/data/port-calls.json` |
 | `npm run fetch:entsog` | Scheduled: ENTSOG physical flows and technical capacity at the points in `ENTSOG.points` to `public/data/gas-flows.json` |
 | `npm run fetch:agsi` | Scheduled: AGSI+ storage fill by country to `public/data/gas-storage.json`. Needs `AGSI_API_KEY` in `.env` (and as an Actions secret) |
 | `npm run fetch:alsi` | Scheduled: GIE ALSI daily send-out for the EU import terminals in `ALSI.terminals` to `public/data/lng-sendout.json`. Same `AGSI_API_KEY`. Run `build:curated` after changing `ALSI.terminals` so terminals link to their series |

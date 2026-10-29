@@ -1,30 +1,30 @@
 import { z } from 'zod';
 import type { ObservationSeries } from '../../src/types';
 
-export const dailyRowSchema = z.object({
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  portid: z.string(),
-  n_tanker: z.number().int().min(0),
-});
+/** One day at one chokepoint or port, with the fields asked for by name. */
+export interface DailyRow {
+  date: string;
+  portid: string;
+  values: Record<string, number>;
+}
 
-export const dailyResponseSchema = z.object({
-  features: z.array(z.object({ attributes: dailyRowSchema })),
-  exceededTransferLimit: z.boolean().optional(),
-});
-
-export type DailyRow = z.infer<typeof dailyRowSchema>;
-
-/** Daily_Ports_Data rows carry tanker port calls as portcalls_tanker; read them as DailyRow. */
-export const portCallsResponseSchema = z.object({
-  features: z.array(
-    z.object({
-      attributes: z
-        .object({ date: dailyRowSchema.shape.date, portid: z.string(), portcalls_tanker: z.number().int().min(0) })
-        .transform(({ date, portid, portcalls_tanker }): DailyRow => ({ date, portid, n_tanker: portcalls_tanker })),
-    }),
-  ),
-  exceededTransferLimit: z.boolean().optional(),
-});
+/**
+ * A query response whose rows carry `fields` as non-negative numbers: counts such as n_tanker, or
+ * PortWatch's tonnage estimates such as capacity_tanker and export_tanker (metric tons).
+ */
+export function dailyResponseSchema(fields: readonly string[]) {
+  const attributes = z
+    .object({
+      date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      portid: z.string(),
+      ...Object.fromEntries(fields.map((f) => [f, z.number().finite().min(0)])),
+    })
+    .transform((row): DailyRow => {
+      const { date, portid, ...values } = row as { date: string; portid: string } & Record<string, number>;
+      return { date, portid, values };
+    });
+  return z.object({ features: z.array(z.object({ attributes })), exceededTransferLimit: z.boolean().optional() });
+}
 
 import { addDays, fiveYearBaseline } from '../../src/lib/flow';
 
@@ -45,7 +45,7 @@ export function daysBetween(a: string, b: string): number {
 }
 
 /**
- * Daily rows for one chokepoint (or port, with metric tanker_port_calls) to a tanker series. Sorted, deduplicated by date,
+ * Daily rows for one chokepoint or port to a series of one field (n_tanker unless `field` says otherwise). Sorted, deduplicated by date,
  * trimmed to the last `keepDays`, with the five-year baseline computed from the full history
  * passed in. Throws when the series looks broken, so the old file stays.
  */
@@ -58,18 +58,27 @@ export function toTransitSeries(
     minPoints,
     maxLagDays,
     metric = 'tanker_transits',
+    field = 'n_tanker',
+    unit = 'tankers/day',
+    id = `portwatch-${portwatchId}`,
     label,
   }: {
     today: string;
     keepDays: number;
     minPoints: number;
     maxLagDays: number;
-    metric?: 'tanker_transits' | 'tanker_port_calls';
+    metric?: ObservationSeries['metric'];
+    field?: string;
+    unit?: string;
+    id?: string;
     label?: string;
   },
 ): ObservationSeries {
   const byDate = new Map<string, number>();
-  for (const row of rows) if (row.portid === portwatchId) byDate.set(row.date, row.n_tanker);
+  for (const row of rows) {
+    const value = row.values[field];
+    if (row.portid === portwatchId && value !== undefined) byDate.set(row.date, value);
+  }
   const all = [...byDate]
     .filter(([date]) => date <= today)
     .sort(([a], [b]) => a.localeCompare(b))
@@ -84,7 +93,7 @@ export function toTransitSeries(
 
   const fiveYear = fiveYearBaseline(all, latest);
   if (!fiveYear) throw new Error(`${portwatchId}: not enough history for the five-year baseline`);
-  return { id: `portwatch-${portwatchId}`, metric, unit: 'tankers/day', ...(label ? { label } : {}), points, fiveYear };
+  return { id, metric, unit, ...(label ? { label } : {}), points, fiveYear };
 }
 
 /** The date every series is complete through: the earliest of their latest points. */
