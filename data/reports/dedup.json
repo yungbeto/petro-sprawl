@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-28",
+  "recordedAt": "2026-10-29",
   "merged": [
     {
       "curatedId": "nord-stream-1",
@@ -217,6 +217,41 @@
         {
           "gemId": "gem-p1770",
           "gemName": "Zeepipe Gas Pipeline · Zeepipe I",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "habshan-fujairah",
+      "rows": [
+        {
+          "gemId": "gem-p0553",
+          "gemName": "Bab-Habshan–Fujairah Oil Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "sumed",
+      "rows": [
+        {
+          "gemId": "gem-p0530",
+          "gemName": "Sumed Oil Pipeline · Pipeline 1",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p5121",
+          "gemName": "Sumed Oil Pipeline · Pipeline 2",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "arish-ashkelon",
+      "rows": [
+        {
+          "gemId": "gem-p0462",
+          "gemName": "Arish–Ashkelon Pipeline",
           "reason": "listed"
         }
       ]

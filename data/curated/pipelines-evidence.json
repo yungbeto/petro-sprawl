@@ -368,5 +368,109 @@
     ],
     "autoMatch": false,
     "evidence": []
+  },
+  {
+    "id": "habshan-fujairah",
+    "name": "Habshan–Fujairah (ADCOP)",
+    "aliases": [
+      "ADCOP",
+      "Abu Dhabi Crude Oil Pipeline"
+    ],
+    "commodity": "oil",
+    "fromCountry": "AE",
+    "toCountry": "AE",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0553"
+    ],
+    "capacity": {
+      "value": 1.5,
+      "unit": "mb/d",
+      "source": {
+        "publisher": "Al Jazeera",
+        "title": "UAE to accelerate oil pipeline project to bypass Strait of Hormuz",
+        "url": "https://www.aljazeera.com/news/2026/5/15/uae-to-accelerate-oil-pipeline-project-to-bypass-hormuz",
+        "publishedAt": "2026-05-15"
+      }
+    },
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "The 380 km line carries about 1.5 million b/d of crude from Habshan to Fujairah, outside Hormuz; Fujairah has come under attack (Al Jazeera and Reuters).",
+        "url": "https://www.aljazeera.com/news/2026/5/15/uae-to-accelerate-oil-pipeline-project-to-bypass-hormuz",
+        "observedAt": "2026-05-15",
+        "recordedAt": "2026-10-28"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Drone attacks disrupted loadings at Fujairah, where the UAE operates a 1.5 million b/d pipeline that bypasses Hormuz (Reuters, via Malay Mail).",
+        "url": "https://www.malaymail.com/news/money/2026/03/18/drone-strikes-expose-reliance-on-uaes-fujairah-port-as-a-critical-middle-east-oil-bypass/213052",
+        "observedAt": "2026-03-18",
+        "recordedAt": "2026-10-28"
+      }
+    ]
+  },
+  {
+    "id": "sumed",
+    "name": "SUMED (Suez–Mediterranean)",
+    "aliases": [
+      "Sumed",
+      "Suez-Mediterranean Pipeline"
+    ],
+    "commodity": "oil",
+    "fromCountry": "EG",
+    "toCountry": "EG",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0530",
+      "gem-p5121"
+    ],
+    "capacity": {
+      "value": 2.5,
+      "unit": "mb/d",
+      "source": {
+        "publisher": "EIA",
+        "title": "Red Sea chokepoints are critical for international oil and natural gas flows",
+        "url": "https://www.eia.gov/todayinenergy/detail.php?id=61025",
+        "publishedAt": "2023-12-04"
+      }
+    },
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "An LSEG analyst said crude stored at Ain Sukhna and Sidi Kerir can keep supplying Europe through the Sumed pipeline for as long as stored volumes last (Al Jazeera).",
+        "url": "https://www.aljazeera.com/news/2026/9/17/from-yanbu-to-sohar-tracking-saudi-arabias-alternative-oil-routes",
+        "observedAt": "2026-09-17",
+        "recordedAt": "2026-10-28"
+      }
+    ]
+  },
+  {
+    "id": "arish-ashkelon",
+    "name": "Arish–Ashkelon (EMG)",
+    "aliases": [
+      "East Mediterranean Gas pipeline",
+      "EMG"
+    ],
+    "commodity": "gas",
+    "fromCountry": "IL",
+    "toCountry": "EG",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0462"
+    ],
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "A new 45 km subsea line from Ashdod to Ashkelon links Leviathan to the EMG pipeline into Egypt at El-Arish, with export capacity on the route expected to rise from 6.5 to 8.5 bcm a year (OGE Journal).",
+        "url": "https://ogejournal.com/israel-expands-gas-exports-to-egypt-with-new-pipeline-under-35bn-deal/",
+        "observedAt": "2026-07-11",
+        "recordedAt": "2026-10-28"
+      }
+    ]
   }
 ]
