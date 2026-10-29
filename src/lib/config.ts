@@ -85,6 +85,8 @@ export const PIPELINE_WIDTH = {
   approxAlpha: 0.5,
   /** Operating lines recede so chokepoints and status problems stand out. */
   operatingAlpha: 0.55,
+  /** Width of the invisible band that picks a pipeline, however thin it's drawn. */
+  hitPx: 12,
 } as const;
 
 /** Chokepoint ring radius: area proportional to EIA volume. px per sqrt(mb/d). */

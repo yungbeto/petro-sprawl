@@ -92,6 +92,8 @@ interface BuildLayersInput {
   visibility: LayerVisibility;
   selection: Selection | null;
   highlight: FilterMatches | null;
+  /** The pipeline under the pointer, drawn highlighted. */
+  hoveredPipelineId: string | null;
   colors: MapColors;
   zoom: number;
   basinLabelMinZoom: number;
@@ -106,6 +108,7 @@ export function buildLayers({
   visibility,
   selection,
   highlight,
+  hoveredPipelineId,
   colors,
   zoom,
   basinLabelMinZoom,
@@ -128,6 +131,7 @@ export function buildLayers({
   };
   const paths = pipelinePaths(data.pipelines);
   const selectedPaths = paths.filter((p) => isSelected('pipeline', p.pipeline.id));
+  const hoveredPaths = paths.filter((p) => p.pipeline.id === hoveredPipelineId);
   const flowPaths = paths.filter((p) => (pipelineShares.get(p.pipeline.id) ?? 0) > 0 && pipelineFade(p.pipeline.id) === 1);
 
   const storageFeatures: FeatureCollection<Polygon | MultiPolygon, Country> = {
@@ -198,11 +202,23 @@ export function buildLayers({
       capRounded: true,
       jointRounded: true,
     }),
+    // Thin lines are hard to hit, so picking uses this wider, invisible band. Markers drawn later still win.
+    new PathLayer<PipelinePath>({
+      id: 'pipeline-hits',
+      data: paths,
+      visible: visibility.pipelines,
+      pickable: true,
+      getPath: (p) => p.path as [number, number][],
+      getWidth: (p) => Math.max(pipelineWidthPx(p.pipeline), PIPELINE_WIDTH.hitPx),
+      getColor: [0, 0, 0, 0],
+      widthUnits: 'pixels',
+      capRounded: true,
+      jointRounded: true,
+    }),
     new PathLayer<PipelinePath>({
       id: 'pipelines',
       data: paths,
       visible: visibility.pipelines,
-      pickable: true,
       getPath: (p) => p.path as [number, number][],
       getWidth: (p) => pipelineWidthPx(p.pipeline),
       getColor: (p) => {
@@ -217,9 +233,20 @@ export function buildLayers({
       widthMinPixels: 1,
       capRounded: true,
       jointRounded: true,
-      autoHighlight: true,
-      highlightColor: withAlpha(colors.selection, 0.5),
       updateTriggers: { getColor: [colors, highlight, selection] },
+    }),
+    new PathLayer<PipelinePath>({
+      id: 'pipeline-hover',
+      data: hoveredPaths,
+      visible: visibility.pipelines,
+      getPath: (p) => p.path as [number, number][],
+      getWidth: (p) => pipelineWidthPx(p.pipeline),
+      getColor: withAlpha(colors.selection, 0.5),
+      widthUnits: 'pixels',
+      widthMinPixels: 2,
+      capRounded: true,
+      jointRounded: true,
+      updateTriggers: { getColor: [colors] },
     }),
     // Measured flow: a brighter inner line whose width is the flow's share of capacity (SPEC 5).
     new PathLayer<PipelinePath>({
@@ -388,7 +415,7 @@ export function toPicked(layerId: string | undefined, object: unknown): PickedOb
   switch (layerId) {
     case 'basins':
       return { kind: 'basin', item: (object as Feature<Polygon | MultiPolygon, Basin>).properties };
-    case 'pipelines':
+    case 'pipeline-hits':
       return { kind: 'pipeline', item: (object as PipelinePath).pipeline };
     case 'chokepoints':
       return { kind: 'chokepoint', item: object as Chokepoint };

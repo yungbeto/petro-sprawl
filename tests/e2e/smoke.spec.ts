@@ -197,7 +197,8 @@ test('clicking a pipeline selects it and shows its detail', async ({ page, reque
   await expect(page.getByText('Pipelines').first()).toBeVisible();
   const point = await screenPoint(page, middle);
   await page.waitForTimeout(500);
-  await page.mouse.click(point.x, point.y);
+  // A few pixels off the line still picks it.
+  await page.mouse.click(point.x, point.y + 5);
   // GEM's two strings are merged into the curated TurkStream record.
   await expect(page).toHaveURL(/sel=pipeline\/turkstream/);
   await expect(page.getByRole('heading', { name: 'TurkStream' })).toBeVisible();

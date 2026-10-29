@@ -189,6 +189,9 @@ export function MapView(props: MapViewProps) {
     map.setStyle(BASEMAP_STYLES[theme], { diff: false });
   }, [theme]);
 
+  // An id, not the hover itself, so moving along one pipeline doesn't rebuild the layers.
+  const hoveredPipelineId = hover?.picked.kind === 'pipeline' ? hover.picked.item.id : null;
+
   useEffect(() => {
     if (!overlayRef.current || !colors) return;
     overlayRef.current.setProps({
@@ -200,13 +203,14 @@ export function MapView(props: MapViewProps) {
         visibility,
         selection,
         highlight,
+        hoveredPipelineId,
         colors,
         zoom,
         basinLabelMinZoom: fontsReady ? BASIN_LABEL_MIN_ZOOM : Infinity,
         fontFamily: `"${LABEL_FONT}", sans-serif`,
       }),
     });
-  }, [data, flows, pipelineShares, fills, visibility, selection, highlight, colors, zoom, fontsReady]);
+  }, [data, flows, pipelineShares, fills, visibility, selection, highlight, hoveredPipelineId, colors, zoom, fontsReady]);
 
   useEffect(() => {
     const map = mapRef.current;
