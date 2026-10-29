@@ -333,6 +333,18 @@ test('a pipeline ending at a reported port shows its tanker calls', async ({ pag
   await expect(panel.getByText(/not flow on this pipeline/)).toBeVisible();
 });
 
+test('an oil terminal opens with its claim, disruptions and route to sea', async ({ page }) => {
+  await page.goto('/?sel=terminal/kharg');
+  const panel = page.getByLabel('Panel');
+  await expect(panel.getByRole('heading', { name: 'Kharg Island' })).toBeVisible();
+  await expect(panel.getByText('Oil export terminal')).toBeVisible();
+  await expect(panel.getByText(/resumed crude loading at Kharg Island/).first()).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Disruptions' })).toBeVisible();
+  await panel.getByRole('button', { name: /Strait of Hormuz/ }).click();
+  await expect(page).toHaveURL(/sel=chokepoint\/hormuz/);
+  await expect(panel.getByRole('heading', { name: /Oil terminals that ship through it/ })).toBeVisible();
+});
+
 test('storage fills a country and opens its detail', async ({ page }) => {
   // Test-only series: storage needs an AGSI+ key, so the smoke test serves its own file.
   const days = Array.from({ length: 400 }, (_, i) =>

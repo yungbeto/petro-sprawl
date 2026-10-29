@@ -73,7 +73,7 @@ describe('quick filters', () => {
 
   it('lists chokepoints first, then corridor pipelines, then the rest, then LNG terminals', () => {
     const rows = filterRows(
-      { pipelines: new Set(['gem-a', 'ns1']), chokepoints: new Set(['suez']), lng: new Set(['ras-laffan']) },
+      { pipelines: new Set(['gem-a', 'ns1']), chokepoints: new Set(['suez']), lng: new Set(['ras-laffan']), terminals: new Set() },
       data,
     );
     expect(rows.map((r) => r.selection.id)).toEqual(['suez', 'ns1', 'gem-a', 'ras-laffan']);

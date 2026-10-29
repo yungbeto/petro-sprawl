@@ -20,7 +20,7 @@ export interface CuratedRecord {
 }
 
 export interface StaleAsset {
-  /** "pipeline/<id>" or "lng/<id>". */
+  /** "pipeline/<id>", "lng/<id>" or "terminal/<id>". */
   ref: string;
   name: string;
   latest: Evidence;

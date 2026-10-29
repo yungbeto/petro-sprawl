@@ -99,6 +99,7 @@ Basins and GEM pipelines are imported worldwide (`IMPORT_BOUNDS` in `src/lib/con
 | Pipelines | Lines | Width by capacity; style by status (solid = operating, dashed = reduced, dotted or faded = offline/idle, hairline = planned); measured flow shown as a brighter inner line sized to flow share | GEM inventory + curated evidence + ENTSOG flows |
 | Chokepoints | Points | Ring sized by EIA reference volume; ring segment or color by flow index (below, near, above baseline) | EIA baselines + IMF PortWatch |
 | LNG terminals | Points | Dot area by capacity in operation (planned capacity when nothing runs yet); color by status, as pipelines; import terminals have a hollow centre (added 2026-10-28) | GEM LNG terminals tracker |
+| Oil terminals | Points | Diamond of one size, colored by the latest cited claim's status; unknown when nothing could be sourced (added 2026-10-29) | Curated `data/curated/oil-terminals.json`; locations from IMF PortWatch's ports database or the end of a GEM pipeline |
 | EU gas storage | Country fills | Fill level as a sequential scale, only when the layer is on (off by default, on when a link selects a country) | GIE AGSI+; outlines from Natural Earth 1:50m |
 | Countries | Borders, labels | Minimal | Basemap |
 | Day/night (nice to have) | Terminator | Subtle shade | Computed client-side |
@@ -230,6 +231,8 @@ interface DatasetMeta {
 **Measured beats claimed:** where an observation series exists (ENTSOG flow), derive a `measured` evidence entry from the latest data and show it first, alongside the most recent sourced claim. The 7-day mean decides it: no flow (at most 0.5% of firm technical capacity) is `idle`, since a meter shows gas isn't moving but not why; anything else is `operating`. The app derives this when it loads data, so a new day of flows needs no rebuild.
 
 **Cited claims beat dataset claims:** below measured flow, dated claims with a source (operator, regulator, government, press) rank above dataset claims (GEM), newest first within each. A dataset's date is when it last touched the row, not when anyone observed the pipeline (decided 2026-10-28, when GEM's 2023 "mothballed" row outranked the cited offline status of Nord Stream 1).
+
+**Oil terminals (added 2026-10-29):** a curated list of strategic crude terminals, `OilTerminal` in `src/types`. Each links the pipelines that end there and the chokepoints its tankers pass on the way to open sea. There's no capacity field: no comparable source covers them, so a cited average over a stated period (`throughput`) shows instead, as context. Disruptions can name a terminal (`assetKind: 'terminal'`); a pipeline's page also lists the disruptions at the terminals it ends at. The weekly claims refresh covers terminals that already have a claim.
 
 ## 7. Data sources and jobs
 

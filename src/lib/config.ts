@@ -96,10 +96,14 @@ export const CHOKEPOINT_RADIUS = { scale: 4, minPx: 5, haloPx: 6 } as const;
  */
 export const LNG_RADIUS = { scale: 1.4, minPx: 4, maxPx: 10, centreShare: 0.45, selectionGapPx: 4 } as const;
 
+/** Oil terminals are diamonds of one size: no comparable capacity figures to scale them by. */
+export const TERMINAL_MARKER = { sizePx: 15, haloPx: 19, selectionRadiusPx: 13 } as const;
+
 export const MAP_ATTRIBUTION = [
   'Pipelines and LNG terminals: <a href="https://globalenergymonitor.org/">Global Energy Monitor</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>)',
   'Basins: <a href="https://www.sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3">USGS</a>',
   'Chokepoints: <a href="https://portwatch.imf.org/">IMF PortWatch</a>, <a href="https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints">EIA</a>',
+  'Oil terminals: curated; locations from <a href="https://portwatch.imf.org/">IMF PortWatch</a> and Global Energy Monitor',
   'Port calls: <a href="https://portwatch.imf.org/">IMF PortWatch</a>',
   'Gas flows: <a href="https://transparency.entsog.eu/">ENTSOG</a>',
   'Gas storage: <a href="https://agsi.gie.eu/">GIE AGSI+</a>',
@@ -261,6 +265,7 @@ export const DATASET_FRESHNESS: Record<
   countries: { label: 'Countries', scheduled: false, publisher: 'Natural Earth' },
   pipelines: { label: 'Pipelines', scheduled: false, publisher: 'Global Energy Monitor' },
   'lng-terminals': { label: 'LNG terminals', scheduled: false, publisher: 'Global Energy Monitor' },
+  'oil-terminals': { label: 'Oil terminals', scheduled: false, publisher: 'Curated; locations from IMF PortWatch and Global Energy Monitor' },
   chokepoints: { label: 'Chokepoints', scheduled: false, publisher: 'IMF PortWatch and EIA' },
   basins: { label: 'Basins', scheduled: false, publisher: 'USGS' },
   disruptions: { label: 'Disruptions', scheduled: false },

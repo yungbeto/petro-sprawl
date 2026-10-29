@@ -1,4 +1,4 @@
-import type { Basin, Chokepoint, Country, DatasetMeta, Disruption, LngTerminal, ObservationSeries, Pipeline } from '../types';
+import type { Basin, Chokepoint, Country, DatasetMeta, Disruption, LngTerminal, ObservationSeries, OilTerminal, Pipeline } from '../types';
 import { chokepointFlow, type ChokepointFlow } from './flow';
 import { PORT_CALLS, portCallsSeriesId } from './config';
 import type { Selection } from '../app/urlState';
@@ -9,6 +9,7 @@ export interface Datasets {
   chokepoints: Chokepoint[];
   pipelines: Pipeline[];
   lngTerminals: LngTerminal[];
+  oilTerminals: OilTerminal[];
   countries: Country[];
   series: ObservationSeries[];
   disruptions: Disruption[];
@@ -20,6 +21,7 @@ export const EMPTY_DATASETS: Datasets = {
   chokepoints: [],
   pipelines: [],
   lngTerminals: [],
+  oilTerminals: [],
   countries: [],
   series: [],
   disruptions: [],
@@ -70,7 +72,8 @@ export type Resolved =
   | { kind: 'chokepoint'; item: Chokepoint }
   | { kind: 'basin'; item: Basin }
   | { kind: 'storage'; item: Country }
-  | { kind: 'lng'; item: LngTerminal };
+  | { kind: 'lng'; item: LngTerminal }
+  | { kind: 'terminal'; item: OilTerminal };
 
 /** Finds the selected item in the loaded data, or null if it isn't there. */
 export function resolveSelection(selection: Selection | null, data: Datasets): Resolved | null {
@@ -96,6 +99,10 @@ export function resolveSelection(selection: Selection | null, data: Datasets): R
       const item = data.lngTerminals.find((t) => t.id === selection.id);
       return item ? { kind: 'lng', item } : null;
     }
+    case 'terminal': {
+      const item = data.oilTerminals.find((t) => t.id === selection.id);
+      return item ? { kind: 'terminal', item } : null;
+    }
     default:
       return null;
   }
@@ -107,6 +114,27 @@ export function chokepointsInBasin(basin: Basin, chokepoints: Chokepoint[]): Cho
 
 export function lngTerminalsInBasin(basin: Basin, terminals: LngTerminal[]): LngTerminal[] {
   return terminals.filter((t) => pointInPolygon(t.point, basin.geometry));
+}
+
+/** Oil terminals a pipeline ends at. */
+export function terminalsForPipeline(data: Datasets, pipelineId: string): OilTerminal[] {
+  return data.oilTerminals.filter((t) => t.pipelineIds.includes(pipelineId));
+}
+
+/** Oil terminals whose tankers pass a chokepoint on the way to open sea. */
+export function terminalsViaChokepoint(data: Datasets, chokepointId: string): OilTerminal[] {
+  return data.oilTerminals.filter((t) => (t.exitVia as string[]).includes(chokepointId));
+}
+
+/** A pipeline's own disruptions and those at the terminals it ends at, most recent start first. */
+export function pipelineDisruptions(data: Datasets, pipelineId: string): Disruption[] {
+  const terminals = terminalsForPipeline(data, pipelineId).map((t) => t.id);
+  return data.disruptions
+    .filter(
+      (d) =>
+        (d.assetKind === 'pipeline' && d.assetId === pipelineId) || (d.assetKind === 'terminal' && terminals.includes(d.assetId)),
+    )
+    .sort((a, b) => b.startedAt.localeCompare(a.startedAt));
 }
 
 /** The other sections of the system a pipeline belongs to; none when it isn't part of one. */

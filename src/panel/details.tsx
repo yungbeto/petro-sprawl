@@ -1,5 +1,5 @@
 import { useId, useState, type ReactNode } from 'react';
-import type { AssetStatus, Basin, Chokepoint, Country, Evidence, LngTerminal, LngUnit, Pipeline } from '../types';
+import type { AssetStatus, Basin, Chokepoint, Country, Evidence, LngTerminal, LngUnit, OilTerminal, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import {
   CHOKEPOINT_NOTES,
@@ -9,6 +9,7 @@ import {
   FILTERS,
   MEASURED_FLOW,
   agsiSeriesId,
+  portCallsSeriesId,
 } from '../lib/config';
 import { storageSummary } from '../lib/gasStorage';
 import { ALSI_URL, ENTSOG_URL, isUnverified, latestClaim, pipelineFlow } from '../lib/evidence';
@@ -16,9 +17,12 @@ import {
   chokepointsInBasin,
   disruptionsFor,
   lngTerminalsInBasin,
+  pipelineDisruptions,
   pipelinesTouchingBasin,
   portCallsFor,
   seriesById,
+  terminalsForPipeline,
+  terminalsViaChokepoint,
   type PortCalls,
   systemSections,
   type Datasets,
@@ -28,7 +32,7 @@ import { formatIndex, formatIndexShare, formatNumber } from '../lib/format';
 import type { Disruption } from '../types';
 import { Sparkline } from './Sparkline';
 import { formatCapacity, formatCountry, formatEnergyPerDay, formatLonLat, formatMbd } from '../lib/format';
-import { lngStatus, pipelineAge, pipelineStatus, shareCoverage } from '../lib/encoding';
+import { lngStatus, pipelineAge, pipelineStatus, shareCoverage, terminalStatus } from '../lib/encoding';
 import { filterRows, type FilterRow } from '../lib/filters';
 import { chokepointRows } from '../lib/summary';
 import { AssetIcon, COMMODITY_PIPELINE } from './AssetIcon';
@@ -117,8 +121,9 @@ function signedPts(value: number): string {
   return `${value >= 0 ? '+' : '−'}${formatNumber(Math.abs(value), 1)}`;
 }
 
-export function ChokepointDetail({ item, data }: { item: Chokepoint; data: Datasets }) {
+export function ChokepointDetail({ item, data, onSelect }: { item: Chokepoint; data: Datasets; onSelect: OnSelect }) {
   const note = CHOKEPOINT_NOTES[item.id];
+  const terminals = oilTerminalRows(terminalsViaChokepoint(data, item.id));
   const flow = chokepointFlow(seriesById(data, item.transitSeriesId));
   const disruptions = disruptionsFor(data, 'chokepoint', item.id);
   return (
@@ -172,6 +177,9 @@ export function ChokepointDetail({ item, data }: { item: Chokepoint; data: Datas
         <p className="muted">Tanker transits not loaded yet.</p>
       )}
       <DisruptionList disruptions={disruptions} />
+      {terminals.length > 0 && (
+        <RelatedList title="Oil terminals that ship through it" empty="" rows={terminals} data={data} onSelect={onSelect} />
+      )}
       <Facts>
         <Row label="EIA reference volume">
           <span className="mono">{formatMbd(item.eiaReferenceMbd)}</span>
@@ -197,7 +205,7 @@ export function ChokepointDetail({ item, data }: { item: Chokepoint; data: Datas
  * Daily tanker calls at the port a pipeline ends at. Context, not status evidence: a tanker there may
  * be loading oil from elsewhere, and more than one pipeline can end at the same port.
  */
-function PortCallsSection({ calls }: { calls: PortCalls }) {
+function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: boolean }) {
   const { port, flow } = calls;
   return (
     <section className="section">
@@ -222,8 +230,8 @@ function PortCallsSection({ calls }: { calls: PortCalls }) {
         ]}
       />
       <p className="note">
-        Calls by tankers of any cargo, from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>.
-        They show traffic at the port, not flow on this pipeline.
+        Calls by tankers of any cargo, from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>.{' '}
+        {terminal ? 'They count all tanker traffic at the port, not crude loadings.' : 'They show traffic at the port, not flow on this pipeline.'}
       </p>
     </section>
   );
@@ -261,9 +269,12 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
   const pipelines = pipelinesTouchingBasin(item, data.pipelines);
   const terminals = lngTerminalsInBasin(item, data.lngTerminals);
   const none = new Set<string>();
-  const pipelineRows = filterRows({ pipelines: new Set(pipelines.map((p) => p.id)), chokepoints: none, lng: none }, data);
-  const chokepointRowsInside = filterRows({ pipelines: none, chokepoints: new Set(chokepoints.map((c) => c.id)), lng: none }, data);
-  const terminalRows = filterRows({ pipelines: none, chokepoints: none, lng: new Set(terminals.map((t) => t.id)) }, data);
+  const pipelineRows = filterRows({ pipelines: new Set(pipelines.map((p) => p.id)), chokepoints: none, lng: none, terminals: none }, data);
+  const chokepointRowsInside = filterRows(
+    { pipelines: none, chokepoints: new Set(chokepoints.map((c) => c.id)), lng: none, terminals: none },
+    data,
+  );
+  const terminalRows = filterRows({ pipelines: none, chokepoints: none, lng: new Set(terminals.map((t) => t.id)), terminals: none }, data);
   const province = item.provinceType === 'priority' ? 'Priority province' : 'Boutique province';
   return (
     <>
@@ -348,13 +359,14 @@ export function PipelineDetail({
   const current = item.evidence[0];
   const claim = current?.sourceType === 'measured' ? latestClaim(item) : undefined;
   const flow = pipelineFlow(seriesById(data, item.flowSeriesId));
-  const disruptions = disruptionsFor(data, 'pipeline', item.id);
+  const disruptions = pipelineDisruptions(data, item.id);
   const portCalls = portCallsFor(data, item.id);
+  const endTerminals = oilTerminalRows(terminalsForPipeline(data, item.id));
   const route = [item.fromCountry, ...item.transitCountries, item.toCountry].filter(Boolean).join(' → ');
   const curated = item.sources.includes('curated');
   const sections = systemSections(item, data.pipelines);
   const none = new Set<string>();
-  const sectionRows = filterRows({ pipelines: new Set(sections.map((p) => p.id)), chokepoints: none, lng: none }, data);
+  const sectionRows = filterRows({ pipelines: new Set(sections.map((p) => p.id)), chokepoints: none, lng: none, terminals: none }, data);
   return (
     <>
       <Header
@@ -440,6 +452,9 @@ export function PipelineDetail({
       {portCalls.map((calls) => (
         <PortCallsSection key={calls.port} calls={calls} />
       ))}
+      {endTerminals.length > 0 && (
+        <RelatedList title="Ends at" empty="" rows={endTerminals} data={data} onSelect={onSelect} />
+      )}
       <DisruptionList disruptions={disruptions} />
       {item.evidence.length > 1 && (
         <section className="section">
@@ -824,17 +839,129 @@ export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datase
   );
 }
 
+const OIL_ROLE: Record<OilTerminal['role'], string> = {
+  export: 'Oil export terminal',
+  import: 'Oil import terminal',
+};
+
+function oilTerminalRows(terminals: OilTerminal[]): FilterRow[] {
+  return terminals
+    .map((t) => ({ selection: { kind: 'terminal' as const, id: t.id }, name: t.name, curated: true }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function formatThroughput(value: number): string {
+  return `${formatNumber(value, value < 1 ? 2 : 1)} mb/d`;
+}
+
+export function OilTerminalDetail({ item, data, now, onSelect }: { item: OilTerminal; data: Datasets; now: Date; onSelect: OnSelect }) {
+  const status = terminalStatus(item);
+  const current = item.evidence[0];
+  const disruptions = disruptionsFor(data, 'terminal', item.id);
+  const flow = item.portwatchId ? chokepointFlow(seriesById(data, portCallsSeriesId(item.portwatchId))) : null;
+  const none = new Set<string>();
+  const pipelineRows = filterRows({ pipelines: new Set(item.pipelineIds), chokepoints: none, lng: none, terminals: none }, data);
+  const chokepointRowsOut = filterRows({ pipelines: none, chokepoints: new Set(item.exitVia), lng: none, terminals: none }, data);
+  const chokepointNames = item.exitVia.map((id) => data.chokepoints.find((c) => c.id === id)?.name ?? id);
+  return (
+    <>
+      <Header
+        kind={OIL_ROLE[item.role]}
+        name={item.name}
+        icon={<AssetIcon kind="terminal" large />}
+        lede={[formatCountry(item.country), item.pointApprox && 'location approximate'].filter(Boolean).join(' · ')}
+      />
+      <dl className="status-card">
+        <dt className="visually-hidden">Status</dt>
+        <dd>
+          <span className={`status status--${status} status-card__status`}>{statusLabel(status)}</span>
+          {isUnverified(current, now) && (
+            <span className="unverified status-card__line">
+              Unverified since <span className="mono">{current!.observedAt}</span>
+            </span>
+          )}
+          <span className="status-card__line">
+            {current ? <EvidenceLine evidence={current} /> : 'No dated source on its current status yet'}
+          </span>
+        </dd>
+      </dl>
+      <Stats>
+        <Stat
+          label="Loadings"
+          value={item.throughput ? formatThroughput(item.throughput.value) : <span className="muted">Not sourced</span>}
+          aside={
+            item.throughput && (
+              <>
+                {item.throughput.period},{' '}
+                <SourceLink href={item.throughput.source.url}>{item.throughput.source.publisher}</SourceLink>
+              </>
+            )
+          }
+        />
+        <Stat
+          label="Route to sea"
+          value={chokepointNames.length ? chokepointNames.join(' or ') : 'Open sea'}
+          aside={chokepointNames.length ? (chokepointNames.length > 1 ? 'chokepoints, either way' : 'chokepoint') : 'no chokepoint'}
+        />
+        <Stat label="Pipelines" value={String(item.pipelineIds.length)} aside="ending here" />
+      </Stats>
+      {flow && <PortCallsSection calls={{ port: item.name, flow }} terminal />}
+      <DisruptionList disruptions={disruptions} />
+      {item.evidence.length > 1 && (
+        <section className="section">
+          <h3 className="section__title">Status history</h3>
+          <ol className="timeline">
+            {item.evidence.map((e, i) => (
+              <li key={i} className="timeline__item">
+                <span className={`status status--${e.status}`}>{statusLabel(e.status)}</span>
+                <span className="timeline__detail">
+                  <EvidenceLine evidence={e} />
+                </span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+      {pipelineRows.length > 0 && (
+        <RelatedList title="Pipelines ending here" empty="" rows={pipelineRows} data={data} onSelect={onSelect} />
+      )}
+      {chokepointRowsOut.length > 0 && (
+        <RelatedList title="Chokepoints on the way out" empty="" rows={chokepointRowsOut} data={data} onSelect={onSelect} />
+      )}
+      <Facts>
+        {item.operator && <Row label="Operator">{item.operator}</Row>}
+        <Row label="Location">
+          <span className="mono">{formatLonLat(item.point)}</span>
+          <span className="facts__aside">
+            {item.pointSource.publisher}, {item.pointSource.detail}
+          </span>
+        </Row>
+      </Facts>
+      <p className="source">
+        Hand-curated. Each claim links its source; a terminal with no dated source shows its status as unknown. Loadings
+        are a cited average over the period shown, not capacity.
+      </p>
+    </>
+  );
+}
+
 /** Rows that each open an asset: kind icon, name, and its status or band. */
 export function AssetList({ rows, data, onSelect }: { rows: FilterRow[]; data: Datasets; onSelect: OnSelect }) {
   const pipelines = new Map(data.pipelines.map((p) => [p.id, p]));
   const terminals = new Map(data.lngTerminals.map((t) => [t.id, t]));
+  const oilTerminals = new Map(data.oilTerminals.map((t) => [t.id, t]));
   const bands = new Map(chokepointRows(data).map((c) => [c.selection.id, c.band]));
   return (
     <ul className="changes">
       {rows.map((row) => {
         const pipeline = row.selection.kind === 'pipeline' ? pipelines.get(row.selection.id) : undefined;
         const terminal = row.selection.kind === 'lng' ? terminals.get(row.selection.id) : undefined;
-        const status = pipeline ? pipelineStatus(pipeline) : terminal && lngStatus(terminal);
+        const oilTerminal = row.selection.kind === 'terminal' ? oilTerminals.get(row.selection.id) : undefined;
+        const status = pipeline
+          ? pipelineStatus(pipeline)
+          : terminal
+            ? lngStatus(terminal)
+            : oilTerminal && terminalStatus(oilTerminal);
         return (
           <li key={`${row.selection.kind}/${row.selection.id}`}>
             <button type="button" className="change" onClick={() => onSelect(row.selection)}>
@@ -842,7 +969,13 @@ export function AssetList({ rows, data, onSelect }: { rows: FilterRow[]; data: D
               <span className="change__text">
                 <span className="change__name">{row.name}</span>
                 <span className="change__what">
-                  {pipeline ? COMMODITY_PIPELINE[pipeline.commodity] : terminal ? LNG_FACILITY[terminal.facility] : 'Chokepoint'}
+                  {pipeline
+                    ? COMMODITY_PIPELINE[pipeline.commodity]
+                    : terminal
+                      ? LNG_FACILITY[terminal.facility]
+                      : oilTerminal
+                        ? OIL_ROLE[oilTerminal.role]
+                        : 'Chokepoint'}
                   {' · '}
                   {status ? (
                     <span className={`status status--${status}`}>{statusLabel(status)}</span>

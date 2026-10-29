@@ -6,7 +6,11 @@ import { readFile, writeFile } from 'node:fs/promises';
 import type { Evidence } from '../src/types';
 import { addEvidence, type CuratedRecord } from './lib/claims';
 
-const FILES = { pipeline: 'data/curated/pipelines-evidence.json', lng: 'data/curated/lng-evidence.json' } as const;
+const FILES = {
+  pipeline: 'data/curated/pipelines-evidence.json',
+  lng: 'data/curated/lng-evidence.json',
+  terminal: 'data/curated/oil-terminals.json',
+} as const;
 
 const drafts = JSON.parse(await readFile('data/reports/claim-drafts.json', 'utf8')) as { ref: string; evidence: Evidence }[];
 for (const [kind, file] of Object.entries(FILES)) {

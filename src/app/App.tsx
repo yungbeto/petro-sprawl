@@ -36,6 +36,7 @@ export function App() {
     basins: true,
     pipelines: true,
     lng: true,
+    terminals: true,
     chokepoints: true,
   }));
   const [focus, setFocus] = useState<FocusRequest | null>(null);
@@ -207,6 +208,7 @@ export function App() {
               basins: data.basins.length,
               pipelines: data.pipelines.length,
               lng: data.lngTerminals.length,
+              terminals: data.oilTerminals.length,
               chokepoints: data.chokepoints.length,
             }}
           />

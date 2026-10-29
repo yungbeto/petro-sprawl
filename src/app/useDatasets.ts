@@ -3,7 +3,7 @@ import type { DatasetMeta } from '../types';
 import { EMPTY_DATASETS, type Datasets } from '../lib/data';
 import { withMeasuredEvidence, withMeasuredLngEvidence } from '../lib/evidence';
 
-const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'countries', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'lng-sendout', 'disruptions'] as const;
+const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'countries', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'lng-sendout', 'disruptions'] as const;
 
 async function fetchJson<T>(path: string): Promise<T | null> {
   try {
@@ -55,6 +55,7 @@ export function useDatasets(): DatasetsState {
           pipelines: withMeasuredEvidence(get('pipelines') as Datasets['pipelines'], series),
           // Measured send-out goes first for EU import terminals ALSI reports.
           lngTerminals: withMeasuredLngEvidence(get('lng-terminals') as Datasets['lngTerminals'], series),
+          oilTerminals: get('oil-terminals') as Datasets['oilTerminals'],
           countries: get('countries') as Datasets['countries'],
           series,
           disruptions: get('disruptions') as Datasets['disruptions'],

@@ -1,4 +1,4 @@
-import { BoatIcon, CylinderIcon, DropHalfIcon, DropIcon, FlameIcon, MountainsIcon, SnowflakeIcon } from '@phosphor-icons/react';
+import { AnchorIcon, BoatIcon, CylinderIcon, DropHalfIcon, DropIcon, FlameIcon, MountainsIcon, SnowflakeIcon } from '@phosphor-icons/react';
 import type { SelectionKind } from '../app/urlState';
 import type { Commodity } from '../types';
 
@@ -13,6 +13,8 @@ export function AssetIcon({ kind, commodity, large }: { kind: SelectionKind; com
           ? CylinderIcon
           : kind === 'lng'
             ? SnowflakeIcon
+          : kind === 'terminal'
+            ? AnchorIcon
           : commodity === 'gas'
             ? FlameIcon
             : commodity === 'ngl'

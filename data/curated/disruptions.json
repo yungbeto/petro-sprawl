@@ -251,8 +251,8 @@
   },
   {
     "id": "cpc-2026-tanker-attacks",
-    "assetKind": "pipeline",
-    "assetId": "cpc",
+    "assetKind": "terminal",
+    "assetId": "cpc-marine-terminal",
     "startedAt": "2026-07",
     "endedAt": "2026-08",
     "cause": "conflict",
@@ -327,8 +327,8 @@
   },
   {
     "id": "bps-1-2026-primorsk-strikes",
-    "assetKind": "pipeline",
-    "assetId": "baltic-pipeline-system-1",
+    "assetKind": "terminal",
+    "assetId": "primorsk",
     "startedAt": "2026-03",
     "cause": "conflict",
     "summary": "Ukrainian drone strikes in March 2026 destroyed at least 40% of the storage at Primorsk, BPS-1's export terminal, according to satellite images reviewed by Reuters; traders said it might force the port to cut turnover.",
@@ -344,8 +344,8 @@
   },
   {
     "id": "bps-2-2026-ust-luga-strikes",
-    "assetKind": "pipeline",
-    "assetId": "baltic-pipeline-system-2",
+    "assetKind": "terminal",
+    "assetId": "ust-luga",
     "startedAt": "2026-03-22",
     "endedAt": "2026-04-04",
     "cause": "conflict",
@@ -431,6 +431,64 @@
         "title": "Adnoc keeps loading LNG on tankers despite Hormuz disruption",
         "url": "https://www.energyconnects.com/news/gas-lng/2026/september/adnoc-keeps-loading-lng-on-tankers-despite-hormuz-disruption/",
         "publishedAt": "2026-09-04"
+      }
+    ],
+    "recordedAt": "2026-10-29"
+  },
+  {
+    "id": "kharg-2026-loading-halt",
+    "assetKind": "terminal",
+    "assetId": "kharg",
+    "startedAt": "2026-07-18",
+    "endedAt": "2026-08-12",
+    "cause": "conflict",
+    "summary": "Crude loading at Kharg Island stopped for 25 days, a shutdown The National links to disruption from the Strait of Hormuz blockade. Satellite imagery showed a VLCC loading at the western terminal on 12 August for the first time since 18 July; Reuters cautioned that this was not proof that normal exports had resumed.",
+    "sources": [
+      {
+        "publisher": "The National",
+        "title": "Iran reroutes oil flow as loading resumes at Kharg Island terminal",
+        "url": "https://www.thenationalnews.com/business/energy/2026/08/16/iran-reroutes-oil-flow-as-loading-resumes-at-kharg-island-terminal/",
+        "publishedAt": "2026-08-16"
+      }
+    ],
+    "recordedAt": "2026-10-29"
+  },
+  {
+    "id": "sheskharis-2026-drone-attacks",
+    "assetKind": "terminal",
+    "assetId": "sheskharis",
+    "startedAt": "2026-07-21",
+    "cause": "conflict",
+    "summary": "Sheskharis stopped loading tankers on the morning of 21 July amid Ukrainian drone threats, The Moscow Times reported, citing Bloomberg; the terminal had averaged about 650,000 b/d in the first seven months of 2026. Reuters reported on 28 August that drone attacks had disrupted loadings and that traders expected Novorossiysk loadings to fall below 350,000 b/d in August, from about 800,000 b/d in July, with the disruption likely to continue into September.",
+    "sources": [
+      {
+        "publisher": "The Moscow Times",
+        "title": "Major Russian Black Sea oil terminal halts operations amid Ukrainian drone threat",
+        "url": "https://www.themoscowtimes.com/2026/07/25/major-russian-black-sea-oil-terminal-halts-operations-amid-ukrainian-drone-threat-a93337",
+        "publishedAt": "2026-07-25"
+      },
+      {
+        "publisher": "Baird Maritime",
+        "title": "Ukrainian attacks deal severe blow to Russian Black Sea oil exports",
+        "url": "https://www.bairdmaritime.com/shipping/tankers/ukrainian-attacks-deal-severe-blow-to-russian-black-sea-oil-exports",
+        "publishedAt": "2026-08-28"
+      }
+    ],
+    "recordedAt": "2026-10-29"
+  },
+  {
+    "id": "ras-tanura-2026-10-fire",
+    "assetKind": "terminal",
+    "assetId": "ras-tanura",
+    "startedAt": "2026-10-27",
+    "cause": "other",
+    "summary": "Saudi Arabia contained a fire near Ras Tanura, its biggest oil export terminal, in the early hours of 27 October, near facilities operated by Saudi Aramco. The extent of the damage was not immediately clear. Aramco had been stepping up crude exports from the Gulf again in the preceding weeks.",
+    "sources": [
+      {
+        "publisher": "Rigzone",
+        "title": "Aramco contains fire near Ras Tanura oil hub",
+        "url": "https://www.rigzone.com/news/aramco_contains_fire_near_ras_tanura_oil_hub-27-oct-2026-184944-article",
+        "publishedAt": "2026-10-27"
       }
     ],
     "recordedAt": "2026-10-29"

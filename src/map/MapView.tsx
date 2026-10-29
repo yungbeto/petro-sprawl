@@ -21,6 +21,8 @@ import type { ChokepointFlow } from '../lib/flow';
 import { boundsOf } from '../lib/geo';
 import { formatCapacity, formatIndexShare, formatMbd, formatNumber } from '../lib/format';
 import type { FilterMatches } from '../lib/filters';
+import { terminalStatus } from '../lib/encoding';
+import { statusLabel } from '../panel/details';
 import { buildLayers, selectionId, toPicked, type LayerVisibility, type PickedObject } from './layers';
 import { readMapColors, type MapColors } from './colors';
 
@@ -80,6 +82,10 @@ function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>,
         : planned
           ? `${facility} · ${formatNumber(planned, 1)} mtpa planned`
           : `${facility} · capacity unknown`;
+    }
+    case 'terminal': {
+      const role = picked.item.role === 'export' ? 'Export terminal' : 'Import terminal';
+      return `${role} · ${statusLabel(terminalStatus(picked.item)).toLowerCase()}`;
     }
     case 'storage': {
       const fill = fills.get(picked.item.id);
@@ -206,7 +212,7 @@ export function MapView(props: MapViewProps) {
     const map = mapRef.current;
     const resolved = focus && resolveSelection(focus.selection, data);
     if (!map || !resolved) return;
-    if (resolved.kind === 'chokepoint' || resolved.kind === 'lng') {
+    if (resolved.kind === 'chokepoint' || resolved.kind === 'lng' || resolved.kind === 'terminal') {
       map.flyTo({ center: resolved.item.point, zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM) });
     } else {
       map.fitBounds(boundsOf(resolved.item.geometry), { padding: FIT_PADDING, maxZoom: 8 });

@@ -6,18 +6,21 @@
 //   public/data/pipelines.json. Every merge is logged in data/reports/dedup.json for review.
 // - lng-evidence.json adds cited claims to GEM terminals (data/derived/gem-lng-terminals.json) in
 //   public/data/lng-terminals.json.
+// - oil-terminals.json goes out with its links checked against the published pipelines and disruptions.
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { ALSI, ENTSOG, alsiSeriesId, entsogSeriesId } from '../src/lib/config';
-import type { DatasetMeta, LngTerminal, Pipeline } from '../src/types';
+import type { DatasetMeta, Disruption, LngTerminal, OilTerminal, Pipeline } from '../src/types';
 import { linkSendOut, mergeLngEvidence, type CuratedLngEvidence } from './lib/curated-lng';
 import { mergePipelines, type CuratedPipeline } from './lib/curated-pipelines';
+import { prepareTerminals } from './lib/curated-terminals';
 import { publishDataset, report, sha256File, validateRecords } from './lib/output';
 import {
   curatedLngEvidenceSchema,
   curatedPipelineSchema,
   disruptionSchema,
   lngTerminalSchema,
+  oilTerminalSchema,
   pipelineSchema,
 } from './lib/schemas';
 
@@ -26,6 +29,7 @@ const GEM_PIPELINES = 'data/derived/gem-pipelines.json';
 const DEDUP_REPORT = 'data/reports/dedup.json';
 const CURATED_LNG = 'data/curated/lng-evidence.json';
 const GEM_LNG = 'data/derived/gem-lng-terminals.json';
+const CURATED_TERMINALS = 'data/curated/oil-terminals.json';
 
 const readJson = async <T>(path: string) => JSON.parse(await readFile(path, 'utf8')) as T;
 
@@ -100,3 +104,21 @@ const lng = await publishDataset({
   },
 });
 report(lng, 'lng-terminals');
+
+const terminals = await publishDataset({
+  id: 'oil-terminals',
+  schema: oilTerminalSchema,
+  produce: async () => {
+    const curated = validateRecords('oil-terminals', await readJson<unknown[]>(CURATED_TERMINALS), oilTerminalSchema) as OilTerminal[];
+    const pipelineIds = new Set((await readJson<Pipeline[]>('public/data/pipelines.json')).map((p) => p.id));
+    return {
+      records: prepareTerminals(curated, pipelineIds, await readJson<Disruption[]>('data/curated/disruptions.json')),
+      meta: {
+        sourceUrl: CURATED_TERMINALS,
+        sourceVersion: `Hand-curated; locations from IMF PortWatch and Global Energy Monitor; sha256:${await sha256File(CURATED_TERMINALS)}`,
+        license: 'Ours; linked sources keep their own terms',
+      },
+    };
+  },
+});
+report(terminals, 'oil-terminals');

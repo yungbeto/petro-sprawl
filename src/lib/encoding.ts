@@ -1,6 +1,6 @@
 // Visual encodings that depend only on the data: line widths, ring sizes, current status.
 
-import type { AssetStatus, Chokepoint, LngTerminal, Pipeline, PipelineHistory } from '../types';
+import type { AssetStatus, Chokepoint, LngTerminal, OilTerminal, Pipeline, PipelineHistory } from '../types';
 import { CHOKEPOINT_RADIUS, LNG_RADIUS, PIPELINE_WIDTH } from './config';
 
 export function pipelineStatus(pipeline: Pipeline): AssetStatus {
@@ -27,6 +27,11 @@ export function chokepointRadiusPx(chokepoint: Chokepoint): number {
 }
 
 export function lngStatus(terminal: LngTerminal): AssetStatus {
+  return terminal.evidence[0]?.status ?? 'unknown';
+}
+
+/** The newest cited claim's status; unknown when nothing could be sourced. */
+export function terminalStatus(terminal: OilTerminal): AssetStatus {
   return terminal.evidence[0]?.status ?? 'unknown';
 }
 

@@ -65,6 +65,9 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
         2,
       ),
     ),
+    ...data.oilTerminals.map((t) =>
+      entry({ kind: 'terminal', id: t.id }, t.name, `Oil ${t.role} terminal · ${t.country}`, t.aliases, 1),
+    ),
     ...data.basins.map((b) => entry({ kind: 'basin', id: b.id }, b.name, 'Basin', [], 3)),
     ...data.lngTerminals.map((t) =>
       entry(

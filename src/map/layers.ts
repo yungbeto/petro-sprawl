@@ -1,10 +1,10 @@
-import { GeoJsonLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, IconLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
 import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon, Position } from 'geojson';
 import type { Layer } from '@deck.gl/core';
-import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, Pipeline } from '../types';
+import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, OilTerminal, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, PIPELINE_WIDTH } from '../lib/config';
+import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, PIPELINE_WIDTH, TERMINAL_MARKER } from '../lib/config';
 import type { FilterMatches } from '../lib/filters';
 import {
   chokepointRadiusPx,
@@ -14,12 +14,13 @@ import {
   lngStatus,
   pipelineStatus,
   pipelineWidthPx,
+  terminalStatus,
 } from '../lib/encoding';
 import type { ChokepointFlow, FlowBand } from '../lib/flow';
 import { mixColors, withAlpha } from '../lib/color';
 import type { MapColors } from './colors';
 
-export type LayerId = 'storage' | 'basins' | 'pipelines' | 'lng' | 'chokepoints';
+export type LayerId = 'storage' | 'basins' | 'pipelines' | 'lng' | 'terminals' | 'chokepoints';
 export type LayerVisibility = Record<LayerId, boolean>;
 
 export type PickedObject =
@@ -27,7 +28,8 @@ export type PickedObject =
   | { kind: 'pipeline'; item: Pipeline }
   | { kind: 'chokepoint'; item: Chokepoint }
   | { kind: 'storage'; item: Country }
-  | { kind: 'lng'; item: LngTerminal };
+  | { kind: 'lng'; item: LngTerminal }
+  | { kind: 'terminal'; item: OilTerminal };
 
 interface PipelinePath {
   pipeline: Pipeline;
@@ -47,6 +49,17 @@ function statusColor(status: AssetStatus, colors: MapColors) {
       return colors.unknown;
   }
 }
+
+/** A diamond, drawn as a mask so deck.gl can color it per terminal. */
+const DIAMOND = {
+  id: 'diamond',
+  url: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><path d="M32 3 L61 32 L32 61 L3 32 Z" fill="#000"/></svg>',
+  )}`,
+  width: 64,
+  height: 64,
+  mask: true,
+};
 
 function pipelinePaths(pipelines: Pipeline[]): PipelinePath[] {
   return pipelines.flatMap((pipeline) =>
@@ -105,6 +118,8 @@ export function buildLayers({
   const chokepointFade = (id: string) =>
     !highlight || highlight.chokepoints.has(id) || isSelected('chokepoint', id) ? 1 : FILTERS.fadeAlpha;
   const lngFade = (id: string) => (!highlight || highlight.lng.has(id) || isSelected('lng', id) ? 1 : FILTERS.fadeAlpha);
+  const terminalFade = (id: string) =>
+    !highlight || highlight.terminals.has(id) || isSelected('terminal', id) ? 1 : FILTERS.fadeAlpha;
   const importTerminals = data.lngTerminals.filter((t) => t.facility === 'import');
 
   const basinFeatures: FeatureCollection<Polygon | MultiPolygon, Basin> = {
@@ -262,6 +277,46 @@ export function buildLayers({
       getFillColor: (t) => withAlpha(colors.halo, lngFade(t.id)),
       updateTriggers: { getFillColor: [colors, highlight, selection] },
     }),
+    // Oil terminals: a diamond colored by the latest claim's status, on a halo that lifts it off the lines below.
+    new ScatterplotLayer<OilTerminal>({
+      id: 'terminal-selection',
+      data: data.oilTerminals.filter((t) => isSelected('terminal', t.id)),
+      visible: visibility.terminals,
+      getPosition: (t) => t.point,
+      getRadius: TERMINAL_MARKER.selectionRadiusPx,
+      radiusUnits: 'pixels',
+      stroked: true,
+      filled: false,
+      getLineColor: colors.selection,
+      getLineWidth: 2,
+      lineWidthUnits: 'pixels',
+      updateTriggers: { getLineColor: [colors] },
+    }),
+    new IconLayer<OilTerminal>({
+      id: 'terminal-halo',
+      data: data.oilTerminals,
+      visible: visibility.terminals,
+      getPosition: (t) => t.point,
+      getIcon: () => DIAMOND,
+      getSize: TERMINAL_MARKER.haloPx,
+      sizeUnits: 'pixels',
+      getColor: (t) => withAlpha(colors.halo, terminalFade(t.id)),
+      updateTriggers: { getColor: [colors, highlight, selection] },
+    }),
+    new IconLayer<OilTerminal>({
+      id: 'terminals',
+      data: data.oilTerminals,
+      visible: visibility.terminals,
+      pickable: true,
+      getPosition: (t) => t.point,
+      getIcon: () => DIAMOND,
+      getSize: TERMINAL_MARKER.sizePx,
+      sizeUnits: 'pixels',
+      getColor: (t) => withAlpha(statusColor(terminalStatus(t), colors), terminalFade(t.id)),
+      autoHighlight: true,
+      highlightColor: withAlpha(colors.selection, 0.5),
+      updateTriggers: { getColor: [colors, highlight, selection] },
+    }),
     // Halo separates the ring from pipelines passing underneath.
     new ScatterplotLayer<Chokepoint>({
       id: 'chokepoint-halo',
@@ -341,6 +396,8 @@ export function toPicked(layerId: string | undefined, object: unknown): PickedOb
       return { kind: 'storage', item: (object as Feature<Polygon | MultiPolygon, Country>).properties };
     case 'lng':
       return { kind: 'lng', item: object as LngTerminal };
+    case 'terminals':
+      return { kind: 'terminal', item: object as OilTerminal };
     default:
       return null;
   }

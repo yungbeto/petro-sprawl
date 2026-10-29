@@ -131,9 +131,35 @@ export const curatedLngEvidenceSchema = z.object({
   evidence: z.array(evidenceSchema.extend({ sourceType: z.enum(['operator', 'regulator', 'government', 'press']) })).min(1),
 });
 
+/** A curated oil terminal. Its claims must link a source, and can't pose as dataset or measured. */
+export const oilTerminalSchema = z.object({
+  id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
+  name: z.string().min(1),
+  aliases: z.array(z.string()),
+  role: z.enum(['export', 'import']),
+  country: z.string().regex(/^[A-Z]{2}$/),
+  point: lonLat,
+  pointSource: z.object({ publisher: z.string().min(1), detail: z.string().min(1) }),
+  pointApprox: z.boolean().optional(),
+  operator: z.string().min(1).optional(),
+  pipelineIds: z.array(z.string().min(1)),
+  exitVia: z.array(z.enum(['hormuz', 'malacca', 'suez', 'babelm', 'danish', 'turkish', 'panama'])),
+  throughput: z
+    .object({ value: z.number().positive(), unit: z.literal('mb/d'), period: z.string().min(1), source: sourceRefSchema })
+    .optional(),
+  portwatchId: z.string().regex(/^port\d+$/).optional(),
+  evidence: z.array(
+    evidenceSchema.extend({
+      sourceType: z.enum(['operator', 'regulator', 'government', 'press']),
+      statement: z.string().min(1),
+      url: z.string().url(),
+    }),
+  ),
+});
+
 export const disruptionSchema = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
-  assetKind: z.enum(['pipeline', 'chokepoint', 'lng']),
+  assetKind: z.enum(['pipeline', 'chokepoint', 'lng', 'terminal']),
   assetId: z.string().min(1),
   startedAt: isoDate,
   endedAt: isoDate.optional(),

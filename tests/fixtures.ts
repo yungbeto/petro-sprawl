@@ -1,4 +1,4 @@
-import type { Basin, Chokepoint, LngTerminal, Pipeline } from '../src/types';
+import type { Basin, Chokepoint, LngTerminal, OilTerminal, Pipeline } from '../src/types';
 
 export const basin: Basin = {
   id: 'usgs-1',
@@ -50,5 +50,19 @@ export const lngTerminal = (overrides: Partial<LngTerminal> = {}): LngTerminal =
   capacityMtpa: { operating: 10, planned: 0 },
   units: [{ status: 'operating', capacityMtpa: 10 }],
   evidence: [{ status: 'operating', sourceType: 'dataset', observedAt: '2026-09-01', recordedAt: '2026-10-28' }],
+  ...overrides,
+});
+
+export const oilTerminal = (overrides: Partial<OilTerminal> = {}): OilTerminal => ({
+  id: 'test-terminal',
+  name: 'Test terminal',
+  aliases: [],
+  role: 'export',
+  country: 'SA',
+  point: [50, 26],
+  pointSource: { publisher: 'IMF PortWatch', detail: 'ports database, port1' },
+  pipelineIds: [],
+  exitVia: [],
+  evidence: [],
   ...overrides,
 });

@@ -28,17 +28,21 @@ import {
   urlKey,
 } from './lib/claims';
 
-const FILES = { pipeline: 'data/curated/pipelines-evidence.json', lng: 'data/curated/lng-evidence.json' } as const;
+const FILES = {
+  pipeline: 'data/curated/pipelines-evidence.json',
+  lng: 'data/curated/lng-evidence.json',
+  terminal: 'data/curated/oil-terminals.json',
+} as const;
 const DRAFTS = 'data/reports/claim-drafts.json';
 const LOG = 'data/reports/refresh-claims.json';
 
 type Kind = keyof typeof FILES;
-type PipelineRecord = CuratedRecord & { name: string; aliases?: string[] };
+type NamedRecord = CuratedRecord & { name: string; aliases?: string[] };
 
-const SYSTEM = `You keep the status of energy infrastructure current for a map of world energy flows. For one pipeline or LNG terminal, search the web for a news report or official statement that is newer than the claim we already show and says whether the asset is operating, running reduced, idle or offline.
+const SYSTEM = `You keep the status of energy infrastructure current for a map of world energy flows. For one pipeline, LNG terminal or oil terminal, search the web for a news report or official statement that is newer than the claim we already show and says whether the asset is operating, running reduced, idle or offline.
 
 Rules:
-- The source must be published after the current claim's date and must name the asset (or, for a pipeline, its terminal port or entry point, saying so in the statement). For a section of a longer system, the source must be about that section, not gas or oil moving through other sections.
+- The source must be published after the current claim's date and must name the asset (or, for a pipeline, its terminal port or entry point, saying so in the statement). For a section of a longer system, the source must be about that section, not gas or oil moving through other sections. For an oil terminal, the source must be about loadings or operations at that terminal, not a country's exports in general.
 - Use only the publication date printed on the article. Never work a date out from "days ago" labels or search results; if the article shows no date, don't use it.
 - Prefer operators, governments and regulators, then wire services and established trade press. Never use Wikipedia, forums, aggregators or AI-written pages.
 - quote: one or two sentences copied exactly, character for character, from the article body. Not the headline, and not paraphrased.
@@ -104,25 +108,34 @@ async function readPage(url: string): Promise<Page | string> {
 }
 
 const today = new Date().toISOString().slice(0, 10);
-const texts = { pipeline: await readFile(FILES.pipeline, 'utf8'), lng: await readFile(FILES.lng, 'utf8') };
+const texts = {
+  pipeline: await readFile(FILES.pipeline, 'utf8'),
+  lng: await readFile(FILES.lng, 'utf8'),
+  terminal: await readFile(FILES.terminal, 'utf8'),
+};
 const records = {
-  pipeline: JSON.parse(texts.pipeline) as PipelineRecord[],
+  pipeline: JSON.parse(texts.pipeline) as NamedRecord[],
   lng: JSON.parse(texts.lng) as CuratedRecord[],
+  terminal: JSON.parse(texts.terminal) as NamedRecord[],
 };
 const terminals = JSON.parse(await readFile('public/data/lng-terminals.json', 'utf8')) as LngTerminal[];
 const lngName = (id: string) => terminals.find((t) => t.id === id)?.name ?? id;
-const aliasesOf = (ref: string) => records.pipeline.find((p) => `pipeline/${p.id}` === ref)?.aliases ?? [];
+const aliasesOf = (ref: string) =>
+  [...records.pipeline.map((r) => ['pipeline', r] as const), ...records.terminal.map((r) => ['terminal', r] as const)].find(
+    ([kind, r]) => `${kind}/${r.id}` === ref,
+  )?.[1].aliases ?? [];
 
 const stale = staleAssets(
   [
     ...records.pipeline.map((p) => ({ ref: `pipeline/${p.id}`, name: p.name, evidence: p.evidence })),
     ...records.lng.map((t) => ({ ref: `lng/${t.id}`, name: lngName(t.id), evidence: t.evidence })),
+    ...records.terminal.map((t) => ({ ref: `terminal/${t.id}`, name: t.name, evidence: t.evidence })),
   ],
   { today, staleDays: STALE_AFTER_DAYS, skip: CLAIMS_REFRESH.skip },
 );
 console.log(`${stale.length} stale claims`);
 
-const cited = citedUrls([texts.pipeline, texts.lng, await readFile('data/curated/disruptions.json', 'utf8')]);
+const cited = citedUrls([texts.pipeline, texts.lng, texts.terminal, await readFile('data/curated/disruptions.json', 'utf8')]);
 const drafts: { ref: string; reason: string; evidence: Evidence }[] = [];
 const log: { ref: string; name: string; outcome: string; detail?: string; draft?: ClaimDraft }[] = [];
 
@@ -161,6 +174,7 @@ for (const asset of stale) {
       console.log(`review\t${asset.name}: ${review}`);
     } else {
       if (kind === 'pipeline') records.pipeline = addEvidence(records.pipeline, id, evidence);
+      else if (kind === 'terminal') records.terminal = addEvidence(records.terminal, id, evidence);
       else records.lng = addEvidence(records.lng, id, evidence);
       log.push({ ref: asset.ref, name: asset.name, outcome: 'committed', draft });
       console.log(`committed\t${asset.name}: ${draft.status}, ${draft.observedAt}`);
@@ -174,6 +188,7 @@ for (const asset of stale) {
 const json = (value: unknown) => `${JSON.stringify(value, null, 2)}\n`;
 await writeFile(FILES.pipeline, json(records.pipeline));
 await writeFile(FILES.lng, json(records.lng));
+await writeFile(FILES.terminal, json(records.terminal));
 await writeFile(DRAFTS, json(drafts));
 const { price } = CLAIMS_REFRESH;
 const costUsd =

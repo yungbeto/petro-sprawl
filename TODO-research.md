@@ -9,6 +9,13 @@ Items that couldn't be sourced or that need a decision. See CLAUDE.md: unsourced
 - **Turkish Straits:** PortWatch's `chokepoint3` is the Bosporus; EIA reports the Turkish Straits at the Dardanelles. Probably the same tanker traffic, but confirm.
 - **Port calls coverage:** PortWatch's `Daily_Ports_Data` had no rows at all (checked 2026-10-29) for Yanbu (`port570`), Sidi Kerir (`port2129`), Novorossiysk (`port833`), Primorsk (`port1020`), Ras Laffan (`port1090`), Ras Tanura (`port1091`), Juaymah (`port526`), Das Island (`port2237`) or El Sokhna (`port828`), though its ports database lists them all. Ust-Luga (`port1095`) stopped on 2026-07-26. Al Basrah (`port20`), Basrah Oil Terminal (`port2479`) and Mina al-Ahmadi (`port743`) report near zero tanker calls, which looks like a coverage gap, not a stop. Kharg Island (`port2164`) queries failed; retry. Only Fujairah and Ceyhan (`port162`, named "Botas") are wired up. Ask PortWatch whether coverage is planned, or find another source.
 
+## Oil terminals
+
+- **CPC Marine Terminal location:** the map uses the end of GEM's CPC route, about 30 km inland of the terminal at Yuzhnaya Ozereyevka; PortWatch has no entry for it. Find a citable coordinate (CPC, a port authority, or a nautical source).
+- **No dated status source (checked 2026-10-29):** Ras al-Ju'aymah, Mina al-Ahmadi and LOOP show unknown. Kuwait's exports were 39% below pre-war in the first 22 days of October (Arab Times, citing TankerTrackers), but the report doesn't name Mina al-Ahmadi. LOOP's latest coverage is the March 2026 spill.
+- **Capacities:** none cited yet. EIA's country briefs that list terminal capacities render with JavaScript or are old summaries; Ras Tanura (5.4 mb/d in 2025, Al Jazeera) and Sheskharis (0.65 mb/d, January to July 2026, The Moscow Times) show cited average loadings instead.
+- **Claims refresh:** the weekly job skips terminals with no claim at all, so it won't fill the three above. Seed them by hand, or teach the job to search for assets with no claim.
+
 ## Basins
 
 - ~~Countries each basin spans.~~ Done 2026-10-28 with Natural Earth 5.1.1 1:50m admin-0 (public domain), used at import only. Rule in `BASIN_COUNTRY_OVERLAP`: at least 1,000 km² of land overlap, or at least 20% of the country.

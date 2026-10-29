@@ -112,6 +112,36 @@ export interface LngTerminal {
   sendOutSeriesId?: string;
 }
 
+/**
+ * A curated crude oil terminal: where a pipeline meets the sea, or a major export port. Every claim
+ * cites a source; with no claim the status is unknown. Not in SPEC section 6; added after M5.
+ */
+export interface OilTerminal {
+  id: string;
+  name: string;
+  aliases: string[];
+  /** Export terminals load crude; import terminals receive it (Ain Sokhna feeds SUMED, LOOP serves US refiners). */
+  role: 'export' | 'import';
+  /** ISO 3166-1 alpha-2 */
+  country: string;
+  point: [number, number];
+  /** Where the location comes from: a PortWatch port, or the end of a GEM pipeline route. */
+  pointSource: { publisher: string; detail: string };
+  /** The source's point is near, not at, the terminal. */
+  pointApprox?: boolean;
+  operator?: string;
+  /** Pipelines that end at the terminal. */
+  pipelineIds: string[];
+  /** Chokepoints a tanker leaving the terminal passes before open sea, in either direction it can take. */
+  exitVia: ChokepointId[];
+  /** Cited loadings over a stated period, as context; not capacity. */
+  throughput?: { value: number; unit: 'mb/d'; period: string; source: SourceRef };
+  /** PortWatch port id, when Daily_Ports_Data reports tanker calls there (PORT_CALLS). */
+  portwatchId?: string;
+  /** Newest first. Empty when nothing could be sourced. */
+  evidence: Evidence[];
+}
+
 export type ChokepointId = 'hormuz' | 'malacca' | 'suez' | 'babelm' | 'danish' | 'turkish' | 'panama';
 
 export interface Chokepoint {
@@ -178,7 +208,7 @@ export interface SourceRef {
  */
 export interface Disruption {
   id: string;
-  assetKind: 'pipeline' | 'chokepoint' | 'lng';
+  assetKind: 'pipeline' | 'chokepoint' | 'lng' | 'terminal';
   assetId: string;
   /** ISO date or month; month when sources don't give a day. */
   startedAt: string;
