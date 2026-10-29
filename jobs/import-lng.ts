@@ -1,4 +1,5 @@
-// Manual import: GEM LNG terminals tracker (one row per unit) -> public/data/lng-terminals.json, one record per terminal.
+// Manual import: GEM LNG terminals tracker (one row per unit) -> data/derived/gem-lng-terminals.json, one record per terminal.
+// npm run build:curated then adds cited evidence from data/curated/lng-evidence.json into public/data/lng-terminals.json.
 // Put the tracker's GeoJSON download in data/raw/gem/ (path below), then: npm run import:lng
 // Writes data/reports/import-lng.json with counts of every unit skipped and why.
 
@@ -22,7 +23,8 @@ const { terminals, skipped, unresolvedCountries } = lngTerminals(rows, { recorde
 const sha256 = await sha256File(TRACKER.path);
 
 const result = await publishDataset({
-  id: 'lng-terminals',
+  id: 'gem-lng-terminals',
+  dataDir: 'data/derived',
   schema: lngTerminalSchema,
   produce: async () => ({
     records: terminals,
@@ -33,7 +35,7 @@ const result = await publishDataset({
     },
   }),
 });
-reportResult(result, 'lng-terminals');
+reportResult(result, 'gem-lng-terminals');
 if (result.ok) {
   await mkdir('data/reports', { recursive: true });
   const report = { recordedAt, file: TRACKER.path, sha256, units: rows.length, terminals: terminals.length, skipped, unresolvedCountries };

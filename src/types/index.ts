@@ -142,7 +142,7 @@ export interface SourceRef {
  */
 export interface Disruption {
   id: string;
-  assetKind: 'pipeline' | 'chokepoint';
+  assetKind: 'pipeline' | 'chokepoint' | 'lng';
   assetId: string;
   /** ISO date or month; month when sources don't give a day. */
   startedAt: string;

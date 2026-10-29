@@ -1,0 +1,76 @@
+[
+  {
+    "id": "gem-t100000130594-export",
+    "evidence": [
+      {
+        "status": "reduced",
+        "sourceType": "press",
+        "statement": "QatarEnergy restored LNG exports in September to about a third of pre-war levels, and at least 20 more cargoes have passed Hormuz since early September (Semafor, citing Bloomberg).",
+        "url": "https://www.semafor.com/article/10/20/2026/qatar-is-ramping-up-liquefied-natural-gas-exports-as-prices-surge",
+        "observedAt": "2026-10-20",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "reduced",
+        "sourceType": "press",
+        "statement": "Much of Ras Laffan has been shut since the war began; Kpler put September LNG exports at 1.6 million tonnes, under a quarter of the pre-war average, with October on track for 0.6 million tonnes (Reuters, via Cyprus Mail).",
+        "url": "https://cyprus-mail.com/2026/10/12/qatar-lng-exports-remain-severely-disrupted-despite-recovery-in-gulf-oil-shipments",
+        "observedAt": "2026-10-12",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "offline",
+        "sourceType": "press",
+        "statement": "Wood Mackenzie expected the North site back within a month of a restart; the strikes that damaged two trains hit the South site (The National).",
+        "url": "https://www.thenationalnews.com/business/energy/2026/04/09/months-expected-until-qatars-ras-laffan-lng-site-resumes-full-operations/",
+        "observedAt": "2026-04-09",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "offline",
+        "sourceType": "press",
+        "statement": "QatarEnergy declared force majeure on its entire LNG output after missile and rocket attacks on Ras Laffan caused fires and extensive damage (Fox Business, citing Reuters).",
+        "url": "https://www.foxbusiness.com/economy/iranian-strikes-cut-17-qatar-lng-output-threatening-global-supply",
+        "observedAt": "2026-03-19",
+        "recordedAt": "2026-10-29"
+      }
+    ]
+  },
+  {
+    "id": "gem-t100000130598-export",
+    "evidence": [
+      {
+        "status": "reduced",
+        "sourceType": "press",
+        "statement": "QatarEnergy restored LNG exports in September to about a third of pre-war levels, and at least 20 more cargoes have passed Hormuz since early September (Semafor, citing Bloomberg).",
+        "url": "https://www.semafor.com/article/10/20/2026/qatar-is-ramping-up-liquefied-natural-gas-exports-as-prices-surge",
+        "observedAt": "2026-10-20",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "reduced",
+        "sourceType": "press",
+        "statement": "Much of Ras Laffan has been shut since the war began; Kpler put September LNG exports at 1.6 million tonnes, under a quarter of the pre-war average, with October on track for 0.6 million tonnes (Reuters, via Cyprus Mail).",
+        "url": "https://cyprus-mail.com/2026/10/12/qatar-lng-exports-remain-severely-disrupted-despite-recovery-in-gulf-oil-shipments",
+        "observedAt": "2026-10-12",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "offline",
+        "sourceType": "press",
+        "statement": "Iranian strikes damaged Trains 4 and 6, removing 12.8 million tonnes a year and cutting the South site from 36 to 24 million tonnes a year; Wood Mackenzie expected it back by late summer at the earliest (The National).",
+        "url": "https://www.thenationalnews.com/business/energy/2026/04/09/months-expected-until-qatars-ras-laffan-lng-site-resumes-full-operations/",
+        "observedAt": "2026-04-09",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "offline",
+        "sourceType": "press",
+        "statement": "QatarEnergy declared force majeure on its entire LNG output after missile and rocket attacks on Ras Laffan caused fires and extensive damage (Fox Business, citing Reuters).",
+        "url": "https://www.foxbusiness.com/economy/iranian-strikes-cut-17-qatar-lng-output-threatening-global-supply",
+        "observedAt": "2026-03-19",
+        "recordedAt": "2026-10-29"
+      }
+    ]
+  }
+]

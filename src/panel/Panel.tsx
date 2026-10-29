@@ -134,7 +134,7 @@ function Detail({
       {resolved?.kind === 'basin' && <BasinDetail item={resolved.item} data={data} onSelect={onSelect} />}
       {resolved?.kind === 'pipeline' && <PipelineDetail item={resolved.item} data={data} now={now} />}
       {resolved?.kind === 'storage' && <StorageDetail item={resolved.item} data={data} />}
-      {resolved?.kind === 'lng' && <LngDetail item={resolved.item} now={now} />}
+      {resolved?.kind === 'lng' && <LngDetail item={resolved.item} data={data} now={now} />}
       {!resolved && (
         <section className="section">
           <p className="muted">{KIND_LABELS[selection.kind]}</p>

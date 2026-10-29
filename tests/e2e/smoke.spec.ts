@@ -119,8 +119,14 @@ test('an LNG terminal link shows its units, and search and the layer list know t
   await expect(panel.getByRole('heading', { name: 'QatarEnergy LNG (N)' })).toBeVisible();
   await expect(panel.getByText('LNG export terminal')).toBeVisible();
   await expect(panel.locator('dt', { hasText: 'Operating' }).locator('xpath=following-sibling::dd[1]')).toContainText('40.8 mtpa');
+  // Cited reports set the status over GEM's; GEM's own claim stays in the history.
+  const status = panel.locator('dt', { hasText: 'Status' }).locator('xpath=following-sibling::dd[1]');
+  await expect(status).toContainText('Reduced');
+  await expect(status.getByRole('link', { name: /restored LNG exports in September/ })).toHaveAttribute('href', /semafor\.com/);
+  await expect(panel.getByRole('heading', { name: 'Disruptions' })).toBeVisible();
+  await expect(panel.getByText(/Global Energy Monitor's, as of/)).toBeVisible();
   await expect(panel.getByRole('heading', { name: 'Units' })).toBeVisible();
-  await expect(panel.getByRole('row')).toHaveCount(5);
+  await expect(panel.getByRole('table').getByRole('row')).toHaveCount(5);
 
   await page.goto('/');
   const search = page.getByRole('combobox');

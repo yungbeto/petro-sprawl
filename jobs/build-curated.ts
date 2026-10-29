@@ -4,17 +4,28 @@
 // - disruptions.json goes out as is.
 // - pipelines-evidence.json is merged with GEM rows (data/derived/gem-pipelines.json) into
 //   public/data/pipelines.json. Every merge is logged in data/reports/dedup.json for review.
+// - lng-evidence.json adds cited claims to GEM terminals (data/derived/gem-lng-terminals.json) in
+//   public/data/lng-terminals.json.
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { ENTSOG, entsogSeriesId } from '../src/lib/config';
-import type { DatasetMeta, Pipeline } from '../src/types';
+import type { DatasetMeta, LngTerminal, Pipeline } from '../src/types';
+import { mergeLngEvidence, type CuratedLngEvidence } from './lib/curated-lng';
 import { mergePipelines, type CuratedPipeline } from './lib/curated-pipelines';
 import { publishDataset, report, sha256File, validateRecords } from './lib/output';
-import { curatedPipelineSchema, disruptionSchema, pipelineSchema } from './lib/schemas';
+import {
+  curatedLngEvidenceSchema,
+  curatedPipelineSchema,
+  disruptionSchema,
+  lngTerminalSchema,
+  pipelineSchema,
+} from './lib/schemas';
 
 const CURATED_PIPELINES = 'data/curated/pipelines-evidence.json';
 const GEM_PIPELINES = 'data/derived/gem-pipelines.json';
 const DEDUP_REPORT = 'data/reports/dedup.json';
+const CURATED_LNG = 'data/curated/lng-evidence.json';
+const GEM_LNG = 'data/derived/gem-lng-terminals.json';
 
 const readJson = async <T>(path: string) => JSON.parse(await readFile(path, 'utf8')) as T;
 
@@ -68,3 +79,21 @@ const pipelines = await publishDataset({
 });
 report(pipelines, 'pipelines');
 if (pipelines.ok) console.log(`dedup report in ${DEDUP_REPORT}`);
+
+const lng = await publishDataset({
+  id: 'lng-terminals',
+  schema: lngTerminalSchema,
+  produce: async () => {
+    const curated = validateRecords('lng-evidence', await readJson<unknown[]>(CURATED_LNG), curatedLngEvidenceSchema) as CuratedLngEvidence[];
+    const gemMeta = await readJson<DatasetMeta>('data/derived/meta/gem-lng-terminals.json');
+    return {
+      records: mergeLngEvidence(curated, await readJson<LngTerminal[]>(GEM_LNG)),
+      meta: {
+        sourceUrl: 'https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/',
+        sourceVersion: `${gemMeta.sourceVersion}; curated ${CURATED_LNG} sha256:${await sha256File(CURATED_LNG)}`,
+        license: 'CC BY 4.0, Global Energy Monitor; curated evidence ours, linked sources keep their own terms',
+      },
+    };
+  },
+});
+report(lng, 'lng-terminals');

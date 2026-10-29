@@ -66,6 +66,8 @@ describe('buildChokepoints', () => {
 import { countryToIso } from '../jobs/lib/countries';
 import { gemRowToPipeline, joinLineParts, mapGemStatus, parseOwners, type GemRow } from '../jobs/lib/gem';
 import { lngTerminals, type GemLngRow } from '../jobs/lib/lng';
+import { mergeLngEvidence } from '../jobs/lib/curated-lng';
+import { lngTerminal } from './fixtures';
 
 describe('countryToIso', () => {
   it('resolves current codes, not deprecated ones', () => {
@@ -263,5 +265,27 @@ describe('lngTerminals', () => {
     expect(result.skipped).toEqual({ excluded_status: 1 });
     expect(result.unresolvedCountries).toEqual(['Atlantis']);
     expect(result.terminals[0]?.country).toBe('');
+  });
+});
+
+describe('mergeLngEvidence', () => {
+  const dataset = { status: 'operating' as const, sourceType: 'dataset' as const, observedAt: '2026-07-27', recordedAt: '2026-10-28' };
+  const press = (status: 'offline' | 'reduced', observedAt: string) => ({ status, sourceType: 'press' as const, observedAt, recordedAt: '2026-10-29' });
+
+  it('puts cited claims, newest first, ahead of the dataset claim', () => {
+    const [merged, untouched] = mergeLngEvidence(
+      [{ id: 'gem-a', evidence: [press('offline', '2026-03-19'), press('reduced', '2026-10-20')] }],
+      [lngTerminal({ id: 'gem-a', evidence: [dataset] }), lngTerminal({ id: 'gem-b', evidence: [dataset] })],
+    );
+    expect(merged!.evidence.map((e) => `${e.status}@${e.observedAt}`)).toEqual([
+      'reduced@2026-10-20',
+      'offline@2026-03-19',
+      'operating@2026-07-27',
+    ]);
+    expect(untouched!.evidence).toEqual([dataset]);
+  });
+
+  it('refuses evidence for a terminal that is not there', () => {
+    expect(() => mergeLngEvidence([{ id: 'gem-x', evidence: [press('offline', '2026-03-19')] }], [lngTerminal()])).toThrow(/gem-x/);
   });
 });

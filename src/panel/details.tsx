@@ -493,8 +493,9 @@ function unitCapacity(units: LngUnit[], states: AssetStatus[], total: number): {
   return { value: formatNumber(total, 1), unit: 'mtpa' };
 }
 
-export function LngDetail({ item, now }: { item: LngTerminal; now: Date }) {
+export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datasets; now: Date }) {
   const status = lngStatus(item);
+  const disruptions = disruptionsFor(data, 'lng', item.id);
   const current = item.evidence[0];
   const kind = [LNG_FACILITY[item.facility], item.floating && 'floating', item.offshore && !item.floating && 'offshore']
     .filter(Boolean)
@@ -516,7 +517,11 @@ export function LngDetail({ item, now }: { item: LngTerminal; now: Date }) {
         </dd>
       </dl>
       <Stats>
-        <Stat label="Operating" {...unitCapacity(item.units, ['operating', 'reduced'], item.capacityMtpa.operating)} />
+        <Stat
+          label="Operating"
+          {...unitCapacity(item.units, ['operating', 'reduced'], item.capacityMtpa.operating)}
+          aside="units GEM lists as running"
+        />
         <Stat
           label="Planned"
           {...unitCapacity(item.units, ['under_construction', 'planned'], item.capacityMtpa.planned)}
@@ -524,8 +529,31 @@ export function LngDetail({ item, now }: { item: LngTerminal; now: Date }) {
         />
         <Stat label="Units" value={String(item.units.length)} aside={item.facility === 'export' ? 'trains' : 'regas units'} />
       </Stats>
+      <DisruptionList disruptions={disruptions} />
+      {item.evidence.length > 1 && (
+        <section className="section">
+          <h3 className="section__title">Status history</h3>
+          <ol className="timeline">
+            {item.evidence.map((e, k) => (
+              <li key={k} className="timeline__item">
+                <span className={`status status--${e.status}`}>{statusLabel(e.status)}</span>
+                <span className="timeline__detail">
+                  <EvidenceLine evidence={e} />
+                </span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
       <section className="section">
         <h3 className="section__title">Units</h3>
+        {current && current.sourceType !== 'dataset' && (
+          <p className="muted section__lede">
+            Unit statuses and capacities are Global Energy Monitor's, as of{' '}
+            <span className="mono">{item.evidence.find((e) => e.sourceType === 'dataset')?.observedAt ?? 'its release'}</span>.
+            The status above comes from later cited reports.
+          </p>
+        )}
         <table className="table">
           <thead>
             <tr>

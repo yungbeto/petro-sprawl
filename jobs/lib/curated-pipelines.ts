@@ -106,7 +106,8 @@ export function matchGemRows(
  * the dataset last touched the row, not when anyone observed the pipeline, so a newer GEM row
  * must not displace a dated, sourced claim. Measured flow is put first later, in the app.
  */
-const byRankThenObservedDesc = (a: Evidence, b: Evidence) =>
+/** Cited claims before dataset claims, then newest first (SPEC 6). */
+export const byRankThenObservedDesc = (a: Evidence, b: Evidence) =>
   Number(a.sourceType === 'dataset') - Number(b.sourceType === 'dataset') || b.observedAt.localeCompare(a.observedAt);
 
 /** One curated pipeline built from its GEM rows. Curated fields win; GEM fills the rest. */

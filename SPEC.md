@@ -200,7 +200,7 @@ interface LngTerminal {
   owners?: { name: string; sharePct?: number }[];
   capacityMtpa: { operating: number; planned: number };  // sum of units with a GEM capacity
   units: { name?: string; status: AssetStatus; capacityMtpa?: number; startYear?: number }[];
-  evidence: Evidence[];      // one dataset claim: the most live unit's status
+  evidence: Evidence[];      // GEM's claim (the most live unit's status), after any cited claims from data/curated/lng-evidence.json
 }
 
 interface DatasetMeta {

@@ -25,7 +25,11 @@ Items that couldn't be sourced or that need a decision. See CLAUDE.md: unsourced
 
 ## LNG terminals
 
-- **Status is GEM's alone so far.** Qatar's Ras Laffan trains show operating per GEM (last updated 2026-07-27), with no cited claim for how the war and the Hormuz restrictions affect loadings. Worth curating like the corridor pipelines: Ras Laffan, Das Island, and the import terminals Europe leans on.
+- **Ras Laffan curated 2026-10-29** (North and South sites): reduced, from Semafor (Bloomberg) 2026-10-20 and Reuters (Kpler) 2026-10-12, with the March shutdown and the strike on South Trains 4 and 6 in the history and a disruption record each. Still open:
+  - Reports on 2026-10-28 that QatarEnergy extended force majeure to the end of 2026 came only through aggregators (OilPrice via ua.news); find the primary before adding it.
+  - GEM groups the South site's trains as S(1) T1-2, S(2) T3-5, S(3) T6-7, so Trains 4 and 6 can't be marked on their own units; the units table stays GEM's, with a note.
+  - The National (2026-04-09) gives 12.8 mtpa lost and the South site cut from 36 to 24 mtpa; GEM lists the South site at 36.3 mtpa.
+- **Next LNG terminals to curate:** Das Island (UAE, inside Hormuz), and the import terminals Europe leans on.
 - East London LNG Terminal (proposed) has no country in GEM's file; it's imported with the country left empty.
 - 48 live units have no capacity in GEM's mtpa column. A terminal whose units all lack it shows capacity "Unknown"; one with some known shows only the known part.
 - GEM sometimes places units of one project apart; the terminal sits at its first unit with the terminal's status.

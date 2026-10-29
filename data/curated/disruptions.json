@@ -178,5 +178,75 @@
     ],
     "recordedAt": "2026-10-28",
     "endedAt": "2026-09"
+  },
+  {
+    "id": "ras-laffan-south-2026-war",
+    "assetKind": "lng",
+    "assetId": "gem-t100000130598-export",
+    "startedAt": "2026-03",
+    "cause": "conflict",
+    "summary": "QatarEnergy shut LNG production in early March 2026 after Iranian attacks and declared force majeure on its entire output. Missile strikes in mid-March damaged Trains 4 and 6 at this site, removing 12.8 million tonnes a year for three to five years, by QatarEnergy's estimate. With Hormuz restricted, Qatar's exports were about a third of pre-war levels in September, by Bloomberg's count, and under a quarter by Kpler's.",
+    "sources": [
+      {
+        "publisher": "Fox Business",
+        "title": "QatarEnergy declares force majeure after Iran strikes on Ras Laffan facility",
+        "url": "https://www.foxbusiness.com/economy/iranian-strikes-cut-17-qatar-lng-output-threatening-global-supply",
+        "publishedAt": "2026-03-19"
+      },
+      {
+        "publisher": "The National",
+        "title": "Qatar's Ras Laffan LNG site may not be fully back online for months",
+        "url": "https://www.thenationalnews.com/business/energy/2026/04/09/months-expected-until-qatars-ras-laffan-lng-site-resumes-full-operations/",
+        "publishedAt": "2026-04-09"
+      },
+      {
+        "publisher": "Reuters, via Cyprus Mail",
+        "title": "Qatar LNG exports remain severely disrupted despite recovery in Gulf oil shipments",
+        "url": "https://cyprus-mail.com/2026/10/12/qatar-lng-exports-remain-severely-disrupted-despite-recovery-in-gulf-oil-shipments",
+        "publishedAt": "2026-10-12"
+      },
+      {
+        "publisher": "Semafor",
+        "title": "Qatar is ramping up liquefied natural gas exports as prices surge",
+        "url": "https://www.semafor.com/article/10/20/2026/qatar-is-ramping-up-liquefied-natural-gas-exports-as-prices-surge",
+        "publishedAt": "2026-10-20"
+      }
+    ],
+    "recordedAt": "2026-10-29"
+  },
+  {
+    "id": "ras-laffan-north-2026-war",
+    "assetKind": "lng",
+    "assetId": "gem-t100000130594-export",
+    "startedAt": "2026-03",
+    "cause": "conflict",
+    "summary": "QatarEnergy shut LNG production in early March 2026 after Iranian attacks and declared force majeure on its entire output. The strikes that damaged two trains hit the South site; Wood Mackenzie expected this site back within a month of a restart. With Hormuz restricted, Qatar's exports were about a third of pre-war levels in September, by Bloomberg's count, and under a quarter by Kpler's.",
+    "sources": [
+      {
+        "publisher": "Fox Business",
+        "title": "QatarEnergy declares force majeure after Iran strikes on Ras Laffan facility",
+        "url": "https://www.foxbusiness.com/economy/iranian-strikes-cut-17-qatar-lng-output-threatening-global-supply",
+        "publishedAt": "2026-03-19"
+      },
+      {
+        "publisher": "The National",
+        "title": "Qatar's Ras Laffan LNG site may not be fully back online for months",
+        "url": "https://www.thenationalnews.com/business/energy/2026/04/09/months-expected-until-qatars-ras-laffan-lng-site-resumes-full-operations/",
+        "publishedAt": "2026-04-09"
+      },
+      {
+        "publisher": "Reuters, via Cyprus Mail",
+        "title": "Qatar LNG exports remain severely disrupted despite recovery in Gulf oil shipments",
+        "url": "https://cyprus-mail.com/2026/10/12/qatar-lng-exports-remain-severely-disrupted-despite-recovery-in-gulf-oil-shipments",
+        "publishedAt": "2026-10-12"
+      },
+      {
+        "publisher": "Semafor",
+        "title": "Qatar is ramping up liquefied natural gas exports as prices surge",
+        "url": "https://www.semafor.com/article/10/20/2026/qatar-is-ramping-up-liquefied-natural-gas-exports-as-prices-surge",
+        "publishedAt": "2026-10-20"
+      }
+    ],
+    "recordedAt": "2026-10-29"
   }
 ]

@@ -101,9 +101,14 @@ export const lngTerminalSchema = z.object({
   evidence: z.array(evidenceSchema).min(1),
 });
 
+export const curatedLngEvidenceSchema = z.object({
+  id: z.string().regex(/^gem-[a-z0-9-]+$/),
+  evidence: z.array(evidenceSchema.extend({ sourceType: z.enum(['operator', 'regulator', 'government', 'press']) })).min(1),
+});
+
 export const disruptionSchema = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
-  assetKind: z.enum(['pipeline', 'chokepoint']),
+  assetKind: z.enum(['pipeline', 'chokepoint', 'lng']),
   assetId: z.string().min(1),
   startedAt: isoDate,
   endedAt: isoDate.optional(),
