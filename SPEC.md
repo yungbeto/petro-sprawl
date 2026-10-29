@@ -378,6 +378,42 @@ Done when: Nord Stream shows offline with its cited evidence and date; Ukraine t
 **M5: Summary and polish.** Summary state with counts and "what changed since last visit", search, keyboard shortcuts, empty and error states, attribution footer.
 Done when: opening the app gives a useful summary in under two seconds on a warm cache, every summary row links to its asset, and all source attributions appear.
 
+**M6: Where is my oil from?** A US user enters a ZIP code, city or state and sees where the crude refined for their region comes from, and the routes it takes to get there. Detail below.
+Done when: entering any US ZIP code or state opens its region's view; every share links to the EIA series it came from, with the month it covers; foreign origins show only the chokepoints a cited route supports; and the location never leaves the browser.
+
+### M6 detail: where is my oil from?
+
+**The question it answers.** "Where does the crude refined for my part of the country come from, and what does it pass through on the way?" Not "where did my gallon come from". Refineries blend crude from many sources, and refined fuel often travels far from the refinery, so no public data traces one community's oil. The view says this in its first line.
+
+**Unit of answer: the PADD.** EIA reports crude movements by Petroleum Administration for Defense District (five regions: East Coast, Midwest, Gulf Coast, Rocky Mountain, West Coast). Every share in the view is a share of one PADD's crude supply. Smaller areas would need refinery-level shipments, which aren't public.
+
+**Location to PADD, in the browser.** The user types a ZIP code, city or state into the existing search. A ZIP maps to a state through a small table built once from the Census Bureau's ZCTA relationship file (public domain); a state maps to its PADD by EIA's published definition. Cities come from the same search index as states (a short list of large US cities with their state). The ZIP or city is never stored, sent anywhere or put in the URL. The URL holds only the region (`?sel=region/padd-3`), which is coarse enough to share.
+
+**Sources (all EIA, public domain, API v2 with a free key, `EIA_API_KEY`):**
+
+| Dataset | API route | Gives | Frequency |
+| --- | --- | --- | --- |
+| PAD District imports by country of origin | `petroleum/move/impcp` | Crude imports into each PADD, by country | Monthly, about 3 months behind (July 2026 on 2026-10-29) |
+| Movements between PAD districts | `petroleum/move/ptb` (and `pipe`, `tb`, `rail` for the mode) | Crude moved from one PADD to another, by pipeline, tanker and barge, and rail | Monthly |
+| Refinery and blender net input | `petroleum/pnp/inpt` | Crude run by each PADD's refineries: the total the shares are of | Monthly |
+| Crude oil production | `petroleum/crd/crpdn` | Production by state, to say where a PADD's own crude is pumped | Monthly |
+| Refinery locations | EIA U.S. Energy Atlas `Petroleum_Refineries_US_EIA` (ArcGIS FeatureServer, from the Refinery Capacity Report) | Operable refineries with location and capacity, for the map | Yearly; manual import |
+
+Company Level Imports (refinery and port of entry for each import, monthly spreadsheet) could later narrow foreign crude to refineries; it isn't needed for PADD shares.
+
+**Method (pure, tested, in `src/lib/oilOrigins.ts`):** over the trailing 12 complete months, for one PADD:
+
+- Foreign: crude imports by country of origin.
+- Other regions: crude received from each other PADD, split by mode.
+- Own region: refinery crude input minus foreign imports minus receipts from other PADDs. This residual also absorbs stock changes and rounding, so it is labelled "approximately" and shown with the in-region production by state as context, never as a measured flow. If the residual is negative, or imports and receipts exceed refinery input, the own-region share shows as unknown with the reason.
+- Shares are shown to the nearest percent with the months they cover. Countries under 1% fold into "other countries".
+
+**Routes.** Each foreign origin is drawn as a path from the country to the receiving PADD's coast, through only the chokepoints a cited source supports for that trade. A curated file (`data/curated/oil-routes.json`) holds, for each exporting country that matters to a PADD, its usual export terminals (linked to the oil terminal layer where we have them), the chokepoints on the way with a source for each, and alternatives where a source names them (for example a Red Sea outlet that avoids Hormuz). Where no source supports a chokepoint, the route shows the country and the receiving coast only. Canadian crude is drawn along the mapped pipelines that cross the border into that PADD, when GEM has them. The view then sums the share of the region's crude whose cited route passes each chokepoint, and shows each chokepoint's current status beside it ("about N% of the region's crude comes by a route through the Strait of Hormuz, now at 2% of normal tanker traffic").
+
+**Panel view (selection kind `region`):** a heading with the region's name; the one-line caveat; a ranked list of origins (country or region, share, how it arrives) where each row selects its route on the map; the chokepoint exposure lines; the region's refineries count and capacity; and a source line with EIA links and the months covered. The map fits to the routes, dims everything else, and shows the region's refineries as small points.
+
+**Not in this milestone:** refined fuel brought in from other regions (EIA product movements between PADDs would give it; a later step), the EU version (Eurostat crude imports by member state), and anything below PADD level.
+
 ## 12. Working notes for Claude Code
 
 - Read this spec fully before starting. Build milestone by milestone and stop for review at the end of each.
@@ -391,4 +427,7 @@ Done when: opening the app gives a useful summary in under two seconds on a warm
 - Which basemap provider (OpenFreeMap or Protomaps) gives the cleanest minimal style?
 - Dark and light are both built; which should be the default when the system has no preference?
 - `STALE_AFTER_DAYS`: is 30 the right default for curated evidence?
+- M6: should the origin shares use the trailing 12 months (steadier, recommended) or the latest month (more current, noisier)?
+- M6: which cities should the search know, beyond states and ZIP codes? A list of the largest few hundred US cities is enough to start.
+- M6: should refined fuel from other regions (for example Gulf Coast gasoline reaching the East Coast by pipeline) come into the first version? It changes the answer most for the East Coast and West Coast.
 - Later: news sources and story placement (asset, then company, then place, then country), and matching companies to assets via GEM's ownership tracker.
