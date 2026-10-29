@@ -132,7 +132,7 @@ function Detail({
     <>
       {resolved?.kind === 'chokepoint' && <ChokepointDetail item={resolved.item} data={data} />}
       {resolved?.kind === 'basin' && <BasinDetail item={resolved.item} data={data} onSelect={onSelect} />}
-      {resolved?.kind === 'pipeline' && <PipelineDetail item={resolved.item} data={data} now={now} />}
+      {resolved?.kind === 'pipeline' && <PipelineDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'storage' && <StorageDetail item={resolved.item} data={data} />}
       {resolved?.kind === 'lng' && <LngDetail item={resolved.item} data={data} now={now} />}
       {!resolved && (

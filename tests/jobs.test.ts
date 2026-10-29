@@ -207,6 +207,9 @@ describe('GEM transforms', () => {
     );
     expect(result.ok && result.pipeline).toMatchObject({ endpoints: { start: 'Anapa', end: 'Kıyıköy' }, history: { startYears: [2020] } });
     expect(result.ok && result.pipeline).not.toHaveProperty('parents');
+    // A segment row belongs to the system its project name gives.
+    expect(result.ok && result.pipeline.system).toBe('TurkStream Gas Pipeline');
+    expect(gemRowToPipeline({ ...row, SegmentName: '' }, line, ctx)).not.toHaveProperty('pipeline.system');
   });
 
   it('keeps a pipeline whose country has no ISO code and reports the name', () => {

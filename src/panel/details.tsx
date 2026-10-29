@@ -18,6 +18,7 @@ import {
   lngTerminalsInBasin,
   pipelinesTouchingBasin,
   seriesById,
+  systemSections,
   type Datasets,
 } from '../lib/data';
 import { chokepointFlow, type FlowBand } from '../lib/flow';
@@ -294,7 +295,17 @@ function EvidenceLine({ evidence }: { evidence: Evidence }) {
   );
 }
 
-export function PipelineDetail({ item, data, now }: { item: Pipeline; data: Datasets; now: Date }) {
+export function PipelineDetail({
+  item,
+  data,
+  now,
+  onSelect,
+}: {
+  item: Pipeline;
+  data: Datasets;
+  now: Date;
+  onSelect: OnSelect;
+}) {
   const status = pipelineStatus(item);
   const current = item.evidence[0];
   const claim = current?.sourceType === 'measured' ? latestClaim(item) : undefined;
@@ -302,6 +313,9 @@ export function PipelineDetail({ item, data, now }: { item: Pipeline; data: Data
   const disruptions = disruptionsFor(data, 'pipeline', item.id);
   const route = [item.fromCountry, ...item.transitCountries, item.toCountry].filter(Boolean).join(' → ');
   const curated = item.sources.includes('curated');
+  const sections = systemSections(item, data.pipelines);
+  const none = new Set<string>();
+  const sectionRows = filterRows({ pipelines: new Set(sections.map((p) => p.id)), chokepoints: none, lng: none }, data);
   return (
     <>
       <Header
@@ -463,6 +477,15 @@ export function PipelineDetail({ item, data, now }: { item: Pipeline; data: Data
             </Row>
           )}
         </Facts>
+      )}
+      {sectionRows.length > 0 && (
+        <RelatedList
+          title={`Other sections of ${item.system}`}
+          empty=""
+          rows={sectionRows}
+          data={data}
+          onSelect={onSelect}
+        />
       )}
       {item.geometryApprox && <p className="note">Route is approximate. The source marks it as low accuracy.</p>}
       <p className="source">

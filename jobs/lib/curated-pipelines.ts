@@ -6,6 +6,8 @@ export interface CuratedPipeline {
   id: string;
   name: string;
   aliases: string[];
+  /** The system this record is one section of; otherwise the GEM rows' system when they all share one. */
+  system?: string;
   commodity: Pipeline['commodity'];
   fromCountry: string;
   toCountry: string;
@@ -167,6 +169,9 @@ export function mergeCurated(curated: CuratedPipeline, rows: Pipeline[]): Pipeli
     sources: ['curated', ...new Set(rows.flatMap((r) => r.sources))],
   };
   if (main?.operator) pipeline.operator = main.operator;
+  const systems = new Set(rows.map((r) => r.system));
+  const system = curated.system ?? (systems.size === 1 ? [...systems][0] : undefined);
+  if (system) pipeline.system = system;
   if (curated.owners) {
     pipeline.owners = curated.owners.list;
     pipeline.ownersSource = curated.owners.source;

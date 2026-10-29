@@ -27,6 +27,8 @@ export interface Pipeline {
   id: string;
   name: string;
   aliases: string[];
+  /** The system this is one section of, when GEM splits it ("Druzhba Oil Pipeline"); sections share it. */
+  system?: string;
   commodity: Commodity;
   fromCountry: string;
   toCountry: string;

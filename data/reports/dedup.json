@@ -400,6 +400,31 @@
           "reason": "listed"
         }
       ]
+    },
+    {
+      "curatedId": "arab-gas-egypt-jordan",
+      "rows": [
+        {
+          "gemId": "gem-p0436",
+          "gemName": "Arab Gas Pipeline · Arish-Taba Gas Pipeline",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p7482",
+          "gemName": "Arab Gas Pipeline · Taba-Aqaba Sea Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "arab-gas-jordan-syria",
+      "rows": [
+        {
+          "gemId": "gem-p7540",
+          "gemName": "Arab Gas Pipeline · Jaber-Homs Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
     }
   ],
   "missing": [],

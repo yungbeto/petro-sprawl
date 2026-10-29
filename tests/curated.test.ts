@@ -126,6 +126,14 @@ describe('mergeHistory', () => {
     expect(mergeHistory([pipeline()])).toBeUndefined();
   });
 
+  it('keeps the system its rows share, unless the record names its own', () => {
+    const a = pipeline({ id: 'a', system: 'Arab Gas Pipeline' });
+    const b = pipeline({ id: 'b', system: 'Arab Gas Pipeline' });
+    expect(mergeCurated(curated(), [a, b]).system).toBe('Arab Gas Pipeline');
+    expect(mergeCurated(curated(), [a, pipeline({ id: 'c' })])).not.toHaveProperty('system');
+    expect(mergeCurated(curated({ system: 'Druzhba' }), [pipeline({ id: 'c' })]).system).toBe('Druzhba');
+  });
+
   it('drops length and diameter when a system has more than one row', () => {
     const a = pipeline({ id: 'a', lengthKm: { value: 900, estimated: false }, diameter: '42 in' });
     const b = pipeline({ id: 'b', lengthKm: { value: 400, estimated: false } });

@@ -890,5 +890,60 @@
     ],
     "autoMatch": false,
     "evidence": []
+  },
+  {
+    "id": "arab-gas-egypt-jordan",
+    "name": "Arab Gas Pipeline · Egypt–Jordan (Arish–Aqaba)",
+    "aliases": [
+      "Arish–Aqaba",
+      "Arab Gas Pipeline Egypt section"
+    ],
+    "system": "Arab Gas Pipeline",
+    "commodity": "gas",
+    "fromCountry": "EG",
+    "toCountry": "JO",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0436",
+      "gem-p7482"
+    ],
+    "autoMatch": false,
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "A floating regasification unit shared by Egypt and Jordan arrived at Aqaba; of 750 mmcf/d under their arrangement, Egypt can draw up to 450 mmcf/d through the Arab Gas Pipeline, from Jordan towards Egypt, and Jordan receives about 300 mmcf/d (Enterprise).",
+        "url": "https://enterpriseam.com/logistics/2026/07/15/97943/",
+        "observedAt": "2026-07-15",
+        "recordedAt": "2026-10-29"
+      }
+    ]
+  },
+  {
+    "id": "arab-gas-jordan-syria",
+    "name": "Arab Gas Pipeline · Jordan–Syria (Jaber–Homs)",
+    "aliases": [
+      "Jaber–Homs",
+      "Arab Gas Pipeline Syria section"
+    ],
+    "system": "Arab Gas Pipeline",
+    "commodity": "gas",
+    "fromCountry": "JO",
+    "toCountry": "SY",
+    "transitCountries": [],
+    "gem": [
+      "gem-p7540"
+    ],
+    "autoMatch": false,
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Jordan began supplying Syria with gas in January 2026 through the Arab Gas Pipeline, at 30 to 90 million cubic feet a day, from LNG regasified at Aqaba; a new deal calls for 4 million cubic metres a day (Arab News, citing Petra).",
+        "url": "https://www.arabnews.pk/node/2630686",
+        "observedAt": "2026-01-26",
+        "recordedAt": "2026-10-29"
+      }
+    ]
   }
 ]

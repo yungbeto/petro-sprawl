@@ -296,6 +296,16 @@ test('a pipeline shows its age, size and owners, with GEM gaps and cited owners 
   await expect(panel.locator('dt', { hasText: 'Parent companies' })).toHaveCount(0);
 });
 
+test('a section of a split pipeline lists the other sections, which open', async ({ page }) => {
+  await page.goto('/?sel=pipeline/arab-gas-jordan-syria');
+  const panel = page.getByLabel('Panel');
+  const sections = panel.getByRole('region', { name: /Other sections of Arab Gas Pipeline/ });
+  await expect(sections).toContainText('Homs-Deir Ammar');
+  await sections.getByRole('button', { name: /Egypt–Jordan/ }).click();
+  await expect(page).toHaveURL(/sel=pipeline\/arab-gas-egypt-jordan/);
+  await expect(panel.getByRole('heading', { level: 2 })).toContainText('Egypt–Jordan');
+});
+
 test('a dated claim older than 30 days is marked unverified', async ({ page }) => {
   await page.goto('/?sel=pipeline/druzhba-south');
   await expect(page.getByLabel('Panel').getByText(/unverified since/i)).toBeVisible();

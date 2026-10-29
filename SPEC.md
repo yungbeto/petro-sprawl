@@ -134,6 +134,7 @@ interface Pipeline {
   id: string;                // stable slug
   name: string;
   aliases: string[];         // used for dedup and search
+  system?: string;           // the system this is one section of (GEM's project name); sections list each other
   commodity: Commodity;
   fromCountry: string;       // ISO 3166-1 alpha-2
   toCountry: string;
@@ -263,7 +264,7 @@ Research and cite current status for each. Use `unknown` when a reliable, dated 
 
 Dedup GEM rows against curated rows by name similarity plus endpoint proximity; when they match, the curated record wins and the GEM row's name goes into `aliases`. Log every merge in a report file so it can be reviewed.
 
-As built (M4): each curated record lists its GEM rows by id, checked by hand, and may set `exclude` or turn off automatic matching for systems whose segments share a name (Druzhba). Automatic matches need name similarity of at least 0.6 (Dice on name words, numbers must agree, so "Nord Stream" never matches "Nord Stream 2") and every country of the GEM row on the curated route, which stands in for endpoint proximity. Matches that fail only the country check are logged as near misses. The report is `data/reports/dedup.json`. Merged rows become one record: combined geometry, curated name, route and evidence, GEM operator and owners, and GEM capacity unless the curated record cites its own (TurkStream's two strings). History merges every section's start years, the earliest proposal and construction years, and a stop year only once every section has stopped; length, diameter and end points are kept only for single-row records, since summing parallel strings would mislead. A curated record may cite its own owners (CPC), which replace GEM's owners and parent chain.
+As built (M4): each curated record lists its GEM rows by id, checked by hand, and may set `exclude` or turn off automatic matching for systems whose segments share a name (Druzhba). Automatic matches need name similarity of at least 0.6 (Dice on name words, numbers must agree, so "Nord Stream" never matches "Nord Stream 2") and every country of the GEM row on the curated route, which stands in for endpoint proximity. Matches that fail only the country check are logged as near misses. The report is `data/reports/dedup.json`. Merged rows become one record: combined geometry, curated name, route and evidence, GEM operator and owners, and GEM capacity unless the curated record cites its own (TurkStream's two strings). History merges every section's start years, the earliest proposal and construction years, and a stop year only once every section has stopped; length, diameter and end points are kept only for single-row records, since summing parallel strings would mislead. A curated record may cite its own owners (CPC), which replace GEM's owners and parent chain. A curated record may cover one section of a system whose sections differ in state (the Arab Gas Pipeline): it names the `system`, and each pipeline page lists the system's other sections.
 
 ### ENTSOG entry points to map first
 

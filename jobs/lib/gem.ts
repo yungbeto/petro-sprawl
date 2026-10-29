@@ -299,6 +299,7 @@ export function gemRowToPipeline(row: GemRow, geometry: Geometry | null, ctx: Ge
         ...splitList(row.OtherEnglishNames, /;/),
         ...splitList(row.OtherLanguagePrimaryPipelineName, /;/),
       ],
+      ...(segment ? { system: row.PipelineName.trim() } : {}),
       commodity,
       fromCountry,
       toCountry,

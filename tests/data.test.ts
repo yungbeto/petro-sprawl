@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chokepointsInBasin, pipelinesTouchingBasin, resolveSelection, EMPTY_DATASETS } from '../src/lib/data';
+import { chokepointsInBasin, pipelinesTouchingBasin, resolveSelection, EMPTY_DATASETS, systemSections } from '../src/lib/data';
 import { basin, chokepoint, pipeline } from './fixtures';
 
 const data = {
@@ -46,5 +46,15 @@ describe('disruptionsFor', () => {
     });
     const withDisruptions = { ...data, disruptions: [d('a', 'hormuz', '2024-01'), d('b', 'hormuz', '2026-03'), d('c', 'suez', '2026-01')] };
     expect(disruptionsFor(withDisruptions, 'chokepoint', 'hormuz').map((x) => x.id)).toEqual(['b', 'a']);
+  });
+});
+
+describe('systemSections', () => {
+  it('lists the other sections of the same system, and nothing for a standalone line', () => {
+    const a = pipeline({ id: 'a', system: 'Arab Gas Pipeline' });
+    const b = pipeline({ id: 'b', system: 'Arab Gas Pipeline' });
+    const c = pipeline({ id: 'c', system: 'Druzhba Oil Pipeline' });
+    expect(systemSections(a, [a, b, c]).map((p) => p.id)).toEqual(['b']);
+    expect(systemSections(pipeline({ id: 'd' }), [a, b, c])).toEqual([]);
   });
 });

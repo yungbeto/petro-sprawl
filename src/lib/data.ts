@@ -90,6 +90,12 @@ export function lngTerminalsInBasin(basin: Basin, terminals: LngTerminal[]): Lng
   return terminals.filter((t) => pointInPolygon(t.point, basin.geometry));
 }
 
+/** The other sections of the system a pipeline belongs to; none when it isn't part of one. */
+export function systemSections(pipeline: Pipeline, pipelines: Pipeline[]): Pipeline[] {
+  if (!pipeline.system) return [];
+  return pipelines.filter((p) => p.system === pipeline.system && p.id !== pipeline.id);
+}
+
 export function pipelinesTouchingBasin(basin: Basin, pipelines: Pipeline[]): Pipeline[] {
   return pipelines.filter((p) => lineTouchesPolygon(p.geometry, basin.geometry));
 }
