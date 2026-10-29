@@ -109,7 +109,11 @@ Thirty-two corridor pipelines are curated in `data/curated/pipelines-evidence.js
 ## M6: where is my oil from?
 
 - PADD hubs (the arcs' end points) use EIA's 2021 refinery shapefile; the Energy Atlas FeatureServer with current locations needs a token. Capacity and counts come from `pnp/cap1` (1 January 2026), so only the hub points are old.
-- Only Saudi Arabia and Iraq have curated routes (`data/curated/oil-routes.json`). Other countries show no chokepoints, so exposure is a floor across countries and an upper bound per country. Next candidates by share: Guyana, Nigeria, Colombia, Brazil, Ecuador, Argentina (their loading terminals need a source before any chokepoint is shown), and Kuwait if it shows up again.
+- Curated routes (`data/curated/oil-routes.json`) cover Saudi Arabia, Iraq, Colombia, Guyana, Brazil, Nigeria and Ecuador. Countries without one show no chokepoints. Next by share: Libya (7% of the East Coast), Mexico, Argentina, Angola, Ghana and Gabon.
+- None of the Atlantic and Pacific routes added on 2026-10-29 passes a chokepoint on our list, so their `exitVia` is empty. That is destination-dependent for the Caribbean: Colombian or Guyanese crude bound for the US West Coast may cross Panama (by the canal or the Trans-Panama pipeline). `exitVia` is per terminal, so this would need per-destination chokepoints and a source.
+- Nigeria: Forcados and Qua Iboe, two of the four largest streams, aren't named in PortWatch's ports database. It lists 18 unnamed "Nigeria - Offshore Oil Terminal" entries; one near Forcados (fso140, 11.8% of seaborne exports) is likely it, but that needs a source before it's mapped.
+- Bonny, Açu, the Stabroek FPSOs and Balao use nearby PortWatch points (`pointApprox`). Brazil's other 52% loads elsewhere, unmapped.
+- Ecuador's route source is from 2022; a current one would be better.
 - Saudi Arabia's route lists Ras Tanura, Ras al-Ju'aymah and Yanbu as alternatives; the split between Gulf and Red Sea loadings for US cargoes isn't in the EIA source, which is why Hormuz shows as "up to".
 - Iraq's route lists Basrah and Ceyhan; cargoes to the US West Coast are almost certainly Basrah crude, but no source says so per cargo.
 - EIA names PADD 5 offshore production "Federal Offshore PADD 5"; it shows that way.

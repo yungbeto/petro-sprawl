@@ -379,5 +379,93 @@
         "recordedAt": "2026-10-29"
       }
     ]
+  },
+  {
+    "id": "covenas",
+    "name": "Coveñas",
+    "aliases": ["Covenas", "Coveñas offshore terminal", "Terminal Marítimo de Coveñas"],
+    "role": "export",
+    "country": "CO",
+    "point": [-75.6986, 9.4042],
+    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port266 (Covenas Offshore Term.)" },
+    "pipelineIds": [],
+    "exitVia": [],
+    "evidence": []
+  },
+  {
+    "id": "bonny",
+    "name": "Bonny",
+    "aliases": ["Bonny terminal", "Bonny Light"],
+    "role": "export",
+    "country": "NG",
+    "point": [7.157, 4.4207],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port155 (Bonny); the port, not the terminal itself"
+    },
+    "pointApprox": true,
+    "pipelineIds": [],
+    "exitVia": [],
+    "evidence": []
+  },
+  {
+    "id": "escravos",
+    "name": "Escravos",
+    "aliases": ["Escravos terminal"],
+    "role": "export",
+    "country": "NG",
+    "point": [5.1964, 5.614],
+    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port2076 (Escravos (Oil Terminal))" },
+    "pipelineIds": [],
+    "exitVia": [],
+    "evidence": []
+  },
+  {
+    "id": "acu",
+    "name": "Açu (T-Oil)",
+    "aliases": ["Porto do Açu", "Acu", "T-Oil"],
+    "role": "export",
+    "country": "BR",
+    "point": [-41.0199, -21.8507],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port166 (Porto do Acu); the port, not the transshipment berth"
+    },
+    "pointApprox": true,
+    "pipelineIds": [],
+    "exitVia": [],
+    "evidence": []
+  },
+  {
+    "id": "stabroek-fpsos",
+    "name": "Stabroek FPSOs",
+    "aliases": ["Guyana FPSOs", "Liza", "Stabroek Block"],
+    "role": "export",
+    "country": "GY",
+    "point": [-56.913, 8.008],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, Guyana offshore oil terminals 1 to 4 (fso48 to fso51); the point is terminal 1, the others lie within about 30 km"
+    },
+    "pointApprox": true,
+    "pipelineIds": [],
+    "exitVia": [],
+    "evidence": []
+  },
+  {
+    "id": "balao",
+    "name": "Balao (Esmeraldas)",
+    "aliases": ["Balao", "Esmeraldas", "Punta Gorda", "OCP terminal"],
+    "role": "export",
+    "country": "EC",
+    "point": [-79.6507, 0.9905],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port330 (Esmeraldas); Balao and the OCP terminal at Punta Gorda lie off the same coast"
+    },
+    "pointApprox": true,
+    "pipelineIds": [],
+    "exitVia": [],
+    "evidence": []
   }
 ]

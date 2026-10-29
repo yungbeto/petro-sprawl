@@ -258,10 +258,11 @@ for (const id of ['hormuz', 'malacca', 'suez', 'babelm', 'danish', 'turkish', 'p
     await page.goto(`/?sel=chokepoint/${id}`);
     const panel = page.getByLabel('Panel');
     await expect(panel.locator('.flow-headline__figure')).toHaveText(/^(<1|\d+)%$/);
-    await expect(panel.getByText(/^(Below|Near|Above) baseline$/)).toBeVisible();
+    // The cargo chart has its own band; this is the headline's.
+    await expect(panel.locator('.flow-headline').getByText(/^(Below|Near|Above) baseline$/)).toBeVisible();
     await expect(panel.locator('dt', { hasText: 'Trailing year' })).toBeVisible();
     await expect(panel.getByRole('img', { name: /Daily tanker transits/ })).toBeVisible();
-    const points = await panel.locator('.sparkline__line').getAttribute('d');
+    const points = await panel.getByRole('img', { name: /Daily tanker transits/ }).locator('.sparkline__line').getAttribute('d');
     expect(points?.split('L').length).toBeGreaterThanOrEqual(80);
   });
 }

@@ -24,5 +24,70 @@
         "publishedAt": "2026-10-19"
       }
     ]
+  },
+  {
+    "country": "COL",
+    "terminals": ["covenas"],
+    "note": "Coveñas, on the Caribbean coast, handles 90 to 95% of the crude Colombia exports each year.",
+    "sources": [
+      {
+        "publisher": "Valora Analitik",
+        "title": "Coveñas mueve el 95 % del crudo que exporta Colombia",
+        "url": "https://www.valoraanalitik.com/?p=515575",
+        "publishedAt": "2025-10-13"
+      }
+    ]
+  },
+  {
+    "country": "GUY",
+    "terminals": ["stabroek-fpsos"],
+    "note": "Guyana's crude loads offshore, from the four floating production, storage and offloading vessels (FPSOs) in the Stabroek Block.",
+    "sources": [
+      {
+        "publisher": "Caribbean National Weekly",
+        "title": "Guyana oil exports top US$15 billion in first half of 2026",
+        "url": "https://www.caribbeannationalweekly.com/posts/guyana-oil-exports-top-us15-billion-in-first-half-of-2026",
+        "publishedAt": "2026-09-16"
+      }
+    ]
+  },
+  {
+    "country": "BRA",
+    "terminals": ["acu"],
+    "note": "More than 48% of the crude Brazil exports from terminals leaves through T-Oil at Porto do Açu, where smaller ships bring pre-salt crude from the platforms and transfer it at sea to large tankers. The rest loads at terminals not mapped here.",
+    "sources": [
+      {
+        "publisher": "Click Petróleo e Gás",
+        "title": "A single terminal at Porto do Açu already exports nearly half of all the oil that Brazil exports to the world",
+        "url": "https://en.clickpetroleoegas.com.br/a-single-terminal-at-porto-do-acu-already-exports-nearly-half-of-all-the-oil-that-brazil-exports-to-the-world-phsn84/",
+        "publishedAt": "2026-07-13"
+      }
+    ]
+  },
+  {
+    "country": "NGA",
+    "terminals": ["bonny", "escravos"],
+    "note": "Nigeria's crude streams take the names of their terminals. In May 2026 the largest were Bonny, Forcados, Qua Iboe and Escravos. Forcados and Qua Iboe aren't named in PortWatch's ports database, so only Bonny and Escravos are mapped.",
+    "sources": [
+      {
+        "publisher": "Brand Spur",
+        "title": "Nigeria Surpasses OPEC Output Quota As Crude Production Hits 15-Month High In 2026",
+        "url": "https://brandspurng.com/?p=193935",
+        "publishedAt": "2026-06-12"
+      }
+    ]
+  },
+  {
+    "country": "ECU",
+    "terminals": ["balao"],
+    "note": "Ecuadorian crude loads at Balao, Petroecuador's terminal at Esmeraldas, or at the OCP terminal at Punta Gorda, which connects to it. A 2022 cargo from Punta Gorda went to the US West Coast.",
+    "sources": [
+      {
+        "publisher": "El Oriente",
+        "title": "Petroecuador exportó 8'479.688,96 barriles de crudo Oriente desde el terminal de OCP en Esmeraldas",
+        "url": "https://www.eloriente.com/articulo/petroecuador-exportoacute-8rsquo47968896-barriles-de-crudo-oriente-desde-el-terminal-de-ocp-en-esmeraldas/35638",
+        "publishedAt": "2022-02-24"
+      }
+    ]
   }
 ]
