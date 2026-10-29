@@ -15,7 +15,7 @@ This first prototype proves two things:
 
 Scope is one theater: the oil and gas corridor connecting **Europe, Russia, the Caspian, North Africa and the Middle East**, plus the world's seven major oil chokepoints.
 
-Basins and GEM pipelines are imported worldwide (`IMPORT_BOUNDS` in `src/lib/config.ts`, decided 2026-10-28) so the map holds context everywhere. The theater is still where the camera opens and where the research goes: curated corridor pipelines, measured flows (ENTSOG) and storage (AGSI+) cover it only, so pipelines elsewhere carry GEM's dataset status alone.
+Basins and GEM pipelines are imported worldwide (`IMPORT_BOUNDS` in `src/lib/config.ts`, decided 2026-10-28) so the map holds context everywhere. The theater is still where the camera opens and where the research goes: curated corridor pipelines, measured flows (ENTSOG), storage (AGSI+) and LNG send-out (ALSI) cover it only, so pipelines elsewhere carry GEM's dataset status alone.
 
 ## 2. Principles (apply to every decision)
 
@@ -242,6 +242,7 @@ interface DatasetMeta {
 | Curated evidence file (`data/curated/pipelines-evidence.json`) | Status claims for corridor pipelines | Hand-researched, every claim cited | As events happen | Ours |
 | [ENTSOG Transparency Platform](https://transparency.entsog.eu/) | Physical gas flows and technical capacity at EU entry points | Public REST API, no key ([docs](https://transparency.entsog.eu/pdf/TP_REG715_Documentation_TP_API_v1.3.pdf)) | Daily | Check terms; attribute |
 | [GIE AGSI+](https://agsi.gie.eu/) | EU gas storage fill by country | REST API, free key via account ([docs](https://www.gie.eu/transparency-platform/GIE_API_documentation_v013.pdf)) | Daily | Check terms; attribute |
+| [GIE ALSI](https://alsi.gie.eu/) | Daily send-out and declared send-out capacity by EU LNG import terminal | REST API, same key as AGSI+ (`npm run fetch:alsi`); facilities mapped to GEM terminals in `ALSI.terminals` | Daily | Check terms; attribute |
 | [IMF PortWatch](https://portwatch.imf.org/) | Daily vessel transits at chokepoints, by vessel type | ArcGIS FeatureServer, no key: `services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query` (use `n_tanker`) | Daily (job runs every 6h) | Check terms; attribute |
 | EIA World Oil Transit Chokepoints | Reference oil volumes per chokepoint (2024) | Static values, committed in code | Static | Public domain |
 | [USGS World Petroleum Assessment provinces](https://sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3) | Basin outlines | Shapefile (14 MB); simplify once with mapshaper, commit result | Static | Public domain |
@@ -277,7 +278,8 @@ Identify the right point IDs in ENTSOG and link each to its pipeline. Starting c
 - A failed fetch keeps the last good file and records the failure in meta. Never publish an empty or invalid file over a good one.
 - Manual imports (GEM, USGS basins) are separate scripts that record source release date and SHA-256 in `DatasetMeta.sourceVersion`.
 - The browser only ever reads `public/data/*`. No live calls to upstream sources from the client.
-- API keys (AGSI+) live in GitHub Actions secrets.
+- API keys (AGSI+, also used for ALSI) live in GitHub Actions secrets.
+- Measured send-out sets an EU import terminal's status the way metered flow sets a pipeline's: idle at or below `MEASURED_FLOW.idleShare` of declared send-out capacity over 7 days, operating otherwise. Derived in the browser (`withMeasuredLngEvidence`), not stored in `lng-terminals.json`.
 
 ## 8. Tech stack
 

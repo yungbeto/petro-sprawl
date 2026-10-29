@@ -11,7 +11,7 @@ import {
   agsiSeriesId,
 } from '../lib/config';
 import { storageSummary } from '../lib/gasStorage';
-import { ENTSOG_URL, isUnverified, latestClaim, pipelineFlow } from '../lib/evidence';
+import { ALSI_URL, ENTSOG_URL, isUnverified, latestClaim, pipelineFlow } from '../lib/evidence';
 import {
   chokepointsInBasin,
   disruptionsFor,
@@ -627,6 +627,8 @@ export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datase
   const status = lngStatus(item);
   const disruptions = disruptionsFor(data, 'lng', item.id);
   const current = item.evidence[0];
+  const claim = current?.sourceType === 'measured' ? latestClaim(item) : undefined;
+  const sendOut = pipelineFlow(seriesById(data, item.sendOutSeriesId));
   const kind = [LNG_FACILITY[item.facility], item.floating && 'floating', item.offshore && !item.floating && 'offshore']
     .filter(Boolean)
     .join(' · ');
@@ -644,9 +646,34 @@ export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datase
             </span>
           )}
           <span className="status-card__line">{current ? <EvidenceLine evidence={current} /> : 'No sourced claim yet'}</span>
+          {claim && (
+            <span className="status-card__line">
+              Latest claim, {statusLabel(claim.status).toLowerCase()}: <EvidenceLine evidence={claim} />
+            </span>
+          )}
         </dd>
       </dl>
       <Stats>
+        {sendOut && (
+          <Stat
+            label="Send-out"
+            value={
+              sendOut.recentMean != null ? formatEnergyPerDay(sendOut.recentMean) : <span className="muted">Not reported</span>
+            }
+            aside={
+              sendOut.recentMean != null && (
+                <>
+                  {MEASURED_FLOW.windowDays}-day mean
+                  {sendOut.share !== null && (
+                    <>
+                      , <span className="mono">{formatIndexShare(sendOut.share)}</span> of declared capacity
+                    </>
+                  )}
+                </>
+              )
+            }
+          />
+        )}
         <Stat
           label="Operating"
           {...unitCapacity(item.units, ['operating', 'reduced'], item.capacityMtpa.operating)}
@@ -657,8 +684,26 @@ export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datase
           {...unitCapacity(item.units, ['under_construction', 'planned'], item.capacityMtpa.planned)}
           aside="building or proposed"
         />
-        <Stat label="Units" value={String(item.units.length)} aside={item.facility === 'export' ? 'trains' : 'regas units'} />
+        {/* With send-out shown, the unit count makes way; the table below lists the units. */}
+        {!sendOut && (
+          <Stat label="Units" value={String(item.units.length)} aside={item.facility === 'export' ? 'trains' : 'regas units'} />
+        )}
       </Stats>
+      {sendOut && sendOut.sparkline.length > 1 && (
+        <section className="section">
+          <h3 className="section__title">Daily send-out, last 90 days</h3>
+          <Sparkline
+            points={sendOut.sparkline.map((p) => ({ date: p.date, value: p.value / 1e6 }))}
+            unit=" GWh/d"
+            label={`Daily LNG send-out for ${item.name}, ${sendOut.sparkline[0]?.date} to ${sendOut.latestDate}`}
+            references={
+              sendOut.capacity
+                ? [{ value: sendOut.capacity / 1e6, label: 'Declared send-out capacity', style: 'dashed' as const }]
+                : []
+            }
+          />
+        </section>
+      )}
       <DisruptionList disruptions={disruptions} />
       {item.evidence.length > 1 && (
         <section className="section">
@@ -680,8 +725,10 @@ export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datase
         {current && current.sourceType !== 'dataset' && (
           <p className="muted section__lede">
             Unit statuses and capacities are Global Energy Monitor's, as of{' '}
-            <span className="mono">{item.evidence.find((e) => e.sourceType === 'dataset')?.observedAt ?? 'its release'}</span>.
-            The status above comes from later cited reports.
+            <span className="mono">{item.evidence.find((e) => e.sourceType === 'dataset')?.observedAt ?? 'its release'}</span>.{' '}
+            {current.sourceType === 'measured'
+              ? 'The status above comes from measured send-out.'
+              : 'The status above comes from later cited reports.'}
           </p>
         )}
         <table className="table">
@@ -724,6 +771,12 @@ export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datase
         </SourceLink>
         , Global Gas Infrastructure Tracker, CC BY 4.0. Start is the actual year, or the latest planned year for units not
         yet running.
+        {sendOut && (
+          <>
+            {' '}
+            Send-out: <SourceLink href={ALSI_URL}>GIE ALSI</SourceLink>.
+          </>
+        )}
       </p>
     </>
   );

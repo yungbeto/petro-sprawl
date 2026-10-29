@@ -139,6 +139,20 @@ test('an LNG terminal link shows its units, and search and the layer list know t
   await expect(page.getByRole('checkbox', { name: /LNG terminals/ })).toBeChecked();
 });
 
+test('an EU import terminal takes its status from measured send-out, with a chart and the GEM claim beside it', async ({ page }) => {
+  await page.goto('/?sel=lng/gem-t100000130492-import');
+  const panel = page.getByLabel('Panel', { exact: true });
+  await expect(panel.getByRole('heading', { name: 'Gate LNG Terminal' })).toBeVisible();
+  const status = panel.locator('dt', { hasText: 'Status' }).locator('xpath=following-sibling::dd[1]');
+  await expect(status).toContainText('Operating');
+  await expect(status.getByRole('link', { name: /of declared send-out capacity \(GIE ALSI\)/ })).toHaveAttribute('href', /alsi\.gie\.eu/);
+  await expect(status).toContainText('Latest claim, operating');
+  await expect(panel.locator('dt', { hasText: 'Send-out' }).locator('xpath=following-sibling::dd[1]')).toContainText('GWh/d');
+  await expect(panel.getByRole('heading', { name: 'Daily send-out, last 90 days' })).toBeVisible();
+  await expect(panel.getByText('The status above comes from measured send-out.')).toBeVisible();
+  await expect(panel.locator('.source').getByRole('link', { name: 'GIE ALSI' })).toBeVisible();
+});
+
 test('the layers button opens the list; L, Esc and an outside click close it', async ({ page }) => {
   await page.goto('/');
   const chokepoints = page.getByRole('checkbox', { name: /Chokepoints/ });
@@ -425,12 +439,12 @@ test('a dataset that fails to load is named, and the rest still shows', async ({
 test('every source is attributed on the map and in the menu', async ({ page }) => {
   await page.goto('/');
   const attribution = page.locator('.maplibregl-ctrl-attrib');
-  for (const name of ['Global Energy Monitor', 'USGS', 'IMF PortWatch', 'EIA', 'ENTSOG', 'GIE AGSI+', 'Natural Earth', 'OpenStreetMap']) {
+  for (const name of ['Global Energy Monitor', 'USGS', 'IMF PortWatch', 'EIA', 'ENTSOG', 'GIE AGSI+', 'GIE ALSI', 'Natural Earth', 'OpenStreetMap']) {
     await expect(attribution).toContainText(name, { timeout: 15_000 });
   }
   await page.getByRole('button', { name: 'Menu' }).click();
   const sources = page.getByRole('dialog', { name: 'Menu' }).locator('.sources');
-  for (const name of ['USGS', 'IMF PortWatch', 'Natural Earth', 'ENTSOG Transparency Platform', 'GIE AGSI+', 'Global Energy Monitor', 'OpenStreetMap contributors']) {
+  for (const name of ['USGS', 'IMF PortWatch', 'Natural Earth', 'ENTSOG Transparency Platform', 'GIE AGSI+', 'GIE ALSI', 'Global Energy Monitor', 'OpenStreetMap contributors']) {
     await expect(sources.getByRole('link', { name, exact: true }).first()).toBeVisible();
   }
   // One row per dataset: GEM is credited for both pipelines and LNG terminals.

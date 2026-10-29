@@ -8,9 +8,9 @@
 //   public/data/lng-terminals.json.
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { ENTSOG, entsogSeriesId } from '../src/lib/config';
+import { ALSI, ENTSOG, alsiSeriesId, entsogSeriesId } from '../src/lib/config';
 import type { DatasetMeta, LngTerminal, Pipeline } from '../src/types';
-import { mergeLngEvidence, type CuratedLngEvidence } from './lib/curated-lng';
+import { linkSendOut, mergeLngEvidence, type CuratedLngEvidence } from './lib/curated-lng';
 import { mergePipelines, type CuratedPipeline } from './lib/curated-pipelines';
 import { publishDataset, report, sha256File, validateRecords } from './lib/output';
 import {
@@ -87,7 +87,10 @@ const lng = await publishDataset({
     const curated = validateRecords('lng-evidence', await readJson<unknown[]>(CURATED_LNG), curatedLngEvidenceSchema) as CuratedLngEvidence[];
     const gemMeta = await readJson<DatasetMeta>('data/derived/meta/gem-lng-terminals.json');
     return {
-      records: mergeLngEvidence(curated, await readJson<LngTerminal[]>(GEM_LNG)),
+      records: linkSendOut(
+        mergeLngEvidence(curated, await readJson<LngTerminal[]>(GEM_LNG)),
+        new Map(ALSI.terminals.map((t) => [t.terminalId, alsiSeriesId(t.terminalId)])),
+      ),
       meta: {
         sourceUrl: 'https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/',
         sourceVersion: `${gemMeta.sourceVersion}; curated ${CURATED_LNG} sha256:${await sha256File(CURATED_LNG)}`,

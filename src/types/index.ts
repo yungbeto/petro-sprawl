@@ -108,6 +108,8 @@ export interface LngTerminal {
   capacityMtpa: { operating: number; planned: number };
   units: LngUnit[];
   evidence: Evidence[];
+  /** Daily send-out from GIE ALSI, for EU import terminals ALSI reports. */
+  sendOutSeriesId?: string;
 }
 
 export type ChokepointId = 'hormuz' | 'malacca' | 'suez' | 'babelm' | 'danish' | 'turkish' | 'panama';
@@ -145,11 +147,11 @@ export interface Country {
 
 export interface ObservationSeries {
   id: string;
-  metric: 'tanker_transits' | 'gas_flow_kwh_d' | 'storage_fill_pct';
+  metric: 'tanker_transits' | 'gas_flow_kwh_d' | 'storage_fill_pct' | 'lng_sendout_kwh_d';
   unit: string;
   points: { date: string; value: number }[];
   capacity?: number;
-  /** Where the series is measured, for display: an ENTSOG point and operator. */
+  /** Where the series is measured, for display: an ENTSOG point and operator, or an ALSI facility. */
   label?: string;
   /** Long-run reference computed by the job from history not kept in points. Added in M3. */
   fiveYear?: BaselineStat;

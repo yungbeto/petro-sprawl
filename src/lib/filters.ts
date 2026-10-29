@@ -22,7 +22,7 @@ export const FILTER_DESCRIPTIONS: Record<FilterId, string> = {
   offline: 'Pipelines and LNG terminals whose current status is offline or idle.',
   'below-baseline': 'Chokepoints whose tanker transits over the last 7 days are below their baseline.',
   unverified: 'Corridor pipelines whose latest claim is past the aging threshold, with no metered flow to back it.',
-  metered: 'Pipelines with measured ENTSOG flow.',
+  metered: 'Pipelines with measured ENTSOG flow, and LNG terminals with measured GIE ALSI send-out.',
   gas: 'Gas pipelines and LNG terminals.',
   oil: 'Oil pipelines, and the chokepoints, whose reference volumes are oil.',
 };
@@ -65,7 +65,11 @@ export function filterMatches(filter: FilterId, data: Datasets, now: Date): Filt
         lng: none,
       };
     case 'metered':
-      return { pipelines: pipelines((p) => p.evidence[0]?.sourceType === 'measured'), chokepoints: none, lng: none };
+      return {
+        pipelines: pipelines((p) => p.evidence[0]?.sourceType === 'measured'),
+        chokepoints: none,
+        lng: lng((t) => t.evidence[0]?.sourceType === 'measured'),
+      };
     case 'gas':
       return { pipelines: pipelines((p) => p.commodity === 'gas'), chokepoints: none, lng: lng(() => true) };
     case 'oil':

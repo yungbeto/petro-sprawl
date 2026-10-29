@@ -102,6 +102,7 @@ export const MAP_ATTRIBUTION = [
   'Chokepoints: <a href="https://portwatch.imf.org/">IMF PortWatch</a>, <a href="https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints">EIA</a>',
   'Gas flows: <a href="https://transparency.entsog.eu/">ENTSOG</a>',
   'Gas storage: <a href="https://agsi.gie.eu/">GIE AGSI+</a>',
+  'LNG send-out: <a href="https://alsi.gie.eu/">GIE ALSI</a>',
   'Countries: <a href="https://www.naturalearthdata.com/">Natural Earth</a>',
 ];
 
@@ -170,6 +171,55 @@ export const AGSI = {
 
 export const agsiSeriesId = (country: string) => `agsi-${country.toLowerCase()}`;
 
+/**
+ * GIE ALSI daily send-out by LNG import terminal, with the AGSI key. Each GEM terminal lists the ALSI
+ * facilities that make it up (company and facility EIC codes from ALSI's listing, checked 2026-10-29,
+ * matched by coordinates and GEM's aliases). Left out: facilities ALSI has closed (Lubmin, Le Havre,
+ * the UK's, El Musel before 2023, Panigaglia before March 2025) and Spain's virtual tank (TVB).
+ */
+export const ALSI = {
+  apiUrl: 'https://alsi.gie.eu/api',
+  keepDays: 120,
+  pageSize: 300,
+  maxLagDays: 7,
+  terminals: [
+    { terminalId: 'gem-t100000130426-import', facilities: [{ country: 'BE', company: '21X000000001006T', eic: '21W0000000001245' }] },
+    { terminalId: 'gem-t100000130430-import', facilities: [{ country: 'HR', company: '31X-LNG-HR-----7', eic: '31W-0000-G-000-Z' }] },
+    { terminalId: 'gem-t100000131064-import', facilities: [{ country: 'FI', company: '66X000000000027Z', eic: '21W000000000130A' }] },
+    { terminalId: 'gem-t100000130438-import', facilities: [{ country: 'FI', company: '66X-00000000024H', eic: '66W000000000001U' }] },
+    { terminalId: 'gem-t100000130452-import', facilities: [{ country: 'FR', company: '21X0000000010679', eic: '63W179356656691A' }] },
+    { terminalId: 'gem-t100000130456-import', facilities: [{ country: 'FR', company: '21X0000000010679', eic: '63W631527814486R' }] },
+    { terminalId: 'gem-t100000130446-import', facilities: [{ country: 'FR', company: '21X000000001331I', eic: '21W0000000000451' }] },
+    { terminalId: 'gem-t100000130448-import', facilities: [{ country: 'FR', company: '21X000000001070K', eic: '63W943693783886F' }] },
+    { terminalId: 'gem-t100000130458-import', facilities: [{ country: 'DE', company: '21X000000001403J', eic: '21W000000000129W' }] },
+    { terminalId: 'gem-t100000130460-import', facilities: [{ country: 'DE', company: '21X000000001403J', eic: '37W000000000107A' }] },
+    { terminalId: 'gem-t100000131086-import', facilities: [{ country: 'DE', company: '21X000000001403J', eic: '37W000000000110L' }] },
+    { terminalId: 'gem-t100000131097-import', facilities: [{ country: 'DE', company: '21X000000001403J', eic: '37W000000000111J' }] },
+    { terminalId: 'gem-t100000131141-import', facilities: [{ country: 'DE', company: '37X000000000265F', eic: '37W000000000114D' }] },
+    { terminalId: 'gem-t100000130681-import', facilities: [{ country: 'GR', company: '21X738265265081N', eic: '21W0000000001318' }] },
+    { terminalId: 'gem-t100000130462-import', facilities: [{ country: 'GR', company: '21X-GR-A-A0A0A-G', eic: '21W000000000040B' }] },
+    { terminalId: 'gem-t100000130474-import', facilities: [{ country: 'IT', company: '21X000000001109G', eic: '21W0000000000443' }] },
+    { terminalId: 'gem-t100000131096-import', facilities: [{ country: 'IT', company: '59XFSRUITALIASTY', eic: '59WFSRUGOLARTUNH' }] },
+    { terminalId: 'gem-t100000131095-import', facilities: [{ country: 'IT', company: '59XFSRUITALIASTY', eic: '59WBWSINGAPORERX' }] },
+    { terminalId: 'gem-t100000130476-import', facilities: [{ country: 'IT', company: '59XFSRUITALIASTY', eic: '59W0000000000011' }] },
+    { terminalId: 'gem-t100000130466-import', facilities: [{ country: 'IT', company: '21X000000001360B', eic: '21W000000000082W' }] },
+    { terminalId: 'gem-t100000130488-import', facilities: [{ country: 'LT', company: '21X0000000013740', eic: '21W0000000001253' }] },
+    { terminalId: 'gem-t100000130997-import', facilities: [{ country: 'NL', company: '52X000000000088H', eic: '52W000000000001W' }] },
+    { terminalId: 'gem-t100000130492-import', facilities: [{ country: 'NL', company: '21X000000001063H', eic: '21W0000000000079' }] },
+    { terminalId: 'gem-t100000130498-import', facilities: [{ country: 'PL', company: '21X-PL-A-A0A0A-B', eic: '21W000000000096L' }] },
+    { terminalId: 'gem-t100000130500-import', facilities: [{ country: 'PT', company: '21X0000000013619', eic: '16WTGNL01------O' }] },
+    { terminalId: 'gem-t100000130524-import', facilities: [{ country: 'ES', company: '21X000000001352A', eic: '21W0000000000362' }] },
+    { terminalId: 'gem-t100000130522-import', facilities: [{ country: 'ES', company: '21X000000001254A', eic: '21W000000000039X' }] },
+    { terminalId: 'gem-t100000130532-import', facilities: [{ country: 'ES', company: '21X000000001254A', eic: '21W0000000000370' }] },
+    { terminalId: 'gem-t100000130526-import', facilities: [{ country: 'ES', company: '21X000000001254A', eic: '21W000000000038Z' }] },
+    { terminalId: 'gem-t100000130528-import', facilities: [{ country: 'ES', company: '21X000000000134P', eic: '21W0000000000346' }] },
+    { terminalId: 'gem-t100000130536-import', facilities: [{ country: 'ES', company: '18XTGPRS-12345-G', eic: '21W0000000000354' }] },
+    { terminalId: 'gem-t100000130534-import', facilities: [{ country: 'ES', company: '18XRGNSA-12345-V', eic: '21W0000000000338' }] },
+  ],
+} as const;
+
+export const alsiSeriesId = (terminalId: string) => `alsi-${terminalId}`;
+
 /** Measured flow: a 7-day mean at or below this share of technical capacity counts as no flow. */
 export const MEASURED_FLOW = { windowDays: 7, idleShare: 0.005 } as const;
 
@@ -185,6 +235,7 @@ export const DATASET_FRESHNESS: Record<
   'chokepoint-transits': { label: 'Chokepoint transits', scheduled: true, staleAfterHours: 18, publisher: 'IMF PortWatch' },
   'gas-flows': { label: 'Gas flows', scheduled: true, staleAfterHours: 36, publisher: 'ENTSOG Transparency Platform' },
   'gas-storage': { label: 'Gas storage', scheduled: true, staleAfterHours: 36, publisher: 'GIE AGSI+' },
+  'lng-sendout': { label: 'LNG send-out', scheduled: true, staleAfterHours: 36, publisher: 'GIE ALSI' },
   countries: { label: 'Countries', scheduled: false, publisher: 'Natural Earth' },
   pipelines: { label: 'Pipelines', scheduled: false, publisher: 'Global Energy Monitor' },
   'lng-terminals': { label: 'LNG terminals', scheduled: false, publisher: 'Global Energy Monitor' },

@@ -21,7 +21,8 @@
     "fetch:portwatch": "tsx jobs/fetch-portwatch.ts",
     "fetch:entsog": "tsx jobs/fetch-entsog.ts",
     "fetch:agsi": "tsx --env-file-if-exists=.env jobs/fetch-agsi.ts",
-    "fetch:all": "npm run fetch:portwatch && npm run fetch:entsog && npm run fetch:agsi",
+    "fetch:alsi": "tsx --env-file-if-exists=.env jobs/fetch-alsi.ts",
+    "fetch:all": "npm run fetch:portwatch && npm run fetch:entsog && npm run fetch:agsi && npm run fetch:alsi",
     "build:curated": "tsx jobs/build-curated.ts"
   },
   "dependencies": {

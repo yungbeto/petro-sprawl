@@ -27,6 +27,7 @@ Node 22. Package manager: npm.
 | `npm run fetch:portwatch` | Scheduled: PortWatch daily tanker transits to `public/data/chokepoint-transits.json` |
 | `npm run fetch:entsog` | Scheduled: ENTSOG physical flows and technical capacity at the points in `ENTSOG.points` to `public/data/gas-flows.json` |
 | `npm run fetch:agsi` | Scheduled: AGSI+ storage fill by country to `public/data/gas-storage.json`. Needs `AGSI_API_KEY` in `.env` (and as an Actions secret) |
+| `npm run fetch:alsi` | Scheduled: GIE ALSI daily send-out for the EU import terminals in `ALSI.terminals` to `public/data/lng-sendout.json`. Same `AGSI_API_KEY`. Run `build:curated` after changing `ALSI.terminals` so terminals link to their series |
 | `npm run fetch:all` | Every scheduled fetch, as the GitHub Actions workflow runs them |
 | `npm run build:curated` | Validates `data/curated/`; publishes disruptions, merges the curated corridor pipelines with GEM rows into `public/data/pipelines.json`, and adds cited LNG evidence (`data/curated/lng-evidence.json`) to GEM terminals in `public/data/lng-terminals.json`; merge log in `data/reports/dedup.json` |
 | `npm run import:basins` | Manual: USGS provinces from `data/raw/usgs/` to `public/data/basins.json`, tagged with countries from Natural Earth in `data/raw/naturalearth/`; report in `data/reports/import-basins.json` |
@@ -42,6 +43,7 @@ Scheduled jobs run every 6 hours in `.github/workflows/data.yml` and commit `pub
 - Playwright runs Chromium on the GPU on macOS (`playwright.config.ts`). Software WebGL draws the pipeline layer at about 1 fps, so camera animations never settle and URL tests time out. CI without a GPU needs another plan.
 - The dev server exposes the map as `window.__etMap` so the smoke test can click real features. Dev only.
 - Pipelines and LNG terminals are built in two steps: `import:gem` / `import:lng` (raw GEM to `data/derived/`), then `build:curated` (curated records win). Edit `data/curated/pipelines-evidence.json` or `data/curated/lng-evidence.json`, never the files in `public/data/`.
-- Measured flow evidence is derived in the browser (`withMeasuredEvidence`), not stored in `pipelines.json`.
+- Measured flow evidence is derived in the browser (`withMeasuredEvidence`, and `withMeasuredLngEvidence` for ALSI send-out), not stored in `pipelines.json` or `lng-terminals.json`.
+- ALSI now and then answers a facility with an empty page; `fetch:alsi` asks again before reporting it as having no data.
 - MapLibre 6 loads its worker from a separate file. `src/map/MapView.tsx` imports it with `?url` and calls `setWorkerUrl`; without that, tiles never load in dev or in the build.
 - "What changed since last visit" lives in `localStorage` under `et.visits` (`src/lib/summary.ts`). To see changes locally, edit the stored `current` snapshot (older `savedAt`, a different status) and reload; the smoke test does the same.

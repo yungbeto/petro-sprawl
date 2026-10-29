@@ -31,6 +31,12 @@ const data: Datasets = {
   ],
   lngTerminals: [
     lngTerminal({ id: 'ras-laffan', name: 'Ras Laffan' }),
+    lngTerminal({
+      id: 'gate',
+      name: 'Gate',
+      facility: 'import',
+      evidence: [{ status: 'operating', sourceType: 'measured', observedAt: '2026-10-27', recordedAt: '2026-10-27' }],
+    }),
     lngTerminal({ id: 'mothballed', name: 'Mothballed LNG', facility: 'import', evidence: [claim('idle', '2025-01-01', 'dataset')] }),
   ],
 };
@@ -54,13 +60,14 @@ describe('quick filters', () => {
 
   it('matches metered pipelines and commodities; oil includes the chokepoints', () => {
     expect([...filterMatches('metered', data, now).pipelines]).toEqual(['met']);
+    expect([...filterMatches('metered', data, now).lng]).toEqual(['gate']);
     const oil = filterMatches('oil', data, now);
     expect([...oil.pipelines]).toEqual(['crude']);
     expect(oil.chokepoints.size).toBe(2);
     expect(matchCount(oil)).toBe(3);
     const gas = filterMatches('gas', data, now);
     expect(gas.chokepoints.size).toBe(0);
-    expect([...gas.lng]).toEqual(['ras-laffan', 'mothballed']);
+    expect([...gas.lng]).toEqual(['ras-laffan', 'gate', 'mothballed']);
     expect(oil.lng.size).toBe(0);
   });
 

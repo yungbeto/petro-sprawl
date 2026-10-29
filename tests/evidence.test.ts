@@ -1,10 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import { dailyTotals, toFlowSeries, type OperationalRow } from '../jobs/lib/entsog';
-import { isUnverified, latestClaim, measuredEvidence, pipelineFlow, withMeasuredEvidence } from '../src/lib/evidence';
+import {
+  ALSI_METER,
+  isUnverified,
+  latestClaim,
+  measuredEvidence,
+  pipelineFlow,
+  withMeasuredEvidence,
+  withMeasuredLngEvidence,
+} from '../src/lib/evidence';
+import { toSendOutSeries } from '../jobs/lib/alsi';
 import { flowLineWidthPx } from '../src/lib/encoding';
 import { formatEnergyPerDay } from '../src/lib/format';
 import type { Evidence, ObservationSeries } from '../src/types';
-import { pipeline } from './fixtures';
+import { lngTerminal, pipeline } from './fixtures';
 
 const row = (date: string, value: number | null, unit = 'kWh/d'): OperationalRow => ({
   indicator: 'Physical Flow',
@@ -74,6 +83,53 @@ describe('measured evidence', () => {
     expect(linked!.evidence.map((e) => e.sourceType)).toEqual(['measured', 'press']);
     expect(latestClaim(linked!)).toBe(claim);
     expect(plain!.evidence).toEqual([claim]);
+  });
+});
+
+describe('ALSI send-out', () => {
+  const opts = { today: '2026-10-29', keepDays: 120, maxLagDays: 7 };
+
+  it('adds facilities by day in kWh/d, skips missing values, and sums the latest declared capacity', () => {
+    const a = [
+      { gasDayStart: '2026-10-26', sendOut: '100', dtrs: '150', status: 'C' },
+      { gasDayStart: '2026-10-27', sendOut: '105.4', dtrs: '144.1', status: 'C' },
+    ];
+    const b = [
+      { gasDayStart: '2026-10-27', sendOut: '50', dtrs: '60', status: 'E' },
+      { gasDayStart: '2026-10-25', sendOut: '-', dtrs: '-', status: 'E' },
+    ];
+    expect(toSendOutSeries('alsi-x', 'X', [a, b], opts)).toEqual({
+      id: 'alsi-x',
+      metric: 'lng_sendout_kwh_d',
+      unit: 'kWh/d',
+      label: 'X',
+      points: [
+        { date: '2026-10-26', value: 100e6 },
+        { date: '2026-10-27', value: 155.4e6 },
+      ],
+      capacity: 204.1e6,
+    });
+  });
+
+  it('returns null for a facility with nothing reported, and throws when the data stalled', () => {
+    expect(toSendOutSeries('alsi-x', 'X', [[{ gasDayStart: '2026-10-27', sendOut: '-', dtrs: '-' }]], opts)).toBeNull();
+    expect(() => toSendOutSeries('alsi-x', 'X', [[{ gasDayStart: '2026-10-01', sendOut: '1', dtrs: '2' }]], opts)).toThrow(
+      /days old/,
+    );
+  });
+
+  it('puts measured send-out first on linked terminals, citing ALSI without naming a point', () => {
+    const s = { ...series(0, 183_400_000), id: 'alsi-t', metric: 'lng_sendout_kwh_d' as const, label: 'Toscana FSRU' };
+    const dataset: Evidence = { status: 'operating', sourceType: 'dataset', observedAt: '2026-07-27', recordedAt: '2026-10-28' };
+    const [linked, plain] = withMeasuredLngEvidence(
+      [lngTerminal({ id: 't', sendOutSeriesId: 'alsi-t', evidence: [dataset] }), lngTerminal({ id: 'u', evidence: [dataset] })],
+      [s],
+    );
+    expect(linked!.evidence[0]).toMatchObject({ status: 'idle', sourceType: 'measured', url: ALSI_METER.url });
+    expect(linked!.evidence[0]!.statement).toMatch(/of declared send-out capacity \(GIE ALSI\)$/);
+    expect(linked!.evidence[0]!.statement).not.toMatch(/Toscana/);
+    expect(latestClaim(linked!)).toBe(dataset);
+    expect(plain!.evidence).toEqual([dataset]);
   });
 });
 

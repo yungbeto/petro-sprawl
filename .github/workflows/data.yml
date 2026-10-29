@@ -49,6 +49,13 @@ jobs:
         continue-on-error: true
         run: npm run fetch:agsi
 
+      # ALSI takes the same GIE key as AGSI+.
+      - name: GIE ALSI LNG send-out
+        id: alsi
+        if: env.AGSI_API_KEY != ''
+        continue-on-error: true
+        run: npm run fetch:alsi
+
       - name: Commit changed data
         run: |
           git config user.name "github-actions[bot]"
@@ -62,7 +69,7 @@ jobs:
           fi
 
       - name: Fail if any fetch failed
-        if: steps.portwatch.outcome == 'failure' || steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure'
+        if: steps.portwatch.outcome == 'failure' || steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure' || steps.alsi.outcome == 'failure'
         run: |
           echo "::error::One or more fetch jobs failed; previous data was kept. See the step logs above."
           exit 1

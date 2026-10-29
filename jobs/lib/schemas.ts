@@ -8,7 +8,7 @@ const position = z.array(z.number()).min(2);
 
 export const observationSeriesSchema = z.object({
   id: z.string().min(1),
-  metric: z.enum(['tanker_transits', 'gas_flow_kwh_d', 'storage_fill_pct']),
+  metric: z.enum(['tanker_transits', 'gas_flow_kwh_d', 'storage_fill_pct', 'lng_sendout_kwh_d']),
   unit: z.string().min(1),
   points: z.array(z.object({ date: isoDate, value: z.number().finite() })).min(1),
   capacity: z.number().positive().optional(),
@@ -123,6 +123,7 @@ export const lngTerminalSchema = z.object({
     )
     .min(1),
   evidence: z.array(evidenceSchema).min(1),
+  sendOutSeriesId: z.string().optional(),
 });
 
 export const curatedLngEvidenceSchema = z.object({

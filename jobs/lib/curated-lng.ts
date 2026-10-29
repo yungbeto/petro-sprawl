@@ -19,3 +19,13 @@ export function mergeLngEvidence(curated: CuratedLngEvidence[], terminals: LngTe
     return cited ? { ...t, evidence: [...cited, ...t.evidence].sort(byRankThenObservedDesc) } : t;
   });
 }
+
+/** Links terminals to their send-out series by terminal id. Throws on a link to a terminal that isn't there. */
+export function linkSendOut(terminals: LngTerminal[], links: Map<string, string>): LngTerminal[] {
+  const missing = [...links.keys()].filter((id) => !terminals.some((t) => t.id === id));
+  if (missing.length) throw new Error(`ALSI terminals that don't exist in GEM: ${missing.join(', ')}`);
+  return terminals.map((t) => {
+    const sendOutSeriesId = links.get(t.id);
+    return sendOutSeriesId ? { ...t, sendOutSeriesId } : t;
+  });
+}

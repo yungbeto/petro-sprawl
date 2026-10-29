@@ -1,11 +1,24 @@
 // Status evidence: measured flow as evidence, and symmetric aging of the current claim.
 
-import type { Evidence, ObservationSeries, Pipeline } from '../types';
+import type { Evidence, LngTerminal, ObservationSeries, Pipeline } from '../types';
 import { FLOW_WINDOWS, MEASURED_FLOW, STALE_AFTER_DAYS } from './config';
 import { addDays, windowEndingOn } from './flow';
 import { formatEnergyPerDay, formatIndexShare } from './format';
 
 export const ENTSOG_URL = 'https://transparency.entsog.eu/';
+export const ALSI_URL = 'https://alsi.gie.eu/';
+
+/** Who measured a series, and what its capacity figure is, for the measured claim's wording. */
+export interface MeterSource {
+  name: string;
+  url: string;
+  capacity: string;
+  /** Name the metering point: an ENTSOG point is somewhere along the line; an ALSI series is the terminal itself. */
+  namePoint: boolean;
+}
+
+export const ENTSOG_METER: MeterSource = { name: 'ENTSOG', url: ENTSOG_URL, capacity: 'firm technical capacity', namePoint: true };
+export const ALSI_METER: MeterSource = { name: 'GIE ALSI', url: ALSI_URL, capacity: 'declared send-out capacity', namePoint: false };
 
 export interface PipelineFlow {
   latestDate: string;
@@ -40,17 +53,17 @@ export function pipelineFlow(series: ObservationSeries | undefined): PipelineFlo
  * Evidence derived from measured flow (SPEC 6, "measured beats claimed"). No flow over the
  * window is idle: the meter says gas isn't moving, not why. Anything else is operating.
  */
-export function measuredEvidence(series: ObservationSeries | undefined): Evidence | null {
+export function measuredEvidence(series: ObservationSeries | undefined, meter: MeterSource = ENTSOG_METER): Evidence | null {
   const flow = pipelineFlow(series);
   if (!flow || flow.recentMean === null) return null;
   const idle = flow.share !== null ? flow.share <= MEASURED_FLOW.idleShare : flow.recentMean === 0;
-  const share = flow.share !== null ? `, ${formatIndexShare(flow.share)} of firm technical capacity` : '';
-  const where = flow.label ? ` at ${flow.label}` : '';
+  const share = flow.share !== null ? `, ${formatIndexShare(flow.share)} of ${meter.capacity}` : '';
+  const where = meter.namePoint && flow.label ? ` at ${flow.label}` : '';
   return {
     status: idle ? 'idle' : 'operating',
     sourceType: 'measured',
-    statement: `${MEASURED_FLOW.windowDays}-day mean ${formatEnergyPerDay(flow.recentMean)}${share}${where} (ENTSOG)`,
-    url: ENTSOG_URL,
+    statement: `${MEASURED_FLOW.windowDays}-day mean ${formatEnergyPerDay(flow.recentMean)}${share}${where} (${meter.name})`,
+    url: meter.url,
     observedAt: flow.latestDate,
     recordedAt: flow.latestDate,
   };
@@ -65,9 +78,18 @@ export function withMeasuredEvidence(pipelines: Pipeline[], series: ObservationS
   });
 }
 
-/** The most recent claim that isn't measured flow: what a source said, shown beside the meter. */
-export function latestClaim(pipeline: Pipeline): Evidence | undefined {
-  return pipeline.evidence.find((e) => e.sourceType !== 'measured');
+/** LNG terminals with measured send-out put first, for those linked to an ALSI series. */
+export function withMeasuredLngEvidence(terminals: LngTerminal[], series: ObservationSeries[]): LngTerminal[] {
+  const byId = new Map(series.map((s) => [s.id, s]));
+  return terminals.map((t) => {
+    const measured = t.sendOutSeriesId ? measuredEvidence(byId.get(t.sendOutSeriesId), ALSI_METER) : null;
+    return measured ? { ...t, evidence: [measured, ...t.evidence] } : t;
+  });
+}
+
+/** The most recent claim that isn't measured: what a source said, shown beside the meter. */
+export function latestClaim(asset: { evidence: Evidence[] }): Evidence | undefined {
+  return asset.evidence.find((e) => e.sourceType !== 'measured');
 }
 
 /** A month-only date ("2026-01") counts from the end of that month, so it never ages early. */

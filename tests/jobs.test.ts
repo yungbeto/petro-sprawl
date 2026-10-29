@@ -66,7 +66,7 @@ describe('buildChokepoints', () => {
 import { countryToIso } from '../jobs/lib/countries';
 import { gemDiameter, gemHistory, gemLength, gemRowToPipeline, joinLineParts, mapGemStatus, parseOwners, parseYear, sameCompanies, type GemRow } from '../jobs/lib/gem';
 import { lngTerminals, type GemLngRow } from '../jobs/lib/lng';
-import { mergeLngEvidence } from '../jobs/lib/curated-lng';
+import { linkSendOut, mergeLngEvidence } from '../jobs/lib/curated-lng';
 import { lngTerminal } from './fixtures';
 
 describe('countryToIso', () => {
@@ -309,6 +309,15 @@ describe('lngTerminals', () => {
     expect(result.skipped).toEqual({ excluded_status: 1 });
     expect(result.unresolvedCountries).toEqual(['Atlantis']);
     expect(result.terminals[0]?.country).toBe('');
+  });
+});
+
+describe('linkSendOut', () => {
+  it('links terminals to their series, and refuses a link to a terminal GEM lacks', () => {
+    const [a, b] = linkSendOut([lngTerminal({ id: 'gem-a' }), lngTerminal({ id: 'gem-b' })], new Map([['gem-a', 'alsi-gem-a']]));
+    expect(a!.sendOutSeriesId).toBe('alsi-gem-a');
+    expect(b).not.toHaveProperty('sendOutSeriesId');
+    expect(() => linkSendOut([lngTerminal({ id: 'gem-a' })], new Map([['gem-z', 'alsi-gem-z']]))).toThrow(/gem-z/);
   });
 });
 
