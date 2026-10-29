@@ -20,6 +20,7 @@ import {
   curatedPipelineSchema,
   disruptionSchema,
   lngTerminalSchema,
+  oilRouteSchema,
   oilTerminalSchema,
   pipelineSchema,
 } from './lib/schemas';
@@ -122,3 +123,24 @@ const terminals = await publishDataset({
   },
 });
 report(terminals, 'oil-terminals');
+
+// Export routes for "Where is my oil from?": every terminal they name must be a published oil terminal.
+const routes = await publishDataset({
+  id: 'oil-routes',
+  schema: oilRouteSchema,
+  produce: async () => {
+    const records = await readJson<{ country: string; terminals: string[] }[]>('data/curated/oil-routes.json');
+    const terminalIds = new Set((await readJson<OilTerminal[]>('public/data/oil-terminals.json')).map((t) => t.id));
+    const unknown = records.flatMap((r) => r.terminals.filter((t) => !terminalIds.has(t)).map((t) => `${r.country} names ${t}`));
+    if (unknown.length) throw new Error(`oil routes name terminals that don't exist: ${unknown.join('; ')}`);
+    return {
+      records,
+      meta: {
+        sourceUrl: 'data/curated/oil-routes.json',
+        sourceVersion: 'Hand-curated; every route cites its sources',
+        license: 'Ours; linked sources keep their own terms',
+      },
+    };
+  },
+});
+report(routes, 'oil-routes');

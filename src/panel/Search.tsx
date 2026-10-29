@@ -1,7 +1,7 @@
 import { useId, useMemo, useState, type KeyboardEvent, type Ref } from 'react';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { buildSearchIndex, search } from '../lib/search';
+import { buildSearchIndex, search, zipEntry } from '../lib/search';
 import { XIcon } from '@phosphor-icons/react';
 import { AssetIcon } from './AssetIcon';
 
@@ -25,7 +25,10 @@ export function Search({ data, onSelect, inputRef, context, onClose }: SearchPro
   // Typing in the bar; otherwise it shows the context.
   const [editing, setEditing] = useState(false);
   const [active, setActive] = useState(0);
-  const results = useMemo(() => search(index, query), [index, query]);
+  const results = useMemo(() => {
+    const zip = zipEntry(data, query);
+    return zip ? [zip] : search(index, query);
+  }, [data, index, query]);
   const listId = useId();
   const value = editing ? query : (context ?? query);
   // The bar starts out holding the context's own name; results appear once you change it.
@@ -75,7 +78,7 @@ export function Search({ data, onSelect, inputRef, context, onClose }: SearchPro
         ref={inputRef}
         type="text"
         className="search-input"
-        placeholder="Search pipelines, chokepoints, places"
+        placeholder="Search pipelines, chokepoints, places, ZIP codes"
         aria-label="Search"
         role="combobox"
         aria-expanded={showList}
@@ -125,11 +128,13 @@ export function Search({ data, onSelect, inputRef, context, onClose }: SearchPro
       {showList && (
         <ul className="search-results" id={listId} role="listbox" aria-label="Search results">
           {results.length === 0 ? (
-            <li className="search-results__empty muted">No matches</li>
+            <li className="search-results__empty muted">
+              {/^\d{5}$/.test(query.trim()) ? "That ZIP code isn't in our table. Try your state or city." : 'No matches'}
+            </li>
           ) : (
             results.map((r, i) => (
               <li
-                key={`${r.selection.kind}/${r.selection.id}`}
+                key={`${r.selection.kind}/${r.selection.id}/${r.name}`}
                 id={`${listId}-${i}`}
                 role="option"
                 aria-selected={i === active}

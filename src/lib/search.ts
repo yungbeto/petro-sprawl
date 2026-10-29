@@ -1,10 +1,12 @@
-// Type-ahead search across pipelines, chokepoints, basins, LNG terminals and countries. Pure.
+// Type-ahead search across pipelines, chokepoints, basins, LNG terminals and countries, and US regions,
+// states, cities and ZIP codes for "Where is my oil from?". Pure.
 
 import type { Selection } from '../app/urlState';
-import { SEARCH, agsiSeriesId } from './config';
+import { PADDS, SEARCH, agsiSeriesId } from './config';
 import type { Datasets } from './data';
 import type { Commodity } from '../types';
 import { formatCountry } from './format';
+import { paddForState, stateForZip } from './oilOrigins';
 
 export interface SearchEntry {
   selection: Selection;
@@ -69,6 +71,7 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
       entry({ kind: 'terminal', id: t.id }, t.name, `Oil ${t.role} terminal · ${t.country}`, t.aliases, 1),
     ),
     ...data.basins.map((b) => entry({ kind: 'basin', id: b.id }, b.name, 'Basin', [], 3)),
+    ...usPlaceEntries(data, entry),
     ...data.lngTerminals.map((t) =>
       entry(
         { kind: 'lng', id: t.id },
@@ -79,6 +82,50 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
       ),
     ),
   ];
+}
+
+const regionName = (id: string) => PADDS.find((p) => p.id === id)?.name ?? id;
+const WHERE = 'where its crude comes from';
+
+/** US regions, states and large cities, each opening its region's "Where is my oil from?" view. */
+function usPlaceEntries(
+  data: Datasets,
+  entry: (selection: Selection, name: string, detail: string, aliases: string[], priority: number) => SearchEntry,
+): SearchEntry[] {
+  if (!data.oilOrigins.length) return [];
+  const regions = PADDS.map((p, i) =>
+    entry({ kind: 'region', id: p.id }, `${p.name} fuel region`, `US region · ${WHERE}`, [p.name, `PADD ${i + 1}`, 'where is my oil from'], 2),
+  );
+  const states = PADDS.flatMap((p) =>
+    p.states.map((state) => entry({ kind: 'region', id: p.id }, state, `US state · ${p.name} region, ${WHERE}`, [], 2)),
+  );
+  const cities = (data.usLookup?.cities ?? []).flatMap((c) => {
+    const padd = paddForState(c.state);
+    if (!padd) return [];
+    // "Nashville-Davidson" and "San Buenaventura (Ventura)" also answer to "Nashville" and "Ventura".
+    const aliases = [c.name.split(/[-(]/)[0]!, c.name.match(/\(([^)]+)\)/)?.[1] ?? ''].filter(Boolean);
+    return [entry({ kind: 'region', id: padd }, `${c.name}, ${c.state}`, `${regionName(padd)} region, ${WHERE}`, aliases, 3)];
+  });
+  return [...regions, ...states, ...cities];
+}
+
+/**
+ * A result for a typed US ZIP code. Built per query and never stored: the ZIP code stays in the
+ * search box, and only the region it falls in goes into the URL.
+ */
+export function zipEntry(data: Datasets, query: string): SearchEntry | null {
+  const zip = query.trim();
+  if (!/^\d{5}$/.test(zip) || !data.usLookup || !data.oilOrigins.length) return null;
+  const state = stateForZip(data.usLookup, zip);
+  const padd = state ? paddForState(state) : null;
+  if (!state || !padd) return null;
+  return {
+    selection: { kind: 'region', id: padd },
+    name: `ZIP code ${zip}`,
+    detail: `${state} · ${regionName(padd)} region, ${WHERE}`,
+    terms: [zip],
+    priority: 0,
+  };
 }
 
 /** 0 exact, 1 prefix, 2 word prefix, 3 anywhere; null no match. Every query word must match. */

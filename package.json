@@ -15,6 +15,7 @@
     "test:watch": "vitest",
     "import:basins": "tsx jobs/import-basins.ts",
     "import:countries": "tsx jobs/import-countries.ts",
+    "import:us-lookup": "tsx jobs/import-us-lookup.ts",
     "import:lng": "tsx jobs/import-lng.ts",
     "import:chokepoints": "tsx jobs/import-chokepoints.ts",
     "import:gem": "tsx jobs/import-gem.ts",
@@ -22,7 +23,8 @@
     "fetch:entsog": "tsx jobs/fetch-entsog.ts",
     "fetch:agsi": "tsx --env-file-if-exists=.env jobs/fetch-agsi.ts",
     "fetch:alsi": "tsx --env-file-if-exists=.env jobs/fetch-alsi.ts",
-    "fetch:all": "npm run fetch:portwatch && npm run fetch:entsog && npm run fetch:agsi && npm run fetch:alsi",
+    "fetch:eia": "tsx --env-file-if-exists=.env jobs/fetch-eia.ts",
+    "fetch:all": "npm run fetch:portwatch && npm run fetch:entsog && npm run fetch:agsi && npm run fetch:alsi && npm run fetch:eia",
     "build:curated": "tsx jobs/build-curated.ts",
     "refresh:claims": "tsx --env-file-if-exists=.env jobs/refresh-claims.ts",
     "apply:claim-drafts": "tsx jobs/apply-claim-drafts.ts"

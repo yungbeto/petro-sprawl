@@ -543,3 +543,28 @@ test('the search bar titles what is open, and its × closes back to the previous
   await expect(search).toHaveValue('');
   await expect(page.getByRole('region', { name: 'Overview' })).toBeVisible();
 });
+
+test('where is my oil from: a ZIP code or state opens its fuel region and its chokepoints', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Where is my oil from?' })).toBeVisible();
+  const search = page.getByRole('combobox', { name: 'Search' });
+  await search.fill('90012');
+  await expect(page.getByRole('option').first()).toContainText('West Coast region');
+  await page.keyboard.press('Enter');
+  // Only the region goes in the URL, never the ZIP code.
+  await expect(page).toHaveURL(/sel=region\/padd-5/);
+  expect(page.url()).not.toContain('90012');
+  await expect(page.getByRole('heading', { name: 'West Coast' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Where it comes from' })).toBeVisible();
+
+  // A chokepoint on the way opens the chokepoint.
+  await page.getByRole('button', { name: /^Strait of Hormuz/ }).click();
+  await expect(page).toHaveURL(/sel=chokepoint\/hormuz/);
+
+  // A state finds its region too, and another region's row opens that region.
+  await search.fill('ohio');
+  await page.getByRole('option', { name: /^Ohio US state/ }).click();
+  await expect(page).toHaveURL(/sel=region\/padd-2/);
+  await page.getByRole('button', { name: /^Gulf Coast/ }).click();
+  await expect(page).toHaveURL(/sel=region\/padd-3/);
+});

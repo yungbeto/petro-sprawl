@@ -23,6 +23,7 @@ jobs:
     timeout-minutes: 40
     env:
       AGSI_API_KEY: ${{ secrets.AGSI_API_KEY }}
+      EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
     steps:
       - uses: actions/checkout@v7
 
@@ -59,6 +60,13 @@ jobs:
         continue-on-error: true
         run: npm run fetch:alsi
 
+      # EIA publishes monthly, about two months behind; a run every 6 hours just keeps it current.
+      - name: EIA crude origins
+        id: eia
+        if: env.EIA_API_KEY != ''
+        continue-on-error: true
+        run: npm run fetch:eia
+
       - name: Commit changed data
         run: |
           git config user.name "github-actions[bot]"
@@ -72,7 +80,7 @@ jobs:
           fi
 
       - name: Fail if any fetch failed
-        if: steps.portwatch.outcome == 'failure' || steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure' || steps.alsi.outcome == 'failure'
+        if: steps.portwatch.outcome == 'failure' || steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure' || steps.alsi.outcome == 'failure' || steps.eia.outcome == 'failure'
         run: |
           echo "::error::One or more fetch jobs failed; previous data was kept. See the step logs above."
           exit 1

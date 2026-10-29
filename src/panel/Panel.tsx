@@ -7,7 +7,7 @@ import type { VisitChanges } from '../app/useVisitChanges';
 import { Summary } from './Summary';
 import { FilterList } from './FilterList';
 import type { FilterId, FilterMatches } from '../lib/filters';
-import { BasinDetail, ChokepointDetail, LngDetail, OilTerminalDetail, PipelineDetail, StorageDetail } from './details';
+import { BasinDetail, ChokepointDetail, LngDetail, OilTerminalDetail, PipelineDetail, RegionDetail, StorageDetail } from './details';
 
 interface PanelProps {
   collapsed: boolean;
@@ -34,6 +34,7 @@ const KIND_LABELS: Record<SelectionKind, string> = {
   storage: 'Gas storage',
   lng: 'LNG terminal',
   terminal: 'Oil terminal',
+  region: 'US fuel region',
 };
 
 
@@ -137,6 +138,7 @@ function Detail({
       {resolved?.kind === 'storage' && <StorageDetail item={resolved.item} data={data} />}
       {resolved?.kind === 'lng' && <LngDetail item={resolved.item} data={data} now={now} />}
       {resolved?.kind === 'terminal' && <OilTerminalDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
+      {resolved?.kind === 'region' && <RegionDetail item={resolved.item} data={data} onSelect={onSelect} />}
       {!resolved && (
         <section className="section">
           <p className="muted">{KIND_LABELS[selection.kind]}</p>

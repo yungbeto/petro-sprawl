@@ -249,6 +249,52 @@ export const MEASURED_FLOW = { windowDays: 7, idleShare: 0.005 } as const;
  * are marked stale in the panel. Manual imports are never marked stale by age. `publisher` names
  * the source in the panel's source list.
  */
+/**
+ * EIA's Petroleum Administration for Defense Districts, the regions "Where is my oil from?" answers for
+ * (SPEC M6). State lists as EIA's glossary gives them, read 2026-10-29; PADD 1's three subdistricts are
+ * merged, since the crude series are reported for PADD 1 as a whole.
+ */
+export const PADD_SOURCE = 'https://www.eia.gov/tools/glossary/index.php?id=P';
+export const PADDS = [
+  {
+    id: 'padd-1',
+    eia: 'R10',
+    name: 'East Coast',
+    states: [
+      'Connecticut', 'Maine', 'Massachusetts', 'New Hampshire', 'Rhode Island', 'Vermont',
+      'Delaware', 'District of Columbia', 'Maryland', 'New Jersey', 'New York', 'Pennsylvania',
+      'Florida', 'Georgia', 'North Carolina', 'South Carolina', 'Virginia', 'West Virginia',
+    ],
+  },
+  {
+    id: 'padd-2',
+    eia: 'R20',
+    name: 'Midwest',
+    states: [
+      'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Michigan', 'Minnesota', 'Missouri',
+      'Nebraska', 'North Dakota', 'Ohio', 'Oklahoma', 'South Dakota', 'Tennessee', 'Wisconsin',
+    ],
+  },
+  { id: 'padd-3', eia: 'R30', name: 'Gulf Coast', states: ['Alabama', 'Arkansas', 'Louisiana', 'Mississippi', 'New Mexico', 'Texas'] },
+  { id: 'padd-4', eia: 'R40', name: 'Rocky Mountain', states: ['Colorado', 'Idaho', 'Montana', 'Utah', 'Wyoming'] },
+  { id: 'padd-5', eia: 'R50', name: 'West Coast', states: ['Alaska', 'Arizona', 'California', 'Hawaii', 'Nevada', 'Oregon', 'Washington'] },
+] as const;
+export type PaddId = (typeof PADDS)[number]['id'];
+
+/** EIA API v2 (free key, EIA_API_KEY). All crude volumes are thousand barrels a month. */
+export const EIA = {
+  apiUrl: 'https://api.eia.gov/v2',
+  /** Months fetched: the trailing 12 complete months plus slack for series that lag. */
+  months: 18,
+  /** Months the origin shares are taken over. */
+  windowMonths: 12,
+  pageSize: 5000,
+  /** Federal offshore production areas, by the PADD EIA counts them in. */
+  offshore: { R3FM: 'padd-3', R5F: 'padd-5' } as Record<string, PaddId>,
+  /** Origins below this share of a region's crude fold into "other countries". */
+  minShare: 0.01,
+} as const;
+
 export const DATASET_FRESHNESS: Record<
   string,
   { label: string; scheduled: boolean; staleAfterHours?: number; publisher?: string }
@@ -265,6 +311,9 @@ export const DATASET_FRESHNESS: Record<
   chokepoints: { label: 'Chokepoints', scheduled: false, publisher: 'IMF PortWatch and EIA' },
   basins: { label: 'Basins', scheduled: false, publisher: 'USGS' },
   disruptions: { label: 'Disruptions', scheduled: false },
+  'oil-origins': { label: 'US crude origins', scheduled: true, staleAfterHours: 72, publisher: 'EIA' },
+  'oil-routes': { label: 'Oil export routes', scheduled: false },
+  'us-lookup': { label: 'US places', scheduled: false, publisher: 'U.S. Census Bureau, EIA and Natural Earth' },
 };
 
 /**
@@ -278,6 +327,9 @@ export const BASIN_LABEL_MIN_ZOOM = 4.5;
 
 /** Padding (px) when the camera fits a selected feature. */
 export const FIT_PADDING = 80;
+
+/** Origin arcs in a region view: width in px from the smallest share shown to the whole supply. */
+export const ORIGIN_ARC = { minPx: 1.5, maxPx: 14 } as const;
 
 /** Zoom used when flying to a point feature. */
 export const POINT_FOCUS_ZOOM = 6;

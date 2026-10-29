@@ -105,3 +105,14 @@ Thirty-two corridor pipelines are curated in `data/curated/pipelines-evidence.js
 ## M5
 
 - An EU-wide storage fill for the summary. AGSI+ publishes EU aggregates, but the job only fetches countries; check the aggregate endpoint and its terms before adding it, rather than averaging country percentages.
+
+## M6: where is my oil from?
+
+- PADD hubs (the arcs' end points) use EIA's 2021 refinery shapefile; the Energy Atlas FeatureServer with current locations needs a token. Capacity and counts come from `pnp/cap1` (1 January 2026), so only the hub points are old.
+- Only Saudi Arabia and Iraq have curated routes (`data/curated/oil-routes.json`). Other countries show no chokepoints, so exposure is a floor across countries and an upper bound per country. Next candidates by share: Guyana, Nigeria, Colombia, Brazil, Ecuador, Argentina (their loading terminals need a source before any chokepoint is shown), and Kuwait if it shows up again.
+- Saudi Arabia's route lists Ras Tanura, Ras al-Ju'aymah and Yanbu as alternatives; the split between Gulf and Red Sea loadings for US cargoes isn't in the EIA source, which is why Hormuz shows as "up to".
+- Iraq's route lists Basrah and Ceyhan; cargoes to the US West Coast are almost certainly Basrah crude, but no source says so per cargo.
+- EIA names PADD 5 offshore production "Federal Offshore PADD 5"; it shows that way.
+- Canadian crude could be drawn along the GEM cross-border pipelines into each PADD instead of a straight arc.
+- Over the 12 months, West Coast refineries ran more crude (1.98 million b/d) than flowed in (1.93). Stock draws would explain it, but that isn't checked; the panel's caption says "stocks and other inputs" rather than implying a surplus.
+

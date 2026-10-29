@@ -1464,3 +1464,94 @@ a:hover {
   font-weight: 400;
   color: var(--text-muted);
 }
+
+/* "Where is my oil from?": ranked origins with a share bar under each name. */
+.region__caveat {
+  margin-top: var(--space-3);
+}
+
+.origins {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.origins__row {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: var(--space-2) 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.origins li:first-child .origins__row {
+  border-top: 0;
+}
+
+.origins__row--link {
+  cursor: pointer;
+}
+
+.origins__row--link:hover .origins__label {
+  text-decoration: underline;
+}
+
+.origins__head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.origins__label {
+  font-weight: 500;
+}
+
+.origins__share {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.origins__bar {
+  display: block;
+  height: 4px;
+  background: var(--surface-sunken);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.origins__fill {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--border-strong);
+}
+
+/* The same two tones as the map's arcs. */
+.origins__fill--country {
+  background: var(--map-selection);
+}
+
+.origins__fill--region {
+  background: var(--text-muted);
+}
+
+.origins__detail {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.region__routes {
+  margin: 0;
+  padding-left: var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.region__routes li + li {
+  margin-top: var(--space-2);
+}

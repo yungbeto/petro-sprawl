@@ -1,5 +1,5 @@
 import { useId, useState, type ReactNode } from 'react';
-import type { AssetStatus, Basin, Chokepoint, Country, Evidence, LngTerminal, LngUnit, OilTerminal, Pipeline } from '../types';
+import type { AssetStatus, Basin, Chokepoint, Country, Evidence, LngTerminal, LngUnit, OilOriginRegion, OilTerminal, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import {
   CHOKEPOINT_NOTES,
@@ -8,14 +8,18 @@ import {
   EIA_REFERENCE_YEAR,
   FILTERS,
   MEASURED_FLOW,
+  PADDS,
+  PADD_SOURCE,
   agsiSeriesId,
   tankerCargoSeriesId,
 } from '../lib/config';
 import { storageSummary } from '../lib/gasStorage';
 import { ALSI_URL, ENTSOG_URL, isUnverified, latestClaim, pipelineFlow } from '../lib/evidence';
 import {
+  chokepointFlows,
   chokepointsInBasin,
   disruptionsFor,
+  originsFor,
   lngTerminalsInBasin,
   pipelineDisruptions,
   pipelinesTouchingBasin,
@@ -1098,4 +1102,169 @@ function capitalize(value: string): string {
 
 export function statusLabel(status: string): string {
   return capitalize(status.replace(/_/g, ' '));
+}
+
+/** EIA's own tables behind a region view; the imports table is per region (R10 to R50). Checked 2026-10-29. */
+const eiaSeries = (eia: string) =>
+  [
+    ['Imports by country of origin', `https://www.eia.gov/dnav/pet/pet_move_impcp_a2_${eia.toLowerCase()}_epc0_ip0_mbbl_m.htm`],
+    ['Movements between regions', 'https://www.eia.gov/dnav/pet/pet_move_ptb_a_epc0_tnr_mbbl_m.htm'],
+    ['Production by state', 'https://www.eia.gov/dnav/pet/pet_crd_crpdn_adc_mbbl_m.htm'],
+  ] as const;
+
+/** "2026-07" -> "July 2026". */
+function monthLabel(period: string): string {
+  const [y, m] = period.split('-').map(Number);
+  return new Date(Date.UTC(y!, m! - 1, 1)).toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+}
+
+function millionsPerDay(barrels: number): string {
+  return formatNumber(barrels / 1e6, 2);
+}
+
+/** "Where is my oil from?" for one PADD (SPEC M6): shares of the crude flowing in, and the chokepoints on its routes. */
+export function RegionDetail({ item, data, onSelect }: { item: OilOriginRegion; data: Datasets; onSelect: OnSelect }) {
+  const origins = originsFor(data, item);
+  const padd = PADDS.find((p) => p.id === item.id);
+  const states = padd ? [...padd.states] : [];
+  const stateList = states.length > 1 ? `${states.slice(0, -1).join(', ')} and ${states.at(-1)}` : (states[0] ?? '');
+  const flows = chokepointFlows(data);
+  return (
+    <>
+      <Header kind="US fuel region" name={item.name} icon={<AssetIcon kind="region" large />} lede={stateList} />
+      {!origins ? (
+        <p className="muted">Not enough months of EIA data loaded for this region yet.</p>
+      ) : (
+        <>
+          <p className="section__lede region__caveat">
+            Where the crude flowing into the region comes from, over the 12 months to{' '}
+            <span className="mono">{monthLabel(origins.to)}</span>. Refineries blend crude from many sources and fuel travels
+            after refining, so this is the region's picture, not any one town's.
+          </p>
+          <Stats>
+            <Stat label="Crude in" value={millionsPerDay(origins.barrelsPerDay)} unit="million b/d" aside="imported, received or pumped" />
+            <Stat label="Refineries run" value={millionsPerDay(origins.refineryInputPerDay)} unit="million b/d" aside={
+                origins.refineryInputPerDay < origins.barrelsPerDay ? 'the rest moves on or is stored' : 'the difference comes from stocks and other inputs'
+              }
+            />
+            {item.capacity && (
+              <Stat
+                label="Refineries"
+                value={item.capacity.refineries.toLocaleString('en-US')}
+                aside={
+                  <>
+                    <span className="mono">{millionsPerDay(item.capacity.barrelsPerCalendarDay)}</span> million b/d capacity, 1 January{' '}
+                    {item.capacity.asOf}
+                  </>
+                }
+              />
+            )}
+          </Stats>
+          <section className="section">
+            <h3 className="section__title">Where it comes from</h3>
+            <ol className="origins">
+              {origins.rows.map((row) => {
+                const body = (
+                  <>
+                    <span className="origins__head">
+                      <span className="origins__label">{row.label}</span>
+                      <span className="origins__share mono">{formatShare(row.share)}</span>
+                    </span>
+                    <span className="origins__bar" aria-hidden="true">
+                      <span className={`origins__fill origins__fill--${row.kind}`} style={{ width: `${Math.max(row.share * 100, 0.5)}%` }} />
+                    </span>
+                    {row.detail && <span className="origins__detail">{row.detail}</span>}
+                  </>
+                );
+                return (
+                  <li key={row.key}>
+                    {row.kind === 'region' && row.padd ? (
+                      <button type="button" className="origins__row origins__row--link" onClick={() => onSelect({ kind: 'region', id: row.padd! })}>
+                        {body}
+                      </button>
+                    ) : (
+                      <div className="origins__row">{body}</div>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+          {origins.exposure.length > 0 && (
+            <section className="section">
+              <h3 className="section__title">Chokepoints on the way</h3>
+              <ul className="origins">
+                {origins.exposure.map((e) => {
+                  const chokepoint = data.chokepoints.find((c) => c.id === e.chokepoint);
+                  const flow = flows.get(e.chokepoint);
+                  return (
+                    <li key={e.chokepoint}>
+                      <button type="button" className="origins__row origins__row--link" onClick={() => onSelect({ kind: 'chokepoint', id: e.chokepoint })}>
+                        <span className="origins__head">
+                          <span className="origins__label">{chokepoint?.name ?? e.chokepoint}</span>
+                          <span className="origins__share mono">
+                            {e.certain ? '' : 'up to '}
+                            {formatShare(e.share)}
+                          </span>
+                        </span>
+                        <span className="origins__detail">
+                          {e.countries.join(' and ')}
+                          {flow?.indexFiveYear != null && (
+                            <>
+                              {' '}
+                              · tanker traffic now <span className="mono">{formatIndexShare(flow.indexFiveYear)}</span> of its five-year average
+                            </>
+                          )}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p className="note">
+                "Up to" where a country can also load at a terminal that avoids the chokepoint. Only countries with a cited
+                route are counted.
+              </p>
+            </section>
+          )}
+          {origins.routes.length > 0 && (
+            <section className="section">
+              <h3 className="section__title">Routes</h3>
+              <ul className="region__routes">
+                {origins.routes.map((r) => (
+                  <li key={r.country}>
+                    {r.note}{' '}
+                    {r.sources.map((s, i) => (
+                      <span key={s.url}>
+                        {i > 0 && ', '}
+                        <SourceLink href={s.url}>{s.publisher}</SourceLink>
+                      </span>
+                    ))}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          <p className="source">
+            Monthly EIA data from <span className="mono">{monthLabel(origins.from)}</span> to{' '}
+            <span className="mono">{monthLabel(origins.to)}</span>:{' '}
+            {eiaSeries(padd?.eia ?? 'R10').map(([label, href], i) => (
+              <span key={href}>
+                {i > 0 && ', '}
+                <SourceLink href={href}>{label.toLowerCase()}</SourceLink>
+              </span>
+            ))}
+            . Imports count where the crude is refined. Some crude moves on to other regions or abroad, so the shares describe
+            what flows in, not exactly what the refineries run. Regions as <SourceLink href={PADD_SOURCE}>EIA defines them</SourceLink>.
+            Arcs on the map are schematic: they show where crude comes from, not the path it takes.
+          </p>
+        </>
+      )}
+    </>
+  );
+}
+
+/** Shares to the nearest percent; "<1%" for anything smaller. */
+function formatShare(share: number): string {
+  return share < 0.005 ? '<1%' : `${Math.round(share * 100)}%`;
 }

@@ -209,3 +209,41 @@ export const countrySchema = z.object({
   name: z.string().min(1),
   geometry: z.object({ type: z.enum(['Polygon', 'MultiPolygon']), coordinates: z.array(z.any()).min(1) }),
 });
+
+const paddRef = z.enum(['padd-1', 'padd-2', 'padd-3', 'padd-4', 'padd-5']);
+const kbbl = z.number().finite().min(0);
+
+export const oilOriginRegionSchema = z.object({
+  id: paddRef,
+  name: z.string().min(1),
+  months: z
+    .array(
+      z.object({
+        period: z.string().regex(/^\d{4}-\d{2}$/),
+        refineryInput: kbbl,
+        imports: z.array(z.object({ code: z.string().regex(/^[A-Z]{3}$/), name: z.string().min(1), kbbl })),
+        receipts: z.array(z.object({ from: paddRef, kbbl, pipeline: kbbl, tankerBarge: kbbl, rail: kbbl })),
+        production: z.array(z.object({ area: z.string().min(1), kbbl })),
+      }),
+    )
+    .min(12),
+  capacity: z
+    .object({ asOf: z.string().regex(/^\d{4}$/), refineries: z.number().int().positive(), barrelsPerCalendarDay: z.number().positive() })
+    .optional(),
+});
+
+export const usLookupSchema = z.object({
+  states: z.array(z.string().min(1)).min(50),
+  zipRanges: z.array(z.tuple([z.number().int().min(0), z.number().int().max(99999), z.number().int().min(0)])).min(50),
+  cities: z.array(z.object({ name: z.string().min(1), state: z.string().min(1) })).min(100),
+  hubs: z.record(paddRef, lonLat),
+  countryPoints: z.record(z.string().regex(/^[A-Z]{3}$/), lonLat),
+});
+
+/** A curated export route for one country: the terminals its crude can leave from, with sources. */
+export const oilRouteSchema = z.object({
+  country: z.string().regex(/^[A-Z]{3}$/),
+  terminals: z.array(z.string().min(1)).min(1),
+  note: z.string().min(1),
+  sources: z.array(sourceRefSchema).min(1),
+});

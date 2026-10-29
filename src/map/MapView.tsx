@@ -13,7 +13,8 @@ import {
 } from '../lib/config';
 import type { Theme } from '../lib/theme';
 import type { Camera, Selection } from '../app/urlState';
-import { chokepointFlows, resolveSelection, seriesById, type Datasets } from '../lib/data';
+import { chokepointFlows, originsFor, regionHighlight, resolveSelection, seriesById, type Datasets } from '../lib/data';
+import { originArcs, type OriginArc } from '../lib/oilOrigins';
 import { pipelineFlow } from '../lib/evidence';
 import { storageFills } from '../lib/gasStorage';
 import type { ChokepointFlow } from '../lib/flow';
@@ -92,6 +93,9 @@ function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>,
     }
   }
 }
+
+/** Stable empty arcs, so the arc layer keeps its data between rebuilds outside a region view. */
+const NO_ARCS: OriginArc[] = [];
 
 export function MapView(props: MapViewProps) {
   const { theme, initialCamera, data, visibility, selection, highlight, focus } = props;
@@ -189,6 +193,14 @@ export function MapView(props: MapViewProps) {
     map.setStyle(BASEMAP_STYLES[theme], { diff: false });
   }, [theme]);
 
+  // A region view draws its origin arcs and keeps only the chokepoints and terminals on its routes bright.
+  const regionView = useMemo(() => {
+    const resolved = selection?.kind === 'region' ? resolveSelection(selection, data) : null;
+    if (resolved?.kind !== 'region' || !data.usLookup) return null;
+    const origins = originsFor(data, resolved.item);
+    return origins ? { arcs: originArcs(origins, resolved.item.id, data.usLookup), highlight: regionHighlight(origins) } : null;
+  }, [selection, data]);
+
   // An id, not the hover itself, so moving along one pipeline doesn't rebuild the layers.
   const hoveredPipelineId = hover?.picked.kind === 'pipeline' ? hover.picked.item.id : null;
 
@@ -202,15 +214,16 @@ export function MapView(props: MapViewProps) {
         storageFills: fills,
         visibility,
         selection,
-        highlight,
+        highlight: regionView?.highlight ?? highlight,
         hoveredPipelineId,
+        originArcs: regionView?.arcs ?? NO_ARCS,
         colors,
         zoom,
         basinLabelMinZoom: fontsReady ? BASIN_LABEL_MIN_ZOOM : Infinity,
         fontFamily: `"${LABEL_FONT}", sans-serif`,
       }),
     });
-  }, [data, flows, pipelineShares, fills, visibility, selection, highlight, hoveredPipelineId, colors, zoom, fontsReady]);
+  }, [data, flows, pipelineShares, fills, visibility, selection, highlight, regionView, hoveredPipelineId, colors, zoom, fontsReady]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -218,6 +231,9 @@ export function MapView(props: MapViewProps) {
     if (!map || !resolved) return;
     if (resolved.kind === 'chokepoint' || resolved.kind === 'lng' || resolved.kind === 'terminal') {
       map.flyTo({ center: resolved.item.point, zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM) });
+    } else if (resolved.kind === 'region') {
+      const points = regionView?.arcs.flatMap((a) => [a.from, a.to]) ?? [];
+      if (points.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: points }), { padding: FIT_PADDING, maxZoom: 5 });
     } else {
       map.fitBounds(boundsOf(resolved.item.geometry), { padding: FIT_PADDING, maxZoom: 8 });
     }

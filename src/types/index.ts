@@ -233,3 +233,47 @@ export interface DatasetMeta {
   /** The most recent run, successful or not. A failure leaves fetchedAt and the data file unchanged. Added in M2. */
   lastAttempt?: { at: string; ok: boolean; error?: string };
 }
+
+/** One month of a PADD's crude supply, in thousand barrels (EIA). */
+export interface CrudeMonth {
+  period: string;
+  /** Crude run by the region's refineries and blenders. */
+  refineryInput: number;
+  /** Foreign crude processed in the region, by country of origin. */
+  imports: { code: string; name: string; kbbl: number }[];
+  /** Crude received from other PADDs, with the split by mode where EIA reports it. */
+  receipts: { from: PaddRef; kbbl: number; pipeline: number; tankerBarge: number; rail: number }[];
+  /** Crude pumped in the region, by state or federal offshore area. */
+  production: { area: string; kbbl: number }[];
+}
+
+export type PaddRef = 'padd-1' | 'padd-2' | 'padd-3' | 'padd-4' | 'padd-5';
+
+export interface OilOriginRegion {
+  id: PaddRef;
+  name: string;
+  months: CrudeMonth[];
+  /** Operable refineries and atmospheric crude distillation capacity, as of 1 January of `asOf`. */
+  capacity?: { asOf: string; refineries: number; barrelsPerCalendarDay: number };
+}
+
+/** Lookup tables for "Where is my oil from?": built once by import:us-lookup, read in the browser only. */
+export interface UsLookup {
+  /** State names; zipRanges point into this list. */
+  states: string[];
+  /** Runs of ZCTAs in one state: [first ZIP, last ZIP, index into states]. */
+  zipRanges: [number, number, number][];
+  cities: { name: string; state: string }[];
+  /** Schematic map point per PADD, where route arcs end. */
+  hubs: Record<PaddRef, [number, number]>;
+  /** Natural Earth label point by ISO 3166-1 alpha-3 code, where route arcs start. */
+  countryPoints: Record<string, [number, number]>;
+}
+
+/** Where one country's crude can leave from (data/curated/oil-routes.json). Chokepoints come from the terminals' exitVia. */
+export interface OilRoute {
+  country: string;
+  terminals: string[];
+  note: string;
+  sources: SourceRef[];
+}

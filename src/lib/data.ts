@@ -1,5 +1,20 @@
-import type { Basin, Chokepoint, Country, DatasetMeta, Disruption, LngTerminal, ObservationSeries, OilTerminal, Pipeline } from '../types';
+import type {
+  Basin,
+  Chokepoint,
+  Country,
+  DatasetMeta,
+  Disruption,
+  LngTerminal,
+  ObservationSeries,
+  OilOriginRegion,
+  OilRoute,
+  OilTerminal,
+  Pipeline,
+  UsLookup,
+} from '../types';
 import { chokepointFlow, type ChokepointFlow } from './flow';
+import type { FilterMatches } from './filters';
+import { regionOrigins, type RegionOrigins } from './oilOrigins';
 import { PORT_CALLS, portCallsSeriesId, portExportsSeriesId } from './config';
 import type { Selection } from '../app/urlState';
 import { lineTouchesPolygon, pointInPolygon } from './geo';
@@ -13,6 +28,10 @@ export interface Datasets {
   countries: Country[];
   series: ObservationSeries[];
   disruptions: Disruption[];
+  /** "Where is my oil from?": EIA crude supply by PADD, curated export routes and the US lookup tables. */
+  oilOrigins: OilOriginRegion[];
+  oilRoutes: OilRoute[];
+  usLookup: UsLookup | null;
   meta: DatasetMeta[];
 }
 
@@ -25,6 +44,9 @@ export const EMPTY_DATASETS: Datasets = {
   countries: [],
   series: [],
   disruptions: [],
+  oilOrigins: [],
+  oilRoutes: [],
+  usLookup: null,
   meta: [],
 };
 
@@ -81,7 +103,8 @@ export type Resolved =
   | { kind: 'basin'; item: Basin }
   | { kind: 'storage'; item: Country }
   | { kind: 'lng'; item: LngTerminal }
-  | { kind: 'terminal'; item: OilTerminal };
+  | { kind: 'terminal'; item: OilTerminal }
+  | { kind: 'region'; item: OilOriginRegion };
 
 /** Finds the selected item in the loaded data, or null if it isn't there. */
 export function resolveSelection(selection: Selection | null, data: Datasets): Resolved | null {
@@ -110,6 +133,10 @@ export function resolveSelection(selection: Selection | null, data: Datasets): R
     case 'terminal': {
       const item = data.oilTerminals.find((t) => t.id === selection.id);
       return item ? { kind: 'terminal', item } : null;
+    }
+    case 'region': {
+      const item = data.oilOrigins.find((r) => r.id === selection.id);
+      return item ? { kind: 'region', item } : null;
     }
     default:
       return null;
@@ -153,4 +180,19 @@ export function systemSections(pipeline: Pipeline, pipelines: Pipeline[]): Pipel
 
 export function pipelinesTouchingBasin(basin: Basin, pipelines: Pipeline[]): Pipeline[] {
   return pipelines.filter((p) => lineTouchesPolygon(p.geometry, basin.geometry));
+}
+
+/** A region's crude origins, with the routes and terminals the data names. */
+export function originsFor(data: Datasets, region: OilOriginRegion): RegionOrigins | null {
+  return regionOrigins(region, { routes: data.oilRoutes, terminals: data.oilTerminals });
+}
+
+/** What a region view keeps at full strength on the map: chokepoints and terminals on its routes. */
+export function regionHighlight(origins: RegionOrigins | null): FilterMatches {
+  return {
+    pipelines: new Set(),
+    chokepoints: new Set(origins?.exposure.map((e) => e.chokepoint) ?? []),
+    lng: new Set(),
+    terminals: new Set(origins?.rows.flatMap((r) => r.terminals?.map((t) => t.id) ?? []) ?? []),
+  };
 }

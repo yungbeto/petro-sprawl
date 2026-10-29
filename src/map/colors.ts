@@ -18,6 +18,9 @@ const TOKENS = {
   storageLow: '--map-storage-low',
   storageHigh: '--map-storage-high',
   storageLine: '--map-storage-line',
+  /** Origin arcs: foreign in ink, other US regions in a muted tone. Not status colors. */
+  arcForeign: '--map-selection',
+  arcDomestic: '--text-muted',
 } as const;
 
 export type MapColors = Record<keyof typeof TOKENS, Rgba>;

@@ -1,10 +1,11 @@
-import { GeoJsonLayer, IconLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
+import { ArcLayer, GeoJsonLayer, IconLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
 import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon, Position } from 'geojson';
 import type { Layer } from '@deck.gl/core';
 import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, OilTerminal, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, PIPELINE_WIDTH, TERMINAL_MARKER } from '../lib/config';
+import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, ORIGIN_ARC, PIPELINE_WIDTH, TERMINAL_MARKER } from '../lib/config';
+import type { OriginArc } from '../lib/oilOrigins';
 import type { FilterMatches } from '../lib/filters';
 import {
   chokepointRadiusPx,
@@ -131,6 +132,8 @@ interface BuildLayersInput {
   highlight: FilterMatches | null;
   /** The pipeline under the pointer, drawn highlighted. */
   hoveredPipelineId: string | null;
+  /** A region view's origin arcs ("Where is my oil from?"); empty otherwise. */
+  originArcs: OriginArc[];
   colors: MapColors;
   zoom: number;
   basinLabelMinZoom: number;
@@ -146,6 +149,7 @@ export function buildLayers({
   selection,
   highlight,
   hoveredPipelineId,
+  originArcs,
   colors,
   zoom,
   basinLabelMinZoom,
@@ -289,6 +293,19 @@ export function buildLayers({
       capRounded: true,
       jointRounded: true,
       updateTriggers: { getWidth: [pipelineShares], getColor: [colors] },
+    }),
+    // Where a region's crude comes from: schematic arcs, width by share, foreign and domestic in two tones.
+    new ArcLayer<OriginArc>({
+      id: 'origin-arcs',
+      data: originArcs,
+      getSourcePosition: (a) => a.from,
+      getTargetPosition: (a) => a.to,
+      getWidth: (a) => ORIGIN_ARC.minPx + Math.sqrt(a.share) * (ORIGIN_ARC.maxPx - ORIGIN_ARC.minPx),
+      widthUnits: 'pixels',
+      getSourceColor: (a) => withAlpha(a.kind === 'country' ? colors.arcForeign : colors.arcDomestic, 0.3),
+      getTargetColor: (a) => withAlpha(a.kind === 'country' ? colors.arcForeign : colors.arcDomestic, 0.85),
+      greatCircle: true,
+      updateTriggers: { getSourceColor: [colors], getTargetColor: [colors] },
     }),
     // LNG terminals: a dot colored by status, area by capacity; import terminals have a hollow centre.
     new ScatterplotLayer<LngTerminal>({

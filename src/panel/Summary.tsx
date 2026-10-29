@@ -2,7 +2,7 @@ import { useMemo, type ReactNode } from 'react';
 import type { Selection } from '../app/urlState';
 import type { VisitChanges } from '../app/useVisitChanges';
 import { DATASET_FRESHNESS } from '../lib/config';
-import type { Datasets } from '../lib/data';
+import { originsFor, type Datasets } from '../lib/data';
 import { formatCountry, formatDate, formatIndex, formatIndexShare, formatNumber } from '../lib/format';
 import { chokepointRows, corridorRows, statusCounts, storageRows, type Change } from '../lib/summary';
 import { Band, statusLabel } from './details';
@@ -32,6 +32,14 @@ export function Summary({ data, loaded, failed, visit, now, onSelect, onFilter, 
   const corridor = useMemo(() => corridorRows(data.pipelines, now), [data, now]);
   const chokepoints = useMemo(() => chokepointRows(data), [data]);
   const storage = useMemo(() => storageRows(data), [data]);
+  const regions = useMemo(
+    () =>
+      data.oilOrigins.flatMap((region) => {
+        const top = originsFor(data, region)?.rows[0];
+        return top ? [{ region, top }] : [];
+      }),
+    [data],
+  );
 
   if (!loaded) {
     return <p className="muted">Loading data</p>;
@@ -104,6 +112,32 @@ export function Summary({ data, loaded, failed, visit, now, onSelect, onFilter, 
                       </span>
                     )}
                   </td>
+                </LinkRow>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+
+      {regions.length > 0 && (
+        <section className="section">
+          <h2 className="section__title">Where is my oil from?</h2>
+          <p className="muted section__lede">Crude flowing into each US fuel region. Search a ZIP code, city or state to find yours.</p>
+          <table className="table rows">
+            <thead>
+              <tr>
+                <th>Region</th>
+                <th>Largest source</th>
+                <th className="num">Share</th>
+              </tr>
+            </thead>
+            <tbody>
+              {regions.map(({ region, top }) => (
+                <LinkRow key={region.id} selection={{ kind: 'region', id: region.id }} onSelect={onSelect} label={region.name}>
+                  <td className="rows__meta">
+                    {top.kind === 'own' ? 'Pumped in the region' : top.label}
+                  </td>
+                  <td className="mono num">{Math.round(top.share * 100)}%</td>
                 </LinkRow>
               ))}
             </tbody>

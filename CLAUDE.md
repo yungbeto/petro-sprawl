@@ -28,6 +28,7 @@ Node 22. Package manager: npm.
 | `npm run fetch:entsog` | Scheduled: ENTSOG physical flows and technical capacity at the points in `ENTSOG.points` to `public/data/gas-flows.json` |
 | `npm run fetch:agsi` | Scheduled: AGSI+ storage fill by country to `public/data/gas-storage.json`. Needs `AGSI_API_KEY` in `.env` (and as an Actions secret) |
 | `npm run fetch:alsi` | Scheduled: GIE ALSI daily send-out for the EU import terminals in `ALSI.terminals` to `public/data/lng-sendout.json`. Same `AGSI_API_KEY`. Run `build:curated` after changing `ALSI.terminals` so terminals link to their series |
+| `npm run fetch:eia` | Scheduled: EIA monthly crude imports by country, movements between PADDs, field production and refinery input to `public/data/oil-origins.json` (M6). Needs `EIA_API_KEY` in `.env` (and as an Actions secret) |
 | `npm run fetch:all` | Every scheduled fetch, as the GitHub Actions workflow runs them |
 | `npm run refresh:claims` | Weekly: Claude looks for newer sources for cited claims older than 30 days, and a first source for assets with no claim and no measured flow, and checks each draft against the page. First claims always go to review. Commits trusted confirmations to `data/curated/`; other drafts go to `data/reports/claim-drafts.json`; every outcome and the cost in `data/reports/refresh-claims.json`. Needs `ANTHROPIC_API_KEY` in `.env`. Run `build:curated` after it |
 | `npm run apply:claim-drafts` | Adds the drafts in `data/reports/claim-drafts.json` to `data/curated/`, for the review pull request |
@@ -36,6 +37,7 @@ Node 22. Package manager: npm.
 | `npm run import:countries` | Manual: Natural Earth country outlines in the theater to `public/data/countries.json` (storage layer) |
 | `npm run import:gem` | Manual: GEM gas and oil pipeline GeoJSON from `data/raw/gem/` to `data/derived/gem-pipelines.json`; skip counts in `data/reports/import-gem.json`. Run `build:curated` after it |
 | `npm run import:lng` | Manual: GEM LNG terminals (one row per unit) from `data/raw/gem/` to `data/derived/gem-lng-terminals.json`, grouped into terminals; report in `data/reports/import-lng.json`. Run `build:curated` after it |
+| `npm run import:us-lookup` | Manual: Census ZCTA relationship file and city populations from `data/raw/census/`, EIA refinery locations from `data/raw/eia/refineries/` and Natural Earth label points to `public/data/us-lookup.json` (ZIP to state, cities, PADD hubs, country points) |
 | `npm run import:chokepoints` | PortWatch locations plus EIA volumes (from `src/lib/config.ts`) to `public/data/chokepoints.json` |
 
 Scheduled jobs run every 6 hours in `.github/workflows/data.yml` and commit `public/data` when it changes. The claims refresh runs weekly in `.github/workflows/claims.yml`: confirmations go to main, other drafts open a pull request (the repository must allow GitHub Actions to create pull requests). Every job writes through `publishDataset` in `jobs/lib/output.ts`: new data must pass its zod schema or the previous file stays and the failure is recorded in `meta/<id>.json`.
@@ -50,4 +52,5 @@ Scheduled jobs run every 6 hours in `.github/workflows/data.yml` and commit `pub
 - ALSI now and then answers a facility with an empty page; `fetch:alsi` asks again before reporting it as having no data.
 - MapLibre 6 loads its worker from a separate file. `src/map/MapView.tsx` imports it with `?url` and calls `setWorkerUrl`; without that, tiles never load in dev or in the build.
 - The claims refresh never trusts what the model says about a page: `verifyDraft` (`jobs/lib/claims.ts`) fetches it and checks the quote and the metadata date. Haiku has invented dates from "days ago" labels; the date check caught it. Keep the checks in code, not in the prompt.
+- "Where is my oil from?" (M6) shares are of crude flowing into a PADD (imports, receipts from other PADDs, field production), not of refinery input; the residual method went negative for the Midwest. A ZIP code or city never goes in the URL, only `region/padd-n`.
 - "What changed since last visit" lives in `localStorage` under `et.visits` (`src/lib/summary.ts`). To see changes locally, edit the stored `current` snapshot (older `savedAt`, a different status) and reload; the smoke test does the same.
