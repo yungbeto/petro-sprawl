@@ -3,9 +3,11 @@ import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
 import {
   corridorRows,
   diffSnapshots,
+  median,
   nextVisit,
   parseVisitRecord,
   statusCounts,
+  statusGroups,
   storageRows,
   takeSnapshot,
   type Snapshot,
@@ -28,6 +30,30 @@ const fillSeries = (country: string, points: [string, number][]): ObservationSer
 });
 
 const now = new Date('2026-10-28T12:00:00Z');
+
+describe('dashboard helpers', () => {
+  it('takes the median of odd and even lists', () => {
+    expect(median([3, -1, 2])).toBe(2);
+    expect(median([4, 1, 3, 2])).toBe(2.5);
+    expect(median([])).toBeNull();
+  });
+
+  it('folds statuses into running, stopped, unbuilt and unknown', () => {
+    const groups = statusGroups([
+      { status: 'operating', count: 10 },
+      { status: 'reduced', count: 1 },
+      { status: 'idle', count: 2 },
+      { status: 'offline', count: 3 },
+      { status: 'planned', count: 4 },
+    ]);
+    expect(groups.map((g) => [g.id, g.count])).toEqual([
+      ['running', 11],
+      ['stopped', 5],
+      ['unbuilt', 4],
+      ['unknown', 0],
+    ]);
+  });
+});
 
 describe('summary counts', () => {
   it('counts pipelines by current status in a fixed order', () => {

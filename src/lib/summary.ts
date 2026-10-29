@@ -242,3 +242,29 @@ export function parseVisitRecord(raw: string | null): VisitRecord | null {
     return null;
   }
 }
+
+/** Middle value, or the mean of the middle two; null for none. */
+export function median(values: number[]): number | null {
+  if (!values.length) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2;
+}
+
+/** Pipeline statuses folded into the four groups the dashboard bar shows, in display order. */
+export const STATUS_GROUPS = [
+  { id: 'running', label: 'Operating or reduced', statuses: ['operating', 'reduced'] },
+  { id: 'stopped', label: 'Offline or idle', statuses: ['offline', 'idle'] },
+  { id: 'unbuilt', label: 'Not built', statuses: ['under_construction', 'planned', 'cancelled'] },
+  { id: 'unknown', label: 'Unknown', statuses: ['unknown'] },
+] as const satisfies readonly { id: string; label: string; statuses: readonly AssetStatus[] }[];
+
+export type StatusGroupId = (typeof STATUS_GROUPS)[number]['id'];
+
+export function statusGroups(counts: { status: AssetStatus; count: number }[]): { id: StatusGroupId; label: string; count: number }[] {
+  return STATUS_GROUPS.map((g) => ({
+    id: g.id,
+    label: g.label,
+    count: counts.filter((c) => (g.statuses as readonly AssetStatus[]).includes(c.status)).reduce((n, c) => n + c.count, 0),
+  }));
+}

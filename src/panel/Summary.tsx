@@ -1,12 +1,15 @@
 import { useMemo, type ReactNode } from 'react';
 import type { Selection } from '../app/urlState';
 import type { VisitChanges } from '../app/useVisitChanges';
-import { BASEMAP_CREDITS, DATASET_FRESHNESS } from '../lib/config';
+import { DATASET_FRESHNESS } from '../lib/config';
 import type { Datasets } from '../lib/data';
 import { formatCountry, formatDate, formatIndex, formatIndexShare, formatNumber } from '../lib/format';
-import { formatAge, type Freshness } from '../lib/freshness';
 import { chokepointRows, corridorRows, statusCounts, storageRows, type Change } from '../lib/summary';
 import { Band, statusLabel } from './details';
+import { Dashboard } from './Dashboard';
+import { AssetIcon } from './AssetIcon';
+import type { Commodity } from '../types';
+import type { FilterId } from '../lib/filters';
 
 type OnSelect = (selection: Selection) => void;
 
@@ -14,16 +17,17 @@ interface SummaryProps {
   data: Datasets;
   loaded: boolean;
   failed: string[];
-  freshness: Freshness[];
   visit: VisitChanges | null;
   now: Date;
   onSelect: OnSelect;
+  onFilter: (filter: FilterId) => void;
+  onShowStorage: () => void;
 }
 
 const pts = (value: number) => `${value >= 0 ? '+' : '−'}${formatNumber(Math.abs(value), 1)} pts`;
 const pct = (value: number) => `${formatNumber(value, 1)}%`;
 
-export function Summary({ data, loaded, failed, freshness, visit, now, onSelect }: SummaryProps) {
+export function Summary({ data, loaded, failed, visit, now, onSelect, onFilter, onShowStorage }: SummaryProps) {
   const counts = useMemo(() => statusCounts(data.pipelines), [data]);
   const corridor = useMemo(() => corridorRows(data.pipelines, now), [data, now]);
   const chokepoints = useMemo(() => chokepointRows(data), [data]);
@@ -32,10 +36,6 @@ export function Summary({ data, loaded, failed, freshness, visit, now, onSelect 
   if (!loaded) {
     return <p className="muted">Loading data</p>;
   }
-
-  const offBaseline = chokepoints.filter((c) => c.band && c.band !== 'near');
-  const withLastYear = storage.filter((s) => s.vsLastYear !== null);
-  const belowLastYear = withLastYear.filter((s) => s.vsLastYear! < 0);
 
   return (
     <>
@@ -48,56 +48,17 @@ export function Summary({ data, loaded, failed, freshness, visit, now, onSelect 
         </section>
       )}
 
-      <section className="section">
-        <h2 className="section__title">Theater</h2>
-        <dl className="glance">
-          <div className="glance__row">
-            <dt>Pipelines</dt>
-            <dd>
-              {counts.length ? (
-                <ul className="count-list">
-                  {counts.map(({ status, count }) => (
-                    <li key={status}>
-                      <span className={`status status--${status}`}>{statusLabel(status)}</span>
-                      <span className="mono num">{count.toLocaleString('en-US')}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <span className="muted">None loaded</span>
-              )}
-            </dd>
-          </div>
-          <div className="glance__row">
-            <dt>Chokepoints</dt>
-            <dd>
-              {chokepoints.length ? (
-                <>
-                  <span className="mono">{offBaseline.length}</span> of <span className="mono">{chokepoints.length}</span>{' '}
-                  away from their five-year baseline
-                </>
-              ) : (
-                <span className="muted">No transit data</span>
-              )}
-            </dd>
-          </div>
-          <div className="glance__row">
-            <dt>EU gas storage</dt>
-            <dd>
-              {withLastYear.length ? (
-                <>
-                  <span className="mono">{belowLastYear.length}</span> of <span className="mono">{withLastYear.length}</span>{' '}
-                  countries below the same date last year
-                </>
-              ) : (
-                <span className="muted">No storage data</span>
-              )}
-            </dd>
-          </div>
-        </dl>
-      </section>
+      <Dashboard
+        counts={counts}
+        chokepoints={chokepoints}
+        storage={storage}
+        visit={visit}
+        onFilter={onFilter}
+        onShowStorage={onShowStorage}
+        onShowChanges={() => document.getElementById('summary-changes')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+      />
 
-      <ChangesSection visit={visit} onSelect={onSelect} />
+      <ChangesSection visit={visit} onSelect={onSelect} commodityOf={(id) => data.pipelines.find((p) => p.id === id)?.commodity} />
 
       {chokepoints.length > 0 && (
         <section className="section">
@@ -175,8 +136,6 @@ export function Summary({ data, loaded, failed, freshness, visit, now, onSelect 
         </section>
       )}
 
-      <FreshnessSection freshness={freshness} now={now} />
-      <SourcesSection data={data} />
     </>
   );
 }
@@ -217,9 +176,17 @@ function LinkRow({
   );
 }
 
-function ChangesSection({ visit, onSelect }: { visit: VisitChanges | null; onSelect: OnSelect }) {
+function ChangesSection({
+  visit,
+  onSelect,
+  commodityOf,
+}: {
+  visit: VisitChanges | null;
+  onSelect: OnSelect;
+  commodityOf: (pipelineId: string) => Commodity | undefined;
+}) {
   return (
-    <section className="section">
+    <section className="section" id="summary-changes">
       <h2 className="section__title">What changed since last visit</h2>
       {!visit?.since ? (
         <p className="muted">First visit on this browser. Changes show from your next visit.</p>
@@ -236,8 +203,11 @@ function ChangesSection({ visit, onSelect }: { visit: VisitChanges | null; onSel
               {visit.changes.map((change) => (
                 <li key={`${change.kind}/${change.selection.kind}/${change.selection.id}`}>
                   <button type="button" className="change" onClick={() => onSelect(change.selection)}>
-                    <span className="change__name">{change.name}</span>
-                    <span className="change__what">{describeChange(change)}</span>
+                    <AssetIcon kind={change.selection.kind} commodity={commodityOf(change.selection.id)} />
+                    <span className="change__text">
+                      <span className="change__name">{change.name}</span>
+                      <span className="change__what">{describeChange(change)}</span>
+                    </span>
                   </button>
                 </li>
               ))}
@@ -264,83 +234,4 @@ function describeChange(change: Change): string {
     case 'disruption':
       return `New disruption from ${change.startedAt}`;
   }
-}
-
-function FreshnessSection({ freshness, now }: { freshness: Freshness[]; now: Date }) {
-  return (
-    <section className="section">
-      <h2 className="section__title">Data freshness</h2>
-      {freshness.length === 0 ? (
-        <p className="muted">No datasets loaded.</p>
-      ) : (
-        <table className="table freshness">
-          <thead>
-            <tr>
-              <th>Dataset</th>
-              <th className="num">Updated</th>
-              <th className="num">Data through</th>
-            </tr>
-          </thead>
-          <tbody>
-            {freshness.map((f) => (
-              <tr key={f.id}>
-                <td>
-                  {f.label}
-                  {f.stale && <span className="freshness__flag"> stale</span>}
-                  {f.failedAt && (
-                    <span className="freshness__flag" title={`Last fetch failed at ${f.failedAt}; showing the previous data`}>
-                      {' '}
-                      fetch failed {formatAge(f.failedAt, now)}
-                    </span>
-                  )}
-                </td>
-                <td className={`mono num${f.stale ? ' freshness--warn' : ''}`} title={f.fetchedAt}>
-                  {f.scheduled ? formatAge(f.fetchedAt, now) : formatDate(f.fetchedAt)}
-                </td>
-                <td className="mono num">{f.dataThrough ?? <span className="muted">n/a</span>}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </section>
-  );
-}
-
-/** Every dataset's source and terms, as each job recorded them in its meta file. */
-function SourcesSection({ data }: { data: Datasets }) {
-  const metas = [...data.meta].sort((a, b) =>
-    (DATASET_FRESHNESS[a.id]?.label ?? a.id).localeCompare(DATASET_FRESHNESS[b.id]?.label ?? b.id),
-  );
-  return (
-    <section className="section">
-      <h2 className="section__title">Sources</h2>
-      <ul className="sources">
-        {metas.map((m) => (
-          <li key={m.id}>
-            <span>{DATASET_FRESHNESS[m.id]?.label ?? m.id}:</span>{' '}
-            {/^https?:\/\//.test(m.sourceUrl) ? (
-              <a href={m.sourceUrl} target="_blank" rel="noreferrer">
-                {DATASET_FRESHNESS[m.id]?.publisher ?? new URL(m.sourceUrl).hostname}
-              </a>
-            ) : (
-              <span>hand-curated, with sources cited on each record</span>
-            )}
-            <span className="sources__license">{m.license}</span>
-          </li>
-        ))}
-        <li>
-          <span>Basemap:</span>{' '}
-          {BASEMAP_CREDITS.map((c, i) => (
-            <span key={c.url}>
-              {i > 0 && ', '}
-              <a href={c.url} target="_blank" rel="noreferrer">
-                {c.label}
-              </a>
-            </span>
-          ))}
-        </li>
-      </ul>
-    </section>
-  );
 }

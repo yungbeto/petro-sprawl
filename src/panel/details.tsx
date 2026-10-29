@@ -1,10 +1,12 @@
-import type { ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 import type { Basin, Chokepoint, Country, Evidence, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import {
   CHOKEPOINT_NOTES,
+  DETAIL,
   EIA_CHOKEPOINTS_SOURCE,
   EIA_REFERENCE_YEAR,
+  FILTERS,
   MEASURED_FLOW,
   agsiSeriesId,
 } from '../lib/config';
@@ -17,6 +19,9 @@ import type { Disruption } from '../types';
 import { Sparkline } from './Sparkline';
 import { formatCapacity, formatCountry, formatEnergyPerDay, formatLonLat, formatMbd } from '../lib/format';
 import { pipelineStatus } from '../lib/encoding';
+import { filterRows, type FilterRow } from '../lib/filters';
+import { chokepointRows } from '../lib/summary';
+import { AssetIcon, COMMODITY_PIPELINE } from './AssetIcon';
 
 type OnSelect = (selection: Selection) => void;
 
@@ -29,12 +34,47 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-function Header({ kind, name }: { kind: string; name: string }) {
+/** Icon, kind and name, with an optional line under the name for what places the asset. */
+function Header({ kind, name, icon, lede }: { kind: string; name: string; icon: ReactNode; lede?: ReactNode }) {
   return (
     <header className="detail__header">
-      <p className="muted">{kind}</p>
-      <h2 className="detail__title">{name}</h2>
+      {icon}
+      <div className="detail__heading">
+        <p className="detail__kind">{kind}</p>
+        <h2 className="detail__title">{name}</h2>
+        {lede && <p className="detail__lede">{lede}</p>}
+      </div>
     </header>
+  );
+}
+
+/** The few numbers an asset is about, side by side, before the details. */
+function Stats({ children }: { children: ReactNode }) {
+  return <dl className="stats">{children}</dl>;
+}
+
+function Stat({ label, value, unit, aside }: { label: string; value: ReactNode; unit?: string; aside?: ReactNode }) {
+  return (
+    <div className="stats__item">
+      <dt>{label}</dt>
+      <dd>
+        <span className="stats__value">
+          {value}
+          {unit && <span className="stats__unit"> {unit}</span>}
+        </span>
+        {aside && <span className="stats__aside">{aside}</span>}
+      </dd>
+    </div>
+  );
+}
+
+/** Secondary facts, label beside value, under their own heading. */
+function Facts({ children }: { children: ReactNode }) {
+  return (
+    <section className="section">
+      <h3 className="section__title">Details</h3>
+      <dl className="facts">{children}</dl>
+    </section>
   );
 }
 
@@ -57,8 +97,14 @@ export function Band({ band }: { band: FlowBand | null }) {
   return <span className={`band band--${band}`}>{BAND_LABELS[band]}</span>;
 }
 
-function perDay(value: number | undefined): string {
-  return value === undefined ? 'n/a' : `${formatNumber(value, 1)} tankers/day`;
+const notAvailable = <span className="muted">n/a</span>;
+
+function perDay(value: number | undefined): ReactNode {
+  return value === undefined ? notAvailable : formatNumber(value, 1);
+}
+
+function signedPts(value: number): string {
+  return `${value >= 0 ? '+' : '−'}${formatNumber(Math.abs(value), 1)}`;
 }
 
 export function ChokepointDetail({ item, data }: { item: Chokepoint; data: Datasets }) {
@@ -67,49 +113,56 @@ export function ChokepointDetail({ item, data }: { item: Chokepoint; data: Datas
   const disruptions = disruptionsFor(data, 'chokepoint', item.id);
   return (
     <>
-      <Header kind="Chokepoint" name={item.name} />
-      {flow && (
-        <section className="flow-headline">
-          <p className="flow-headline__figure mono">
-            {flow.indexFiveYear !== null ? formatIndexShare(flow.indexFiveYear) : 'n/a'}
-          </p>
-          <p>
-            of the five-year average for tanker transits, last 7 days. <Band band={flow.band} />
-          </p>
-        </section>
+      <Header kind="Chokepoint" name={item.name} icon={<AssetIcon kind="chokepoint" large />} />
+      {flow ? (
+        <>
+          <section className="flow-headline">
+            <p className="flow-headline__figure">
+              {flow.indexFiveYear !== null ? formatIndexShare(flow.indexFiveYear) : 'n/a'}
+            </p>
+            <p className="flow-headline__text">
+              of the five-year average for tanker transits, last 7 days
+            </p>
+            <Band band={flow.band} />
+          </section>
+          <Stats>
+            <Stat
+              label="Last 7 days"
+              value={perDay(flow.recent?.mean)}
+              unit="per day"
+              aside={<>to <span className="mono">{flow.latestDate}</span></>}
+            />
+            <Stat
+              label="Trailing year"
+              value={perDay(flow.trailing?.mean)}
+              unit="per day"
+              aside={<>index <span className="mono">{flow.indexTrailing !== null ? formatIndex(flow.indexTrailing) : 'n/a'}</span></>}
+            />
+            <Stat
+              label="Five years"
+              value={perDay(flow.fiveYear?.mean)}
+              unit="per day"
+              aside={flow.fiveYear && <span className="mono">{flow.fiveYear.from.slice(0, 4)} to {flow.fiveYear.to.slice(0, 4)}</span>}
+            />
+          </Stats>
+          <section className="section">
+            <h3 className="section__title">Daily tanker transits, last 90 days</h3>
+            <Sparkline
+              points={flow.sparkline}
+              unit="/day"
+              label={`Daily tanker transits at ${item.name}, ${flow.sparkline[0]?.date} to ${flow.latestDate}`}
+              references={[
+                ...(flow.fiveYear ? [{ value: flow.fiveYear.mean, label: 'Five-year average', style: 'dashed' as const }] : []),
+                ...(flow.trailing ? [{ value: flow.trailing.mean, label: 'Trailing year', style: 'dotted' as const }] : []),
+              ]}
+            />
+          </section>
+        </>
+      ) : (
+        <p className="muted">Tanker transits not loaded yet.</p>
       )}
-      <dl className="facts">
-        {flow ? (
-          <>
-            <Row label="Last 7 days">
-              <span className="mono">{perDay(flow.recent?.mean)}</span>
-              <span className="facts__aside">
-                to <span className="mono">{flow.latestDate}</span>
-              </span>
-            </Row>
-            <Row label="Trailing year">
-              <span className="mono">{perDay(flow.trailing?.mean)}</span>
-              <span className="facts__aside">
-                Index <span className="mono">{flow.indexTrailing !== null ? formatIndex(flow.indexTrailing) : 'n/a'}</span>
-              </span>
-            </Row>
-            <Row label="Five-year average">
-              <span className="mono">{perDay(flow.fiveYear?.mean)}</span>
-              {flow.fiveYear && (
-                <span className="facts__aside">
-                  <span className="mono">
-                    {flow.fiveYear.from} to {flow.fiveYear.to}
-                  </span>
-                  , index <span className="mono">{flow.indexFiveYear !== null ? formatIndex(flow.indexFiveYear) : 'n/a'}</span>
-                </span>
-              )}
-            </Row>
-          </>
-        ) : (
-          <Row label="Tanker transits">
-            <span className="muted">Not loaded yet</span>
-          </Row>
-        )}
+      <DisruptionList disruptions={disruptions} />
+      <Facts>
         <Row label="EIA reference volume">
           <span className="mono">{formatMbd(item.eiaReferenceMbd)}</span>
           <span className="facts__aside">
@@ -120,23 +173,8 @@ export function ChokepointDetail({ item, data }: { item: Chokepoint; data: Datas
         <Row label="Location">
           <span className="mono">{formatLonLat(item.point)}</span>
         </Row>
-      </dl>
-      {flow && (
-        <section className="section">
-          <h3 className="section__title">Daily tanker transits, last 90 days</h3>
-          <Sparkline
-            points={flow.sparkline}
-            unit="/day"
-            label={`Daily tanker transits at ${item.name}, ${flow.sparkline[0]?.date} to ${flow.latestDate}`}
-            references={[
-              ...(flow.fiveYear ? [{ value: flow.fiveYear.mean, label: 'Five-year average', style: 'dashed' as const }] : []),
-              ...(flow.trailing ? [{ value: flow.trailing.mean, label: 'Trailing year', style: 'dotted' as const }] : []),
-            ]}
-          />
-        </section>
-      )}
-      <DisruptionList disruptions={disruptions} />
-      <p className="note">
+      </Facts>
+      <p className="source">
         Transits are vessel counts from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>; the EIA
         figure is barrels, shown for scale. The two aren't compared.
         {note && ` ${note}`}
@@ -175,13 +213,32 @@ function DisruptionList({ disruptions }: { disruptions: Disruption[] }) {
 export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datasets; onSelect: OnSelect }) {
   const chokepoints = chokepointsInBasin(item, data.chokepoints);
   const pipelines = pipelinesTouchingBasin(item, data.pipelines);
+  const pipelineRows = filterRows({ pipelines: new Set(pipelines.map((p) => p.id)), chokepoints: new Set() }, data);
+  const chokepointRowsInside = filterRows({ pipelines: new Set(), chokepoints: new Set(chokepoints.map((c) => c.id)) }, data);
+  const province = item.provinceType === 'priority' ? 'Priority province' : 'Boutique province';
   return (
     <>
-      <Header kind="Basin" name={item.name} />
-      <dl className="facts">
-        <Row label="Province type">
-          {item.provinceType === 'priority' ? 'Priority province' : 'Boutique province'}
-        </Row>
+      <Header kind={`Basin · ${province.toLowerCase()}`} name={item.name} icon={<AssetIcon kind="basin" large />} />
+      <Stats>
+        <Stat label="Pipelines" value={data.pipelines.length ? pipelines.length.toLocaleString('en-US') : notAvailable} aside="crossing it" />
+        <Stat label="Chokepoints" value={String(chokepoints.length)} aside="inside it" />
+        <Stat
+          label="Dominant"
+          value={item.dominant ? capitalize(item.dominant) : <span className="muted">Not given</span>}
+          aside="petroleum type"
+        />
+      </Stats>
+      <RelatedList
+        title="Pipelines crossing it"
+        empty={data.pipelines.length ? 'None in the loaded data.' : 'Pipelines not loaded yet.'}
+        rows={pipelineRows}
+        data={data}
+        onSelect={onSelect}
+      />
+      {chokepointRowsInside.length > 0 && (
+        <RelatedList title="Chokepoints inside it" empty="" rows={chokepointRowsInside} data={data} onSelect={onSelect} />
+      )}
+      <Facts>
         <Row label="Countries">
           {item.countries.length ? (
             item.countries.map(formatCountry).sort().join(', ')
@@ -189,25 +246,10 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
             <span className="muted">None on land (offshore)</span>
           )}
         </Row>
-        <Row label="Dominant petroleum">
-          {item.dominant ? capitalize(item.dominant) : <span className="muted">Not given</span>}
-        </Row>
         <Row label="USGS code">
           <span className="mono">{item.code}</span>
         </Row>
-      </dl>
-      <LinkList
-        title="Pipelines crossing it"
-        empty={data.pipelines.length ? 'None in the loaded data' : 'Pipelines not loaded yet'}
-        items={pipelines.map((p) => ({ selection: { kind: 'pipeline', id: p.id }, label: p.name }))}
-        onSelect={onSelect}
-      />
-      <LinkList
-        title="Chokepoints inside it"
-        empty="None"
-        items={chokepoints.map((c) => ({ selection: { kind: 'chokepoint', id: c.id }, label: c.name }))}
-        onSelect={onSelect}
-      />
+      </Facts>
       <p className="source">
         <SourceLink href="https://www.sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3">
           USGS World Petroleum Assessment 2000
@@ -249,68 +291,66 @@ export function PipelineDetail({ item, data, now }: { item: Pipeline; data: Data
   const curated = item.sources.includes('curated');
   return (
     <>
-      <Header kind={`${capitalize(item.commodity)} pipeline`} name={item.name} />
-      <dl className="facts">
-        <Row label="Status">
-          <span className={`status status--${status}`}>{statusLabel(status)}</span>
+      <Header
+        kind={`${COMMODITY_PIPELINE[item.commodity]}${curated ? ' · corridor' : ''}`}
+        name={item.name}
+        icon={<AssetIcon kind="pipeline" commodity={item.commodity} large />}
+        lede={route ? <span className="mono">{route}</span> : undefined}
+      />
+      <dl className="status-card">
+        <dt className="visually-hidden">Status</dt>
+        <dd>
+          <span className={`status status--${status} status-card__status`}>{statusLabel(status)}</span>
           {isUnverified(current, now) && (
-            <span className="unverified"> · unverified since <span className="mono">{current!.observedAt}</span></span>
+            <span className="unverified status-card__line">
+              Unverified since <span className="mono">{current!.observedAt}</span>
+            </span>
           )}
-          <span className="facts__aside">{current ? <EvidenceLine evidence={current} /> : 'No sourced claim yet'}</span>
+          <span className="status-card__line">{current ? <EvidenceLine evidence={current} /> : 'No sourced claim yet'}</span>
           {claim && (
-            <span className="facts__aside">
+            <span className="status-card__line">
               Latest claim, {statusLabel(claim.status).toLowerCase()}: <EvidenceLine evidence={claim} />
             </span>
           )}
-        </Row>
-        <Row label="Route">
-          {route ? <span className="mono">{route}</span> : <span className="muted">Unknown</span>}
-        </Row>
-        <Row label="Capacity">
-          {item.capacity ? (
-            <>
-              <span className="mono">{formatCapacity(item.capacity)}</span>
-              {item.capacitySource && (
-                <span className="facts__aside">
-                  <SourceLink href={item.capacitySource.url}>{item.capacitySource.publisher}</SourceLink>,{' '}
-                  <span className="mono">{item.capacitySource.publishedAt}</span>
-                </span>
-              )}
-            </>
-          ) : (
-            <span className="muted">Unknown</span>
-          )}
-        </Row>
-        <Row label="Measured flow">
-          {flow?.recentMean != null ? (
-            <>
-              <span className="mono">{formatEnergyPerDay(flow.recentMean)}</span>
-              <span className="facts__aside">
-                {MEASURED_FLOW.windowDays}-day mean to <span className="mono">{flow.latestDate}</span>
+        </dd>
+      </dl>
+      <Stats>
+        <Stat
+          label="Capacity"
+          value={item.capacity ? formatCapacity(item.capacity) : <span className="muted">Unknown</span>}
+          aside={
+            item.capacitySource && (
+              <>
+                <SourceLink href={item.capacitySource.url}>{item.capacitySource.publisher}</SourceLink>,{' '}
+                <span className="mono">{item.capacitySource.publishedAt}</span>
+              </>
+            )
+          }
+        />
+        <Stat
+          label="Measured flow"
+          value={
+            flow?.recentMean != null ? (
+              formatEnergyPerDay(flow.recentMean)
+            ) : (
+              <span className="muted">{item.flowSeriesId ? 'Not loaded yet' : 'Not measured'}</span>
+            )
+          }
+          aside={
+            flow?.recentMean != null && (
+              // Where and when it was metered is on the status line above; this says how full it runs.
+              <>
+                {MEASURED_FLOW.windowDays}-day mean
                 {flow.share !== null && (
                   <>
                     , <span className="mono">{formatIndexShare(flow.share)}</span> of technical capacity
                   </>
                 )}
-                {flow.label && `, at ${flow.label}`}
-              </span>
-            </>
-          ) : (
-            <span className="muted">{item.flowSeriesId ? 'Not loaded yet' : 'Not measured'}</span>
-          )}
-        </Row>
-        {item.operator && <Row label="Operator">{item.operator}</Row>}
-        {item.owners && item.owners.length > 0 && (
-          <Row label="Owners">
-            {item.owners.map((o) => (
-              <span key={o.name} className="facts__line">
-                {o.name}
-                {o.sharePct !== undefined && <span className="mono"> {o.sharePct}%</span>}
-              </span>
-            ))}
-          </Row>
-        )}
-      </dl>
+              </>
+            )
+          }
+        />
+      </Stats>
       {flow && flow.sparkline.length > 1 && (
         <section className="section">
           <h3 className="section__title">Daily physical flow, last 90 days</h3>
@@ -328,17 +368,37 @@ export function PipelineDetail({ item, data, now }: { item: Pipeline; data: Data
       {item.evidence.length > 1 && (
         <section className="section">
           <h3 className="section__title">Status history</h3>
-          <ul className="evidence">
+          <ol className="timeline">
             {item.evidence.map((e, i) => (
-              <li key={i}>
-                <span className={`status status--${e.status}`}>{statusLabel(e.status)}</span>{' '}
-                <span className="facts__aside">
+              <li key={i} className="timeline__item">
+                <span className={`status status--${e.status}`}>{statusLabel(e.status)}</span>
+                <span className="timeline__detail">
                   <EvidenceLine evidence={e} />
                 </span>
               </li>
             ))}
-          </ul>
+          </ol>
         </section>
+      )}
+      {(item.operator || (item.owners && item.owners.length > 0) || !route) && (
+        <Facts>
+          {!route && (
+            <Row label="Route">
+              <span className="muted">Unknown</span>
+            </Row>
+          )}
+          {item.operator && <Row label="Operator">{item.operator}</Row>}
+          {item.owners && item.owners.length > 0 && (
+            <Row label="Owners">
+              {item.owners.map((o) => (
+                <span key={o.name} className="facts__line">
+                  {o.name}
+                  {o.sharePct !== undefined && <span className="mono muted"> {o.sharePct}%</span>}
+                </span>
+              ))}
+            </Row>
+          )}
+        </Facts>
       )}
       {item.geometryApprox && <p className="note">Route is approximate. The source marks it as low accuracy.</p>}
       <p className="source">
@@ -359,43 +419,33 @@ export function StorageDetail({ item, data }: { item: Country; data: Datasets })
   const pct = (value: number) => `${formatNumber(value, 1)}%`;
   return (
     <>
-      <Header kind="Gas storage" name={item.name} />
+      <Header kind="Gas storage" name={item.name} icon={<AssetIcon kind="storage" large />} />
       {summary ? (
         <>
           <section className="flow-headline">
-            <p className="flow-headline__figure mono">{pct(summary.fill)}</p>
-            <p>
-              of working gas volume in storage on <span className="mono">{summary.latestDate}</span>.
+            <p className="flow-headline__figure">{pct(summary.fill)}</p>
+            <p className="flow-headline__text">
+              of working gas volume in storage on <span className="mono">{summary.latestDate}</span>
             </p>
           </section>
-          <dl className="facts">
-            <Row label="Last 7 days">
-              {summary.change7d !== null ? (
-                <span className="mono">
-                  {summary.change7d >= 0 ? '+' : '−'}
-                  {formatNumber(Math.abs(summary.change7d), 1)} pts
-                </span>
-              ) : (
-                <span className="muted">n/a</span>
-              )}
-            </Row>
-            <Row label="Same date last year">
-              {summary.lastYear ? (
-                <>
-                  <span className="mono">{pct(summary.lastYear.fill)}</span>
-                  <span className="facts__aside">
-                    <span className="mono">{summary.lastYear.date}</span>, now{' '}
-                    <span className="mono">
-                      {summary.fill >= summary.lastYear.fill ? '+' : '−'}
-                      {formatNumber(Math.abs(summary.fill - summary.lastYear.fill), 1)} pts
-                    </span>
-                  </span>
-                </>
-              ) : (
-                <span className="muted">n/a</span>
-              )}
-            </Row>
-          </dl>
+          <Stats>
+            <Stat
+              label="Last 7 days"
+              value={summary.change7d !== null ? signedPts(summary.change7d) : notAvailable}
+              unit={summary.change7d !== null ? 'pts' : undefined}
+            />
+            <Stat
+              label="Same date last year"
+              value={summary.lastYear ? pct(summary.lastYear.fill) : notAvailable}
+              aside={
+                summary.lastYear && (
+                  <>
+                    now <span className="mono">{signedPts(summary.fill - summary.lastYear.fill)} pts</span>
+                  </>
+                )
+              }
+            />
+          </Stats>
           <section className="section">
             <h3 className="section__title">Storage fill, last 12 months</h3>
             <Sparkline
@@ -417,32 +467,80 @@ export function StorageDetail({ item, data }: { item: Country; data: Datasets })
   );
 }
 
-function LinkList({
+/** Rows that each open an asset: kind icon, name, and its status or band. */
+export function AssetList({ rows, data, onSelect }: { rows: FilterRow[]; data: Datasets; onSelect: OnSelect }) {
+  const pipelines = new Map(data.pipelines.map((p) => [p.id, p]));
+  const bands = new Map(chokepointRows(data).map((c) => [c.selection.id, c.band]));
+  return (
+    <ul className="changes">
+      {rows.map((row) => {
+        const pipeline = row.selection.kind === 'pipeline' ? pipelines.get(row.selection.id) : undefined;
+        const status = pipeline && pipelineStatus(pipeline);
+        return (
+          <li key={`${row.selection.kind}/${row.selection.id}`}>
+            <button type="button" className="change" onClick={() => onSelect(row.selection)}>
+              <AssetIcon kind={row.selection.kind} commodity={pipeline?.commodity} />
+              <span className="change__text">
+                <span className="change__name">{row.name}</span>
+                <span className="change__what">
+                  {pipeline ? COMMODITY_PIPELINE[pipeline.commodity] : 'Chokepoint'}
+                  {' · '}
+                  {status ? (
+                    <span className={`status status--${status}`}>{statusLabel(status)}</span>
+                  ) : (
+                    <Band band={bands.get(row.selection.id) ?? null} />
+                  )}
+                  {row.curated && pipeline && ' · corridor'}
+                </span>
+              </span>
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+/** Related assets, counted in the heading; the first few show, the rest on request. */
+function RelatedList({
   title,
   empty,
-  items,
+  rows,
+  data,
   onSelect,
 }: {
   title: string;
   empty: string;
-  items: { selection: Selection; label: string }[];
+  rows: FilterRow[];
+  data: Datasets;
   onSelect: OnSelect;
 }) {
+  const [expanded, setExpanded] = useState(false);
+  const titleId = useId();
+  const limit = expanded ? FILTERS.listLimit : DETAIL.relatedLimit;
+  const shown = rows.slice(0, limit);
   return (
-    <section className="section">
-      <h3 className="section__title">{title}</h3>
-      {items.length === 0 ? (
+    <section className="section" aria-labelledby={titleId}>
+      <h3 className="section__title" id={titleId}>
+        {title}
+        {rows.length > 0 && <span className="section__count">{rows.length.toLocaleString('en-US')}</span>}
+      </h3>
+      {rows.length === 0 ? (
         <p className="muted">{empty}</p>
       ) : (
-        <ul className="link-list">
-          {items.map(({ selection, label }) => (
-            <li key={`${selection.kind}/${selection.id}`}>
-              <button type="button" className="link-button" onClick={() => onSelect(selection)}>
-                {label}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <>
+          <AssetList rows={shown} data={data} onSelect={onSelect} />
+          {!expanded && rows.length > shown.length && (
+            <button type="button" className="show-all" onClick={() => setExpanded(true)}>
+              Show all {rows.length.toLocaleString('en-US')}
+            </button>
+          )}
+          {expanded && rows.length > shown.length && (
+            <p className="note">
+              Showing the first <span className="mono">{shown.length}</span>; the map shows all of them.
+            </p>
+          )}
+        </>
       )}
     </section>
   );

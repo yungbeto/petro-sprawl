@@ -51,39 +51,41 @@ Scope is one theater: the oil and gas corridor connecting **Europe, Russia, the 
 
 ```
 +--------------------+---------------------------------------------+
-| Panel (400px)      |                                             |
-|                    |                 Map (full bleed)            |
-| [Search          ] |                                             |
+| [≡ Search        ] | (filter chips)                              |
+| Panel (400px)      |                 Map (full bleed)            |
+|                    |                                             |
 |                    |                                             |
 | Summary / Detail   |                                             |
-|                    |                                     [Layers]|
 |                    |                                             |
-| Updated 3h ago     |                          scale · attribution|
+|                    |                                             |
+| Updated 3h ago     | [Layers]                 scale · attribution|
 +--------------------+---------------------------------------------+
 ```
 
 - Map fills the viewport; the panel sits on the left, flush, full height. Every visit opens on the summary (the home view). The search is one floating bar at the top left, over the top of the panel when it is open, and over the map when the panel is minimized (with a button to reopen it), so it never moves; selecting anything reopens it on that detail (decided 2026-10-28, after Google Maps).
-- A compact layer control floats on the map (top right). Layers can be toggled; defaults are all on.
+- A compact Layers button sits at the map's bottom left; the layer list opens above it and closes on `L`, Esc or a click elsewhere. Layers default to on, except EU gas storage (see section 5). The top edge is left to the filter chips (decided 2026-10-28, after Google Maps).
 - Initial camera frames the theater (roughly lon -15 to 65, lat 10 to 72).
 
 ### Panel states
 
 1. **Summary (default on open)**
-   - Headline counts for the theater: pipelines by status, chokepoints with flow notably above or below baseline, EU storage fill versus the same date last year.
+   - A dashboard of four tiles leads the panel, one number each with a small picture: chokepoints below baseline (a ring per chokepoint, the worst named), pipelines offline or idle (a status bar), EU storage countries below last year (a tick per country around zero, with the median gap), and changes since last visit. Each tile opens what it counts: its filter, the storage layer, or the changes list (decided 2026-10-28).
    - "What changed since last visit" list: status changes, flow swings, storage moves. Each row links to the asset on the map. Last visit timestamp lives in `localStorage` (wrapped in try/catch; render fine without it).
-   - Data freshness for each dataset, and every dataset's source and license as its job recorded them.
+   - Data age in the panel footer ("Updated 3 h ago"), which opens the app menu at the full freshness table.
    - As built (M5): storage is counted by country ("16 of 20 countries below the same date last year") rather than as one EU fill, because a fair EU figure needs each country's working gas volume. Loads less than 30 minutes apart count as one visit, so a reload doesn't swallow the changes. Flow swings are listed at 15 points of capacity or more, storage moves at 2 points or more (`CHANGES` in `src/lib/config.ts`). A load where a dataset failed isn't saved as the next visit's baseline.
 2. **Pipeline detail:** name, commodity, route (from → transit → to), operator and owners, capacity, current status with its evidence (source type, statement, link, date), measured flow where available (sparkline, last 90 days, flow as share of capacity), disruption history.
 3. **Chokepoint detail:** EIA reference volume (mb/d, 2024), daily tanker transits with the 7-day average against two baselines: the trailing 365-day average and the five-year average before that year. Flow index for each, 90-day sparkline with both baselines drawn, and sourced disruptions. The map colors by the five-year index, because a trailing year absorbs a long disruption within twelve months (decided 2026-10-28, after Hormuz transits fell from about 43 a day to about 1 in March 2026).
 4. **Basin detail:** name, countries it spans, pipelines and chokepoints inside or touching it.
 5. **Storage detail (country):** fill level, trend, same date last year.
+6. **Detail layout, all kinds** (decided 2026-10-28): a header with the kind icon, the kind and the name; then what the asset is about, largest (a pipeline's status and its evidence, a chokepoint's or a country's headline figure); then a strip of two or three key numbers; then charts, disruptions and history; then secondary facts under "Details"; sources last. Related assets (a basin's pipelines and chokepoints) are rows with icon and status, counted in the heading, corridor pipelines first, the first six showing and the rest behind "Show all" (`DETAIL.relatedLimit` in `src/lib/config.ts`).
 
 ### Interactions
 
 - **Hover:** highlight the feature and show a minimal tooltip (name plus one key figure).
 - **Click:** select it, fly the camera to fit, open its detail in the panel.
-- **Back / Esc:** return to the previous panel state. Selection and camera are in the URL (shareable, reloadable).
+- **Close / Esc:** the search bar shows the name of whatever is open (an asset, or the active filter). Its × clears typing, or otherwise closes what is open and returns to the previous panel state; Esc does the same. There is no separate Back button (decided 2026-10-28, after Google Maps). Selection and camera are in the URL (shareable, reloadable).
 - **Search:** type-ahead across pipelines, chokepoints, basins and countries.
+- **App menu:** a menu button at the left of the search bar opens a drawer over everything with app-level settings and information: theme, data freshness for each dataset, every dataset's source and license as its job recorded them, keyboard shortcuts, and a short about. Esc or the backdrop closes it (decided 2026-10-28, after Google Maps' main menu).
 - **Quick filters:** a row of chips over the map: offline or idle, below baseline, unverified claims, metered flow, gas, oil, each with its match count. One at a time; matches stay at full strength on the map, the rest fade, and the panel lists the matches in place of the summary. The filter is in the URL (`f=`), and Back or Esc clears it (decided 2026-10-28, after Google Maps' category chips).
 - **Keyboard:** `/` focuses search, `Esc` goes back, `L` toggles the layer control, `[` minimizes or reopens the panel.
 
@@ -250,6 +252,7 @@ Identify the right point IDs in ENTSOG and link each to its pipeline. Starting c
 - **Map:** MapLibre GL JS for the basemap, deck.gl layers via `@deck.gl/mapbox` overlay (lines, paths, scatter, polygons)
 - **State:** URL as the source of truth for selection and camera; small React state otherwise (no state library unless needed)
 - **Charts:** small hand-rolled SVG sparklines (no chart library for v0.1)
+- **Icons:** Phosphor (`@phosphor-icons/react`, MIT), imported by name so only the icons used are bundled (added 2026-10-28 at the owner's request)
 - **Data jobs:** Node 22 + TypeScript (`tsx`), zod for validation, mapshaper for one-off geometry simplification
 - **Hosting:** static site on Cloudflare Pages, Vercel or Netlify (free tier); jobs on GitHub Actions
 - **Testing:** Vitest for transforms, flow index math, status aging and dedup; one Playwright smoke test that loads the app and selects a pipeline

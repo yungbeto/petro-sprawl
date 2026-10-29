@@ -3,6 +3,7 @@
 import type { Selection } from '../app/urlState';
 import { SEARCH, agsiSeriesId } from './config';
 import type { Datasets } from './data';
+import type { Commodity } from '../types';
 import { formatCountry } from './format';
 
 export interface SearchEntry {
@@ -14,6 +15,8 @@ export interface SearchEntry {
   terms: string[];
   /** Lower sorts first among equally good matches. */
   priority: number;
+  /** For pipelines, so a result can show the right icon. */
+  commodity?: Commodity;
 }
 
 /** Lowercase, no diacritics, punctuation as spaces: "Urengoy–Pomary" and "urengoy pomary" match. */
@@ -42,13 +45,16 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
     ...data.pipelines.map((p) => {
       const route = [p.fromCountry, ...p.transitCountries, p.toCountry].filter(Boolean).join(' → ');
       const curated = p.sources.includes('curated');
-      return entry(
-        { kind: 'pipeline', id: p.id },
-        p.name,
-        `${COMMODITY_LABELS[p.commodity]} pipeline${route ? ` · ${route}` : ''}`,
-        p.aliases,
-        curated ? 1 : 4,
-      );
+      return {
+        ...entry(
+          { kind: 'pipeline', id: p.id },
+          p.name,
+          `${COMMODITY_LABELS[p.commodity]} pipeline${route ? ` · ${route}` : ''}`,
+          p.aliases,
+          curated ? 1 : 4,
+        ),
+        commodity: p.commodity,
+      };
     }),
     ...data.countries.map((c) =>
       entry(
