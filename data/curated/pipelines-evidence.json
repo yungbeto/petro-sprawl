@@ -408,13 +408,13 @@
       "gem-p0553"
     ],
     "capacity": {
-      "value": 1.5,
+      "value": 1.8,
       "unit": "mb/d",
       "source": {
-        "publisher": "Al Jazeera",
-        "title": "UAE to accelerate oil pipeline project to bypass Strait of Hormuz",
-        "url": "https://www.aljazeera.com/news/2026/5/15/uae-to-accelerate-oil-pipeline-project-to-bypass-hormuz",
-        "publishedAt": "2026-05-15"
+        "publisher": "Reuters",
+        "title": "Pipelines and ports: Iran war spurs Gulf infrastructure investment",
+        "url": "https://www.reuters.com/business/energy/pipelines-ports-iran-war-spurs-gulf-infrastructure-investment-2026-08-28/",
+        "publishedAt": "2026-08-28"
       }
     },
     "evidence": [
