@@ -321,7 +321,8 @@ test('a section of a split pipeline lists the other sections, which open', async
 });
 
 test('a dated claim older than 30 days is marked unverified', async ({ page }) => {
-  await page.goto('/?sel=pipeline/druzhba-south');
+  // Soyuz's only claim is from 2022 and describes a lasting stop, so it stays old.
+  await page.goto('/?sel=pipeline/soyuz');
   await expect(page.getByLabel('Panel').getByText(/unverified since/i)).toBeVisible();
 });
 

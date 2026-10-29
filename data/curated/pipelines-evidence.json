@@ -149,6 +149,14 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "Russian gas exports to Europe via TurkStream fell to about 1.34 bcm in September, 44.8 mcm a day, during maintenance at the Strandzha-2 entry into Bulgaria from 21 to 26 September (Baird Maritime, citing Reuters and Entsog data).",
+        "url": "https://www.bairdmaritime.com/shipping/tankers/gas/russian-gas-flows-to-europe-via-undersea-pipeline-decline-in-september",
+        "observedAt": "2026-09-30",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "The European line carried about 1.7 bcm in March 2026, 97% of its capacity, per European transmission data reported by Interfax.",
         "url": "https://interfax.com/newsroom/top-stories/116906/",
         "observedAt": "2026-04-01",
@@ -186,6 +194,14 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "All crude the EU imported from Russia in September was carried through the Druzhba pipeline to Slovakia and Hungary, worth about EUR 290 million (CREA).",
+        "url": "https://energyandcleanair.org/september-2026-monthly-analysis-of-russian-fossil-fuel-exports-and-sanctions/",
+        "observedAt": "2026-09-30",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "Deliveries to Hungary and Slovakia restarted after a halt of nearly three months from late January 2026; Ukrtransnafta lifted force majeure on 21 April and MOL confirmed crude had arrived.",
         "url": "https://www.hungarianconservative.com/articles/current/druzhba-pipeline-oil-resumes-hungary-slovakia/",
         "observedAt": "2026-04-24",
@@ -208,6 +224,14 @@
       "gem-p0547"
     ],
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "By 4 October about 450,000 b/d was moving toward Ceyhan through the northern system, about 200,000 b/d of it from Kurdistan Region fields (Washington Kurdish Institute).",
+        "url": "https://dckurd.org/2026/10/26/kurdistan-digest-october-25-2026/",
+        "observedAt": "2026-10-04",
+        "recordedAt": "2026-10-29"
+      },
       {
         "status": "operating",
         "sourceType": "press",
@@ -397,6 +421,14 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "Adnoc exports Murban through Fujairah without passing Hormuz: it reaches Fujairah by pipeline and loads outside the strait, where Vortexa reports record volumes (The National).",
+        "url": "https://www.thenationalnews.com/business/energy/2026/10/15/oil-transfers-off-indias-west-coast-surge-as-gulf-shipping-congestion-worsens/",
+        "observedAt": "2026-10-15",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "The 380 km line carries about 1.5 million b/d of crude from Habshan to Fujairah, outside Hormuz; Fujairah has come under attack (Al Jazeera and Reuters).",
         "url": "https://www.aljazeera.com/news/2026/5/15/uae-to-accelerate-oil-pipeline-project-to-bypass-hormuz",
         "observedAt": "2026-05-15",
@@ -438,6 +470,14 @@
       }
     },
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Flows through Sumed have risen 150% since the Iran war began, with the Ain Sokhna to Sidi Kerir system running at its 2.5 million b/d ceiling, up from about 1 million b/d in February (Enterprise).",
+        "url": "https://enterpriseam.com/egypt/2026/10/27/the-house-authorizes-el-sisi-to-take-whatever-measures-are-needed-to-support-saudi-arabia/",
+        "observedAt": "2026-10-27",
+        "recordedAt": "2026-10-29"
+      },
       {
         "status": "operating",
         "sourceType": "press",
@@ -545,6 +585,14 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "CPC throughput fell to six million tonnes in September, 1.59 million b/d, from 1.6 million b/d in August, during Karachaganak maintenance; loadings were suspended repeatedly after drone attacks on tankers (Baird Maritime, citing Reuters).",
+        "url": "https://www.bairdmaritime.com/offshore/transport/caspian-pipelines-throughput-falls-on-oilfield-maintenance-in-september",
+        "observedAt": "2026-09-30",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "A drone incident briefly halted loading at two moorings on 8 September; loading resumed after the Energy Ministry found no issues, with no restrictions on Kazakh shippers (Times of Central Asia).",
         "url": "https://timesca.com/kazakhstan-oil-exports-routes-beyond-cpc/",
         "observedAt": "2026-09-10",
@@ -623,6 +671,14 @@
       {
         "status": "idle",
         "sourceType": "government",
+        "statement": "Kazakhstan does not expect Kazakh oil transit to Germany via Druzhba to resume within three months: Transneft three-month plans show zero volumes, Energy Minister Akkenzhenov said (Kazinform).",
+        "url": "https://qazinform.com/news/kazakh-oil-transit-via-druzhba-to-remain-suspended-for-next-three-months-445512",
+        "observedAt": "2026-08-25",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "idle",
+        "sourceType": "government",
         "statement": "Kazakhstan's Energy Ministry: Kazakh oil on the Atyrau–Samara–Druzhba route to Germany is temporarily suspended; none has been shipped through Druzhba since May (Orda.kz).",
         "url": "https://en.orda.kz/kazakhstan-still-unable-to-resume-druzhba-oil-exports-to-germany-11154/",
         "observedAt": "2026-08-17",
@@ -693,6 +749,14 @@
     ],
     "autoMatch": false,
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "After Ukrainian drone strikes on Ust-Luga, the port BPS-2 ends at, at the beginning of September, crude loadings there dropped 26% month on month (CREA).",
+        "url": "https://energyandcleanair.org/september-2026-monthly-analysis-of-russian-fossil-fuel-exports-and-sanctions/",
+        "observedAt": "2026-09-30",
+        "recordedAt": "2026-10-29"
+      },
       {
         "status": "operating",
         "sourceType": "press",
@@ -824,6 +888,14 @@
     "evidence": [
       {
         "status": "operating",
+        "sourceType": "press",
+        "statement": "Azerbaijan exported 18.4 bcm of gas in January to September 2026; exports via TANAP fell 2.3% to 4.2 bcm (Interfax, citing the Energy Ministry).",
+        "url": "https://interfax.com/newsroom/top-stories/119559/",
+        "observedAt": "2026-09-30",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "operating",
         "sourceType": "government",
         "statement": "Azerbaijan's Ministry of Energy: 99.6 bcm of Azerbaijani gas has moved through TANAP since it opened, 39.6 bcm of it to Türkiye, as commercial deliveries reached their eighth year (APA).",
         "url": "https://en.apa.az/energy-and-industry/nearly-100-bcm-of-azerbaijani-gas-transported-via-tanap-to-date-513799",
@@ -936,6 +1008,14 @@
     ],
     "autoMatch": false,
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "government",
+        "statement": "Energy Minister Kharabsheh said Jordan imports gas from international markets, regasifies it and supplies it to Syria via the Arab Gas Pipeline (Petra).",
+        "url": "https://petra.gov.jo/en/news/jordan-expands-role-in-regional-gas-supply-electricity-interconnection-efforts",
+        "observedAt": "2026-05-04",
+        "recordedAt": "2026-10-29"
+      },
       {
         "status": "operating",
         "sourceType": "press",
