@@ -98,6 +98,7 @@ Basins and GEM pipelines are imported worldwide (`IMPORT_BOUNDS` in `src/lib/con
 | Basins | Polygons | Very quiet outline, faint fill on hover; label at higher zoom | USGS World Petroleum Assessment provinces (simplified) |
 | Pipelines | Lines | Width by capacity; style by status (solid = operating, dashed = reduced, dotted or faded = offline/idle, hairline = planned); measured flow shown as a brighter inner line sized to flow share | GEM inventory + curated evidence + ENTSOG flows |
 | Chokepoints | Points | Ring sized by EIA reference volume; ring segment or color by flow index (below, near, above baseline) | EIA baselines + IMF PortWatch |
+| LNG terminals | Points | Dot area by capacity in operation (planned capacity when nothing runs yet); color by status, as pipelines; import terminals have a hollow centre (added 2026-10-28) | GEM LNG terminals tracker |
 | EU gas storage | Country fills | Fill level as a sequential scale, only when the layer is on (off by default, on when a link selects a country) | GIE AGSI+; outlines from Natural Earth 1:50m |
 | Countries | Borders, labels | Minimal | Basemap |
 | Day/night (nice to have) | Terminator | Subtle shade | Computed client-side |
@@ -183,6 +184,25 @@ interface Disruption {
   recordedAt: string;
 }
 
+// Added 2026-10-28. GEM lists LNG terminals one row per unit (train or regas unit); the import
+// groups units by GEM project and facility type. Cancelled and shelved units are left out.
+interface LngTerminal {
+  id: string;                // gem-<project id>-<export|import>
+  name: string;
+  aliases: string[];
+  facility: 'export' | 'import';
+  country: string;           // ISO code; empty when GEM gives none
+  point: [number, number];   // first unit with the terminal's status
+  pointApprox: boolean;      // GEM Accuracy is not "exact"
+  floating: boolean;
+  offshore: boolean;
+  operator?: string;
+  owners?: { name: string; sharePct?: number }[];
+  capacityMtpa: { operating: number; planned: number };  // sum of units with a GEM capacity
+  units: { name?: string; status: AssetStatus; capacityMtpa?: number; startYear?: number }[];
+  evidence: Evidence[];      // one dataset claim: the most live unit's status
+}
+
 interface DatasetMeta {
   id: string;
   fetchedAt: string;         // last successful run
@@ -208,6 +228,7 @@ interface DatasetMeta {
 | Dataset | Gives | Access | Cadence | License / terms |
 | --- | --- | --- | --- | --- |
 | [Global Energy Monitor](https://globalenergymonitor.org/) Oil and Gas Infrastructure trackers | Pipeline inventory, routes, capacity, owners | Free download after registration; manual import | Quarterly, by hand | CC-BY 4.0, attribution required |
+| GEM Global Gas Infrastructure Tracker, LNG terminals | Export and import terminals by unit: status, capacity (mtpa), owners, location | Free download after registration; manual import (`npm run import:lng`) | Quarterly, by hand | CC-BY 4.0, attribution required |
 | Curated evidence file (`data/curated/pipelines-evidence.json`) | Status claims for corridor pipelines | Hand-researched, every claim cited | As events happen | Ours |
 | [ENTSOG Transparency Platform](https://transparency.entsog.eu/) | Physical gas flows and technical capacity at EU entry points | Public REST API, no key ([docs](https://transparency.entsog.eu/pdf/TP_REG715_Documentation_TP_API_v1.3.pdf)) | Daily | Check terms; attribute |
 | [GIE AGSI+](https://agsi.gie.eu/) | EU gas storage fill by country | REST API, free key via account ([docs](https://www.gie.eu/transparency-platform/GIE_API_documentation_v013.pdf)) | Daily | Check terms; attribute |

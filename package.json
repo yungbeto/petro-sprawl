@@ -15,6 +15,7 @@
     "test:watch": "vitest",
     "import:basins": "tsx jobs/import-basins.ts",
     "import:countries": "tsx jobs/import-countries.ts",
+    "import:lng": "tsx jobs/import-lng.ts",
     "import:chokepoints": "tsx jobs/import-chokepoints.ts",
     "import:gem": "tsx jobs/import-gem.ts",
     "fetch:portwatch": "tsx jobs/fetch-portwatch.ts",

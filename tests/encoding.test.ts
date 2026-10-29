@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { chokepointRadiusPx, pipelineStatus, pipelineWidthPx } from '../src/lib/encoding';
-import { CHOKEPOINT_RADIUS, PIPELINE_WIDTH } from '../src/lib/config';
-import { chokepoint, pipeline } from './fixtures';
+import { chokepointRadiusPx, lngRadiusPx, pipelineStatus, pipelineWidthPx } from '../src/lib/encoding';
+import { CHOKEPOINT_RADIUS, LNG_RADIUS, PIPELINE_WIDTH } from '../src/lib/config';
+import { chokepoint, lngTerminal, pipeline } from './fixtures';
 
 describe('pipelineWidthPx', () => {
   it('uses a hairline when capacity is unknown', () => {
@@ -70,5 +70,16 @@ describe('flowFillRadiusPx', () => {
     expect(flowFillRadiusPx(10, 9)).toBe(flowFillRadiusPx(10, FLOW_FILL_MAX_INDEX));
     expect(flowFillRadiusPx(10, null)).toBe(0);
     expect(flowFillRadiusPx(10, 0)).toBe(0);
+  });
+});
+
+describe('lngRadiusPx', () => {
+  it('sizes by operating capacity, else planned, within limits', () => {
+    const r = (operating: number, planned: number) => lngRadiusPx(lngTerminal({ capacityMtpa: { operating, planned } }));
+    expect(r(36, 0) / r(9, 0)).toBeCloseTo(2);
+    expect(r(0, 16)).toBe(r(16, 0));
+    expect(r(4, 100)).toBe(r(4, 0));
+    expect(r(0, 0)).toBe(LNG_RADIUS.minPx);
+    expect(r(1000, 0)).toBe(LNG_RADIUS.maxPx);
   });
 });

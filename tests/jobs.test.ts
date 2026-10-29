@@ -65,6 +65,7 @@ describe('buildChokepoints', () => {
 
 import { countryToIso } from '../jobs/lib/countries';
 import { gemRowToPipeline, joinLineParts, mapGemStatus, parseOwners, type GemRow } from '../jobs/lib/gem';
+import { lngTerminals, type GemLngRow } from '../jobs/lib/lng';
 
 describe('countryToIso', () => {
   it('resolves current codes, not deprecated ones', () => {
@@ -194,5 +195,73 @@ describe('joinLineParts', () => {
       [[1, 0], [1, 1]],
       [[5, 5], [6, 6]],
     ]);
+  });
+});
+
+describe('lngTerminals', () => {
+  const unit = (overrides: Partial<GemLngRow> = {}): GemLngRow => ({
+    ProjectID: 'T100',
+    TerminalName: 'Ras Laffan LNG',
+    UnitName: 'T1',
+    FacilityType: 'export',
+    Status: 'operating',
+    OtherNames: 'North Field LNG, RL',
+    'Country/Area': 'Qatar',
+    Owner: 'QatarEnergy [70%]; Shell [30%]',
+    Operator: 'QatarEnergy LNG',
+    CapacityinMtpa: 7.8,
+    ActualStartYear: 2010,
+    LatestPlannedStartYear: null,
+    Latitude: 25.9,
+    Longitude: 51.55,
+    Accuracy: 'exact',
+    Offshore: null,
+    Floating: null,
+    Wiki: 'https://www.gem.wiki/Ras_Laffan',
+    LastUpdated: '2026-03-02',
+    ...overrides,
+  });
+  const ctx = { recordedAt: '2026-10-28', releaseDate: '2026-10' };
+
+  it('groups units into one terminal per project and facility type, as live as its most live unit', () => {
+    const { terminals } = lngTerminals(
+      [
+        unit(),
+        unit({ UnitName: 'T2', Status: 'construction', CapacityinMtpa: 8, ActualStartYear: null, LatestPlannedStartYear: 2027, Latitude: 26, LastUpdated: '2026-09-01' }),
+        unit({ UnitName: 'T3', Status: 'cancelled' }),
+        unit({ UnitName: 'Regas', FacilityType: 'import', Status: 'proposed', CapacityinMtpa: null }),
+      ],
+      ctx,
+    );
+    expect(terminals.map((t) => t.id)).toEqual(['gem-t100-export', 'gem-t100-import']);
+    expect(terminals[0]).toMatchObject({
+      facility: 'export',
+      country: 'QA',
+      point: [51.55, 25.9],
+      pointApprox: false,
+      aliases: ['North Field LNG', 'RL'],
+      owners: [{ name: 'QatarEnergy', sharePct: 70 }, { name: 'Shell', sharePct: 30 }],
+      capacityMtpa: { operating: 7.8, planned: 8 },
+      units: [
+        { name: 'T1', status: 'operating', capacityMtpa: 7.8, startYear: 2010 },
+        { name: 'T2', status: 'under_construction', capacityMtpa: 8, startYear: 2027 },
+      ],
+      evidence: [
+        {
+          status: 'operating',
+          sourceType: 'dataset',
+          statement: 'Global Energy Monitor: 1 unit operating, 1 under construction',
+          observedAt: '2026-09-01',
+        },
+      ],
+    });
+    expect(terminals[1]).toMatchObject({ capacityMtpa: { operating: 0, planned: 0 }, evidence: [{ status: 'planned', observedAt: '2026-03-02' }] });
+  });
+
+  it('counts what it leaves out and the country names it cannot code', () => {
+    const result = lngTerminals([unit({ Status: 'shelved' }), unit({ ProjectID: 'T2', 'Country/Area': 'Atlantis' })], ctx);
+    expect(result.skipped).toEqual({ excluded_status: 1 });
+    expect(result.unresolvedCountries).toEqual(['Atlantis']);
+    expect(result.terminals[0]?.country).toBe('');
   });
 });

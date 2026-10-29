@@ -1,5 +1,5 @@
 import { useId, useState, type ReactNode } from 'react';
-import type { Basin, Chokepoint, Country, Evidence, Pipeline } from '../types';
+import type { AssetStatus, Basin, Chokepoint, Country, Evidence, LngTerminal, LngUnit, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import {
   CHOKEPOINT_NOTES,
@@ -12,13 +12,20 @@ import {
 } from '../lib/config';
 import { storageSummary } from '../lib/gasStorage';
 import { ENTSOG_URL, isUnverified, latestClaim, pipelineFlow } from '../lib/evidence';
-import { chokepointsInBasin, disruptionsFor, pipelinesTouchingBasin, seriesById, type Datasets } from '../lib/data';
+import {
+  chokepointsInBasin,
+  disruptionsFor,
+  lngTerminalsInBasin,
+  pipelinesTouchingBasin,
+  seriesById,
+  type Datasets,
+} from '../lib/data';
 import { chokepointFlow, type FlowBand } from '../lib/flow';
 import { formatIndex, formatIndexShare, formatNumber } from '../lib/format';
 import type { Disruption } from '../types';
 import { Sparkline } from './Sparkline';
 import { formatCapacity, formatCountry, formatEnergyPerDay, formatLonLat, formatMbd } from '../lib/format';
-import { pipelineStatus } from '../lib/encoding';
+import { lngStatus, pipelineStatus } from '../lib/encoding';
 import { filterRows, type FilterRow } from '../lib/filters';
 import { chokepointRows } from '../lib/summary';
 import { AssetIcon, COMMODITY_PIPELINE } from './AssetIcon';
@@ -213,8 +220,11 @@ function DisruptionList({ disruptions }: { disruptions: Disruption[] }) {
 export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datasets; onSelect: OnSelect }) {
   const chokepoints = chokepointsInBasin(item, data.chokepoints);
   const pipelines = pipelinesTouchingBasin(item, data.pipelines);
-  const pipelineRows = filterRows({ pipelines: new Set(pipelines.map((p) => p.id)), chokepoints: new Set() }, data);
-  const chokepointRowsInside = filterRows({ pipelines: new Set(), chokepoints: new Set(chokepoints.map((c) => c.id)) }, data);
+  const terminals = lngTerminalsInBasin(item, data.lngTerminals);
+  const none = new Set<string>();
+  const pipelineRows = filterRows({ pipelines: new Set(pipelines.map((p) => p.id)), chokepoints: none, lng: none }, data);
+  const chokepointRowsInside = filterRows({ pipelines: none, chokepoints: new Set(chokepoints.map((c) => c.id)), lng: none }, data);
+  const terminalRows = filterRows({ pipelines: none, chokepoints: none, lng: new Set(terminals.map((t) => t.id)) }, data);
   const province = item.provinceType === 'priority' ? 'Priority province' : 'Boutique province';
   return (
     <>
@@ -235,6 +245,9 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
         data={data}
         onSelect={onSelect}
       />
+      {terminalRows.length > 0 && (
+        <RelatedList title="LNG terminals inside it" empty="" rows={terminalRows} data={data} onSelect={onSelect} />
+      )}
       {chokepointRowsInside.length > 0 && (
         <RelatedList title="Chokepoints inside it" empty="" rows={chokepointRowsInside} data={data} onSelect={onSelect} />
       )}
@@ -467,15 +480,113 @@ export function StorageDetail({ item, data }: { item: Country; data: Datasets })
   );
 }
 
+const LNG_FACILITY: Record<LngTerminal['facility'], string> = {
+  export: 'LNG export terminal',
+  import: 'LNG import terminal',
+};
+
+/** Capacity of the units in some states: none when there are no such units, unknown when GEM gives none. */
+function unitCapacity(units: LngUnit[], states: AssetStatus[], total: number): { value: ReactNode; unit?: string } {
+  const matching = units.filter((u) => states.includes(u.status));
+  if (matching.length === 0) return { value: <span className="muted">None</span> };
+  if (total === 0) return { value: <span className="muted">Unknown</span> };
+  return { value: formatNumber(total, 1), unit: 'mtpa' };
+}
+
+export function LngDetail({ item, now }: { item: LngTerminal; now: Date }) {
+  const status = lngStatus(item);
+  const current = item.evidence[0];
+  const kind = [LNG_FACILITY[item.facility], item.floating && 'floating', item.offshore && !item.floating && 'offshore']
+    .filter(Boolean)
+    .join(' · ');
+  const place = [item.country && formatCountry(item.country), item.pointApprox && 'location approximate'].filter(Boolean).join(' · ');
+  return (
+    <>
+      <Header kind={kind} name={item.name} icon={<AssetIcon kind="lng" large />} lede={place || undefined} />
+      <dl className="status-card">
+        <dt className="visually-hidden">Status</dt>
+        <dd>
+          <span className={`status status--${status} status-card__status`}>{statusLabel(status)}</span>
+          {isUnverified(current, now) && (
+            <span className="unverified status-card__line">
+              Unverified since <span className="mono">{current!.observedAt}</span>
+            </span>
+          )}
+          <span className="status-card__line">{current ? <EvidenceLine evidence={current} /> : 'No sourced claim yet'}</span>
+        </dd>
+      </dl>
+      <Stats>
+        <Stat label="Operating" {...unitCapacity(item.units, ['operating', 'reduced'], item.capacityMtpa.operating)} />
+        <Stat
+          label="Planned"
+          {...unitCapacity(item.units, ['under_construction', 'planned'], item.capacityMtpa.planned)}
+          aside="building or proposed"
+        />
+        <Stat label="Units" value={String(item.units.length)} aside={item.facility === 'export' ? 'trains' : 'regas units'} />
+      </Stats>
+      <section className="section">
+        <h3 className="section__title">Units</h3>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Unit</th>
+              <th>Status</th>
+              <th className="num">mtpa</th>
+              <th className="num">Start</th>
+            </tr>
+          </thead>
+          <tbody>
+            {item.units.map((u, i) => (
+              <tr key={i}>
+                <td>{u.name ?? <span className="muted">Unit {i + 1}</span>}</td>
+                <td>
+                  <span className={`status status--${u.status}`}>{statusLabel(u.status)}</span>
+                </td>
+                <td className="num mono">{u.capacityMtpa !== undefined ? formatNumber(u.capacityMtpa, 1) : '–'}</td>
+                <td className="num mono">{u.startYear ?? '–'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+      <Facts>
+        {item.operator && <Row label="Operator">{item.operator}</Row>}
+        {item.owners && item.owners.length > 0 && (
+          <Row label="Owners">
+            {item.owners.map((o) => (
+              <span key={o.name} className="facts__line">
+                {o.name}
+                {o.sharePct !== undefined && <span className="mono muted"> {o.sharePct}%</span>}
+              </span>
+            ))}
+          </Row>
+        )}
+        <Row label="Location">
+          <span className="mono">{formatLonLat(item.point)}</span>
+        </Row>
+      </Facts>
+      <p className="source">
+        <SourceLink href="https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/">
+          Global Energy Monitor
+        </SourceLink>
+        , Global Gas Infrastructure Tracker, CC BY 4.0. Start is the actual year, or the latest planned year for units not
+        yet running.
+      </p>
+    </>
+  );
+}
+
 /** Rows that each open an asset: kind icon, name, and its status or band. */
 export function AssetList({ rows, data, onSelect }: { rows: FilterRow[]; data: Datasets; onSelect: OnSelect }) {
   const pipelines = new Map(data.pipelines.map((p) => [p.id, p]));
+  const terminals = new Map(data.lngTerminals.map((t) => [t.id, t]));
   const bands = new Map(chokepointRows(data).map((c) => [c.selection.id, c.band]));
   return (
     <ul className="changes">
       {rows.map((row) => {
         const pipeline = row.selection.kind === 'pipeline' ? pipelines.get(row.selection.id) : undefined;
-        const status = pipeline && pipelineStatus(pipeline);
+        const terminal = row.selection.kind === 'lng' ? terminals.get(row.selection.id) : undefined;
+        const status = pipeline ? pipelineStatus(pipeline) : terminal && lngStatus(terminal);
         return (
           <li key={`${row.selection.kind}/${row.selection.id}`}>
             <button type="button" className="change" onClick={() => onSelect(row.selection)}>
@@ -483,7 +594,7 @@ export function AssetList({ rows, data, onSelect }: { rows: FilterRow[]; data: D
               <span className="change__text">
                 <span className="change__name">{row.name}</span>
                 <span className="change__what">
-                  {pipeline ? COMMODITY_PIPELINE[pipeline.commodity] : 'Chokepoint'}
+                  {pipeline ? COMMODITY_PIPELINE[pipeline.commodity] : terminal ? LNG_FACILITY[terminal.facility] : 'Chokepoint'}
                   {' · '}
                   {status ? (
                     <span className={`status status--${status}`}>{statusLabel(status)}</span>

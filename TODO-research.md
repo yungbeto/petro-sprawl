@@ -23,6 +23,13 @@ Items that couldn't be sourced or that need a decision. See CLAUDE.md: unsourced
 - **GEM statuses with no match in ours:** `shelved` and `mixed status` map to `unknown`, `mothballed` to `idle`, `retired` to `offline`. Cancelled and shelved rows are not imported.
 - One gas row (`gem-p5854`) lists its country as "Kuwait-Saudi Arabia" (the former neutral zone); it's kept with that country left out.
 
+## LNG terminals
+
+- **Status is GEM's alone so far.** Qatar's Ras Laffan trains show operating per GEM (last updated 2026-07-27), with no cited claim for how the war and the Hormuz restrictions affect loadings. Worth curating like the corridor pipelines: Ras Laffan, Das Island, and the import terminals Europe leans on.
+- East London LNG Terminal (proposed) has no country in GEM's file; it's imported with the country left empty.
+- 48 live units have no capacity in GEM's mtpa column. A terminal whose units all lack it shows capacity "Unknown"; one with some known shows only the known part.
+- GEM sometimes places units of one project apart; the terminal sits at its first unit with the terminal's status.
+
 ## Disruptions and reporting
 
 - Two sourced records so far (`data/curated/disruptions.json`): Hormuz, cited to CRS R45281 (2026-08-07), the Commons Library briefing CBP-10636 (2026-06-08) and News On AIR (2026-04-10); Bab el-Mandeb, cited to CNBC (2026-07-22) and Al Jazeera (2026-08-12). Both need later sources as events move: for example the IRGC closure declaration of 2026-10-26 and the IMO mine warning of 2026-10-27, which showed up only in secondary aggregators. Find primary or wire reports before adding them.

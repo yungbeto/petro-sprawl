@@ -1,0 +1,13 @@
+{
+  "recordedAt": "2026-10-29",
+  "file": "data/raw/gem/GEM-GGIT-LNG-Terminals-2026-10/GEM-GGIT-LNG-Terminals-2026-10.geojson",
+  "sha256": "216f29ca64e91733884d690508689c4b77ac2c3e20a225ff3368c5bdd7c701bf",
+  "units": 1268,
+  "terminals": 509,
+  "skipped": {
+    "excluded_status": 437
+  },
+  "unresolvedCountries": [
+    "(none given)"
+  ]
+}

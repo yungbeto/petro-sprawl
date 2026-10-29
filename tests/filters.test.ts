@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
 import { filterMatches, filterRows, matchCount, parseFilter } from '../src/lib/filters';
 import type { Evidence } from '../src/types';
-import { chokepoint, pipeline } from './fixtures';
+import { chokepoint, lngTerminal, pipeline } from './fixtures';
 
 const claim = (status: Evidence['status'], observedAt: string, sourceType: Evidence['sourceType'] = 'press'): Evidence => ({
   status,
@@ -29,6 +29,10 @@ const data: Datasets = {
     }),
     pipeline({ id: 'crude', name: 'Crude line', commodity: 'oil', sources: ['gem'], evidence: [claim('operating', '2024-01-01', 'dataset')] }),
   ],
+  lngTerminals: [
+    lngTerminal({ id: 'ras-laffan', name: 'Ras Laffan' }),
+    lngTerminal({ id: 'mothballed', name: 'Mothballed LNG', facility: 'import', evidence: [claim('idle', '2025-01-01', 'dataset')] }),
+  ],
 };
 
 describe('quick filters', () => {
@@ -38,8 +42,10 @@ describe('quick filters', () => {
     expect(parseFilter(null)).toBeNull();
   });
 
-  it('matches offline and idle pipelines', () => {
-    expect([...filterMatches('offline', data, now).pipelines].sort()).toEqual(['gem-a', 'ns1']);
+  it('matches offline and idle pipelines and LNG terminals', () => {
+    const offline = filterMatches('offline', data, now);
+    expect([...offline.pipelines].sort()).toEqual(['gem-a', 'ns1']);
+    expect([...offline.lng]).toEqual(['mothballed']);
   });
 
   it('matches unverified corridor claims, not metered ones or dataset rows', () => {
@@ -52,14 +58,18 @@ describe('quick filters', () => {
     expect([...oil.pipelines]).toEqual(['crude']);
     expect(oil.chokepoints.size).toBe(2);
     expect(matchCount(oil)).toBe(3);
-    expect(filterMatches('gas', data, now).chokepoints.size).toBe(0);
+    const gas = filterMatches('gas', data, now);
+    expect(gas.chokepoints.size).toBe(0);
+    expect([...gas.lng]).toEqual(['ras-laffan', 'mothballed']);
+    expect(oil.lng.size).toBe(0);
   });
 
-  it('lists chokepoints first, then corridor pipelines, then the rest', () => {
+  it('lists chokepoints first, then corridor pipelines, then the rest, then LNG terminals', () => {
     const rows = filterRows(
-      { pipelines: new Set(['gem-a', 'ns1']), chokepoints: new Set(['suez']) },
+      { pipelines: new Set(['gem-a', 'ns1']), chokepoints: new Set(['suez']), lng: new Set(['ras-laffan']) },
       data,
     );
-    expect(rows.map((r) => r.selection.id)).toEqual(['suez', 'ns1', 'gem-a']);
+    expect(rows.map((r) => r.selection.id)).toEqual(['suez', 'ns1', 'gem-a', 'ras-laffan']);
+    expect(rows.at(-1)?.selection.kind).toBe('lng');
   });
 });

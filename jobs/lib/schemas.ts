@@ -75,6 +75,32 @@ export const pipelineSchema = z.object({
   sources: z.array(z.string()).min(1),
 });
 
+export const lngTerminalSchema = z.object({
+  id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
+  name: z.string().min(1),
+  aliases: z.array(z.string()),
+  facility: z.enum(['export', 'import']),
+  country: z.string(),
+  point: lonLat,
+  pointApprox: z.boolean(),
+  floating: z.boolean(),
+  offshore: z.boolean(),
+  operator: z.string().optional(),
+  owners: z.array(z.object({ name: z.string(), sharePct: z.number().optional() })).optional(),
+  capacityMtpa: z.object({ operating: z.number().nonnegative(), planned: z.number().nonnegative() }),
+  units: z
+    .array(
+      z.object({
+        name: z.string().optional(),
+        status: evidenceSchema.shape.status,
+        capacityMtpa: z.number().positive().optional(),
+        startYear: z.number().int().optional(),
+      }),
+    )
+    .min(1),
+  evidence: z.array(evidenceSchema).min(1),
+});
+
 export const disruptionSchema = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
   assetKind: z.enum(['pipeline', 'chokepoint']),

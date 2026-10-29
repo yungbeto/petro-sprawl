@@ -35,6 +35,7 @@ export function App() {
     storage: selection?.kind === 'storage',
     basins: true,
     pipelines: true,
+    lng: true,
     chokepoints: true,
   }));
   const [focus, setFocus] = useState<FocusRequest | null>(null);
@@ -205,6 +206,7 @@ export function App() {
               storage: data.series.filter((s) => s.metric === 'storage_fill_pct').length,
               basins: data.basins.length,
               pipelines: data.pipelines.length,
+              lng: data.lngTerminals.length,
               chokepoints: data.chokepoints.length,
             }}
           />

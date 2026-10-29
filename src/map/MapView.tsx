@@ -72,6 +72,15 @@ function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>,
         .join(' · ');
     case 'pipeline':
       return picked.item.capacity ? formatCapacity(picked.item.capacity) : 'Capacity unknown';
+    case 'lng': {
+      const { operating, planned } = picked.item.capacityMtpa;
+      const facility = picked.item.facility === 'export' ? 'Export' : 'Import';
+      return operating
+        ? `${facility} · ${formatNumber(operating, 1)} mtpa operating`
+        : planned
+          ? `${facility} · ${formatNumber(planned, 1)} mtpa planned`
+          : `${facility} · capacity unknown`;
+    }
     case 'storage': {
       const fill = fills.get(picked.item.id);
       return fill != null ? `Storage ${formatNumber(fill, 1)}% full` : 'No storage data';
@@ -197,7 +206,7 @@ export function MapView(props: MapViewProps) {
     const map = mapRef.current;
     const resolved = focus && resolveSelection(focus.selection, data);
     if (!map || !resolved) return;
-    if (resolved.kind === 'chokepoint') {
+    if (resolved.kind === 'chokepoint' || resolved.kind === 'lng') {
       map.flyTo({ center: resolved.item.point, zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM) });
     } else {
       map.fitBounds(boundsOf(resolved.item.geometry), { padding: FIT_PADDING, maxZoom: 8 });

@@ -3,7 +3,7 @@ import type { DatasetMeta } from '../types';
 import { EMPTY_DATASETS, type Datasets } from '../lib/data';
 import { withMeasuredEvidence } from '../lib/evidence';
 
-const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'countries', 'chokepoint-transits', 'gas-flows', 'gas-storage', 'disruptions'] as const;
+const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'countries', 'chokepoint-transits', 'gas-flows', 'gas-storage', 'disruptions'] as const;
 
 async function fetchJson<T>(path: string): Promise<T | null> {
   try {
@@ -47,6 +47,7 @@ export function useDatasets(): DatasetsState {
           chokepoints: get('chokepoints') as Datasets['chokepoints'],
           // Measured flow goes first in each linked pipeline's evidence, so it sets the current status.
           pipelines: withMeasuredEvidence(get('pipelines') as Datasets['pipelines'], series),
+          lngTerminals: get('lng-terminals') as Datasets['lngTerminals'],
           countries: get('countries') as Datasets['countries'],
           series,
           disruptions: get('disruptions') as Datasets['disruptions'],

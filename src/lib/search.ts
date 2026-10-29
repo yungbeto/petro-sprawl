@@ -1,4 +1,4 @@
-// Type-ahead search across pipelines, chokepoints, basins and countries. Pure.
+// Type-ahead search across pipelines, chokepoints, basins, LNG terminals and countries. Pure.
 
 import type { Selection } from '../app/urlState';
 import { SEARCH, agsiSeriesId } from './config';
@@ -66,6 +66,15 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
       ),
     ),
     ...data.basins.map((b) => entry({ kind: 'basin', id: b.id }, b.name, 'Basin', [], 3)),
+    ...data.lngTerminals.map((t) =>
+      entry(
+        { kind: 'lng', id: t.id },
+        t.name,
+        `LNG ${t.facility} terminal${t.country ? ` · ${t.country}` : ''}`,
+        t.aliases,
+        3,
+      ),
+    ),
   ];
 }
 

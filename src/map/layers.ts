@@ -1,24 +1,33 @@
 import { GeoJsonLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
 import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon, Position } from 'geojson';
 import type { Layer } from '@deck.gl/core';
-import type { AssetStatus, Basin, Chokepoint, Country, Pipeline } from '../types';
+import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { CHOKEPOINT_RADIUS, FILTERS, PIPELINE_WIDTH } from '../lib/config';
+import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, PIPELINE_WIDTH } from '../lib/config';
 import type { FilterMatches } from '../lib/filters';
-import { chokepointRadiusPx, flowFillRadiusPx, flowLineWidthPx, pipelineStatus, pipelineWidthPx } from '../lib/encoding';
+import {
+  chokepointRadiusPx,
+  flowFillRadiusPx,
+  flowLineWidthPx,
+  lngRadiusPx,
+  lngStatus,
+  pipelineStatus,
+  pipelineWidthPx,
+} from '../lib/encoding';
 import type { ChokepointFlow, FlowBand } from '../lib/flow';
 import { mixColors, withAlpha } from '../lib/color';
 import type { MapColors } from './colors';
 
-export type LayerId = 'storage' | 'basins' | 'pipelines' | 'chokepoints';
+export type LayerId = 'storage' | 'basins' | 'pipelines' | 'lng' | 'chokepoints';
 export type LayerVisibility = Record<LayerId, boolean>;
 
 export type PickedObject =
   | { kind: 'basin'; item: Basin }
   | { kind: 'pipeline'; item: Pipeline }
   | { kind: 'chokepoint'; item: Chokepoint }
-  | { kind: 'storage'; item: Country };
+  | { kind: 'storage'; item: Country }
+  | { kind: 'lng'; item: LngTerminal };
 
 interface PipelinePath {
   pipeline: Pipeline;
@@ -95,6 +104,8 @@ export function buildLayers({
     !highlight || highlight.pipelines.has(id) || isSelected('pipeline', id) ? 1 : FILTERS.fadeAlpha;
   const chokepointFade = (id: string) =>
     !highlight || highlight.chokepoints.has(id) || isSelected('chokepoint', id) ? 1 : FILTERS.fadeAlpha;
+  const lngFade = (id: string) => (!highlight || highlight.lng.has(id) || isSelected('lng', id) ? 1 : FILTERS.fadeAlpha);
+  const importTerminals = data.lngTerminals.filter((t) => t.facility === 'import');
 
   const basinFeatures: FeatureCollection<Polygon | MultiPolygon, Basin> = {
     type: 'FeatureCollection',
@@ -208,6 +219,49 @@ export function buildLayers({
       jointRounded: true,
       updateTriggers: { getWidth: [pipelineShares], getColor: [colors] },
     }),
+    // LNG terminals: a dot colored by status, area by capacity; import terminals have a hollow centre.
+    new ScatterplotLayer<LngTerminal>({
+      id: 'lng-selection',
+      data: data.lngTerminals.filter((t) => isSelected('lng', t.id)),
+      visible: visibility.lng,
+      getPosition: (t) => t.point,
+      getRadius: (t) => lngRadiusPx(t) + LNG_RADIUS.selectionGapPx,
+      radiusUnits: 'pixels',
+      stroked: true,
+      filled: false,
+      getLineColor: colors.selection,
+      getLineWidth: 2,
+      lineWidthUnits: 'pixels',
+      updateTriggers: { getLineColor: [colors] },
+    }),
+    new ScatterplotLayer<LngTerminal>({
+      id: 'lng',
+      data: data.lngTerminals,
+      visible: visibility.lng,
+      pickable: true,
+      getPosition: (t) => t.point,
+      getRadius: lngRadiusPx,
+      radiusUnits: 'pixels',
+      stroked: true,
+      filled: true,
+      getFillColor: (t) => withAlpha(statusColor(lngStatus(t), colors), lngFade(t.id)),
+      getLineColor: (t) => withAlpha(colors.halo, lngFade(t.id)),
+      getLineWidth: 1,
+      lineWidthUnits: 'pixels',
+      autoHighlight: true,
+      highlightColor: withAlpha(colors.selection, 0.5),
+      updateTriggers: { getFillColor: [colors, highlight, selection], getLineColor: [colors, highlight, selection] },
+    }),
+    new ScatterplotLayer<LngTerminal>({
+      id: 'lng-import-centres',
+      data: importTerminals,
+      visible: visibility.lng,
+      getPosition: (t) => t.point,
+      getRadius: (t) => lngRadiusPx(t) * LNG_RADIUS.centreShare,
+      radiusUnits: 'pixels',
+      getFillColor: (t) => withAlpha(colors.halo, lngFade(t.id)),
+      updateTriggers: { getFillColor: [colors, highlight, selection] },
+    }),
     // Halo separates the ring from pipelines passing underneath.
     new ScatterplotLayer<Chokepoint>({
       id: 'chokepoint-halo',
@@ -285,6 +339,8 @@ export function toPicked(layerId: string | undefined, object: unknown): PickedOb
       return { kind: 'chokepoint', item: object as Chokepoint };
     case 'storage':
       return { kind: 'storage', item: (object as Feature<Polygon | MultiPolygon, Country>).properties };
+    case 'lng':
+      return { kind: 'lng', item: object as LngTerminal };
     default:
       return null;
   }

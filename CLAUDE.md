@@ -32,6 +32,7 @@ Node 22. Package manager: npm.
 | `npm run import:basins` | Manual: USGS provinces from `data/raw/usgs/` to `public/data/basins.json`, tagged with countries from Natural Earth in `data/raw/naturalearth/`; report in `data/reports/import-basins.json` |
 | `npm run import:countries` | Manual: Natural Earth country outlines in the theater to `public/data/countries.json` (storage layer) |
 | `npm run import:gem` | Manual: GEM gas and oil pipeline GeoJSON from `data/raw/gem/` to `data/derived/gem-pipelines.json`; skip counts in `data/reports/import-gem.json`. Run `build:curated` after it |
+| `npm run import:lng` | Manual: GEM LNG terminals (one row per unit) from `data/raw/gem/` to `public/data/lng-terminals.json`, grouped into terminals; report in `data/reports/import-lng.json` |
 | `npm run import:chokepoints` | PortWatch locations plus EIA volumes (from `src/lib/config.ts`) to `public/data/chokepoints.json` |
 
 Scheduled jobs run every 6 hours in `.github/workflows/data.yml` and commit `public/data` when it changes. Every job writes through `publishDataset` in `jobs/lib/output.ts`: new data must pass its zod schema or the previous file stays and the failure is recorded in `meta/<id>.json`.

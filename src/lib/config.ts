@@ -90,8 +90,14 @@ export const PIPELINE_WIDTH = {
 /** Chokepoint ring radius: area proportional to EIA volume. px per sqrt(mb/d). */
 export const CHOKEPOINT_RADIUS = { scale: 4, minPx: 5, haloPx: 6 } as const;
 
+/**
+ * LNG terminal dot radius: area proportional to capacity in operation, or planned capacity when
+ * nothing operates yet. px per sqrt(mtpa). Import terminals get a hollow centre of centreShare.
+ */
+export const LNG_RADIUS = { scale: 1.4, minPx: 4, maxPx: 10, centreShare: 0.45, selectionGapPx: 4 } as const;
+
 export const MAP_ATTRIBUTION = [
-  'Pipelines: <a href="https://globalenergymonitor.org/">Global Energy Monitor</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>)',
+  'Pipelines and LNG terminals: <a href="https://globalenergymonitor.org/">Global Energy Monitor</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>)',
   'Basins: <a href="https://www.sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3">USGS</a>',
   'Chokepoints: <a href="https://portwatch.imf.org/">IMF PortWatch</a>, <a href="https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints">EIA</a>',
   'Gas flows: <a href="https://transparency.entsog.eu/">ENTSOG</a>',
@@ -180,6 +186,7 @@ export const DATASET_FRESHNESS: Record<
   'gas-storage': { label: 'Gas storage', scheduled: true, staleAfterHours: 36, publisher: 'GIE AGSI+' },
   countries: { label: 'Countries', scheduled: false, publisher: 'Natural Earth' },
   pipelines: { label: 'Pipelines', scheduled: false, publisher: 'Global Energy Monitor' },
+  'lng-terminals': { label: 'LNG terminals', scheduled: false, publisher: 'Global Energy Monitor' },
   chokepoints: { label: 'Chokepoints', scheduled: false, publisher: 'IMF PortWatch and EIA' },
   basins: { label: 'Basins', scheduled: false, publisher: 'USGS' },
   disruptions: { label: 'Disruptions', scheduled: false },

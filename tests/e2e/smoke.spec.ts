@@ -113,6 +113,26 @@ test('a basin link selects and shows its detail', async ({ page }) => {
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/basin.png` });
 });
 
+test('an LNG terminal link shows its units, and search and the layer list know the layer', async ({ page }) => {
+  await page.goto('/?sel=lng/gem-t100000130594-export');
+  const panel = page.getByLabel('Panel', { exact: true });
+  await expect(panel.getByRole('heading', { name: 'QatarEnergy LNG (N)' })).toBeVisible();
+  await expect(panel.getByText('LNG export terminal')).toBeVisible();
+  await expect(panel.locator('dt', { hasText: 'Operating' }).locator('xpath=following-sibling::dd[1]')).toContainText('40.8 mtpa');
+  await expect(panel.getByRole('heading', { name: 'Units' })).toBeVisible();
+  await expect(panel.getByRole('row')).toHaveCount(5);
+
+  await page.goto('/');
+  const search = page.getByRole('combobox');
+  await search.fill('wilhelmshaven');
+  await page.getByRole('option', { name: /Wilhelmshaven FSRU/ }).click();
+  await expect(page).toHaveURL(/sel=lng%2Fgem-t100000130458-import|sel=lng\/gem-t100000130458-import/);
+  await expect(page.getByText('LNG import terminal · floating')).toBeVisible();
+
+  await openLayers(page);
+  await expect(page.getByRole('checkbox', { name: /LNG terminals/ })).toBeChecked();
+});
+
 test('the layers button opens the list; L, Esc and an outside click close it', async ({ page }) => {
   await page.goto('/');
   const chokepoints = page.getByRole('checkbox', { name: /Chokepoints/ });
@@ -378,8 +398,10 @@ test('every source is attributed on the map and in the menu', async ({ page }) =
   await page.getByRole('button', { name: 'Menu' }).click();
   const sources = page.getByRole('dialog', { name: 'Menu' }).locator('.sources');
   for (const name of ['USGS', 'IMF PortWatch', 'Natural Earth', 'ENTSOG Transparency Platform', 'GIE AGSI+', 'Global Energy Monitor', 'OpenStreetMap contributors']) {
-    await expect(sources.getByRole('link', { name, exact: true })).toBeVisible();
+    await expect(sources.getByRole('link', { name, exact: true }).first()).toBeVisible();
   }
+  // One row per dataset: GEM is credited for both pipelines and LNG terminals.
+  await expect(sources.getByRole('listitem').filter({ hasText: /^LNG terminals:/ })).toContainText('Global Energy Monitor');
 });
 
 test('the summary is ready within two seconds on a warm cache', async ({ page }) => {

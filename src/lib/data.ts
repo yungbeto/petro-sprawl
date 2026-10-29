@@ -1,4 +1,4 @@
-import type { Basin, Chokepoint, Country, DatasetMeta, Disruption, ObservationSeries, Pipeline } from '../types';
+import type { Basin, Chokepoint, Country, DatasetMeta, Disruption, LngTerminal, ObservationSeries, Pipeline } from '../types';
 import { chokepointFlow, type ChokepointFlow } from './flow';
 import type { Selection } from '../app/urlState';
 import { lineTouchesPolygon, pointInPolygon } from './geo';
@@ -7,6 +7,7 @@ export interface Datasets {
   basins: Basin[];
   chokepoints: Chokepoint[];
   pipelines: Pipeline[];
+  lngTerminals: LngTerminal[];
   countries: Country[];
   series: ObservationSeries[];
   disruptions: Disruption[];
@@ -17,6 +18,7 @@ export const EMPTY_DATASETS: Datasets = {
   basins: [],
   chokepoints: [],
   pipelines: [],
+  lngTerminals: [],
   countries: [],
   series: [],
   disruptions: [],
@@ -48,7 +50,8 @@ export type Resolved =
   | { kind: 'pipeline'; item: Pipeline }
   | { kind: 'chokepoint'; item: Chokepoint }
   | { kind: 'basin'; item: Basin }
-  | { kind: 'storage'; item: Country };
+  | { kind: 'storage'; item: Country }
+  | { kind: 'lng'; item: LngTerminal };
 
 /** Finds the selected item in the loaded data, or null if it isn't there. */
 export function resolveSelection(selection: Selection | null, data: Datasets): Resolved | null {
@@ -70,6 +73,10 @@ export function resolveSelection(selection: Selection | null, data: Datasets): R
       const item = data.countries.find((c) => c.id.toLowerCase() === selection.id);
       return item ? { kind: 'storage', item } : null;
     }
+    case 'lng': {
+      const item = data.lngTerminals.find((t) => t.id === selection.id);
+      return item ? { kind: 'lng', item } : null;
+    }
     default:
       return null;
   }
@@ -77,6 +84,10 @@ export function resolveSelection(selection: Selection | null, data: Datasets): R
 
 export function chokepointsInBasin(basin: Basin, chokepoints: Chokepoint[]): Chokepoint[] {
   return chokepoints.filter((c) => pointInPolygon(c.point, basin.geometry));
+}
+
+export function lngTerminalsInBasin(basin: Basin, terminals: LngTerminal[]): LngTerminal[] {
+  return terminals.filter((t) => pointInPolygon(t.point, basin.geometry));
 }
 
 export function pipelinesTouchingBasin(basin: Basin, pipelines: Pipeline[]): Pipeline[] {

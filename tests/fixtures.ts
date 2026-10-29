@@ -1,4 +1,4 @@
-import type { Basin, Chokepoint, Pipeline } from '../src/types';
+import type { Basin, Chokepoint, LngTerminal, Pipeline } from '../src/types';
 
 export const basin: Basin = {
   id: 'usgs-1',
@@ -34,5 +34,21 @@ export const pipeline = (overrides: Partial<Pipeline> = {}): Pipeline => ({
   geometryApprox: false,
   evidence: [],
   sources: [],
+  ...overrides,
+});
+
+export const lngTerminal = (overrides: Partial<LngTerminal> = {}): LngTerminal => ({
+  id: 'gem-t1-export',
+  name: 'Test LNG',
+  aliases: [],
+  facility: 'export',
+  country: 'QA',
+  point: [51.5, 25.9],
+  pointApprox: false,
+  floating: false,
+  offshore: false,
+  capacityMtpa: { operating: 10, planned: 0 },
+  units: [{ status: 'operating', capacityMtpa: 10 }],
+  evidence: [{ status: 'operating', sourceType: 'dataset', observedAt: '2026-09-01', recordedAt: '2026-10-28' }],
   ...overrides,
 });

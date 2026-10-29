@@ -1,7 +1,7 @@
 // Visual encodings that depend only on the data: line widths, ring sizes, current status.
 
-import type { AssetStatus, Chokepoint, Pipeline } from '../types';
-import { CHOKEPOINT_RADIUS, PIPELINE_WIDTH } from './config';
+import type { AssetStatus, Chokepoint, LngTerminal, Pipeline } from '../types';
+import { CHOKEPOINT_RADIUS, LNG_RADIUS, PIPELINE_WIDTH } from './config';
 
 export function pipelineStatus(pipeline: Pipeline): AssetStatus {
   return pipeline.evidence[0]?.status ?? 'unknown';
@@ -24,6 +24,17 @@ export function pipelineWidthPx(pipeline: Pipeline): number {
 
 export function chokepointRadiusPx(chokepoint: Chokepoint): number {
   return Math.max(CHOKEPOINT_RADIUS.minPx, Math.sqrt(chokepoint.eiaReferenceMbd) * CHOKEPOINT_RADIUS.scale);
+}
+
+export function lngStatus(terminal: LngTerminal): AssetStatus {
+  return terminal.evidence[0]?.status ?? 'unknown';
+}
+
+/** Dot radius from capacity in operation, or from planned capacity when nothing operates yet. */
+export function lngRadiusPx(terminal: LngTerminal): number {
+  const { scale, minPx, maxPx } = LNG_RADIUS;
+  const mtpa = terminal.capacityMtpa.operating || terminal.capacityMtpa.planned;
+  return Math.min(maxPx, Math.max(minPx, Math.sqrt(mtpa) * scale));
 }
 
 /** Largest flow index the inner disk shows; beyond this it stays at this size. */

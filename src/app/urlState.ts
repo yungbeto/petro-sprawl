@@ -4,7 +4,7 @@
 import { CAMERA_PRECISION } from '../lib/config';
 import { parseFilter, type FilterId } from '../lib/filters';
 
-export const SELECTION_KINDS = ['pipeline', 'chokepoint', 'basin', 'storage'] as const;
+export const SELECTION_KINDS = ['pipeline', 'chokepoint', 'basin', 'storage', 'lng'] as const;
 export type SelectionKind = (typeof SELECTION_KINDS)[number];
 
 export interface Selection {

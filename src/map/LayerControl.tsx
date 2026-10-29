@@ -5,6 +5,7 @@ const LAYERS: { id: LayerId; label: string }[] = [
   { id: 'storage', label: 'EU gas storage' },
   { id: 'basins', label: 'Basins' },
   { id: 'pipelines', label: 'Pipelines' },
+  { id: 'lng', label: 'LNG terminals' },
   { id: 'chokepoints', label: 'Chokepoints' },
 ];
 

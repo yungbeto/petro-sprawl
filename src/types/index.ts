@@ -43,6 +43,39 @@ export interface Pipeline {
   sources: string[];
 }
 
+/** One unit of an LNG terminal (a liquefaction train or a regasification unit), as GEM lists it. */
+export interface LngUnit {
+  name?: string;
+  status: AssetStatus;
+  /** GEM's capacity in million tonnes a year, when it gives one. */
+  capacityMtpa?: number;
+  startYear?: number;
+}
+
+/**
+ * GEM LNG terminal: the units of one GEM project and facility type, grouped. Added after v0.1
+ * (SPEC section 6); status comes from the units, as a dataset claim.
+ */
+export interface LngTerminal {
+  id: string;
+  name: string;
+  aliases: string[];
+  facility: 'export' | 'import';
+  /** ISO code, or empty when GEM's name for the place has none. */
+  country: string;
+  point: [number, number];
+  /** GEM marks the location approximate. */
+  pointApprox: boolean;
+  floating: boolean;
+  offshore: boolean;
+  operator?: string;
+  owners?: { name: string; sharePct?: number }[];
+  /** Million tonnes a year: units operating, and units under construction or proposed. */
+  capacityMtpa: { operating: number; planned: number };
+  units: LngUnit[];
+  evidence: Evidence[];
+}
+
 export type ChokepointId = 'hormuz' | 'malacca' | 'suez' | 'babelm' | 'danish' | 'turkish' | 'panama';
 
 export interface Chokepoint {

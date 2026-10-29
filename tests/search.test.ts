@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
 import { buildSearchIndex, matchScore, normalize, search } from '../src/lib/search';
-import { basin, chokepoint, pipeline } from './fixtures';
+import { basin, chokepoint, lngTerminal, pipeline } from './fixtures';
 
 const data: Datasets = {
   ...EMPTY_DATASETS,
@@ -22,6 +22,7 @@ const data: Datasets = {
   countries: [{ id: 'DE', name: 'Germany', geometry: basin.geometry }],
   series: [{ id: 'agsi-de', metric: 'storage_fill_pct', unit: '%', points: [] }],
   basins: [{ ...basin, name: 'Zagros Fold Belt' }],
+  lngTerminals: [lngTerminal({ id: 'gem-t1-export', name: 'QatarEnergy LNG (N)', aliases: ['Ras Laffan'] })],
 };
 
 const index = buildSearchIndex(data);
@@ -49,6 +50,7 @@ describe('search', () => {
     expect(ids('zagros')).toEqual(['basin/usgs-1']);
     expect(ids('bratstvo')).toEqual(['pipeline/urengoy-pomary-uzhhorod']);
     expect(ids('ger')).toEqual(['storage/de']);
+    expect(ids('ras laffan')).toEqual(['lng/gem-t1-export']);
     expect(ids('')).toEqual([]);
   });
 
@@ -56,6 +58,7 @@ describe('search', () => {
     const byId = new Map(index.map((e) => [e.selection.id, e.detail]));
     expect(byId.get('urengoy-pomary-uzhhorod')).toBe('Gas pipeline · RU → UA → SK');
     expect(byId.get('de')).toBe('Country · gas storage');
+    expect(byId.get('gem-t1-export')).toBe('LNG export terminal · QA');
   });
 
   it('caps the result count', () => {
