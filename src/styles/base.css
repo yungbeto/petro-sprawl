@@ -65,6 +65,9 @@ kbd {
 
 .map {
   position: relative;
+  /* Its own stacking context: the deck.gl canvas sits in a MapLibre control container at z-index 2,
+     and would otherwise draw over the chips and search bar floating above the map. */
+  isolation: isolate;
   min-width: 0;
   height: 100%;
   background: var(--bg);
