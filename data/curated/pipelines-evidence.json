@@ -472,5 +472,81 @@
         "recordedAt": "2026-10-28"
       }
     ]
+  },
+  {
+    "id": "cpc",
+    "name": "Caspian Pipeline Consortium (CPC)",
+    "aliases": [
+      "CPC",
+      "Tengiz–Novorossiysk"
+    ],
+    "commodity": "oil",
+    "fromCountry": "KZ",
+    "toCountry": "RU",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0646"
+    ],
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "A drone incident briefly halted loading at two moorings on 8 September; loading resumed after the Energy Ministry found no issues, with no restrictions on Kazakh shippers (Times of Central Asia).",
+        "url": "https://timesca.com/kazakhstan-oil-exports-routes-beyond-cpc/",
+        "observedAt": "2026-09-10",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "operating",
+        "sourceType": "government",
+        "statement": "Kazakhstan's energy minister said oil exports through CPC are operating normally, after attacks in January, June and July cost about 3.5 million tons of output (Pipeline & Gas Journal).",
+        "url": "https://pgjonline.com/news/2026/august/kazakhstan-cuts-2026-oil-production-goal-after-ukrainian-cpc-strikes",
+        "observedAt": "2026-08-25",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "reduced",
+        "sourceType": "operator",
+        "statement": "After two more tankers were attacked on 30 July, CPC said oil loading had stopped while pipeline facilities kept operating normally (Times of Central Asia).",
+        "url": "https://timesca.com/breaking-cpc-halts-oil-loadings-again-after-two-more-tankers-attacked-near-novorossiysk/",
+        "observedAt": "2026-08-03",
+        "recordedAt": "2026-10-29"
+      }
+    ]
+  },
+  {
+    "id": "btc",
+    "name": "Baku–Tbilisi–Ceyhan (BTC)",
+    "aliases": [
+      "BTC",
+      "Baku-Tbilisi-Ceyhan"
+    ],
+    "commodity": "oil",
+    "fromCountry": "AZ",
+    "toCountry": "TR",
+    "transitCountries": [
+      "GE"
+    ],
+    "gem": [
+      "gem-p0644"
+    ],
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "BTC carried 18.857 million tons of oil in January to September 2026 (Trend).",
+        "url": "https://www.trend.az/azerbaijan/4235604.html",
+        "observedAt": "2026-10-16",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "operating",
+        "sourceType": "government",
+        "statement": "Azerbaijan's State Statistical Committee: 16.75 million tons moved through BTC in January to August 2026, 8.8% less than a year earlier; 18.1% came from Turkmenistan and Kazakhstan (Report.az).",
+        "url": "https://report.az/en/energy/azerbaijan-transports-16-7-million-tons-of-oil-via-btc-pipeline",
+        "observedAt": "2026-09-17",
+        "recordedAt": "2026-10-29"
+      }
+    ]
   }
 ]

@@ -248,5 +248,35 @@
       }
     ],
     "recordedAt": "2026-10-29"
+  },
+  {
+    "id": "cpc-2026-tanker-attacks",
+    "assetKind": "pipeline",
+    "assetId": "cpc",
+    "startedAt": "2026-07",
+    "endedAt": "2026-08",
+    "cause": "conflict",
+    "summary": "Attacks on tankers at CPC's Novorossiysk terminal stopped loadings more than once in July 2026; after two more tankers were hit on 30 July, CPC said loading had stopped while the pipeline kept running. By 25 August Kazakhstan's energy minister said exports were operating normally, and put output lost to attacks in January, June and July at about 3.5 million tons. A drone incident briefly halted loading again on 8 September.",
+    "sources": [
+      {
+        "publisher": "Times of Central Asia",
+        "title": "CPC halts oil loadings again after two more tankers attacked near Novorossiysk",
+        "url": "https://timesca.com/breaking-cpc-halts-oil-loadings-again-after-two-more-tankers-attacked-near-novorossiysk/",
+        "publishedAt": "2026-08-03"
+      },
+      {
+        "publisher": "Pipeline & Gas Journal",
+        "title": "Kazakhstan cuts 2026 oil production goal after Ukrainian CPC strikes",
+        "url": "https://pgjonline.com/news/2026/august/kazakhstan-cuts-2026-oil-production-goal-after-ukrainian-cpc-strikes",
+        "publishedAt": "2026-08-25"
+      },
+      {
+        "publisher": "Times of Central Asia",
+        "title": "Kazakhstan seeks oil export alternatives after latest CPC disruption",
+        "url": "https://timesca.com/kazakhstan-oil-exports-routes-beyond-cpc/",
+        "publishedAt": "2026-09-10"
+      }
+    ],
+    "recordedAt": "2026-10-29"
   }
 ]

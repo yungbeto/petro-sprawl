@@ -255,6 +255,26 @@
           "reason": "listed"
         }
       ]
+    },
+    {
+      "curatedId": "cpc",
+      "rows": [
+        {
+          "gemId": "gem-p0646",
+          "gemName": "Caspian Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "btc",
+      "rows": [
+        {
+          "gemId": "gem-p0644",
+          "gemName": "Baku-Tbilisi-Ceyhan Pipeline",
+          "reason": "listed"
+        }
+      ]
     }
   ],
   "missing": [],
