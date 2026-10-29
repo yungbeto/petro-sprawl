@@ -196,7 +196,6 @@ export const POINT_FOCUS_ZOOM = 6;
 
 export const STORAGE_KEYS = {
   theme: 'et.theme',
-  panelCollapsed: 'et.panelCollapsed',
   visits: 'et.visits',
 } as const;
 

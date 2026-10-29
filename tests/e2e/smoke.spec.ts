@@ -4,20 +4,38 @@ const SHOTS = process.env.SCREENSHOT_DIR;
 
 test('shows the theater map with the panel', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Energy terminal' })).toBeVisible();
+  await expect(page.getByRole('search')).toBeVisible();
   await expect(page.locator('.maplibregl-canvas')).toBeVisible();
   // Attribution appears once the basemap style has loaded.
   await expect(page.locator('.maplibregl-ctrl-attrib')).toContainText('OpenStreetMap', { timeout: 15_000 });
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/light.png` });
 });
 
-test('panel collapses and expands', async ({ page }) => {
+test('the panel minimizes to a floating search and reopens on a selection', async ({ page }) => {
   await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Theater' })).toBeVisible();
   await page.getByRole('button', { name: 'Collapse panel' }).click();
-  await expect(page.getByRole('button', { name: 'Expand panel' })).toBeVisible();
-  expect((await page.locator('aside').boundingBox())?.width).toBeLessThan(60);
+  await expect(page.getByLabel('Panel', { exact: true })).toBeHidden();
+  const search = page.getByRole('combobox', { name: 'Search' });
+  await expect(search).toBeVisible();
+  expect((await page.locator('.map').boundingBox())?.x).toBe(0);
+
+  // / focuses the floating search; picking a result opens the panel on its detail.
+  await page.keyboard.press('/');
+  await expect(search).toBeFocused();
+  await search.fill('turkstream');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { name: 'TurkStream' })).toBeVisible();
+
   await page.keyboard.press('[');
+  await expect(page.getByLabel('Panel', { exact: true })).toBeHidden();
+  await page.getByRole('button', { name: 'Expand panel' }).click();
   await expect(page.getByRole('button', { name: 'Collapse panel' })).toBeVisible();
+
+  // A new visit always opens on the summary.
+  await page.keyboard.press('[');
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Theater' })).toBeVisible();
 });
 
 for (const [scheme, background] of [

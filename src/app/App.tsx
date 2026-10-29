@@ -2,9 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { MapView, type FocusRequest } from '../map/MapView';
 import { LayerControl } from '../map/LayerControl';
 import type { LayerId, LayerVisibility } from '../map/layers';
-import { Panel } from '../panel/Panel';
-import { STORAGE_KEYS } from '../lib/config';
-import { readStorage, writeStorage } from '../lib/storage';
+import { Panel, PanelIcon } from '../panel/Panel';
+import { Search } from '../panel/Search';
 import { useTheme } from './useTheme';
 import { useUrlState } from './useUrlState';
 import { useDatasets } from './useDatasets';
@@ -21,7 +20,8 @@ export function App() {
   const { preference, setPreference, theme } = useTheme();
   const { data, loaded, failed } = useDatasets();
   const visit = useVisitChanges(data, loaded, failed);
-  const [collapsed, setCollapsed] = useState(() => readStorage(STORAGE_KEYS.panelCollapsed) === '1');
+  // Every visit opens on the summary; minimizing lasts until something is selected.
+  const [collapsed, setCollapsed] = useState(false);
   const [layersOpen, setLayersOpen] = useState(true);
   // Storage fills whole countries, so it starts off unless a shared link selects a country.
   const [visibility, setVisibility] = useState<LayerVisibility>(() => ({
@@ -42,6 +42,7 @@ export function App() {
   const selectAndFocus = useCallback(
     (next: Selection) => {
       select(next);
+      setCollapsed(false);
       setFocus((prev) => ({ selection: next, nonce: (prev?.nonce ?? 0) + 1 }));
     },
     [select],
@@ -53,12 +54,7 @@ export function App() {
     // Runs once, when data first loads.
   }, [loaded]);
 
-  const toggleCollapsed = useCallback(() => {
-    setCollapsed((value) => {
-      writeStorage(STORAGE_KEYS.panelCollapsed, value ? null : '1');
-      return !value;
-    });
-  }, []);
+  const toggleCollapsed = useCallback(() => setCollapsed((value) => !value), []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -69,9 +65,8 @@ export function App() {
       }
       if (event.key === '/') {
         event.preventDefault();
-        if (collapsed) toggleCollapsed();
-        // Wait a frame so the input exists after expanding.
-        requestAnimationFrame(() => searchRef.current?.focus());
+        // The search is there whether the panel is open or minimized.
+        searchRef.current?.focus();
       } else if (event.key === '[') {
         toggleCollapsed();
       } else if (event.key === 'l' || event.key === 'L') {
@@ -82,7 +77,7 @@ export function App() {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [back, collapsed, toggleCollapsed]);
+  }, [back, toggleCollapsed]);
 
   const setLayerVisible = useCallback((id: LayerId, visible: boolean) => {
     setVisibility((v) => ({ ...v, [id]: visible }));
@@ -90,6 +85,21 @@ export function App() {
 
   return (
     <div className="app" data-panel-collapsed={collapsed}>
+      {/* One search bar for both states, floating top left, so it never moves when the panel opens or closes. */}
+      <div className="search-bar" role="search">
+        {collapsed && (
+          <button
+            type="button"
+            className="icon-button"
+            onClick={toggleCollapsed}
+            aria-label="Expand panel"
+            title="Expand panel  ["
+          >
+            <PanelIcon />
+          </button>
+        )}
+        <Search data={data} onSelect={selectAndFocus} inputRef={searchRef} />
+      </div>
       <Panel
         collapsed={collapsed}
         onToggleCollapsed={toggleCollapsed}
@@ -102,7 +112,6 @@ export function App() {
         visit={visit}
         themePreference={preference}
         onThemePreferenceChange={setPreference}
-        searchRef={searchRef}
       />
       <MapView
         theme={theme}

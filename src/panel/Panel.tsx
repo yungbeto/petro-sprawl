@@ -1,4 +1,3 @@
-import type { Ref } from 'react';
 import type { Selection, SelectionKind } from '../app/urlState';
 import { THEME_PREFERENCES, type ThemePreference } from '../lib/theme';
 import { resolveSelection, type Datasets } from '../lib/data';
@@ -6,7 +5,6 @@ import { formatDate } from '../lib/format';
 import { datasetFreshness, formatAge, formatUtcClock, overallFreshness, sortFreshness, type Freshness } from '../lib/freshness';
 import { useNow } from '../app/useNow';
 import type { VisitChanges } from '../app/useVisitChanges';
-import { Search } from './Search';
 import { Summary } from './Summary';
 import { BasinDetail, ChokepointDetail, PipelineDetail, StorageDetail } from './details';
 
@@ -22,7 +20,6 @@ interface PanelProps {
   visit: VisitChanges | null;
   themePreference: ThemePreference;
   onThemePreferenceChange: (preference: ThemePreference) => void;
-  searchRef: Ref<HTMLInputElement>;
 }
 
 const KIND_LABELS: Record<SelectionKind, string> = {
@@ -43,38 +40,21 @@ export function Panel(props: PanelProps) {
   const now = useNow();
   const freshness = sortFreshness(props.data.meta.map((m) => datasetFreshness(m, now)));
 
-  if (collapsed) {
-    return (
-      <aside className="panel panel--collapsed" aria-label="Panel (collapsed)">
-        <button
-          type="button"
-          className="icon-button"
-          onClick={onToggleCollapsed}
-          aria-label="Expand panel"
-          title="Expand panel  ["
-        >
-          <ChevronIcon direction="right" />
-        </button>
-      </aside>
-    );
-  }
+  if (collapsed) return null;
 
   return (
     <aside className="panel" aria-label="Panel">
-      <header className="panel__header">
-        <h1 className="panel__title">Energy terminal</h1>
-        <button
-          type="button"
-          className="icon-button"
-          onClick={onToggleCollapsed}
-          aria-label="Collapse panel"
-          title="Collapse panel  ["
-        >
-          <ChevronIcon direction="left" />
-        </button>
-      </header>
-
-      <Search data={props.data} onSelect={props.onSelect} inputRef={props.searchRef} />
+      <button
+        type="button"
+        className="panel__tab"
+        onClick={onToggleCollapsed}
+        aria-label="Collapse panel"
+        title="Collapse panel  ["
+      >
+        <ChevronIcon direction="left" />
+      </button>
+      {/* The floating search bar sits over the top of the panel; the name is for screen readers. */}
+      <h1 className="visually-hidden">Energy terminal</h1>
 
       <div className="panel__body">
         {props.selection ? (
@@ -182,6 +162,16 @@ function ChevronIcon({ direction }: { direction: 'left' | 'right' }) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+    </svg>
+  );
+}
+
+/** A window with a sidebar: the panel itself. */
+export function PanelIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <rect x="2" y="3" width="12" height="10" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M6.5 3v10" stroke="currentColor" strokeWidth="1.5" />
     </svg>
   );
 }

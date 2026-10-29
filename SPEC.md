@@ -62,7 +62,7 @@ Scope is one theater: the oil and gas corridor connecting **Europe, Russia, the 
 +--------------------+---------------------------------------------+
 ```
 
-- Map fills the viewport; the panel sits on the left, flush, full height. Collapsible to a thin rail.
+- Map fills the viewport; the panel sits on the left, flush, full height. Every visit opens on the summary (the home view). The search is one floating bar at the top left, over the top of the panel when it is open, and over the map when the panel is minimized (with a button to reopen it), so it never moves; selecting anything reopens it on that detail (decided 2026-10-28, after Google Maps).
 - A compact layer control floats on the map (top right). Layers can be toggled; defaults are all on.
 - Initial camera frames the theater (roughly lon -15 to 65, lat 10 to 72).
 
@@ -84,7 +84,7 @@ Scope is one theater: the oil and gas corridor connecting **Europe, Russia, the 
 - **Click:** select it, fly the camera to fit, open its detail in the panel.
 - **Back / Esc:** return to the previous panel state. Selection and camera are in the URL (shareable, reloadable).
 - **Search:** type-ahead across pipelines, chokepoints, basins and countries.
-- **Keyboard:** `/` focuses search, `Esc` goes back, `L` toggles the layer control, `[` collapses the panel.
+- **Keyboard:** `/` focuses search, `Esc` goes back, `L` toggles the layer control, `[` minimizes or reopens the panel.
 
 ## 5. Map layers
 
