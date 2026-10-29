@@ -382,5 +382,28 @@
       }
     ],
     "recordedAt": "2026-10-29"
+  },
+  {
+    "id": "gme-2021-algeria-halt",
+    "assetKind": "pipeline",
+    "assetId": "maghreb-europe",
+    "startedAt": "2021-11-01",
+    "cause": "other",
+    "summary": "Algeria let the Maghreb–Europe contract expire on 31 October 2021, and President Tebboune announced the end of commercial relations between Sonatrach and Morocco's ONEE. The line has since run in reverse, carrying LNG regasified in Spain to Morocco.",
+    "sources": [
+      {
+        "publisher": "Morocco World News",
+        "title": "End of Maghreb-Europe pipeline contract will have no immediate impact on Morocco",
+        "url": "https://www.moroccoworldnews.com/2021/11/345279/end-of-maghreb-europe-pipeline-contract-will-have-no-immediate-impact-on-morocco",
+        "publishedAt": "2021-11-01"
+      },
+      {
+        "publisher": "Morocco World News",
+        "title": "Gas flows from Spain to Morocco fall nearly a third since last week",
+        "url": "https://www.moroccoworldnews.com/2026/08/335911/gas-flows-from-spain-to-morocco-fall-nearly-a-third-since-last-week/",
+        "publishedAt": "2026-08-24"
+      }
+    ],
+    "recordedAt": "2026-10-29"
   }
 ]

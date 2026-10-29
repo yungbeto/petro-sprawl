@@ -146,6 +146,7 @@ export const ENTSOG = {
     { pipelineId: 'langeled', operatorKey: 'UK-TSO-0001', pointKey: 'ITP-00091', direction: 'entry', label: 'Easington, entry into Great Britain' },
     { pipelineId: 'franpipe', operatorKey: 'FR-TSO-0003', pointKey: 'ITP-00045', direction: 'entry', label: 'Dunkerque, entry into France' },
     { pipelineId: 'zeepipe', operatorKey: 'BE-TSO-0001', pointKey: 'ITP-00106', direction: 'entry', label: 'Zeebrugge ZPT, entry into Belgium' },
+    { pipelineId: 'baltic-pipe', operatorKey: 'PL-TSO-0002', pointKey: 'ITP-10009', direction: 'entry', label: 'Faxe, entry into Poland' },
   ],
 } as const;
 

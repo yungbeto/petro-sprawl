@@ -16,7 +16,7 @@ export interface CuratedPipeline {
   autoMatch?: boolean;
   /** GEM rows never to merge, even if they match. */
   exclude?: string[];
-  capacity?: NonNullable<Pipeline['capacity']> & { source: SourceRef };
+  capacity?: NonNullable<Pipeline['capacity']> & { source: SourceRef | PageRef };
   /** Cited shareholders. They replace GEM's owners and its parent chain, which may not match them. */
   owners?: { list: NonNullable<Pipeline['owners']>; source: PageRef };
   evidence: Evidence[];

@@ -764,5 +764,131 @@
         "recordedAt": "2026-10-29"
       }
     ]
+  },
+  {
+    "id": "south-caucasus",
+    "name": "South Caucasus Pipeline (SCP)",
+    "aliases": [
+      "SCP",
+      "Baku–Tbilisi–Erzurum",
+      "BTE",
+      "SCPX"
+    ],
+    "commodity": "gas",
+    "fromCountry": "AZ",
+    "toCountry": "TR",
+    "transitCountries": [
+      "GE"
+    ],
+    "gem": [
+      "gem-p0759",
+      "gem-p4212"
+    ],
+    "autoMatch": false,
+    "capacity": {
+      "value": 24.04,
+      "unit": "bcm/yr",
+      "source": {
+        "publisher": "SGC",
+        "title": "South Caucasus Pipeline",
+        "url": "https://sgc.az/en/project/scp",
+        "accessedAt": "2026-10-29"
+      }
+    },
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "government",
+        "statement": "Azerbaijan's State Statistics Committee: 16.86 bcm moved through the Baku–Tbilisi–Erzurum pipeline in January to September 2026, 1.6% less than a year earlier (Trend).",
+        "url": "https://www.trend.az/business/energy/4235605.html",
+        "observedAt": "2026-10-16",
+        "recordedAt": "2026-10-29"
+      }
+    ]
+  },
+  {
+    "id": "tanap",
+    "name": "Trans-Anatolian Pipeline (TANAP)",
+    "aliases": [
+      "TANAP",
+      "Trans-Anatolian Natural Gas Pipeline"
+    ],
+    "commodity": "gas",
+    "fromCountry": "GE",
+    "toCountry": "TR",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0763"
+    ],
+    "autoMatch": false,
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "government",
+        "statement": "Azerbaijan's Ministry of Energy: 99.6 bcm of Azerbaijani gas has moved through TANAP since it opened, 39.6 bcm of it to Türkiye, as commercial deliveries reached their eighth year (APA).",
+        "url": "https://en.apa.az/energy-and-industry/nearly-100-bcm-of-azerbaijani-gas-transported-via-tanap-to-date-513799",
+        "observedAt": "2026-06-30",
+        "recordedAt": "2026-10-29"
+      }
+    ]
+  },
+  {
+    "id": "maghreb-europe",
+    "name": "Maghreb–Europe (GME)",
+    "aliases": [
+      "GME",
+      "MEG",
+      "Pedro Duran Farell",
+      "Maghreb-Europe Gas Pipeline"
+    ],
+    "commodity": "gas",
+    "fromCountry": "DZ",
+    "toCountry": "ES",
+    "transitCountries": [
+      "MA"
+    ],
+    "gem": [
+      "gem-p0453"
+    ],
+    "autoMatch": false,
+    "evidence": [
+      {
+        "status": "reduced",
+        "sourceType": "press",
+        "statement": "Running in reverse, from Spain to Morocco, since Algerian transit ended in late 2021. Enagás readings at Tarifa fell from 30.6 GWh on 14 August to about 20.3 GWh a day on 19 to 23 August, against a 32 GWh/d export ceiling (Morocco World News).",
+        "url": "https://www.moroccoworldnews.com/2026/08/335911/gas-flows-from-spain-to-morocco-fall-nearly-a-third-since-last-week/",
+        "observedAt": "2026-08-24",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "offline",
+        "sourceType": "government",
+        "statement": "Algeria let the contract for the pipeline expire on 31 October 2021; President Tebboune announced the end of commercial relations between Sonatrach and Morocco's ONEE (Morocco World News).",
+        "url": "https://www.moroccoworldnews.com/2021/11/345279/end-of-maghreb-europe-pipeline-contract-will-have-no-immediate-impact-on-morocco",
+        "observedAt": "2021-11-01",
+        "recordedAt": "2026-10-29"
+      }
+    ]
+  },
+  {
+    "id": "baltic-pipe",
+    "name": "Baltic Pipe",
+    "aliases": [
+      "Baltic Pipe Project",
+      "Europe–Poland pipeline"
+    ],
+    "commodity": "gas",
+    "fromCountry": "NO",
+    "toCountry": "PL",
+    "transitCountries": [
+      "DK"
+    ],
+    "gem": [
+      "gem-p0684",
+      "gem-p2265",
+      "gem-p2266"
+    ],
+    "autoMatch": false,
+    "evidence": []
   }
 ]

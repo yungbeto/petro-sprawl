@@ -35,7 +35,7 @@ export interface Pipeline {
   owners?: { name: string; sharePct?: number }[];
   capacity?: { value: number; unit: 'bcm/yr' | 'mb/d' };
   /** Cited source when a curated record sets the capacity; GEM capacities cite GEM. */
-  capacitySource?: SourceRef;
+  capacitySource?: SourceRef | PageRef;
   /** Cited source when a curated record sets the owners; GEM owners cite GEM. */
   ownersSource?: PageRef;
   /** Ultimate parent companies behind the owners, as GEM traces them. */

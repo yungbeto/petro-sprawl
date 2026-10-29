@@ -73,7 +73,7 @@ export const pipelineSchema = z.object({
   operator: z.string().optional(),
   owners: z.array(z.object({ name: z.string(), sharePct: z.number().optional() })).optional(),
   capacity: z.object({ value: z.number().positive(), unit: z.enum(['bcm/yr', 'mb/d']) }).optional(),
-  capacitySource: sourceRefSchema.optional(),
+  capacitySource: z.union([sourceRefSchema, pageRefSchema]).optional(),
   ownersSource: pageRefSchema.optional(),
   parents: z.array(z.object({ name: z.string(), sharePct: z.number().optional() })).optional(),
   history: z
@@ -154,7 +154,11 @@ export const curatedPipelineSchema = z.object({
   autoMatch: z.boolean().optional(),
   exclude: z.array(z.string()).optional(),
   capacity: z
-    .object({ value: z.number().positive(), unit: z.enum(['bcm/yr', 'mb/d']), source: sourceRefSchema })
+    .object({
+      value: z.number().positive(),
+      unit: z.enum(['bcm/yr', 'mb/d']),
+      source: z.union([sourceRefSchema, pageRefSchema]),
+    })
     .optional(),
   owners: z
     .object({

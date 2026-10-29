@@ -335,7 +335,13 @@ export function PipelineDetail({ item, data, now }: { item: Pipeline; data: Data
             item.capacitySource && (
               <>
                 <SourceLink href={item.capacitySource.url}>{item.capacitySource.publisher}</SourceLink>,{' '}
-                <span className="mono">{item.capacitySource.publishedAt}</span>
+                {'accessedAt' in item.capacitySource ? (
+                  <>
+                    read <span className="mono">{item.capacitySource.accessedAt}</span>
+                  </>
+                ) : (
+                  <span className="mono">{item.capacitySource.publishedAt}</span>
+                )}
               </>
             )
           }

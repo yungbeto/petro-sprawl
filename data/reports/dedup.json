@@ -345,6 +345,61 @@
           "reason": "listed"
         }
       ]
+    },
+    {
+      "curatedId": "south-caucasus",
+      "rows": [
+        {
+          "gemId": "gem-p4212",
+          "gemName": "South Caucasus Gas Pipeline · Expansion (SCPX)",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p0759",
+          "gemName": "South Caucasus Gas Pipeline · Main Line",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "tanap",
+      "rows": [
+        {
+          "gemId": "gem-p0763",
+          "gemName": "Trans-Anatolian Gas Pipeline · Main Line (Phase 0 and 1)",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "maghreb-europe",
+      "rows": [
+        {
+          "gemId": "gem-p0453",
+          "gemName": "Maghreb-Europe Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "baltic-pipe",
+      "rows": [
+        {
+          "gemId": "gem-p2265",
+          "gemName": "Baltic Pipe Project · Goleniów-Lwówek Gas Pipeline (Stage 1)",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p2266",
+          "gemName": "Baltic Pipe Project · Goleniów-Lwówek Gas Pipeline (Stage 2)",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p0684",
+          "gemName": "Baltic Pipe Project · Main Segment",
+          "reason": "listed"
+        }
+      ]
     }
   ],
   "missing": [],
