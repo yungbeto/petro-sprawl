@@ -10,6 +10,7 @@ import {
   staleAssets,
   tidyStatement,
   toEvidence,
+  unclaimedAssets,
   urlKey,
   verifyDraft,
   type ClaimDraft,
@@ -37,7 +38,7 @@ const draft = (over: Partial<ClaimDraft> = {}): ClaimDraft => ({
   ...over,
 });
 
-const opts = { today: '2026-10-29', cited: new Set<string>(), quoteWords: { min: 6, max: 50 } };
+const opts = { today: '2026-10-29', cited: new Set<string>(), quoteWords: { min: 6, max: 50 }, firstClaimDays: 90 };
 const page = { text: 'Intro. The loading plan points to broadly stable exports, the sources said. More.', publishedAt: '2026-10-28' };
 
 describe('staleAssets', () => {
@@ -52,6 +53,21 @@ describe('staleAssets', () => {
     const stale = staleAssets(assets, { today: '2026-10-29', staleDays: 30, skip: ['pipeline/skip'] });
     expect(stale.map((s) => s.ref)).toEqual(['pipeline/c', 'pipeline/a']);
     expect(stale[1]?.latest.observedAt).toBe('2026-09-01');
+  });
+});
+
+describe('unclaimedAssets', () => {
+  it('picks assets with no cited claim, measured or dataset entries aside', () => {
+    const assets = [
+      { ref: 'terminal/a', name: 'A', evidence: [] },
+      { ref: 'terminal/b', name: 'B', evidence: [claim('operating', '2026-01-01')] },
+      { ref: 'pipeline/c', name: 'C', evidence: [claim('operating', '2026-10-20', 'dataset')] },
+      { ref: 'terminal/skip', name: 'S', evidence: [] },
+    ];
+    expect(unclaimedAssets(assets, { skip: ['terminal/skip'] })).toEqual([
+      { ref: 'terminal/a', name: 'A', latest: null },
+      { ref: 'pipeline/c', name: 'C', latest: null },
+    ]);
   });
 });
 
@@ -102,6 +118,19 @@ describe('verifyDraft', () => {
   it('rejects sources we already cite', () => {
     const cited = new Set([urlKey('https://reuters.com/business/energy/cpc-loadings-2026-10-28')]);
     expect(verifyDraft(draft(), page, latest, { ...opts, cited })).toEqual(['source already cited']);
+  });
+});
+
+describe('verifyDraft for a first claim', () => {
+  it('takes any recent date, but nothing older than the window', () => {
+    expect(verifyDraft(draft(), page, null, opts)).toEqual([]);
+    expect(verifyDraft(draft({ observedAt: '2026-07-01' }), { ...page, publishedAt: '2026-07-02' }, null, opts)).toEqual([
+      'older than 90 days',
+    ]);
+  });
+
+  it('always sends a first claim to review', () => {
+    expect(needsReview(draft(), null, { trustedDomains: ['reuters.com'], terms: ['CPC'] })).toBe('first claim for this asset');
   });
 });
 

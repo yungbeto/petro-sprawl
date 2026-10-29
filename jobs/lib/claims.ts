@@ -23,7 +23,8 @@ export interface StaleAsset {
   /** "pipeline/<id>", "lng/<id>" or "terminal/<id>". */
   ref: string;
   name: string;
-  latest: Evidence;
+  /** The newest cited claim; null for an asset we have no claim for yet. */
+  latest: Evidence | null;
 }
 
 export const CLAIMED: Evidence['sourceType'][] = ['operator', 'regulator', 'government', 'press'];
@@ -41,13 +42,21 @@ export function daysBetween(a: string, b: string): number {
 export function staleAssets(
   assets: { ref: string; name: string; evidence: Evidence[] }[],
   { today, staleDays, skip }: { today: string; staleDays: number; skip: readonly string[] },
-): StaleAsset[] {
-  const stale: StaleAsset[] = [];
+): (StaleAsset & { latest: Evidence })[] {
+  const stale: (StaleAsset & { latest: Evidence })[] = [];
   for (const a of assets) {
     const latest = latestClaim(a.evidence);
     if (latest && !skip.includes(a.ref) && daysBetween(latest.observedAt, today) > staleDays) stale.push({ ref: a.ref, name: a.name, latest });
   }
   return stale.sort((a, b) => a.latest.observedAt.localeCompare(b.latest.observedAt));
+}
+
+/** Assets with no cited claim at all, so the refresh can look for a first one. */
+export function unclaimedAssets(
+  assets: { ref: string; name: string; evidence: Evidence[] }[],
+  { skip }: { skip: readonly string[] },
+): StaleAsset[] {
+  return assets.filter((a) => !latestClaim(a.evidence) && !skip.includes(a.ref)).map((a) => ({ ref: a.ref, name: a.name, latest: null }));
 }
 
 const ENTITIES: Record<string, string> = {
@@ -138,8 +147,13 @@ export interface Page {
 export function verifyDraft(
   draft: ClaimDraft,
   page: Page,
-  latest: Evidence,
-  { today, cited, quoteWords }: { today: string; cited: Set<string>; quoteWords: { min: number; max: number } },
+  latest: Evidence | null,
+  {
+    today,
+    cited,
+    quoteWords,
+    firstClaimDays,
+  }: { today: string; cited: Set<string>; quoteWords: { min: number; max: number }; firstClaimDays: number },
 ): string[] {
   const problems: string[] = [];
   const words = matchKey(draft.quote).split(' ').filter(Boolean).length;
@@ -150,7 +164,8 @@ export function verifyDraft(
     problems.push(`date "${draft.observedAt}" isn't a date`);
   } else {
     if (draft.observedAt > today) problems.push('date is in the future');
-    if (draft.observedAt <= latest.observedAt) problems.push(`not newer than the current claim (${latest.observedAt})`);
+    if (latest && draft.observedAt <= latest.observedAt) problems.push(`not newer than the current claim (${latest.observedAt})`);
+    if (!latest && daysBetween(draft.observedAt, today) > firstClaimDays) problems.push(`older than ${firstClaimDays} days`);
     if (!page.publishedAt) problems.push('page has no publication date');
     else if (draft.observedAt > page.publishedAt) problems.push(`refers to ${draft.observedAt}, after the page was published (${page.publishedAt})`);
   }
@@ -166,14 +181,15 @@ export function assetTerms(name: string, aliases: readonly string[]): string[] {
 
 /**
  * Commit without review only when the quote names the asset, the status is the one we already show,
- * and the source is on the trusted list. A quote that never names the asset is where a model most
+ * and the source is on the trusted list. A first claim for an asset always goes to review. A quote that never names the asset is where a model most
  * often attaches a true sentence to the wrong pipeline.
  */
 export function needsReview(
   draft: ClaimDraft,
-  latest: Evidence,
+  latest: Evidence | null,
   { trustedDomains, terms }: { trustedDomains: readonly string[]; terms: readonly string[] },
 ): string | null {
+  if (!latest) return 'first claim for this asset';
   if (draft.status !== latest.status) return `status changes from ${latest.status} to ${draft.status}`;
   if (!isTrusted(draft.url, trustedDomains)) return `${new URL(draft.url).hostname} isn't on the trusted list`;
   if (!terms.some((t) => quoteOnPage(t, draft.quote))) return "the quote doesn't name the asset";

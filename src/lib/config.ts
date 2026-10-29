@@ -323,6 +323,8 @@ export const CLAIMS_REFRESH = {
   pageTimeoutMs: 30_000,
   /** Quotes outside this many words are too thin to check, or more than a short quotation. */
   quoteWords: { min: 6, max: 50 },
+  /** A first claim for an asset with none must describe something this recent. */
+  firstClaimDays: 90,
   /** Old claims about lasting stops; searching again won't find anything newer. */
   skip: ['pipeline/urengoy-pomary-uzhhorod', 'pipeline/progress', 'pipeline/soyuz'],
   /** Governments, operators, wires and outlets already cited reliably; subdomains count. */

@@ -14,7 +14,7 @@ Items that couldn't be sourced or that need a decision. See CLAUDE.md: unsourced
 - **CPC Marine Terminal location:** the map uses the end of GEM's CPC route, about 30 km inland of the terminal at Yuzhnaya Ozereyevka; PortWatch has no entry for it. Find a citable coordinate (CPC, a port authority, or a nautical source).
 - **No dated status source (checked 2026-10-29):** Ras al-Ju'aymah, Mina al-Ahmadi and LOOP show unknown. Kuwait's exports were 39% below pre-war in the first 22 days of October (Arab Times, citing TankerTrackers), but the report doesn't name Mina al-Ahmadi. LOOP's latest coverage is the March 2026 spill.
 - **Capacities:** none cited yet. EIA's country briefs that list terminal capacities render with JavaScript or are old summaries; Ras Tanura (5.4 mb/d in 2025, Al Jazeera) and Sheskharis (0.65 mb/d, January to July 2026, The Moscow Times) show cited average loadings instead.
-- **Claims refresh:** the weekly job skips terminals with no claim at all, so it won't fill the three above. Seed them by hand, or teach the job to search for assets with no claim.
+- **Claims refresh:** since 2026-10-29 the weekly job also searches for a first claim for assets with none (the three above). Anything it finds goes to the review pull request; if a run finds nothing, they stay unknown.
 
 ## Basins
 
