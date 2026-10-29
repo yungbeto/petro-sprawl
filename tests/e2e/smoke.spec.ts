@@ -457,19 +457,23 @@ test('a dataset that fails to load is named, and the rest still shows', async ({
   await expect(page.getByRole('heading', { name: 'Chokepoints' })).toBeVisible();
 });
 
-test('every source is attributed on the map and in the menu', async ({ page }) => {
+test('the map credits the basemap, and the About page credits every source', async ({ page }) => {
   await page.goto('/');
   const attribution = page.locator('.maplibregl-ctrl-attrib');
-  for (const name of ['Global Energy Monitor', 'USGS', 'IMF PortWatch', 'EIA', 'ENTSOG', 'GIE AGSI+', 'GIE ALSI', 'Natural Earth', 'OpenStreetMap']) {
-    await expect(attribution).toContainText(name, { timeout: 15_000 });
-  }
+  await expect(attribution).toContainText('OpenStreetMap', { timeout: 15_000 });
+  await expect(attribution).not.toContainText('Global Energy Monitor');
   await page.getByRole('button', { name: 'Menu' }).click();
-  const sources = page.getByRole('dialog', { name: 'Menu' }).locator('.sources');
+  await page.getByRole('dialog', { name: 'Menu' }).getByRole('button', { name: /^About/ }).click();
+  const about = page.getByRole('dialog', { name: 'About' });
+  await expect(about.getByRole('button', { name: 'Back to menu' })).toBeFocused();
+  const sources = about.locator('.sources');
   for (const name of ['USGS', 'IMF PortWatch', 'Natural Earth', 'ENTSOG Transparency Platform', 'GIE AGSI+', 'GIE ALSI', 'Global Energy Monitor', 'OpenStreetMap contributors']) {
     await expect(sources.getByRole('link', { name, exact: true }).first()).toBeVisible();
   }
   // One row per dataset: GEM is credited for both pipelines and LNG terminals.
   await expect(sources.getByRole('listitem').filter({ hasText: /^LNG terminals:/ })).toContainText('Global Energy Monitor');
+  await about.getByRole('button', { name: 'Back to menu' }).click();
+  await expect(page.getByRole('dialog', { name: 'Menu' }).getByRole('button', { name: /^About/ })).toBeFocused();
 });
 
 test('the summary is ready within two seconds on a warm cache', async ({ page }) => {

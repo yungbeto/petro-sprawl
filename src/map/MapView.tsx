@@ -8,7 +8,6 @@ import {
   BASIN_LABEL_MIN_ZOOM,
   EIA_REFERENCE_YEAR,
   FIT_PADDING,
-  MAP_ATTRIBUTION,
   POINT_FOCUS_ZOOM,
   THEATER_BOUNDS,
 } from '../lib/config';
@@ -130,7 +129,8 @@ export function MapView(props: MapViewProps) {
       ...camera,
       dragRotate: false,
       pitchWithRotate: false,
-      attributionControl: { compact: false, customAttribution: MAP_ATTRIBUTION },
+      // Only the basemap's credit stays on the map; data sources are on the About page in the menu.
+      attributionControl: { compact: false },
     });
     map.touchZoomRotate.disableRotation();
     map.keyboard.disableRotation();

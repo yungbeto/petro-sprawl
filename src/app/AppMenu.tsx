@@ -1,11 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { CaretLeftIcon, CaretRightIcon } from '@phosphor-icons/react';
+import { useEffect, useRef, useState } from 'react';
 import { BASEMAP_CREDITS, DATASET_FRESHNESS } from '../lib/config';
 import type { Datasets } from '../lib/data';
 import { formatDate } from '../lib/format';
 import { formatAge, type Freshness } from '../lib/freshness';
 import { THEME_PREFERENCES, type ThemePreference } from '../lib/theme';
 
-export type MenuSection = 'freshness';
+export type MenuSection = 'freshness' | 'about';
 
 interface AppMenuProps {
   onClose: () => void;
@@ -34,11 +35,52 @@ const SHORTCUTS: [string, string][] = [
 /** App-level settings and information, in a drawer over everything, like a map app's main menu. */
 export function AppMenu({ onClose, section, data, freshness, now, themePreference, onThemePreferenceChange }: AppMenuProps) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const backRef = useRef<HTMLButtonElement>(null);
+  const aboutRef = useRef<HTMLButtonElement>(null);
+  const [page, setPage] = useState<'main' | 'about'>(section === 'about' ? 'about' : 'main');
 
   useEffect(() => {
-    if (section) document.getElementById(`menu-${section}`)?.scrollIntoView({ block: 'start' });
+    if (section && section !== 'about') document.getElementById(`menu-${section}`)?.scrollIntoView({ block: 'start' });
     closeRef.current?.focus({ preventScroll: Boolean(section) });
   }, [section]);
+
+  const openAbout = () => {
+    setPage('about');
+    requestAnimationFrame(() => backRef.current?.focus());
+  };
+  const backToMenu = () => {
+    setPage('main');
+    requestAnimationFrame(() => aboutRef.current?.focus());
+  };
+
+  if (page === 'about') {
+    return (
+      <>
+        <div className="menu-scrim" onClick={onClose} aria-hidden="true" />
+        <div className="menu" role="dialog" aria-modal="true" aria-label="About">
+          <header className="menu__header menu__header--page">
+            <button ref={backRef} type="button" className="icon-button" onClick={backToMenu} aria-label="Back to menu" title="Back to menu">
+              <CaretLeftIcon size={16} />
+            </button>
+            <h2 className="menu__title">About</h2>
+            <button ref={closeRef} type="button" className="icon-button" onClick={onClose} aria-label="Close menu" title="Close  Esc">
+              <CloseIcon />
+            </button>
+          </header>
+          <div className="menu__body">
+            <section className="section">
+              <p>
+                A personal, map-first terminal for reading world events through energy flows. It keeps capacity, status
+                and flow apart, and backs every status with a dated, sourced claim. Anything that can't be sourced shows
+                as unknown.
+              </p>
+            </section>
+            <SourcesSection data={data} />
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -70,7 +112,6 @@ export function AppMenu({ onClose, section, data, freshness, now, themePreferenc
           </section>
 
           <FreshnessSection freshness={freshness} now={now} />
-          <SourcesSection data={data} />
 
           <section className="section">
             <h2 className="section__title">Keyboard shortcuts</h2>
@@ -87,12 +128,13 @@ export function AppMenu({ onClose, section, data, freshness, now, themePreferenc
           </section>
 
           <section className="section">
-            <h2 className="section__title">About</h2>
-            <p className="muted">
-              A personal, map-first terminal for reading world events through energy flows. It keeps capacity, status and
-              flow apart, and backs every status with a dated, sourced claim. Anything that can't be sourced shows as
-              unknown.
-            </p>
+            <button ref={aboutRef} type="button" className="menu__link" onClick={openAbout}>
+              <span>
+                About
+                <span className="menu__link-hint">What this is, and where the data comes from</span>
+              </span>
+              <CaretRightIcon size={16} aria-hidden="true" />
+            </button>
           </section>
         </div>
       </div>
@@ -166,7 +208,7 @@ function SourcesSection({ data }: { data: Datasets }) {
                 {DATASET_FRESHNESS[m.id]?.publisher ?? new URL(m.sourceUrl).hostname}
               </a>
             ) : (
-              <span>hand-curated, with sources cited on each record</span>
+              <span>{DATASET_FRESHNESS[m.id]?.publisher ?? 'Curated'}, with sources cited on each record</span>
             )}
             <span className="sources__license">{m.license}</span>
           </li>

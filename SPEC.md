@@ -252,6 +252,8 @@ interface DatasetMeta {
 | [USGS World Petroleum Assessment provinces](https://sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3) | Basin outlines | Shapefile (14 MB); simplify once with mapshaper, commit result | Static | Public domain |
 | Basemap: [OpenFreeMap](https://openfreemap.org/) or [Protomaps](https://protomaps.com/) | Vector tiles | No key | Static | OSM attribution |
 
+The map itself credits only the basemap, as OSM requires. Every data source, with its terms, is credited on the About page in the app menu (moved there 2026-10-29).
+
 EIA reference values (mb/d, 2024, the latest full year in EIA's table, read 2026-10-28): Hormuz 20.7, Malacca 22.5, Suez Canal and SUMED 4.8, Bab el-Mandeb 4.1, Danish Straits 4.9, Turkish Straits 3.6, Panama Canal 2.0 (fiscal year). Suez and Bab el-Mandeb are depressed in 2024 by Red Sea rerouting. Values live in `src/lib/config.ts`.
 
 Note on units: PortWatch counts vessels, EIA measures barrels. Do not compare them directly. Port calls are shown on the pipeline pages as context only, never as status evidence: a tanker at Fujairah or Ceyhan may be loading oil that didn't come down the pipeline. The chokepoint flow index compares tanker transits with their own trailing baseline; the EIA figure is shown as context for scale.
