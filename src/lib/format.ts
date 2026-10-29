@@ -8,6 +8,8 @@ export function formatMbd(value: number): string {
 
 /** Shows the source's precision, up to three decimals: 15.75 bcm/yr, 1.486 mb/d, 55 bcm/yr. */
 export function formatCapacity(capacity: { value: number; unit: string }): string {
+  // Small oil lines read better in barrels a day than as a fraction of a thousandth of a million.
+  if (capacity.unit === 'mb/d' && capacity.value < 0.001) return `${Math.round(capacity.value * 1e6).toLocaleString('en-US')} b/d`;
   const value = capacity.value.toLocaleString('en-US', { maximumFractionDigits: 3 });
   return `${value} ${capacity.unit}`;
 }

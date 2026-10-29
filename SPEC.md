@@ -15,6 +15,8 @@ This first prototype proves two things:
 
 Scope is one theater: the oil and gas corridor connecting **Europe, Russia, the Caspian, North Africa and the Middle East**, plus the world's seven major oil chokepoints.
 
+Basins and GEM pipelines are imported worldwide (`IMPORT_BOUNDS` in `src/lib/config.ts`, decided 2026-10-28) so the map holds context everywhere. The theater is still where the camera opens and where the research goes: curated corridor pipelines, measured flows (ENTSOG) and storage (AGSI+) cover it only, so pipelines elsewhere carry GEM's dataset status alone.
+
 ## 2. Principles (apply to every decision)
 
 - **Map first.** Every item lands on the map before it becomes text. The map is an antidote to abstraction: events are real happenings in real places.

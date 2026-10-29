@@ -1,10 +1,18 @@
 {
-  "recordedAt": "2026-10-28",
+  "recordedAt": "2026-10-29",
   "countriesWithoutIsoCode": [],
   "basinsWithoutCountries": [
     "South Barents Basin",
+    "North Barents Basin",
+    "Saigon Basin",
+    "Malay Basin",
+    "Penyu/West Natuna Basin",
     "Vestford-Helgeland",
     "North Sea Graben",
-    "Provence Basin"
+    "Provence Basin",
+    "Gulf Cenozoic OCS",
+    "Labrador-Newfoundland Shelf",
+    "Malvinas Basin",
+    "Tobago Trough"
   ]
 }

@@ -6,7 +6,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import mapshaper from 'mapshaper';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
-import { THEATER_BOUNDS } from '../src/lib/config';
+import { IMPORT_BOUNDS } from '../src/lib/config';
 import { boundsOf } from '../src/lib/geo';
 import type { Pipeline } from '../src/types';
 import { gemRowToPipeline, type GemRow } from './lib/gem';
@@ -25,11 +25,12 @@ const TRACKERS = [
     releaseDate: '2026-06',
   },
 ];
-const SIMPLIFY = '8%';
+// Douglas-Peucker tolerance in metres: the same detail everywhere, whatever a region's share of vertices.
+const SIMPLIFY = 'interval=500';
 const REPORT_PATH = 'data/reports/import-gem.json';
 
-const [[west, south], [east, north]] = THEATER_BOUNDS;
-function inTheater(geometry: Geometry): boolean {
+const [[west, south], [east, north]] = IMPORT_BOUNDS;
+function inBounds(geometry: Geometry): boolean {
   const [[w, s], [e, n]] = boundsOf(geometry);
   return e >= west && w <= east && n >= south && s <= north;
 }
@@ -42,7 +43,7 @@ for (const tracker of TRACKERS) {
   const collection = JSON.parse(await readFile(tracker.path, 'utf8')) as FeatureCollection<Geometry | null, GemRow>;
   const skipped: Record<string, number> = {};
   const unresolvedCountries: Record<string, string[]> = {};
-  let outsideTheater = 0;
+  let outsideBounds = 0;
   let missingLastUpdated = 0;
   let kept = 0;
 
@@ -56,8 +57,8 @@ for (const tracker of TRACKERS) {
       skipped[result.reason] = (skipped[result.reason] ?? 0) + 1;
       continue;
     }
-    if (!inTheater(result.pipeline.geometry)) {
-      outsideTheater++;
+    if (!inBounds(result.pipeline.geometry)) {
+      outsideBounds++;
       continue;
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(feature.properties.LastUpdated?.trim() ?? '')) missingLastUpdated++;
@@ -72,7 +73,7 @@ for (const tracker of TRACKERS) {
     sha256: await sha256File(tracker.path),
     rows: collection.features.length,
     kept,
-    outsideTheater,
+    outsideBounds,
     skipped,
     unresolvedCountries,
     keptWithoutLastUpdated: missingLastUpdated,

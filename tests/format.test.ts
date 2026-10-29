@@ -6,6 +6,7 @@ describe('format', () => {
     expect(formatCapacity({ value: 15.75, unit: 'bcm/yr' })).toBe('15.75 bcm/yr');
     expect(formatCapacity({ value: 55, unit: 'bcm/yr' })).toBe('55 bcm/yr');
     expect(formatCapacity({ value: 1.486, unit: 'mb/d' })).toBe('1.486 mb/d');
+    expect(formatCapacity({ value: 0.00042, unit: 'mb/d' })).toBe('420 b/d');
   });
 
   it('formats volumes and coordinates', () => {

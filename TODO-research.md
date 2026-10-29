@@ -11,7 +11,8 @@ Items that couldn't be sourced or that need a decision. See CLAUDE.md: unsourced
 ## Basins
 
 - ~~Countries each basin spans.~~ Done 2026-10-28 with Natural Earth 5.1.1 1:50m admin-0 (public domain), used at import only. Rule in `BASIN_COUNTRY_OVERLAP`: at least 1,000 km² of land overlap, or at least 20% of the country.
-- **Offshore basins have no countries.** South Barents, Vestford-Helgeland, North Sea Graben and Provence overlap no land, so the panel says so. Naming the coastal states would need maritime boundaries (for example Marine Regions EEZs, CC BY); decide if it matters.
+- **Offshore basins have no countries.** Twelve since the import went worldwide: South and North Barents, Vestford-Helgeland, North Sea Graben, Provence, Saigon, Malay, Penyu/West Natuna, Gulf Cenozoic OCS, Labrador-Newfoundland Shelf, Malvinas and Tobago Trough overlap no land (by the overlap rule), so the panel says so. Naming the coastal states would need maritime boundaries (for example Marine Regions EEZs, CC BY); decide if it matters.
+- **Flow data outside the theater.** Pipelines in the Americas and Asia show GEM's dataset status only. Candidate measured sources to check (terms, format, frequency): Canada Energy Regulator pipeline throughput and capacity (open data); for the US, EIA publishes pipeline capacity but no daily metered flows that we know of.
 - USGS provinces date from the 2000 World Petroleum Assessment. Fine as a backdrop; note the age in the basin detail if it matters.
 
 ## Pipelines

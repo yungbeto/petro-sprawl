@@ -1,14 +1,14 @@
 {
-  "recordedAt": "2026-10-28",
-  "simplify": "8%",
+  "recordedAt": "2026-10-29",
+  "simplify": "interval=500",
   "trackers": [
     {
       "sourceId": "gem-ggit-gas-pipelines-2025-11",
       "file": "data/raw/gem/GEM-GGIT-Gas-Pipelines-2025-11/GEM-GGIT-Gas-Pipelines-2025-11.geojson",
       "sha256": "c74e54eb04a70ad008cd9a82fa93875fc987389475e7a958bbeec7ebffb93eaa",
       "rows": 4246,
-      "kept": 1249,
-      "outsideTheater": 1975,
+      "kept": 3224,
+      "outsideBounds": 0,
       "skipped": {
         "excluded_status": 346,
         "no_route": 530,
@@ -19,15 +19,15 @@
           "gem-p5854"
         ]
       },
-      "keptWithoutLastUpdated": 8
+      "keptWithoutLastUpdated": 12
     },
     {
       "sourceId": "gem-goit-oil-ngl-pipelines-2026-06",
       "file": "data/raw/gem/GEM-GOIT-Oil-NGL-Pipelines-2026-06-corrected/GEM-GOIT-Oil-NGL-Pipelines-2026-07-21.geojson",
       "sha256": "bea592558dfce7ff5ff69b3b4dd485fe2f07c7989e649ac7c4da5ac3a4b8ef7b",
       "rows": 1926,
-      "kept": 562,
-      "outsideTheater": 894,
+      "kept": 1456,
+      "outsideBounds": 0,
       "skipped": {
         "no_route": 332,
         "excluded_route_type": 20,
@@ -37,5 +37,5 @@
       "keptWithoutLastUpdated": 0
     }
   ],
-  "written": 1811
+  "written": 4680
 }

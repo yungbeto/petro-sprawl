@@ -7,7 +7,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import mapshaper from 'mapshaper';
 import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
-import { BASIN_COUNTRY_OVERLAP, THEATER_BOUNDS } from '../src/lib/config';
+import { BASIN_COUNTRY_OVERLAP, IMPORT_BOUNDS } from '../src/lib/config';
 import type { Basin } from '../src/types';
 import { mergeBasinCountries, toBasin, type BasinCountryMatch, type UsgsProvinceProps } from './lib/basins';
 import { publishDataset, report, sha256File } from './lib/output';
@@ -19,8 +19,8 @@ const NE_NAME = 'ne_50m_admin_0_countries';
 const REPORT_PATH = 'data/reports/import-basins.json';
 const SIMPLIFY = '6%';
 
-const [[west, south], [east, north]] = THEATER_BOUNDS;
-// Keep priority and boutique provinces whose bounds touch the theater (no clipping, so outlines stay whole).
+const [[west, south], [east, north]] = IMPORT_BOUNDS;
+// Keep priority and boutique provinces whose bounds touch the import bounds (no clipping, so outlines stay whole).
 const filter = [
   '(TYPE=="p" || TYPE=="b")',
   `this.bounds[2] >= ${west}`,

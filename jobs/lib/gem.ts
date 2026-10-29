@@ -93,10 +93,49 @@ export function gemCapacity(row: GemRow, commodity: Commodity): Pipeline['capaci
     return bcm === null ? undefined : { value: bcm, unit: 'bcm/yr' };
   }
   const boed = parseNumber(row.CapacityBOEd);
-  return boed === null ? undefined : { value: Math.round((boed / 1e6) * 1000) / 1000, unit: 'mb/d' };
+  if (boed === null) return undefined;
+  // Three decimals of mb/d, except lines under 1,000 b/d, which would round to nothing: two significant figures.
+  const mbd = boed / 1e6;
+  return { value: mbd >= 0.001 ? Math.round(mbd * 1000) / 1000 : Number(mbd.toPrecision(2)), unit: 'mb/d' };
 }
 
-/** Keeps only line parts; returns null when nothing drawable is left. */
+/**
+ * Chains parts that meet end to end (either way round) into longer lines. GEM stores many routes as
+ * thousands of two-point pieces, which simplification can't thin; joined, it can. Where three or more
+ * parts meet, one continues the chain and the rest start their own.
+ */
+export function joinLineParts(parts: Position[][]): Position[][] {
+  const key = (p: Position) => `${p[0]},${p[1]}`;
+  const byEnd = new Map<string, number[]>();
+  parts.forEach((part, i) => {
+    for (const end of [part[0]!, part[part.length - 1]!]) {
+      const k = key(end);
+      byEnd.set(k, [...(byEnd.get(k) ?? []), i]);
+    }
+  });
+  const used = new Array<boolean>(parts.length).fill(false);
+  // The next unused part touching this point, oriented to start there.
+  const next = (point: Position): Position[] | null => {
+    const k = key(point);
+    const i = byEnd.get(k)?.find((j) => !used[j]);
+    if (i === undefined) return null;
+    used[i] = true;
+    const part = parts[i]!;
+    return key(part[0]!) === k ? part : [...part].reverse();
+  };
+  const joined: Position[][] = [];
+  parts.forEach((part, i) => {
+    if (used[i]) return;
+    used[i] = true;
+    const chain = [...part];
+    for (let more = next(chain[chain.length - 1]!); more; more = next(chain[chain.length - 1]!)) chain.push(...more.slice(1));
+    for (let more = next(chain[0]!); more; more = next(chain[0]!)) chain.unshift(...more.reverse().slice(0, -1));
+    joined.push(chain);
+  });
+  return joined;
+}
+
+/** Keeps only line parts, joined where they meet; returns null when nothing drawable is left. */
 export function lineGeometry(geometry: Geometry | null): LineString | MultiLineString | null {
   if (!geometry) return null;
   const lines: Position[][] = [];
@@ -106,7 +145,7 @@ export function lineGeometry(geometry: Geometry | null): LineString | MultiLineS
     else if (g.type === 'GeometryCollection') g.geometries.forEach(collect);
   };
   collect(geometry);
-  const usable = lines.filter((l) => l.length >= 2);
+  const usable = joinLineParts(lines.filter((l) => l.length >= 2));
   if (usable.length === 0) return null;
   return usable.length === 1
     ? { type: 'LineString', coordinates: usable[0]! }

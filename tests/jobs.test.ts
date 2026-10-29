@@ -64,7 +64,7 @@ describe('buildChokepoints', () => {
 });
 
 import { countryToIso } from '../jobs/lib/countries';
-import { gemRowToPipeline, mapGemStatus, parseOwners, type GemRow } from '../jobs/lib/gem';
+import { gemRowToPipeline, joinLineParts, mapGemStatus, parseOwners, type GemRow } from '../jobs/lib/gem';
 
 describe('countryToIso', () => {
   it('resolves current codes, not deprecated ones', () => {
@@ -150,6 +150,9 @@ describe('GEM transforms', () => {
     const result = gemRowToPipeline(oil, line, ctx);
     expect(result.ok && result.pipeline.geometryApprox).toBe(true);
     expect(result.ok && result.pipeline.capacity).toEqual({ value: 1.486, unit: 'mb/d' });
+    // Under 1,000 b/d, three decimals of mb/d would round to zero.
+    const small = gemRowToPipeline({ ...oil, CapacityBOEd: '420.4' }, line, ctx);
+    expect(small.ok && small.pipeline.capacity).toEqual({ value: 0.00042, unit: 'mb/d' });
   });
 
   it('skips cancelled rows, rows without a route, and expansion-only rows', () => {
@@ -165,5 +168,31 @@ describe('GEM transforms', () => {
   it('keeps a pipeline whose country has no ISO code and reports the name', () => {
     const result = gemRowToPipeline({ ...row, CountriesOrAreas: 'Kuwait-Saudi Arabia', StartCountryOrArea: 'Kuwait-Saudi Arabia', EndCountryOrArea: 'Kuwait-Saudi Arabia' }, line, ctx);
     expect(result).toMatchObject({ ok: true, unresolvedCountries: ['Kuwait-Saudi Arabia'] });
+  });
+});
+
+describe('joinLineParts', () => {
+  it('chains pieces that meet end to end, whichever way they run', () => {
+    expect(
+      joinLineParts([
+        [[1, 0], [2, 0]],
+        [[3, 0], [2, 0]],
+        [[0, 0], [1, 0]],
+      ]),
+    ).toEqual([[[0, 0], [1, 0], [2, 0], [3, 0]]]);
+  });
+
+  it('leaves separate pieces apart and starts a new chain at a branch', () => {
+    const parts = joinLineParts([
+      [[0, 0], [1, 0]],
+      [[1, 0], [2, 0]],
+      [[1, 0], [1, 1]],
+      [[5, 5], [6, 6]],
+    ]);
+    expect(parts).toEqual([
+      [[0, 0], [1, 0], [2, 0]],
+      [[1, 0], [1, 1]],
+      [[5, 5], [6, 6]],
+    ]);
   });
 });

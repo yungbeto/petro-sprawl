@@ -6,6 +6,12 @@ export const THEATER_BOUNDS: [[number, number], [number, number]] = [
   [65, 72],
 ];
 
+/** What the basin and pipeline imports keep: the whole world. The theater above is only where the camera opens. */
+export const IMPORT_BOUNDS: [[number, number], [number, number]] = [
+  [-180, -90],
+  [180, 90],
+];
+
 /** Claims older than this show an "unverified since" marker, whatever their status. */
 export const STALE_AFTER_DAYS = 30;
 
