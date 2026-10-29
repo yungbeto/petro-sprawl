@@ -23,9 +23,12 @@
     "fetch:agsi": "tsx --env-file-if-exists=.env jobs/fetch-agsi.ts",
     "fetch:alsi": "tsx --env-file-if-exists=.env jobs/fetch-alsi.ts",
     "fetch:all": "npm run fetch:portwatch && npm run fetch:entsog && npm run fetch:agsi && npm run fetch:alsi",
-    "build:curated": "tsx jobs/build-curated.ts"
+    "build:curated": "tsx jobs/build-curated.ts",
+    "refresh:claims": "tsx --env-file-if-exists=.env jobs/refresh-claims.ts",
+    "apply:claim-drafts": "tsx jobs/apply-claim-drafts.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
     "@deck.gl/core": "^9.4.0",
     "@deck.gl/layers": "^9.4.0",
     "@deck.gl/mapbox": "^9.4.0",

@@ -9,3 +9,4 @@ data/raw/
 __pycache__/
 test-results/
 playwright-report/
+data/reports/claim-drafts.json

@@ -1,0 +1,76 @@
+name: Claims
+
+# Weekly claims refresh (jobs/refresh-claims.ts). Claude looks for newer dated sources for cited claims
+# older than 30 days; every draft is checked against the page itself. Confirmations from trusted
+# domains are committed to main. Status changes and other drafts open a pull request for review.
+
+on:
+  schedule:
+    - cron: '41 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+# Shares the data workflow's group so the two never push to main at the same time.
+concurrency:
+  group: data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: ${{ vars.CLAIMS_REFRESH != 'off' }}
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Refresh stale claims
+        run: npm run refresh:claims
+
+      - name: Commit confirmations
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet data/curated; then
+            echo "No confirmations"
+            exit 0
+          fi
+          npm run build:curated
+          git add data/curated public/data data/reports/dedup.json data/reports/refresh-claims.json
+          git commit -m "Refresh claims $(date -u +%Y-%m-%d)"
+          git pull --rebase
+          git push
+
+      - name: Open a pull request for drafts that need review
+        run: |
+          if [ "$(jq length data/reports/claim-drafts.json)" -eq 0 ]; then
+            echo "No drafts need review"
+            exit 0
+          fi
+          branch="claims/$(date -u +%Y-%m-%d)"
+          git checkout -b "$branch"
+          npm run apply:claim-drafts
+          npm run build:curated
+          git add data/curated public/data data/reports/dedup.json
+          git commit -m "Claim drafts for review $(date -u +%Y-%m-%d)"
+          git push -u origin "$branch"
+          {
+            echo "Claims drafted by the weekly refresh that need a person to check them. Each passed the automatic checks: the quote is on the page, the date comes from the page, and the claim is newer than the one it replaces."
+            echo
+            jq -r '.[] | "- **\(.ref)**: \(.evidence.status), \(.evidence.observedAt). \(.evidence.statement) [Source](\(.evidence.url))\n  - Needs review because \(.reason)"' data/reports/claim-drafts.json
+            echo
+            echo "Every outcome, including rejected drafts, is in the log of the workflow run that opened this pull request."
+          } > pr-body.md
+          gh pr create --base main --head "$branch" --title "Claim drafts for review $(date -u +%Y-%m-%d)" --body-file pr-body.md

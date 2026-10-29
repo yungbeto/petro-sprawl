@@ -285,3 +285,40 @@ export const FILTERS = { fadeAlpha: 0.12, listLimit: 300 } as const;
 
 /** Detail views: how many related assets show before "Show all". */
 export const DETAIL = { relatedLimit: 6 } as const;
+
+/**
+ * Weekly claims refresh (jobs/refresh-claims.ts): Claude searches the web for a newer dated source for
+ * each cited claim older than STALE_AFTER_DAYS, and code checks every draft against the page itself.
+ * A draft that confirms the status we show, from a trusted domain, is committed; anything else opens a
+ * pull request for review. Prices are per million tokens and per search, for the run's cost estimate.
+ */
+export const CLAIMS_REFRESH = {
+  model: 'claude-haiku-5-5',
+  maxSearches: 4,
+  pageTimeoutMs: 30_000,
+  /** Quotes outside this many words are too thin to check, or more than a short quotation. */
+  quoteWords: { min: 6, max: 50 },
+  /** Old claims about lasting stops; searching again won't find anything newer. */
+  skip: ['pipeline/urengoy-pomary-uzhhorod', 'pipeline/progress', 'pipeline/soyuz'],
+  /** Governments, operators, wires and outlets already cited reliably; subdomains count. */
+  trustedDomains: [
+    'reuters.com',
+    'apnews.com',
+    'bloomberg.com',
+    'bairdmaritime.com',
+    'interfax.com',
+    'tass.com',
+    'aljazeera.com',
+    'thenationalnews.com',
+    'enterpriseam.com',
+    'energyandcleanair.org',
+    'timesca.com',
+    'qazinform.com',
+    'petra.gov.jo',
+    'cpc.ru',
+    'molgroup.info',
+    'sgc.az',
+    'gov',
+  ],
+  price: { inputPerM: 0.1, outputPerM: 0.5, perSearch: 0.01 },
+} as const;

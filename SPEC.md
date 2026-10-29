@@ -279,6 +279,7 @@ Identify the right point IDs in ENTSOG and link each to its pipeline. Starting c
 - Manual imports (GEM, USGS basins) are separate scripts that record source release date and SHA-256 in `DatasetMeta.sourceVersion`.
 - The browser only ever reads `public/data/*`. No live calls to upstream sources from the client.
 - API keys (AGSI+, also used for ALSI) live in GitHub Actions secrets.
+- **Claims refresh (weekly, `.github/workflows/claims.yml`).** For each cited claim older than `STALE_AFTER_DAYS`, Claude Haiku 5.5 searches the web for a newer dated source and drafts a claim. Code then fetches the page and checks the draft: the quote must appear on it word for word, the date must come from the page's own metadata and be no later than its publication date, the claim must be newer than the current one, and the link must not already be cited. A draft that passes, keeps the status we show, comes from a trusted domain (`CLAIMS_REFRESH.trustedDomains`) and whose quote names the asset is committed to `data/curated/`. Any other passing draft opens a pull request. Drafts on pages that can't be read are logged for a saved PDF. Old claims about lasting stops (Brotherhood, Progress, Soyuz) are skipped. The Anthropic key is the `ANTHROPIC_API_KEY` Actions secret; the repository variable `CLAIMS_REFRESH=off` turns the workflow off.
 - Measured send-out sets an EU import terminal's status the way metered flow sets a pipeline's: idle at or below `MEASURED_FLOW.idleShare` of declared send-out capacity over 7 days, operating otherwise. Derived in the browser (`withMeasuredLngEvidence`), not stored in `lng-terminals.json`.
 
 ## 8. Tech stack
@@ -287,6 +288,7 @@ Identify the right point IDs in ENTSOG and link each to its pipeline. Starting c
 - **Map:** MapLibre GL JS for the basemap, deck.gl layers via `@deck.gl/mapbox` overlay (lines, paths, scatter, polygons)
 - **State:** URL as the source of truth for selection and camera; small React state otherwise (no state library unless needed)
 - **Charts:** small hand-rolled SVG sparklines (no chart library for v0.1)
+- **Claims refresh:** Anthropic's SDK (`@anthropic-ai/sdk`) with Claude Haiku 5.5 and its web search tool (added 2026-10-29 at the owner's request)
 - **Icons:** Phosphor (`@phosphor-icons/react`, MIT), imported by name so only the icons used are bundled (added 2026-10-28 at the owner's request)
 - **Data jobs:** Node 22 + TypeScript (`tsx`), zod for validation, mapshaper for one-off geometry simplification
 - **Hosting:** static site on Cloudflare Pages, Vercel or Netlify (free tier); jobs on GitHub Actions
