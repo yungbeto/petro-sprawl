@@ -58,3 +58,27 @@ describe('systemSections', () => {
     expect(systemSections(pipeline({ id: 'd' }), [a, b, c])).toEqual([]);
   });
 });
+
+import { portCallsFor } from '../src/lib/data';
+
+describe('portCallsFor', () => {
+  const points = Array.from({ length: 30 }, (_, i) => ({ date: `2026-10-${String(i + 1).padStart(2, '0')}`, value: 4 }));
+  const withSeries = {
+    ...EMPTY_DATASETS,
+    series: [{ id: 'portwatch-port162', metric: 'tanker_port_calls' as const, unit: 'tankers/day', points }],
+  };
+  const ports = [
+    { portwatchId: 'port362', name: 'Fujairah', pipelineIds: ['habshan-fujairah'] },
+    { portwatchId: 'port162', name: 'Ceyhan', pipelineIds: ['kirkuk-ceyhan', 'btc'] },
+  ];
+
+  it('finds the loaded port series for a pipeline', () => {
+    expect(portCallsFor(withSeries, 'btc', ports).map((c) => [c.port, c.flow.latestDate])).toEqual([['Ceyhan', '2026-10-30']]);
+    expect(portCallsFor(withSeries, 'kirkuk-ceyhan', ports)).toHaveLength(1);
+  });
+
+  it('is empty for pipelines without a port or before the series loads', () => {
+    expect(portCallsFor(withSeries, 'habshan-fujairah', ports)).toEqual([]);
+    expect(portCallsFor(withSeries, 'turkstream', ports)).toEqual([]);
+  });
+});

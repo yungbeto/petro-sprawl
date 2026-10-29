@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { failureMeta, publishDataset, validateRecords } from '../jobs/lib/output';
-import { addDays, dataThrough, dateWindows, toTransitSeries } from '../jobs/lib/portwatch';
+import { addDays, dataThrough, dateWindows, portCallsResponseSchema, toTransitSeries } from '../jobs/lib/portwatch';
 
 const schema = z.object({ id: z.string(), value: z.number() });
 const meta = { sourceUrl: 'https://example.org', license: 'test' };
@@ -102,6 +102,20 @@ describe('toTransitSeries', () => {
       { date: '2026-10-25', value: 3 },
     ]);
     expect(series.id).toBe('portwatch-chokepoint6');
+  });
+
+  it('builds port call series from Daily_Ports_Data rows', () => {
+    const page = portCallsResponseSchema.parse({
+      features: daily('2026-10-25', 2400, 4).map((r) => ({ attributes: { date: r.date, portid: 'port362', portcalls_tanker: r.n_tanker } })),
+    });
+    const series = toTransitSeries('port362', page.features.map((f) => f.attributes), {
+      ...opts,
+      metric: 'tanker_port_calls',
+      label: 'Fujairah',
+    });
+    expect(series).toMatchObject({ id: 'portwatch-port362', metric: 'tanker_port_calls', label: 'Fujairah', unit: 'tankers/day' });
+    expect(series.points.at(-1)).toEqual({ date: '2026-10-25', value: 4 });
+    expect(series.fiveYear?.mean).toBe(4);
   });
 
   it('computes the five-year baseline from history before the trailing year', () => {

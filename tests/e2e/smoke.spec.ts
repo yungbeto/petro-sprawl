@@ -326,6 +326,13 @@ test('a dated claim older than 30 days is marked unverified', async ({ page }) =
   await expect(page.getByLabel('Panel').getByText(/unverified since/i)).toBeVisible();
 });
 
+test('a pipeline ending at a reported port shows its tanker calls', async ({ page }) => {
+  await page.goto('/?sel=pipeline/habshan-fujairah');
+  const panel = page.getByLabel('Panel');
+  await expect(panel.getByRole('heading', { name: 'Tanker calls at Fujairah, last 90 days' })).toBeVisible();
+  await expect(panel.getByText(/not flow on this pipeline/)).toBeVisible();
+});
+
 test('storage fills a country and opens its detail', async ({ page }) => {
   // Test-only series: storage needs an AGSI+ key, so the smoke test serves its own file.
   const days = Array.from({ length: 400 }, (_, i) =>

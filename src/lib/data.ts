@@ -1,5 +1,6 @@
 import type { Basin, Chokepoint, Country, DatasetMeta, Disruption, LngTerminal, ObservationSeries, Pipeline } from '../types';
 import { chokepointFlow, type ChokepointFlow } from './flow';
+import { PORT_CALLS, portCallsSeriesId } from './config';
 import type { Selection } from '../app/urlState';
 import { lineTouchesPolygon, pointInPolygon } from './geo';
 
@@ -33,6 +34,24 @@ export function chokepointFlows(data: Datasets): Map<string, ChokepointFlow> {
     if (flow) flows.set(c.id, flow);
   }
   return flows;
+}
+
+export interface PortCalls {
+  port: string;
+  flow: ChokepointFlow;
+}
+
+/** Tanker port calls at the ports a pipeline ends at, for those PortWatch reports and that have loaded. */
+export function portCallsFor(
+  data: Datasets,
+  pipelineId: string,
+  ports: readonly { portwatchId: string; name: string; pipelineIds: readonly string[] }[] = PORT_CALLS.ports,
+): PortCalls[] {
+  return ports.flatMap((port) => {
+    if (!port.pipelineIds.includes(pipelineId)) return [];
+    const flow = chokepointFlow(seriesById(data, portCallsSeriesId(port.portwatchId)));
+    return flow ? [{ port: port.name, flow }] : [];
+  });
 }
 
 /** Disruptions for one asset, most recent start first. */

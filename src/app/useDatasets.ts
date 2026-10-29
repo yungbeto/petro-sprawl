@@ -3,7 +3,7 @@ import type { DatasetMeta } from '../types';
 import { EMPTY_DATASETS, type Datasets } from '../lib/data';
 import { withMeasuredEvidence, withMeasuredLngEvidence } from '../lib/evidence';
 
-const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'countries', 'chokepoint-transits', 'gas-flows', 'gas-storage', 'lng-sendout', 'disruptions'] as const;
+const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'countries', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'lng-sendout', 'disruptions'] as const;
 
 async function fetchJson<T>(path: string): Promise<T | null> {
   try {
@@ -40,6 +40,7 @@ export function useDatasets(): DatasetsState {
       const get = (id: (typeof DATASET_IDS)[number]) => results.find((r) => r.id === id)?.records ?? [];
       const series = [
         ...get('chokepoint-transits'),
+        ...get('port-calls'),
         ...get('gas-flows'),
         ...get('gas-storage'),
         ...get('lng-sendout'),

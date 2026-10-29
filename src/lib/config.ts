@@ -100,6 +100,7 @@ export const MAP_ATTRIBUTION = [
   'Pipelines and LNG terminals: <a href="https://globalenergymonitor.org/">Global Energy Monitor</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>)',
   'Basins: <a href="https://www.sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3">USGS</a>',
   'Chokepoints: <a href="https://portwatch.imf.org/">IMF PortWatch</a>, <a href="https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints">EIA</a>',
+  'Port calls: <a href="https://portwatch.imf.org/">IMF PortWatch</a>',
   'Gas flows: <a href="https://transparency.entsog.eu/">ENTSOG</a>',
   'Gas storage: <a href="https://agsi.gie.eu/">GIE AGSI+</a>',
   'LNG send-out: <a href="https://alsi.gie.eu/">GIE ALSI</a>',
@@ -125,6 +126,24 @@ export const PORTWATCH = {
   /** Attempts per request. The service fails queries at random; see jobs/fetch-portwatch.ts. */
   attempts: 6,
 } as const;
+
+/**
+ * Ports at the end of a mapped pipeline, with IMF PortWatch daily tanker port calls. Only ports the
+ * Daily_Ports_Data layer actually reports: on 2026-10-29 it had no rows for Yanbu, Sidi Kerir,
+ * Novorossiysk, Primorsk, Ras Laffan, Ras Tanura, Juaymah, Das Island or El Sokhna, and Ust-Luga
+ * stopped on 2026-07-26 (TODO-research.md). Calls are context, not evidence: a tanker at the
+ * port may be loading oil from another source, and two pipelines end at Ceyhan.
+ */
+export const PORT_CALLS = {
+  dailyUrl: 'https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Daily_Ports_Data/FeatureServer/0/query',
+  ports: [
+    { portwatchId: 'port362', name: 'Fujairah', pipelineIds: ['habshan-fujairah'] },
+    // PortWatch names it "Botas": the BOTAŞ marine terminal at Ceyhan, 36.88° N 35.92° E.
+    { portwatchId: 'port162', name: 'Ceyhan', pipelineIds: ['kirkuk-ceyhan', 'btc'] },
+  ],
+} as const;
+
+export const portCallsSeriesId = (portwatchId: string) => `portwatch-${portwatchId}`;
 
 /** Curated-to-GEM dedup: smallest name similarity (Dice on name words) that counts as a match. */
 export const DEDUP = { minNameSimilarity: 0.6 } as const;
@@ -235,6 +254,7 @@ export const DATASET_FRESHNESS: Record<
   { label: string; scheduled: boolean; staleAfterHours?: number; publisher?: string }
 > = {
   'chokepoint-transits': { label: 'Chokepoint transits', scheduled: true, staleAfterHours: 18, publisher: 'IMF PortWatch' },
+  'port-calls': { label: 'Port calls', scheduled: true, staleAfterHours: 18, publisher: 'IMF PortWatch' },
   'gas-flows': { label: 'Gas flows', scheduled: true, staleAfterHours: 36, publisher: 'ENTSOG Transparency Platform' },
   'gas-storage': { label: 'Gas storage', scheduled: true, staleAfterHours: 36, publisher: 'GIE AGSI+' },
   'lng-sendout': { label: 'LNG send-out', scheduled: true, staleAfterHours: 36, publisher: 'GIE ALSI' },

@@ -244,13 +244,14 @@ interface DatasetMeta {
 | [GIE AGSI+](https://agsi.gie.eu/) | EU gas storage fill by country | REST API, free key via account ([docs](https://www.gie.eu/transparency-platform/GIE_API_documentation_v013.pdf)) | Daily | Check terms; attribute |
 | [GIE ALSI](https://alsi.gie.eu/) | Daily send-out and declared send-out capacity by EU LNG import terminal | REST API, same key as AGSI+ (`npm run fetch:alsi`); facilities mapped to GEM terminals in `ALSI.terminals` | Daily | Check terms; attribute |
 | [IMF PortWatch](https://portwatch.imf.org/) | Daily vessel transits at chokepoints, by vessel type | ArcGIS FeatureServer, no key: `services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query` (use `n_tanker`) | Daily (job runs every 6h) | Check terms; attribute |
+| [IMF PortWatch](https://portwatch.imf.org/) | Daily tanker port calls at ports where a mapped pipeline ends (`PORT_CALLS` in config) | ArcGIS FeatureServer, no key: `Daily_Ports_Data/FeatureServer/0/query` (use `portcalls_tanker`). Covers few oil terminals; see TODO-research | Daily (same job) | Check terms; attribute |
 | EIA World Oil Transit Chokepoints | Reference oil volumes per chokepoint (2024) | Static values, committed in code | Static | Public domain |
 | [USGS World Petroleum Assessment provinces](https://sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3) | Basin outlines | Shapefile (14 MB); simplify once with mapshaper, commit result | Static | Public domain |
 | Basemap: [OpenFreeMap](https://openfreemap.org/) or [Protomaps](https://protomaps.com/) | Vector tiles | No key | Static | OSM attribution |
 
 EIA reference values (mb/d, 2024, the latest full year in EIA's table, read 2026-10-28): Hormuz 20.7, Malacca 22.5, Suez Canal and SUMED 4.8, Bab el-Mandeb 4.1, Danish Straits 4.9, Turkish Straits 3.6, Panama Canal 2.0 (fiscal year). Suez and Bab el-Mandeb are depressed in 2024 by Red Sea rerouting. Values live in `src/lib/config.ts`.
 
-Note on units: PortWatch counts vessels, EIA measures barrels. Do not compare them directly. The chokepoint flow index compares tanker transits with their own trailing baseline; the EIA figure is shown as context for scale.
+Note on units: PortWatch counts vessels, EIA measures barrels. Do not compare them directly. Port calls are shown on the pipeline pages as context only, never as status evidence: a tanker at Fujairah or Ceyhan may be loading oil that didn't come down the pipeline. The chokepoint flow index compares tanker transits with their own trailing baseline; the EIA figure is shown as context for scale.
 
 ### Pipelines to curate for the corridor (v0.1)
 

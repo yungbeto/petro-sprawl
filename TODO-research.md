@@ -7,6 +7,7 @@ Items that couldn't be sourced or that need a decision. See CLAUDE.md: unsourced
 - ~~EIA reference volumes differed from SPEC section 7.~~ Resolved 2026-10-28: using EIA's 2024 column (latest full year), SPEC updated. Note that 2024 Suez (4.8) and Bab el-Mandeb (4.1) reflect Red Sea rerouting, about half their 2023 levels.
 - **Danish Straits:** PortWatch's `chokepoint10` is the Oresund only. EIA's Danish Straits figure includes the Great Belt, where most large tankers pass. Check whether PortWatch publishes a Great Belt series; if not, the M3 flow index for this chokepoint tracks Oresund traffic only and the panel says so.
 - **Turkish Straits:** PortWatch's `chokepoint3` is the Bosporus; EIA reports the Turkish Straits at the Dardanelles. Probably the same tanker traffic, but confirm.
+- **Port calls coverage:** PortWatch's `Daily_Ports_Data` had no rows at all (checked 2026-10-29) for Yanbu (`port570`), Sidi Kerir (`port2129`), Novorossiysk (`port833`), Primorsk (`port1020`), Ras Laffan (`port1090`), Ras Tanura (`port1091`), Juaymah (`port526`), Das Island (`port2237`) or El Sokhna (`port828`), though its ports database lists them all. Ust-Luga (`port1095`) stopped on 2026-07-26. Al Basrah (`port20`), Basrah Oil Terminal (`port2479`) and Mina al-Ahmadi (`port743`) report near zero tanker calls, which looks like a coverage gap, not a stop. Kharg Island (`port2164`) queries failed; retry. Only Fujairah and Ceyhan (`port162`, named "Botas") are wired up. Ask PortWatch whether coverage is planned, or find another source.
 
 ## Basins
 

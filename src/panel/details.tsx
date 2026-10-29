@@ -17,7 +17,9 @@ import {
   disruptionsFor,
   lngTerminalsInBasin,
   pipelinesTouchingBasin,
+  portCallsFor,
   seriesById,
+  type PortCalls,
   systemSections,
   type Datasets,
 } from '../lib/data';
@@ -191,6 +193,42 @@ export function ChokepointDetail({ item, data }: { item: Chokepoint; data: Datas
   );
 }
 
+/**
+ * Daily tanker calls at the port a pipeline ends at. Context, not status evidence: a tanker there may
+ * be loading oil from elsewhere, and more than one pipeline can end at the same port.
+ */
+function PortCallsSection({ calls }: { calls: PortCalls }) {
+  const { port, flow } = calls;
+  return (
+    <section className="section">
+      <h3 className="section__title">Tanker calls at {port}, last 90 days</h3>
+      <p className="section__lede">
+        <span className="mono">{perDay(flow.recent?.mean)}</span> per day over the 7 days to{' '}
+        <span className="mono">{flow.latestDate}</span>
+        {flow.indexFiveYear !== null && (
+          <>
+            , <span className="mono">{formatIndexShare(flow.indexFiveYear)}</span> of the five-year average
+          </>
+        )}
+        . <Band band={flow.band} />
+      </p>
+      <Sparkline
+        points={flow.sparkline}
+        unit="/day"
+        label={`Daily tanker port calls at ${port}, ${flow.sparkline[0]?.date} to ${flow.latestDate}`}
+        references={[
+          ...(flow.fiveYear ? [{ value: flow.fiveYear.mean, label: 'Five-year average', style: 'dashed' as const }] : []),
+          ...(flow.trailing ? [{ value: flow.trailing.mean, label: 'Trailing year', style: 'dotted' as const }] : []),
+        ]}
+      />
+      <p className="note">
+        Calls by tankers of any cargo, from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>.
+        They show traffic at the port, not flow on this pipeline.
+      </p>
+    </section>
+  );
+}
+
 function DisruptionList({ disruptions }: { disruptions: Disruption[] }) {
   if (disruptions.length === 0) return null;
   return (
@@ -311,6 +349,7 @@ export function PipelineDetail({
   const claim = current?.sourceType === 'measured' ? latestClaim(item) : undefined;
   const flow = pipelineFlow(seriesById(data, item.flowSeriesId));
   const disruptions = disruptionsFor(data, 'pipeline', item.id);
+  const portCalls = portCallsFor(data, item.id);
   const route = [item.fromCountry, ...item.transitCountries, item.toCountry].filter(Boolean).join(' → ');
   const curated = item.sources.includes('curated');
   const sections = systemSections(item, data.pipelines);
@@ -398,6 +437,9 @@ export function PipelineDetail({
           />
         </section>
       )}
+      {portCalls.map((calls) => (
+        <PortCallsSection key={calls.port} calls={calls} />
+      ))}
       <DisruptionList disruptions={disruptions} />
       {item.evidence.length > 1 && (
         <section className="section">
