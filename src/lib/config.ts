@@ -122,6 +122,8 @@ export const PORTWATCH = {
   minPoints: 300,
   /** Latest point older than this means the upstream feed stalled; the run fails and the old file stays. */
   maxLagDays: 21,
+  /** Attempts per request. The service fails queries at random; see jobs/fetch-portwatch.ts. */
+  attempts: 6,
 } as const;
 
 /** Curated-to-GEM dedup: smallest name similarity (Dice on name words) that counts as a match. */

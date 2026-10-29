@@ -1,4 +1,7 @@
-const ATTEMPTS = 3;
+/** Wait before the next attempt: doubling from 4 s, capped at maxBackoffMs. */
+export function backoffMs(attempt: number, maxBackoffMs: number): number {
+  return Math.min(2_000 * 2 ** attempt, maxBackoffMs);
+}
 
 /** Upstream APIs are occasionally slow; retry with backoff before failing the run. */
 export async function fetchJson(
@@ -6,16 +9,20 @@ export async function fetchJson(
   {
     source,
     timeoutMs = 30_000,
+    attempts = 3,
+    maxBackoffMs = 30_000,
     bodyError,
   }: {
     source: string;
     timeoutMs?: number;
+    attempts?: number;
+    maxBackoffMs?: number;
     /** Some APIs answer 200 with an error body; return a message to retry it like any other failure. */
     bodyError?: (body: unknown) => string | null;
   },
 ): Promise<unknown> {
   let lastError: unknown;
-  for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
+  for (let attempt = 1; attempt <= attempts; attempt++) {
     try {
       const response = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
       if (!response.ok) throw new Error(`${source} responded ${response.status}`);
@@ -25,7 +32,7 @@ export async function fetchJson(
       return body;
     } catch (err) {
       lastError = withCause(err, source);
-      if (attempt < ATTEMPTS) await new Promise((r) => setTimeout(r, 2_000 * 2 ** attempt));
+      if (attempt < attempts) await new Promise((r) => setTimeout(r, backoffMs(attempt, maxBackoffMs)));
     }
   }
   throw lastError;

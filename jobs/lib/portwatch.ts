@@ -18,6 +18,16 @@ import { addDays, fiveYearBaseline } from '../../src/lib/flow';
 
 export { addDays };
 
+/** Inclusive date ranges of at most `days` days that cover `since` to `until`, oldest first. */
+export function dateWindows(since: string, until: string, days: number): Array<[string, string]> {
+  const windows: Array<[string, string]> = [];
+  for (let start = since; start <= until; start = addDays(start, days)) {
+    const end = addDays(start, days - 1);
+    windows.push([start, end < until ? end : until]);
+  }
+  return windows;
+}
+
 export function daysBetween(a: string, b: string): number {
   return Math.round((Date.parse(`${b}T00:00:00Z`) - Date.parse(`${a}T00:00:00Z`)) / 86_400_000);
 }

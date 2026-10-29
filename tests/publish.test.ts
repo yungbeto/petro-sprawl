@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { failureMeta, publishDataset, validateRecords } from '../jobs/lib/output';
-import { addDays, dataThrough, toTransitSeries } from '../jobs/lib/portwatch';
+import { addDays, dataThrough, dateWindows, toTransitSeries } from '../jobs/lib/portwatch';
 
 const schema = z.object({ id: z.string(), value: z.number() });
 const meta = { sourceUrl: 'https://example.org', license: 'test' };
@@ -123,7 +123,24 @@ describe('toTransitSeries', () => {
   });
 });
 
-import { withCause } from '../jobs/lib/http';
+import { backoffMs, withCause } from '../jobs/lib/http';
+
+describe('dateWindows', () => {
+  it('covers the range with inclusive windows, the last one cut short', () => {
+    expect(dateWindows('2026-01-01', '2026-01-10', 4)).toEqual([
+      ['2026-01-01', '2026-01-04'],
+      ['2026-01-05', '2026-01-08'],
+      ['2026-01-09', '2026-01-10'],
+    ]);
+    expect(dateWindows('2026-01-01', '2026-01-04', 4)).toEqual([['2026-01-01', '2026-01-04']]);
+  });
+});
+
+describe('backoffMs', () => {
+  it('doubles from 4 s and stops at the cap', () => {
+    expect([1, 2, 3, 4, 5].map((a) => backoffMs(a, 30_000))).toEqual([4_000, 8_000, 16_000, 30_000, 30_000]);
+  });
+});
 
 describe('withCause', () => {
   it('names the network cause behind a bare fetch failure', () => {
