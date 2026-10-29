@@ -25,7 +25,7 @@ import { formatIndex, formatIndexShare, formatNumber } from '../lib/format';
 import type { Disruption } from '../types';
 import { Sparkline } from './Sparkline';
 import { formatCapacity, formatCountry, formatEnergyPerDay, formatLonLat, formatMbd } from '../lib/format';
-import { lngStatus, pipelineStatus } from '../lib/encoding';
+import { lngStatus, pipelineAge, pipelineStatus, shareCoverage } from '../lib/encoding';
 import { filterRows, type FilterRow } from '../lib/filters';
 import { chokepointRows } from '../lib/summary';
 import { AssetIcon, COMMODITY_PIPELINE } from './AssetIcon';
@@ -340,6 +340,7 @@ export function PipelineDetail({ item, data, now }: { item: Pipeline; data: Data
             )
           }
         />
+        <ServiceStat history={item.history} now={now} />
         <Stat
           label="Measured flow"
           value={
@@ -393,22 +394,66 @@ export function PipelineDetail({ item, data, now }: { item: Pipeline; data: Data
           </ol>
         </section>
       )}
-      {(item.operator || (item.owners && item.owners.length > 0) || !route) && (
+      {hasPipelineFacts(item, route) && (
         <Facts>
-          {!route && (
+          {!route ? (
             <Row label="Route">
               <span className="muted">Unknown</span>
+            </Row>
+          ) : (
+            item.endpoints?.start &&
+            item.endpoints.end && (
+              <Row label="Runs from">
+                {item.endpoints.start} to {item.endpoints.end}
+              </Row>
+            )
+          )}
+          {item.lengthKm && (
+            <Row label="Length">
+              <span className="mono">{formatNumber(item.lengthKm.value, 0)} km</span>
+              {item.lengthKm.estimated && <span className="muted"> (estimated from the route)</span>}
+            </Row>
+          )}
+          {item.diameter && (
+            <Row label="Diameter">
+              <span className="mono">{item.diameter}</span>
+            </Row>
+          )}
+          {item.history?.proposalYear !== undefined && (
+            <Row label="Proposed">
+              <span className="mono">{item.history.proposalYear}</span>
+            </Row>
+          )}
+          {item.history?.constructionYear !== undefined && (
+            <Row label="Construction began">
+              <span className="mono">{item.history.constructionYear}</span>
+            </Row>
+          )}
+          {item.history && item.history.startYears.length > 1 && (
+            <Row label={item.history.expected ? 'Sections expected' : 'Sections opened'}>
+              <span className="mono">{item.history.startYears.join(', ')}</span>
+            </Row>
+          )}
+          {item.history?.stopYear !== undefined && (
+            <Row label="Stopped running">
+              <span className="mono">{item.history.stopYear}</span>
             </Row>
           )}
           {item.operator && <Row label="Operator">{item.operator}</Row>}
           {item.owners && item.owners.length > 0 && (
             <Row label="Owners">
-              {item.owners.map((o) => (
-                <span key={o.name} className="facts__line">
-                  {o.name}
-                  {o.sharePct !== undefined && <span className="mono muted"> {o.sharePct}%</span>}
+              <CompanyList companies={item.owners} />
+              {item.ownersSource && (
+                <span className="facts__line muted">
+                  <SourceLink href={item.ownersSource.url}>{item.ownersSource.publisher}</SourceLink>, read{' '}
+                  <span className="mono">{item.ownersSource.accessedAt}</span>
                 </span>
-              ))}
+              )}
+            </Row>
+          )}
+          {item.parents && item.parents.length > 0 && (
+            <Row label="Parent companies">
+              <CompanyList companies={item.parents} />
             </Row>
           )}
         </Facts>
@@ -424,6 +469,62 @@ export function PipelineDetail({ item, data, now }: { item: Pipeline; data: Data
         )}
       </p>
     </>
+  );
+}
+
+function hasPipelineFacts(item: Pipeline, route: string): boolean {
+  const h = item.history;
+  return Boolean(
+    !route ||
+      (item.endpoints?.start && item.endpoints.end) ||
+      item.lengthKm ||
+      item.diameter ||
+      item.operator ||
+      item.owners?.length ||
+      item.parents?.length ||
+      (h && (h.proposalYear !== undefined || h.constructionYear !== undefined || h.startYears.length > 1 || h.stopYear !== undefined)),
+  );
+}
+
+/** Companies with their shares, and a note when the listed shares don't add up to the whole. */
+function CompanyList({ companies }: { companies: { name: string; sharePct?: number }[] }) {
+  const covered = shareCoverage(companies);
+  return (
+    <>
+      {companies.map((c) => (
+        <span key={c.name} className="facts__line">
+          {c.name}
+          {c.sharePct !== undefined && <span className="mono muted"> {c.sharePct}%</span>}
+        </span>
+      ))}
+      {covered !== null && (
+        <span className="facts__line muted">
+          Listed shares cover <span className="mono">{formatNumber(covered, 1)}%</span>
+        </span>
+      )}
+    </>
+  );
+}
+
+/** The year the line first ran, and its age; or the year it's meant to. */
+function ServiceStat({ history, now }: { history: Pipeline['history']; now: Date }) {
+  const first = history?.startYears[0];
+  if (first === undefined) return <Stat label="In service since" value={<span className="muted">Unknown</span>} />;
+  if (history!.expected) return <Stat label="Expected start" value={String(first)} aside="target year, per GEM" />;
+  const age = pipelineAge(history!, now);
+  const years = (n: number) => `${n} ${n === 1 ? 'year' : 'years'}`;
+  return (
+    <Stat
+      label="In service since"
+      value={String(first)}
+      aside={
+        history!.stopYear !== undefined
+          ? `ran ${years(age)}, to ${history!.stopYear}`
+          : age === 0
+            ? 'opened this year'
+            : years(age)
+      }
+    />
   );
 }
 
@@ -581,12 +682,7 @@ export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datase
         {item.operator && <Row label="Operator">{item.operator}</Row>}
         {item.owners && item.owners.length > 0 && (
           <Row label="Owners">
-            {item.owners.map((o) => (
-              <span key={o.name} className="facts__line">
-                {o.name}
-                {o.sharePct !== undefined && <span className="mono muted"> {o.sharePct}%</span>}
-              </span>
-            ))}
+            <CompanyList companies={item.owners} />
           </Row>
         )}
         <Row label="Location">

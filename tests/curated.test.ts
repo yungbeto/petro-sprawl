@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   matchGemRows,
   mergeCurated,
+  mergeHistory,
   mergePipelines,
   nameSimilarity,
   nameTokens,
@@ -113,6 +114,23 @@ describe('mergeCurated', () => {
       'press 2022-09-27',
       'dataset 2023-08-11',
     ]);
+  });
+});
+
+describe('mergeHistory', () => {
+  it('lists every opening year and keeps a stop year only when every section stopped', () => {
+    const a = pipeline({ id: 'a', history: { startYears: [1964], expected: false, stopYear: 2022 } });
+    const b = pipeline({ id: 'b', history: { startYears: [1974, 1981], expected: false, proposalYear: 1970 } });
+    expect(mergeHistory([a, b])).toEqual({ startYears: [1964, 1974, 1981], expected: false, proposalYear: 1970 });
+    expect(mergeHistory([a])).toMatchObject({ stopYear: 2022 });
+    expect(mergeHistory([pipeline()])).toBeUndefined();
+  });
+
+  it('drops length and diameter when a system has more than one row', () => {
+    const a = pipeline({ id: 'a', lengthKm: { value: 900, estimated: false }, diameter: '42 in' });
+    const b = pipeline({ id: 'b', lengthKm: { value: 400, estimated: false } });
+    expect(mergeCurated(curated(), [a, b])).not.toHaveProperty('lengthKm');
+    expect(mergeCurated(curated(), [a])).toMatchObject({ lengthKm: { value: 900 }, diameter: '42 in' });
   });
 });
 

@@ -36,11 +36,43 @@ export interface Pipeline {
   capacity?: { value: number; unit: 'bcm/yr' | 'mb/d' };
   /** Cited source when a curated record sets the capacity; GEM capacities cite GEM. */
   capacitySource?: SourceRef;
+  /** Cited source when a curated record sets the owners; GEM owners cite GEM. */
+  ownersSource?: PageRef;
+  /** Ultimate parent companies behind the owners, as GEM traces them. */
+  parents?: { name: string; sharePct?: number }[];
+  history?: PipelineHistory;
+  /** GEM's known length, or its estimate from the mapped route. */
+  lengthKm?: { value: number; estimated: boolean };
+  /** As GEM gives it, one figure per section: "30, 42 in". */
+  diameter?: string;
+  /** Named places the line starts and ends at, as GEM gives them. */
+  endpoints?: { start?: string; end?: string };
   geometry: LineString | MultiLineString;
   geometryApprox: boolean;
   evidence: Evidence[];
   flowSeriesId?: string;
   sources: string[];
+}
+
+/** A reference page with no publication date, such as an operator's shareholder list. */
+export interface PageRef {
+  publisher: string;
+  title: string;
+  url: string;
+  /** ISO date the page was read. */
+  accessedAt: string;
+}
+
+/** When a pipeline was proposed, built and put in service, from GEM. */
+export interface PipelineHistory {
+  /** Years sections entered service, ascending. Targets rather than history when `expected`. */
+  startYears: number[];
+  /** GEM lists the line as proposed or under construction, so the start years are planned dates. */
+  expected: boolean;
+  proposalYear?: number;
+  constructionYear?: number;
+  /** Year the line stopped running, when GEM records one. */
+  stopYear?: number;
 }
 
 /** One unit of an LNG terminal (a liquefaction train or a regasification unit), as GEM lists it. */

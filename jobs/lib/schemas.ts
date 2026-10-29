@@ -53,6 +53,15 @@ const evidenceSchema = z.object({
   recordedAt: isoDate,
 });
 
+const pageRefSchema = z.object({
+  publisher: z.string().min(1),
+  title: z.string().min(1),
+  url: z.string().url(),
+  accessedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+});
+
+const year = z.number().int().min(1850).max(2100);
+
 export const pipelineSchema = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
   name: z.string().min(1),
@@ -65,6 +74,20 @@ export const pipelineSchema = z.object({
   owners: z.array(z.object({ name: z.string(), sharePct: z.number().optional() })).optional(),
   capacity: z.object({ value: z.number().positive(), unit: z.enum(['bcm/yr', 'mb/d']) }).optional(),
   capacitySource: sourceRefSchema.optional(),
+  ownersSource: pageRefSchema.optional(),
+  parents: z.array(z.object({ name: z.string(), sharePct: z.number().optional() })).optional(),
+  history: z
+    .object({
+      startYears: z.array(year),
+      expected: z.boolean(),
+      proposalYear: year.optional(),
+      constructionYear: year.optional(),
+      stopYear: year.optional(),
+    })
+    .optional(),
+  lengthKm: z.object({ value: z.number().nonnegative(), estimated: z.boolean() }).optional(),
+  diameter: z.string().min(1).optional(),
+  endpoints: z.object({ start: z.string().optional(), end: z.string().optional() }).optional(),
   geometry: z.union([
     z.object({ type: z.literal('LineString'), coordinates: z.array(position).min(2) }),
     z.object({ type: z.literal('MultiLineString'), coordinates: z.array(z.array(position).min(2)).min(1) }),
@@ -132,6 +155,12 @@ export const curatedPipelineSchema = z.object({
   exclude: z.array(z.string()).optional(),
   capacity: z
     .object({ value: z.number().positive(), unit: z.enum(['bcm/yr', 'mb/d']), source: sourceRefSchema })
+    .optional(),
+  owners: z
+    .object({
+      list: z.array(z.object({ name: z.string().min(1), sharePct: z.number().positive().optional() })).min(1),
+      source: pageRefSchema,
+    })
     .optional(),
   evidence: z.array(
     evidenceSchema.extend({

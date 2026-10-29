@@ -1,4 +1,4 @@
-import type { Evidence, Pipeline, SourceRef } from '../../src/types';
+import type { Evidence, PageRef, Pipeline, PipelineHistory, SourceRef } from '../../src/types';
 import { DEDUP } from '../../src/lib/config';
 
 /** A hand-researched corridor pipeline (data/curated/pipelines-evidence.json). */
@@ -17,6 +17,8 @@ export interface CuratedPipeline {
   /** GEM rows never to merge, even if they match. */
   exclude?: string[];
   capacity?: NonNullable<Pipeline['capacity']> & { source: SourceRef };
+  /** Cited shareholders. They replace GEM's owners and its parent chain, which may not match them. */
+  owners?: { list: NonNullable<Pipeline['owners']>; source: PageRef };
   evidence: Evidence[];
 }
 
@@ -110,6 +112,30 @@ export function matchGemRows(
 export const byRankThenObservedDesc = (a: Evidence, b: Evidence) =>
   Number(a.sourceType === 'dataset') - Number(b.sourceType === 'dataset') || b.observedAt.localeCompare(a.observedAt);
 
+/**
+ * The history of a system from its GEM rows: every year a section opened, the earliest proposal
+ * and construction start, and a stop year only once every section has stopped.
+ */
+export function mergeHistory(rows: Pipeline[]): PipelineHistory | undefined {
+  const histories = rows.flatMap((r) => r.history ?? []);
+  if (!histories.length) return undefined;
+  const earliest = (years: (number | undefined)[]) => {
+    const known = years.filter((y): y is number => y !== undefined);
+    return known.length ? Math.min(...known) : undefined;
+  };
+  const proposalYear = earliest(histories.map((h) => h.proposalYear));
+  const constructionYear = earliest(histories.map((h) => h.constructionYear));
+  const stops = rows.map((r) => r.history?.stopYear);
+  const stopYear = stops.every((y) => y !== undefined) ? Math.max(...(stops as number[])) : undefined;
+  return {
+    startYears: [...new Set(histories.flatMap((h) => h.startYears))].sort((a, b) => a - b),
+    expected: histories.every((h) => h.expected),
+    ...(proposalYear !== undefined ? { proposalYear } : {}),
+    ...(constructionYear !== undefined ? { constructionYear } : {}),
+    ...(stopYear !== undefined ? { stopYear } : {}),
+  };
+}
+
 /** One curated pipeline built from its GEM rows. Curated fields win; GEM fills the rest. */
 export function mergeCurated(curated: CuratedPipeline, rows: Pipeline[]): Pipeline {
   // Largest row first, so operator and owners come from the main line rather than a spur.
@@ -141,7 +167,21 @@ export function mergeCurated(curated: CuratedPipeline, rows: Pipeline[]): Pipeli
     sources: ['curated', ...new Set(rows.flatMap((r) => r.sources))],
   };
   if (main?.operator) pipeline.operator = main.operator;
-  if (main?.owners) pipeline.owners = main.owners;
+  if (curated.owners) {
+    pipeline.owners = curated.owners.list;
+    pipeline.ownersSource = curated.owners.source;
+  } else {
+    if (main?.owners) pipeline.owners = main.owners;
+    if (main?.parents) pipeline.parents = main.parents;
+  }
+  const history = mergeHistory(rows);
+  if (history) pipeline.history = history;
+  // Length, diameter and end points describe one line; summed over parallel strings or spurs they'd mislead.
+  if (rows.length === 1 && main) {
+    if (main.lengthKm) pipeline.lengthKm = main.lengthKm;
+    if (main.diameter) pipeline.diameter = main.diameter;
+    if (main.endpoints) pipeline.endpoints = main.endpoints;
+  }
   if (curated.capacity) {
     const { source, ...capacity } = curated.capacity;
     pipeline.capacity = capacity;

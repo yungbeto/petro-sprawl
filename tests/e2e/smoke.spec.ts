@@ -279,6 +279,23 @@ test('Ukraine transit shows no measured flow beside the January 2025 claim', asy
   await expect(status).toContainText('2025-01-01');
 });
 
+test('a pipeline shows its age, size and owners, with GEM gaps and cited owners called out', async ({ page }) => {
+  await page.goto('/?sel=pipeline/btc');
+  const panel = page.getByLabel('Panel');
+  const fact = (label: string) => panel.locator('dt', { hasText: label }).locator('xpath=following-sibling::dd[1]');
+  await expect(fact('In service since')).toContainText('2006');
+  await expect(fact('In service since')).toContainText('20 years');
+  await expect(fact('Runs from')).toHaveText('Sangachal Terminal to Ceyhan');
+  await expect(fact('Length')).toContainText('1,768 km');
+  await expect(fact('Parent companies')).toContainText('BP PLC');
+  await expect(fact('Parent companies')).toContainText('Listed shares cover 89.2%');
+
+  await page.goto('/?sel=pipeline/cpc');
+  await expect(fact('Owners')).toContainText('IC CPC Company');
+  await expect(fact('Owners').getByRole('link', { name: 'CPC', exact: true })).toHaveAttribute('href', /cpc\.ru/);
+  await expect(panel.locator('dt', { hasText: 'Parent companies' })).toHaveCount(0);
+});
+
 test('a dated claim older than 30 days is marked unverified', async ({ page }) => {
   await page.goto('/?sel=pipeline/druzhba-south');
   await expect(page.getByLabel('Panel').getByText(/unverified since/i)).toBeVisible();

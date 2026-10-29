@@ -487,6 +487,60 @@
     "gem": [
       "gem-p0646"
     ],
+    "owners": {
+      "list": [
+        {
+          "name": "Russian Federation (Transneft as trustee)",
+          "sharePct": 24
+        },
+        {
+          "name": "KazMunayGas",
+          "sharePct": 19
+        },
+        {
+          "name": "Chevron Caspian Pipeline Consortium Company",
+          "sharePct": 15
+        },
+        {
+          "name": "LUKOIL International",
+          "sharePct": 12.5
+        },
+        {
+          "name": "Mobil Caspian Pipeline Company",
+          "sharePct": 7.5
+        },
+        {
+          "name": "Rosneft-Shell Caspian Ventures",
+          "sharePct": 7.5
+        },
+        {
+          "name": "IC CPC Company",
+          "sharePct": 7
+        },
+        {
+          "name": "BG Overseas Holding",
+          "sharePct": 2
+        },
+        {
+          "name": "Eni International (N.A.) N.V.",
+          "sharePct": 2
+        },
+        {
+          "name": "Kazakhstan Pipeline Ventures",
+          "sharePct": 1.75
+        },
+        {
+          "name": "Oryx Caspian Pipeline",
+          "sharePct": 1.75
+        }
+      ],
+      "source": {
+        "publisher": "CPC",
+        "title": "Shareholders",
+        "url": "https://www.cpc.ru/en/about/Pages/shareholders.aspx",
+        "accessedAt": "2026-10-28"
+      }
+    },
     "evidence": [
       {
         "status": "operating",

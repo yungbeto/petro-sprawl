@@ -64,7 +64,7 @@ describe('buildChokepoints', () => {
 });
 
 import { countryToIso } from '../jobs/lib/countries';
-import { gemRowToPipeline, joinLineParts, mapGemStatus, parseOwners, type GemRow } from '../jobs/lib/gem';
+import { gemDiameter, gemHistory, gemLength, gemRowToPipeline, joinLineParts, mapGemStatus, parseOwners, parseYear, sameCompanies, type GemRow } from '../jobs/lib/gem';
 import { lngTerminals, type GemLngRow } from '../jobs/lib/lng';
 import { mergeLngEvidence } from '../jobs/lib/curated-lng';
 import { lngTerminal } from './fixtures';
@@ -166,6 +166,47 @@ describe('GEM transforms', () => {
       ok: false,
       reason: 'excluded_route_type',
     });
+  });
+
+  it('reads years, keeping the start of a range and dropping "Before 1990"', () => {
+    expect(parseYear('1997')).toBe(1997);
+    expect(parseYear('2009-2011')).toBe(2009);
+    expect(parseYear('Before 1990')).toBeNull();
+    expect(parseYear('')).toBeNull();
+  });
+
+  it('keeps start years in order, as targets for lines not yet built', () => {
+    expect(gemHistory({ ...row, StartYear1: '2005', StartYear2: '1997', StartYear3: '', StopYear: '' })).toEqual({
+      startYears: [1997, 2005],
+      expected: false,
+    });
+    expect(gemHistory({ ...row, Status: 'proposed', StartYear1: '2029', ProposalYear: '2021' })).toEqual({
+      startYears: [2029],
+      expected: true,
+      proposalYear: 2021,
+    });
+    expect(gemHistory(row)).toBeUndefined();
+  });
+
+  it('prefers the known length to the route estimate, and needs a unit for a diameter', () => {
+    expect(gemLength({ ...row, LengthKnownKm: '930.4', LengthEstimateKm: '911.2' })).toEqual({ value: 930, estimated: false });
+    expect(gemLength({ ...row, LengthKnownKm: '--', LengthEstimateKm: '911.6' })).toEqual({ value: 912, estimated: true });
+    expect(gemLength({ ...row, LengthKnownKm: '--', LengthEstimateKm: '--' })).toBeUndefined();
+    expect(gemDiameter({ ...row, Diameter: '30, 42.0', DiameterUnits: 'in' })).toBe('30, 42 in');
+    expect(gemDiameter({ ...row, Diameter: '800', DiameterUnits: '' })).toBeUndefined();
+  });
+
+  it('keeps parent companies only when they say more than the owners', () => {
+    expect(sameCompanies([{ name: 'Transneft' }], [{ name: 'Transneft PJSC' }])).toBe(true);
+    expect(sameCompanies([{ name: 'ExxonMobil' }], [{ name: 'Exxon Mobil Corp' }])).toBe(true);
+    expect(sameCompanies([{ name: 'Gazprom Export' }], [{ name: 'Gazprom PJSC' }])).toBe(false);
+    const result = gemRowToPipeline(
+      { ...row, Parent: 'Gazprom PJSC [100.00%]', StartLocation: 'Anapa', EndLocation: 'Kıyıköy', StartYear1: '2020' },
+      line,
+      ctx,
+    );
+    expect(result.ok && result.pipeline).toMatchObject({ endpoints: { start: 'Anapa', end: 'Kıyıköy' }, history: { startYears: [2020] } });
+    expect(result.ok && result.pipeline).not.toHaveProperty('parents');
   });
 
   it('keeps a pipeline whose country has no ISO code and reports the name', () => {

@@ -75,7 +75,7 @@ Basins and GEM pipelines are imported worldwide (`IMPORT_BOUNDS` in `src/lib/con
    - "What changed since last visit" list: status changes, flow swings, storage moves. Each row links to the asset on the map. Last visit timestamp lives in `localStorage` (wrapped in try/catch; render fine without it).
    - Data age in the panel footer ("Updated 3 h ago"), which opens the app menu at the full freshness table.
    - As built (M5): storage is counted by country ("16 of 20 countries below the same date last year") rather than as one EU fill, because a fair EU figure needs each country's working gas volume. Loads less than 30 minutes apart count as one visit, so a reload doesn't swallow the changes. Flow swings are listed at 15 points of capacity or more, storage moves at 2 points or more (`CHANGES` in `src/lib/config.ts`). A load where a dataset failed isn't saved as the next visit's baseline.
-2. **Pipeline detail:** name, commodity, route (from → transit → to), operator and owners, capacity, current status with its evidence (source type, statement, link, date), measured flow where available (sparkline, last 90 days, flow as share of capacity), disruption history.
+2. **Pipeline detail:** name, commodity, route (from → transit → to), operator and owners, capacity, age (year in service) and history, length and diameter, current status with its evidence (source type, statement, link, date), measured flow where available (sparkline, last 90 days, flow as share of capacity), disruption history.
 3. **Chokepoint detail:** EIA reference volume (mb/d, 2024), daily tanker transits with the 7-day average against two baselines: the trailing 365-day average and the five-year average before that year. Flow index for each, 90-day sparkline with both baselines drawn, and sourced disruptions. The map colors by the five-year index, because a trailing year absorbs a long disruption within twelve months (decided 2026-10-28, after Hormuz transits fell from about 43 a day to about 1 in March 2026).
 4. **Basin detail:** name, countries it spans, pipelines and chokepoints inside or touching it.
 5. **Storage detail (country):** fill level, trend, same date last year.
@@ -140,7 +140,16 @@ interface Pipeline {
   transitCountries: string[];
   operator?: string;
   owners?: { name: string; sharePct?: number }[];
+  ownersSource?: PageRef;    // when a curated record cites the owners (replaces GEM's, drops parents)
+  parents?: { name: string; sharePct?: number }[];  // GEM's ultimate parents, kept only when they differ from the owners
   capacity?: { value: number; unit: 'bcm/yr' | 'mb/d' };
+  history?: {                // GEM: start years per section (targets when expected), proposal, construction, stop
+    startYears: number[]; expected: boolean;
+    proposalYear?: number; constructionYear?: number; stopYear?: number;
+  };
+  lengthKm?: { value: number; estimated: boolean };  // GEM's known length, or its estimate from the route
+  diameter?: string;         // as GEM gives it: "30, 42 in"
+  endpoints?: { start?: string; end?: string };      // GEM's named start and end places
   geometry: GeoJSON.LineString | GeoJSON.MultiLineString;
   geometryApprox: boolean;
   evidence: Evidence[];      // newest first; current status = evidence[0]
@@ -254,7 +263,7 @@ Research and cite current status for each. Use `unknown` when a reliable, dated 
 
 Dedup GEM rows against curated rows by name similarity plus endpoint proximity; when they match, the curated record wins and the GEM row's name goes into `aliases`. Log every merge in a report file so it can be reviewed.
 
-As built (M4): each curated record lists its GEM rows by id, checked by hand, and may set `exclude` or turn off automatic matching for systems whose segments share a name (Druzhba). Automatic matches need name similarity of at least 0.6 (Dice on name words, numbers must agree, so "Nord Stream" never matches "Nord Stream 2") and every country of the GEM row on the curated route, which stands in for endpoint proximity. Matches that fail only the country check are logged as near misses. The report is `data/reports/dedup.json`. Merged rows become one record: combined geometry, curated name, route and evidence, GEM operator and owners, and GEM capacity unless the curated record cites its own (TurkStream's two strings).
+As built (M4): each curated record lists its GEM rows by id, checked by hand, and may set `exclude` or turn off automatic matching for systems whose segments share a name (Druzhba). Automatic matches need name similarity of at least 0.6 (Dice on name words, numbers must agree, so "Nord Stream" never matches "Nord Stream 2") and every country of the GEM row on the curated route, which stands in for endpoint proximity. Matches that fail only the country check are logged as near misses. The report is `data/reports/dedup.json`. Merged rows become one record: combined geometry, curated name, route and evidence, GEM operator and owners, and GEM capacity unless the curated record cites its own (TurkStream's two strings). History merges every section's start years, the earliest proposal and construction years, and a stop year only once every section has stopped; length, diameter and end points are kept only for single-row records, since summing parallel strings would mislead. A curated record may cite its own owners (CPC), which replace GEM's owners and parent chain.
 
 ### ENTSOG entry points to map first
 

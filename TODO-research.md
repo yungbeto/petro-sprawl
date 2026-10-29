@@ -21,6 +21,8 @@ Items that couldn't be sourced or that need a decision. See CLAUDE.md: unsourced
 - ~~`geometryApprox` covers GEM's low-accuracy routes.~~ Confirmed 2026-10-28; SPEC 5 updated.
 - **GEM status is a dataset claim with old dates.** It goes in as `sourceType: 'dataset'` dated by GEM's `LastUpdated`. Since M4, cited claims outrank it whatever the dates (SPEC 6); GEM's claim stays in the status history.
 - **GEM statuses with no match in ours:** `shelved` and `mixed status` map to `unknown`, `mothballed` to `idle`, `retired` to `offline`. Cancelled and shelved rows are not imported.
+- **Pipeline history and ownership come from GEM as published.** Start years (3,247 of 4,667 lines), length (known or estimated from the route), diameter, end points and parent companies. Proposal and construction years exist only in the oil tracker. Some GEM ownership lists cover less than 100% (BTC's parents: 89.2%); the page says so. Notable errors are fixed by citing the operator's own list in `data/curated/pipelines-evidence.json`.
+- **GEM traces CPC's 7% "CPC Co" stake to CPC Corporation, Taiwan.** CPC's own shareholder page lists the holder as IC CPC Company LLC without naming a parent. CPC now uses CPC's list (read 2026-10-28) and shows no parents. Other GEM parent chains haven't been checked.
 - One gas row (`gem-p5854`) lists its country as "Kuwait-Saudi Arabia" (the former neutral zone); it's kept with that country left out.
 
 ## LNG terminals

@@ -1,6 +1,6 @@
 // Visual encodings that depend only on the data: line widths, ring sizes, current status.
 
-import type { AssetStatus, Chokepoint, LngTerminal, Pipeline } from '../types';
+import type { AssetStatus, Chokepoint, LngTerminal, Pipeline, PipelineHistory } from '../types';
 import { CHOKEPOINT_RADIUS, LNG_RADIUS, PIPELINE_WIDTH } from './config';
 
 export function pipelineStatus(pipeline: Pipeline): AssetStatus {
@@ -56,4 +56,25 @@ export function flowFillRadiusPx(ringRadiusPx: number, index: number | null): nu
 export function flowLineWidthPx(outerPx: number, share: number): number {
   if (share <= 0) return 0;
   return Math.max(PIPELINE_WIDTH.minPx * 0.75, outerPx * Math.min(share, 1));
+}
+
+/**
+ * Whole years from the first section's start to now, or to the stop year for a line that stopped.
+ * Never negative: a start year GEM dates later than today counts as zero.
+ */
+export function pipelineAge(history: PipelineHistory, now: Date): number {
+  const first = history.startYears[0];
+  if (first === undefined) return 0;
+  const end = history.stopYear ?? now.getUTCFullYear();
+  return Math.max(0, end - first);
+}
+
+/**
+ * The total of the listed shares when every company has one and they fall short of the whole
+ * (GEM sometimes lists only the larger holders); null otherwise, so nothing needs saying.
+ */
+export function shareCoverage(companies: { sharePct?: number }[]): number | null {
+  if (!companies.length || companies.some((c) => c.sharePct === undefined)) return null;
+  const total = companies.reduce((sum, c) => sum + c.sharePct!, 0);
+  return total < 99.5 ? Math.round(total * 10) / 10 : null;
 }

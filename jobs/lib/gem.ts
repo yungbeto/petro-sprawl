@@ -1,7 +1,7 @@
 // Pure transforms from GEM Global Gas / Oil Infrastructure Tracker pipeline rows to Pipeline records.
 
 import type { Geometry, LineString, MultiLineString, Position } from 'geojson';
-import type { AssetStatus, Commodity, Evidence, Pipeline } from '../../src/types';
+import type { AssetStatus, Commodity, Evidence, Pipeline, PipelineHistory } from '../../src/types';
 import { countryToIso } from './countries';
 
 /** The GEM fields the import reads. Both trackers share these names. */
@@ -19,6 +19,20 @@ export interface GemRow {
   StartCountryOrArea: string;
   EndCountryOrArea: string;
   Owner?: string;
+  Parent?: string;
+  StartYear1?: string;
+  StartYear2?: string;
+  StartYear3?: string;
+  /** Oil tracker only. */
+  ProposalYear?: string;
+  ConstructionYear?: string;
+  StopYear?: string;
+  LengthKnownKm?: string;
+  LengthEstimateKm?: string;
+  Diameter?: string;
+  DiameterUnits?: string;
+  StartLocation?: string;
+  EndLocation?: string;
   'CapacityBcm/y'?: string;
   CapacityBOEd?: string;
   RouteAccuracy: string;
@@ -99,6 +113,47 @@ export function gemCapacity(row: GemRow, commodity: Commodity): Pipeline['capaci
   return { value: mbd >= 0.001 ? Math.round(mbd * 1000) / 1000 : Number(mbd.toPrecision(2)), unit: 'mb/d' };
 }
 
+/** A plain year, or the first year of GEM's "2009-2011" ranges. "Before 1990" and blanks give null. */
+export function parseYear(raw: string | undefined): number | null {
+  const match = /^\s*(\d{4})(?:\s*-\s*\d{4})?\s*$/.exec(raw ?? '');
+  return match ? Number(match[1]) : null;
+}
+
+/** GEM statuses whose start years are targets, not history. */
+const NOT_YET_BUILT = new Set(['proposed', 'construction']);
+
+export function gemHistory(row: GemRow): PipelineHistory | undefined {
+  const startYears = [...new Set([row.StartYear1, row.StartYear2, row.StartYear3].flatMap((y) => parseYear(y) ?? []))].sort(
+    (a, b) => a - b,
+  );
+  const proposalYear = parseYear(row.ProposalYear);
+  const constructionYear = parseYear(row.ConstructionYear);
+  const stopYear = parseYear(row.StopYear);
+  if (!startYears.length && proposalYear === null && constructionYear === null && stopYear === null) return undefined;
+  return {
+    startYears,
+    expected: NOT_YET_BUILT.has(row.Status.trim().toLowerCase()),
+    ...(proposalYear !== null ? { proposalYear } : {}),
+    ...(constructionYear !== null ? { constructionYear } : {}),
+    ...(stopYear !== null ? { stopYear } : {}),
+  };
+}
+
+/** Known length first; GEM's estimate from the mapped route otherwise. "--" means none. */
+export function gemLength(row: GemRow): Pipeline['lengthKm'] {
+  const known = parseNumber(row.LengthKnownKm);
+  if (known !== null) return { value: Math.round(known), estimated: false };
+  const estimate = parseNumber(row.LengthEstimateKm);
+  return estimate === null ? undefined : { value: Math.round(estimate), estimated: true };
+}
+
+/** "30, 42.0" in "in" -> "30, 42 in". No unit, no diameter: a bare number could be either. */
+export function gemDiameter(row: GemRow): string | undefined {
+  const unit = row.DiameterUnits?.trim();
+  const sizes = splitList(row.Diameter, /,/).map((d) => d.replace(/\.0+$/, ''));
+  return unit && sizes.length ? `${sizes.join(', ')} ${unit}` : undefined;
+}
+
 /**
  * Chains parts that meet end to end (either way round) into longer lines. GEM stores many routes as
  * thousands of two-point pieces, which simplification can't thin; joined, it can. Where three or more
@@ -150,6 +205,25 @@ export function lineGeometry(geometry: Geometry | null): LineString | MultiLineS
   return usable.length === 1
     ? { type: 'LineString', coordinates: usable[0]! }
     : { type: 'MultiLineString', coordinates: usable };
+}
+
+const COMPANY_SUFFIXES =
+  /\b(pjsc|ojsc|jsc|plc|llc|lp|inc|corp|corporation|co|company|ltd|limited|sa|spa|ag|se|nv|bv|asa|as|ab|oyj|gmbh|group|holdings?)\b/g;
+
+const companyKey = (name: string) =>
+  name
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]+/g, ' ')
+    .replace(COMPANY_SUFFIXES, '')
+    .replace(/\s+/g, '');
+
+/**
+ * True when the parents list says nothing the owners list doesn't: the same companies, give or
+ * take a legal suffix ("Transneft" and "Transneft PJSC"). Then only the owners are kept.
+ */
+export function sameCompanies(owners: { name: string }[], parents: { name: string }[]): boolean {
+  const keys = (list: { name: string }[]) => [...new Set(list.map((c) => companyKey(c.name)))].sort().join('|');
+  return keys(owners) === keys(parents);
 }
 
 function splitList(raw: string | undefined, separator: RegExp): string[] {
@@ -207,7 +281,13 @@ export function gemRowToPipeline(row: GemRow, geometry: Geometry | null, ctx: Ge
     recordedAt: ctx.recordedAt,
   };
   const owners = parseOwners(row.Owner);
+  const parents = parseOwners(row.Parent);
   const capacity = gemCapacity(row, commodity);
+  const history = gemHistory(row);
+  const lengthKm = gemLength(row);
+  const diameter = gemDiameter(row);
+  const start = row.StartLocation?.trim();
+  const end = row.EndLocation?.trim();
 
   return {
     ok: true,
@@ -224,7 +304,12 @@ export function gemRowToPipeline(row: GemRow, geometry: Geometry | null, ctx: Ge
       toCountry,
       transitCountries,
       ...(owners.length ? { owners } : {}),
+      ...(parents.length && !sameCompanies(owners, parents) ? { parents } : {}),
       ...(capacity ? { capacity } : {}),
+      ...(history ? { history } : {}),
+      ...(lengthKm ? { lengthKm } : {}),
+      ...(diameter ? { diameter } : {}),
+      ...(start || end ? { endpoints: { ...(start ? { start } : {}), ...(end ? { end } : {}) } } : {}),
       geometry: line,
       // GEM marks rough routes as low accuracy; they render like endpoint-only lines.
       geometryApprox: row.RouteAccuracy.trim().toLowerCase() === 'low',

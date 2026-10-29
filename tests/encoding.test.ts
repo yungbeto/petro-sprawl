@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { chokepointRadiusPx, lngRadiusPx, pipelineStatus, pipelineWidthPx } from '../src/lib/encoding';
+import { chokepointRadiusPx, lngRadiusPx, pipelineAge, pipelineStatus, shareCoverage, pipelineWidthPx } from '../src/lib/encoding';
 import { CHOKEPOINT_RADIUS, LNG_RADIUS, PIPELINE_WIDTH } from '../src/lib/config';
 import { chokepoint, lngTerminal, pipeline } from './fixtures';
 
@@ -81,5 +81,22 @@ describe('lngRadiusPx', () => {
     expect(r(4, 100)).toBe(r(4, 0));
     expect(r(0, 0)).toBe(LNG_RADIUS.minPx);
     expect(r(1000, 0)).toBe(LNG_RADIUS.maxPx);
+  });
+});
+
+describe('pipelineAge', () => {
+  const now = new Date('2026-10-28T12:00:00Z');
+  it('counts from the first section to now, or to the stop year', () => {
+    expect(pipelineAge({ startYears: [1964, 1974], expected: false }, now)).toBe(62);
+    expect(pipelineAge({ startYears: [1997], expected: false, stopYear: 2011 }, now)).toBe(14);
+    expect(pipelineAge({ startYears: [2027], expected: false }, now)).toBe(0);
+  });
+});
+
+describe('shareCoverage', () => {
+  it('reports a shortfall only when every company has a share', () => {
+    expect(shareCoverage([{ sharePct: 30.1 }, { sharePct: 25 }, { sharePct: 34.1 }])).toBe(89.2);
+    expect(shareCoverage([{ sharePct: 70 }, { sharePct: 30 }])).toBeNull();
+    expect(shareCoverage([{ sharePct: 50 }, {}])).toBeNull();
   });
 });
