@@ -416,6 +416,38 @@ Company Level Imports (refinery and port of entry for each import, monthly sprea
 
 **Not in this milestone:** refined fuel brought in from other regions (EIA product movements between PADDs would give it; a later step), the EU version (Eurostat crude imports by member state), and anything below PADD level.
 
+**M7: Where is my fuel from?** The region view also answers for the fuel people put in their cars, trucks and planes: gasoline, diesel and jet fuel, wherever it was refined. Detail below.
+Done when: a region opens on gasoline, with diesel, jet fuel and crude a click away (and in the URL); every share links to its EIA series with the months it covers; each other-region row opens that region; and no share is a residual of two measured series unless it says so.
+
+### M7 detail: where is my fuel from?
+
+**Why.** M6 follows crude to a region's refineries, but much of the fuel a region burns is refined somewhere else. Over the twelve months to July 2026 the East Coast's refineries ran about 0.8 million b/d of crude. In July alone the region used about 3.1 million b/d of gasoline, and about 2.1 million b/d of gasoline and blending components arrived from the Gulf Coast by pipeline, tanker and barge. For most readers the honest first answer is "your gasoline was mostly refined on the Gulf Coast", then "from this crude".
+
+**Products.** Gasoline (finished motor gasoline `EPM0F` plus gasoline blending components `EPOBG`, since most gasoline moves as components and is finished at terminals), distillate fuel oil as "diesel and heating oil" (`EPD0`), and kerosene-type jet fuel (`EPJK`). Fuel ethanol (`EPOOXE`) is shown as its own row under gasoline, because the ethanol in a gallon is mostly made in the Midwest and arrives by rail, separately from the gasoline.
+
+**Sources (EIA API v2, the same key and job as M6):**
+
+| Dataset | API route | Gives |
+| --- | --- | --- |
+| Movements between PAD districts | `petroleum/move/ptb` (and `pipe`, `tb`, `rail`) | Each product received from each other PADD, and how |
+| Imports by PADD of entry | `petroleum/move/impcp`, process `IM0` | Each product imported into the PADD, by country |
+| Product supplied | `petroleum/cons/psup` | What the PADD used of each product: the total the shares are of |
+| Refinery and blender net production | `petroleum/pnp/refp` | Context only. For gasoline it counts blending of components received from elsewhere, so it is never used as "made in the region" |
+
+**Method (pure, tested, in `src/lib/fuelOrigins.ts`):** over the trailing 12 complete months, for one PADD and one product:
+
+- Other regions: receipts from each other PADD, as a share of the PADD's product supplied, with the main mode.
+- Imports: by country, as a share of product supplied. Countries under 1% fold into "other countries".
+- In the region: what's left, product supplied minus receipts and imports. It covers local refining, blending and stock changes, so it is labelled "made in the region or drawn from stocks", never as a measured flow.
+- If what's left is negative (the region passes fuel on to another region or abroad), the view shows shares of what flows in instead and says why, as M6 does for crude.
+- Shares to the nearest percent, with the months they cover and the barrels a day they come to.
+
+**Panel view.** The region view gains a fuel switch above "Where it comes from": gasoline (the default), diesel, jet fuel, crude. The choice goes in the URL (`?sel=region/padd-1&fuel=diesel`) so a view can be shared. For a refined fuel the list shows other regions, imports by country and the in-region remainder; another region's row opens that region on crude, which says what its refineries run on. The chokepoint section appears for crude only; product imports have no cited routes yet. The summary's "Where is my oil from?" table shows each region's largest gasoline source.
+
+**Map.** The arcs follow the selected fuel: from other regions' hubs and importing countries to the region's hub, width by share, as in M6.
+
+**Not in this milestone:** blending each source region's crude mix into a "crude behind your gasoline" figure (it would chain two sets of shares and hide how rough that is); chokepoints for product imports; anything below PADD level.
+
 ## 12. Working notes for Claude Code
 
 - Read this spec fully before starting. Build milestone by milestone and stop for review at the end of each.
@@ -430,4 +462,6 @@ Company Level Imports (refinery and port of entry for each import, monthly sprea
 - Dark and light are both built; which should be the default when the system has no preference?
 - `STALE_AFTER_DAYS`: is 30 the right default for curated evidence?
 - M6 decided: shares over the trailing 12 months; the 300 largest US cities in search; refined fuel from other regions left out of the first version.
+- M7: should gasoline be the default fuel in the region view (recommended: it's what most people mean by "my oil"), or crude, as now?
+- M7: is diesel and heating oil together, as EIA reports distillate, clear enough, or should the label say only diesel?
 - Later: news sources and story placement (asset, then company, then place, then country), and matching companies to assets via GEM's ownership tracker.
