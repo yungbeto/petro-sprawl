@@ -278,5 +278,109 @@
       }
     ],
     "recordedAt": "2026-10-29"
+  },
+  {
+    "id": "druzhba-north-2023-poland-halt",
+    "assetKind": "pipeline",
+    "assetId": "druzhba-north",
+    "startedAt": "2023-02-25",
+    "cause": "commercial",
+    "summary": "Russia halted pipeline oil supplies to Poland through Druzhba; PKN Orlen said Russian crude was about 10% of its supply and would be replaced by sea. Transneft cited operational changes.",
+    "sources": [
+      {
+        "publisher": "Al Jazeera",
+        "title": "Polish refiner says Russia halted pipeline oil supplies to Poland",
+        "url": "https://www.aljazeera.com/news/2023/2/25/russia-halts-pipeline-oil-supplies-to-poland-refiner-pkn-orlen",
+        "publishedAt": "2023-02-25"
+      }
+    ],
+    "recordedAt": "2026-10-29"
+  },
+  {
+    "id": "druzhba-north-2026-kazakh-halt",
+    "assetKind": "pipeline",
+    "assetId": "druzhba-north",
+    "startedAt": "2026-05-01",
+    "cause": "other",
+    "summary": "Russia stopped carrying Kazakh crude to Germany through Druzhba from 1 May 2026, citing technical reasons; Kazakh officials linked it to drone attacks on Russian energy infrastructure. About 43,000 b/d went this way in 2025, 17% of the Schwedt refinery's crude. Kazakhstan rerouted to CPC and Ust-Luga, and said in August the route was still suspended.",
+    "sources": [
+      {
+        "publisher": "Hydrocarbon Processing",
+        "title": "Russia to stop Kazakh oil flows to German PCK refinery via Druzhba",
+        "url": "https://www.hydrocarbonprocessing.com/news/2026/04/russia-to-stop-kazakh-oil-flows-to-german-pck-refinery-via-druzhba/",
+        "publishedAt": "2026-04-23"
+      },
+      {
+        "publisher": "Pipeline & Gas Journal",
+        "title": "KazMunayGas reroutes oil exports after Druzhba pipeline halt",
+        "url": "https://pgjonline.com/news/2026/may/kazmunaygas-reroutes-oil-exports-after-druzhba-pipeline-halt",
+        "publishedAt": "2026-05-05"
+      },
+      {
+        "publisher": "Orda.kz",
+        "title": "Kazakhstan still unable to resume Druzhba oil exports to Germany",
+        "url": "https://en.orda.kz/kazakhstan-still-unable-to-resume-druzhba-oil-exports-to-germany-11154/",
+        "publishedAt": "2026-08-17"
+      }
+    ],
+    "recordedAt": "2026-10-29"
+  },
+  {
+    "id": "bps-1-2026-primorsk-strikes",
+    "assetKind": "pipeline",
+    "assetId": "baltic-pipeline-system-1",
+    "startedAt": "2026-03",
+    "cause": "conflict",
+    "summary": "Ukrainian drone strikes in March 2026 destroyed at least 40% of the storage at Primorsk, BPS-1's export terminal, according to satellite images reviewed by Reuters; traders said it might force the port to cut turnover.",
+    "sources": [
+      {
+        "publisher": "Pipeline & Gas Journal",
+        "title": "Drone attacks knock out 40% of storage at Russia's Primorsk oil terminal",
+        "url": "https://pgjonline.com/news/2026/april/drone-attacks-knock-out-40-of-storage-at-russia-s-primorsk-oil-terminal",
+        "publishedAt": "2026-04-04"
+      }
+    ],
+    "recordedAt": "2026-10-29"
+  },
+  {
+    "id": "bps-2-2026-ust-luga-strikes",
+    "assetKind": "pipeline",
+    "assetId": "baltic-pipeline-system-2",
+    "startedAt": "2026-03-22",
+    "endedAt": "2026-04-04",
+    "cause": "conflict",
+    "summary": "Drone strikes on Ust-Luga on 22, 25, 27, 29 and 31 March 2026 forced export operations to stop. Crude loading resumed on 4 April.",
+    "sources": [
+      {
+        "publisher": "Pipeline & Gas Journal",
+        "title": "Drone attacks knock out 40% of storage at Russia's Primorsk oil terminal",
+        "url": "https://pgjonline.com/news/2026/april/drone-attacks-knock-out-40-of-storage-at-russia-s-primorsk-oil-terminal",
+        "publishedAt": "2026-04-04"
+      },
+      {
+        "publisher": "Caliber.az",
+        "title": "Russia's Ust-Luga oil port resumes crude loadings after drone-related disruptions",
+        "url": "https://caliber.az/en/post/russia-s-ust-luga-oil-port-resumes-crude-loadings-after-drone-related-disruptions",
+        "publishedAt": "2026-04-06"
+      }
+    ],
+    "recordedAt": "2026-10-29"
+  },
+  {
+    "id": "soyuz-2022-sokhranivka",
+    "assetKind": "pipeline",
+    "assetId": "soyuz",
+    "startedAt": "2022-05-11",
+    "cause": "conflict",
+    "summary": "Ukraine's grid operator stopped accepting gas at the Sokhranivka entry point after Russian forces occupied the Novopskov compressor station, and in the early hours of 11 May 2022 Gazprom closed a valve on the Soyuz pipeline in Russia.",
+    "sources": [
+      {
+        "publisher": "The Brussels Times",
+        "title": "Prolonging the pain: Russia blocks Ukraine gas transit to exacerbate EU energy woes",
+        "url": "https://www.brusselstimes.com/224530/prolonging-the-pain-russia-blocks-ukraine-gas-transit-to-exacerbate-eu-energy-woes",
+        "publishedAt": "2022-05-13"
+      }
+    ],
+    "recordedAt": "2026-10-29"
   }
 ]

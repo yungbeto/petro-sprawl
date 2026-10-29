@@ -602,5 +602,167 @@
         "recordedAt": "2026-10-29"
       }
     ]
+  },
+  {
+    "id": "druzhba-north",
+    "name": "Druzhba (northern branch)",
+    "aliases": [
+      "Druzhba North",
+      "Mozyr–Brest–Płock"
+    ],
+    "commodity": "oil",
+    "fromCountry": "BY",
+    "toCountry": "PL",
+    "transitCountries": [],
+    "gem": [
+      "gem-p5188",
+      "gem-p5324"
+    ],
+    "autoMatch": false,
+    "evidence": [
+      {
+        "status": "idle",
+        "sourceType": "government",
+        "statement": "Kazakhstan's Energy Ministry: Kazakh oil on the Atyrau–Samara–Druzhba route to Germany is temporarily suspended; none has been shipped through Druzhba since May (Orda.kz).",
+        "url": "https://en.orda.kz/kazakhstan-still-unable-to-resume-druzhba-oil-exports-to-germany-11154/",
+        "observedAt": "2026-08-17",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "idle",
+        "sourceType": "press",
+        "statement": "Russia stopped Kazakh oil deliveries to Germany via Druzhba from 1 May 2026; Deputy Prime Minister Novak said all volumes were redirected to other routes (Pipeline & Gas Journal).",
+        "url": "https://pgjonline.com/news/2026/may/kazmunaygas-reroutes-oil-exports-after-druzhba-pipeline-halt",
+        "observedAt": "2026-05-05",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "reduced",
+        "sourceType": "press",
+        "statement": "PKN Orlen's chief executive said Russia had halted pipeline oil supplies to Poland; Russian crude was about 10% of Orlen's supply (Al Jazeera).",
+        "url": "https://www.aljazeera.com/news/2023/2/25/russia-halts-pipeline-oil-supplies-to-poland-refiner-pkn-orlen",
+        "observedAt": "2023-02-25",
+        "recordedAt": "2026-10-29"
+      }
+    ]
+  },
+  {
+    "id": "baltic-pipeline-system-1",
+    "name": "Baltic Pipeline System 1 (BPS-1)",
+    "aliases": [
+      "BPS-1",
+      "BTS-1",
+      "Baltic Pipeline System"
+    ],
+    "commodity": "oil",
+    "fromCountry": "RU",
+    "toCountry": "RU",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0651",
+      "gem-p5332",
+      "gem-p5333",
+      "gem-p2367"
+    ],
+    "autoMatch": false,
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Loadings at Primorsk, the port BPS-1 ends at, stopped for about three days in mid-October; the cause may have been work at the port or on the pipeline. Shipments resumed by the end of the week (UA.News, citing OilPrice).",
+        "url": "https://ua.news/en/energetika/rosiiskii-morskii-eksport-nafti-vpav-do-minimumu-z-bereznia-oilprice",
+        "observedAt": "2026-10-20",
+        "recordedAt": "2026-10-29"
+      }
+    ]
+  },
+  {
+    "id": "baltic-pipeline-system-2",
+    "name": "Baltic Pipeline System 2 (BPS-2)",
+    "aliases": [
+      "BPS-2",
+      "BTS-2",
+      "Unecha–Ust-Luga"
+    ],
+    "commodity": "oil",
+    "fromCountry": "RU",
+    "toCountry": "RU",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0652"
+    ],
+    "autoMatch": false,
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Crude loadings at Ust-Luga, the port BPS-2 ends at, rose 49% month on month in May 2026 after repeated drone strikes, per CREA data (Ports Europe).",
+        "url": "https://www.portseurope.com/russia-ust-luga-loadings-rebound-49-after-drone-strikes/",
+        "observedAt": "2026-06-11",
+        "recordedAt": "2026-10-29"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Ust-Luga resumed crude loading on 4 April, when the tanker Jewel began loading, after loadings halted at the end of March (Caliber.az, citing Bloomberg shipping data).",
+        "url": "https://caliber.az/en/post/russia-s-ust-luga-oil-port-resumes-crude-loadings-after-drone-related-disruptions",
+        "observedAt": "2026-04-06",
+        "recordedAt": "2026-10-29"
+      }
+    ]
+  },
+  {
+    "id": "soyuz",
+    "name": "Soyuz",
+    "aliases": [
+      "Soyuz gas pipeline",
+      "Orenburg–Western Border"
+    ],
+    "commodity": "gas",
+    "fromCountry": "RU",
+    "toCountry": "UA",
+    "transitCountries": [
+      "KZ"
+    ],
+    "gem": [
+      "gem-p0761"
+    ],
+    "autoMatch": false,
+    "evidence": [
+      {
+        "status": "offline",
+        "sourceType": "press",
+        "statement": "Gazprom closed a valve on the main Soyuz pipeline in Russia in the early hours of 11 May 2022, after Ukraine's grid operator stopped accepting gas at Sokhranivka (The Brussels Times).",
+        "url": "https://www.brusselstimes.com/224530/prolonging-the-pain-russia-blocks-ukraine-gas-transit-to-exacerbate-eu-energy-woes",
+        "observedAt": "2022-05-13",
+        "recordedAt": "2026-10-29"
+      }
+    ]
+  },
+  {
+    "id": "blue-stream",
+    "name": "Blue Stream",
+    "aliases": [
+      "Blue Stream gas pipeline",
+      "Goluboy Potok"
+    ],
+    "commodity": "gas",
+    "fromCountry": "RU",
+    "toCountry": "TR",
+    "transitCountries": [],
+    "gem": [
+      "gem-p0736"
+    ],
+    "autoMatch": false,
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "The Krasnodarskaya compressor station of Blue Stream was attacked on 7 July 2026; supply disruptions were avoided (TASS).",
+        "url": "https://tass.com/economy/2162523",
+        "observedAt": "2026-07-20",
+        "recordedAt": "2026-10-29"
+      }
+    ]
   }
 ]

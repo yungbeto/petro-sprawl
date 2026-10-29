@@ -275,6 +275,76 @@
           "reason": "listed"
         }
       ]
+    },
+    {
+      "curatedId": "druzhba-north",
+      "rows": [
+        {
+          "gemId": "gem-p5188",
+          "gemName": "Druzhba Oil Pipeline · Mozyr-Brest oil pipeline",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p5324",
+          "gemName": "Druzhba Oil Pipeline · Northern Section: Adamowo-Plock oil pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "baltic-pipeline-system-1",
+      "rows": [
+        {
+          "gemId": "gem-p0651",
+          "gemName": "Baltic Pipeline System 1 · Kirishi-Primorsk oil pipeline",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p2367",
+          "gemName": "Baltic Pipeline System 1 · Palkino-Primorsk oil pipeline",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p5332",
+          "gemName": "Baltic Pipeline System 1 · Yaroslavl-Kirishi 1 oil pipeline",
+          "reason": "listed"
+        },
+        {
+          "gemId": "gem-p5333",
+          "gemName": "Baltic Pipeline System 1 · Yaroslavl-Kirishi 2 oil pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "baltic-pipeline-system-2",
+      "rows": [
+        {
+          "gemId": "gem-p0652",
+          "gemName": "Baltic Pipeline System 2",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "soyuz",
+      "rows": [
+        {
+          "gemId": "gem-p0761",
+          "gemName": "Soyuz Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
+    },
+    {
+      "curatedId": "blue-stream",
+      "rows": [
+        {
+          "gemId": "gem-p0736",
+          "gemName": "Blue Stream Gas Pipeline",
+          "reason": "listed"
+        }
+      ]
     }
   ],
   "missing": [],
