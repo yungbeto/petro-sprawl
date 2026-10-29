@@ -19,7 +19,8 @@ concurrency:
 jobs:
   fetch:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # PortWatch alone takes about 7 minutes since its service slowed in October 2026.
+    timeout-minutes: 40
     env:
       AGSI_API_KEY: ${{ secrets.AGSI_API_KEY }}
     steps:
@@ -35,6 +36,8 @@ jobs:
       - name: PortWatch chokepoint transits
         id: portwatch
         continue-on-error: true
+        # Its own cap, so a stuck PortWatch fails alone and the other fetches still run.
+        timeout-minutes: 20
         run: npm run fetch:portwatch
 
       - name: ENTSOG gas flows
