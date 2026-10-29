@@ -11,6 +11,40 @@ body,
   margin: 0;
 }
 
+/*
+ * Thin scrollbars everywhere, so a scrolling panel keeps its width. WebKit and Blink take the
+ * pseudo-elements (6px, transparent track); others get the standard thin scrollbar. Blink ignores
+ * the pseudo-elements once scrollbar-width is set, so that only applies where they're unsupported.
+ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+}
+
 body {
   background: var(--bg);
   color: var(--text);
