@@ -31,12 +31,10 @@ import { readMapColors, type MapColors } from './colors';
 // pre-bundling and production bundling both break. Point it at an emitted asset instead.
 maplibregl.setWorkerUrl(workerUrl);
 
-const LABEL_FONT = 'IBM Plex Sans';
+const LABEL_FONT = 'Inter';
 
-export interface FocusRequest {
-  selection: Selection;
-  nonce: number;
-}
+/** Move the camera to a selection, or frame a set of points (a view opening). */
+export type FocusRequest = { selection: Selection; nonce: number } | { points: [number, number][]; nonce: number };
 
 interface MapViewProps {
   theme: Theme;
@@ -235,8 +233,13 @@ export function MapView(props: MapViewProps) {
 
   useEffect(() => {
     const map = mapRef.current;
-    const resolved = focus && resolveSelection(focus.selection, data);
-    if (!map || !resolved) return;
+    if (!map || !focus) return;
+    if ('points' in focus) {
+      if (focus.points.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: focus.points }), { padding: FIT_PADDING, maxZoom: 5 });
+      return;
+    }
+    const resolved = resolveSelection(focus.selection, data);
+    if (!resolved) return;
     if (resolved.kind === 'chokepoint' || resolved.kind === 'lng' || resolved.kind === 'terminal') {
       map.flyTo({ center: resolved.item.point, zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM) });
     } else if (resolved.kind === 'region') {

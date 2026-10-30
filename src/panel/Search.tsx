@@ -1,161 +1,261 @@
-import { useId, useMemo, useState, type KeyboardEvent, type Ref } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode, type Ref } from 'react';
+import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { buildSearchIndex, search, zipEntry } from '../lib/search';
-import { XIcon } from '@phosphor-icons/react';
+import {
+  SEARCH_GROUP_LABELS,
+  SEARCH_SCOPES,
+  SEARCH_SCOPE_LABELS,
+  buildSearchIndex,
+  groupResults,
+  normalize,
+  search,
+  zipEntry,
+  type SearchEntry,
+  type SearchScope,
+} from '../lib/search';
+import { VIEW_IDS, VIEW_LABELS, type ViewId } from '../lib/views';
+import { SEARCH } from '../lib/config';
 import { AssetIcon } from './AssetIcon';
+import { HOME_ICON, VIEW_ICONS } from '../app/viewIcons';
 
-interface SearchProps {
+const PLACEHOLDER = 'Search pipelines, chokepoints, places, ZIP codes';
+
+interface SearchBarProps {
+  onOpen: () => void;
+  buttonRef: Ref<HTMLButtonElement>;
+}
+
+/** The header's search: a button that opens the search dialog. The panel's own bar handles back and close. */
+export function SearchBar({ onOpen, buttonRef }: SearchBarProps) {
+  return (
+    <div className="search-bar" role="search">
+      <button ref={buttonRef} type="button" className="search-bar__trigger" onClick={onOpen} aria-haspopup="dialog">
+        <MagnifyingGlassIcon size={24} className="search-bar__icon" aria-hidden="true" />
+        <span className="search-bar__placeholder">{PLACEHOLDER}</span>
+        <kbd className="search-hint" aria-hidden="true">
+          /
+        </kbd>
+      </button>
+    </div>
+  );
+}
+
+interface Item {
+  key: string;
+  name: string;
+  detail: string;
+  icon: ReactNode;
+  run: () => void;
+}
+
+interface ItemGroup {
+  label: string;
+  items: Item[];
+}
+
+interface SearchDialogProps {
   data: Datasets;
   onSelect: (selection: Selection) => void;
-  inputRef: Ref<HTMLInputElement>;
-  /** What the panel shows: the selected asset's name or the active filter's. Fills the bar when not typing. */
-  context: string | null;
-  /** Closes what the panel shows, back to the previous view. */
+  onView: (view: ViewId | null) => void;
   onClose: () => void;
+  /** The scope it opens on: all, or one kind when a surface opens it ("find your region"). */
+  initialScope?: SearchScope;
 }
 
 /**
- * Type-ahead over every selectable thing, and the title of whatever is open, like a map app's search
- * bar. Arrow keys move, Enter opens. The × clears typing, or otherwise closes what is open.
+ * Search everything in one box, over the app: results grouped by kind, narrowed to one kind with the
+ * scope row, and the app's views when the box is empty. Arrow keys move, Enter opens, Esc or the
+ * close button closes.
  */
-export function Search({ data, onSelect, inputRef, context, onClose }: SearchProps) {
+export function SearchDialog({ data, onSelect, onView, onClose, initialScope = 'all' }: SearchDialogProps) {
   const index = useMemo(() => buildSearchIndex(data), [data]);
   const [query, setQuery] = useState('');
-  // Typing in the bar; otherwise it shows the context.
-  const [editing, setEditing] = useState(false);
+  const [scope, setScope] = useState<SearchScope>(initialScope);
   const [active, setActive] = useState(0);
-  const results = useMemo(() => {
-    const zip = zipEntry(data, query);
-    return zip ? [zip] : search(index, query);
-  }, [data, index, query]);
+  const inputRef = useRef<HTMLInputElement>(null);
   const listId = useId();
-  const value = editing ? query : (context ?? query);
-  // The bar starts out holding the context's own name; results appear once you change it.
-  const typed = editing && query.trim() !== '' && query !== context;
-  const showList = typed;
 
-  const choose = (selection: Selection, input: HTMLInputElement | null) => {
-    onSelect(selection);
-    setQuery('');
-    setEditing(false);
-    input?.blur();
-  };
+  useEffect(() => inputRef.current?.focus(), []);
 
-  const clearOrClose = (input: HTMLInputElement | null) => {
-    if (typed) {
-      setQuery('');
-      input?.focus();
-      return;
+  const groups = useMemo((): ItemGroup[] => {
+    const q = normalize(query);
+    const entryItem = (e: SearchEntry): Item => ({
+      key: `${e.selection.kind}/${e.selection.id}/${e.name}`,
+      name: e.name,
+      detail: e.detail,
+      icon: <AssetIcon kind={e.selection.kind} commodity={e.commodity} />,
+      run: () => onSelect(e.selection),
+    });
+    const views: ItemGroup[] =
+      scope === 'all'
+        ? [
+            {
+              label: 'Views',
+              items: [
+                { id: null, label: 'Home' },
+                ...VIEW_IDS.map((id) => ({ id, label: VIEW_LABELS[id] })),
+              ]
+                .filter((v) => !q || normalize(v.label).startsWith(q))
+                .map((v) => {
+                  const Icon = v.id ? VIEW_ICONS[v.id] : HOME_ICON;
+                  return {
+                    key: `view/${v.id ?? 'home'}`,
+                    name: v.label,
+                    detail: v.id ? 'View' : 'The summary',
+                    icon: (
+                      <span className="asset-icon" aria-hidden="true">
+                        <Icon size={16} />
+                      </span>
+                    ),
+                    run: () => onView(v.id),
+                  };
+                }),
+            },
+          ]
+        : [];
+    if (!q) {
+      // Empty: the views, or a scope's first entries to browse.
+      if (scope === 'all') return views;
+      const browse = [...index].sort((a, b) => a.priority - b.priority || a.name.localeCompare(b.name));
+      return groupResults(browse, scope).map((g) => ({ label: g.label, items: g.entries.map(entryItem) }));
     }
-    setQuery('');
-    setEditing(false);
-    input?.blur();
-    if (context) onClose();
-  };
+    const zip = zipEntry(data, query);
+    const found = zip
+      ? scope === 'all' || scope === 'us-places'
+        ? [{ label: SEARCH_GROUP_LABELS.region, items: [entryItem(zip)] }]
+        : []
+      : groupResults(search(index, query, SEARCH.limit), scope).map((g) => ({ label: g.label, items: g.entries.map(entryItem) }));
+    return [...found, ...views].filter((g) => g.items.length > 0);
+  }, [data, index, query, scope, onSelect, onView]);
 
-  const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+  const items = groups.flatMap((g) => g.items);
+  const activeIndex = Math.min(active, items.length - 1);
+  const activeItem = items[activeIndex];
+  const activeId = activeItem ? `${listId}-${activeIndex}` : undefined;
+
+  // Keep the active result in sight as the arrow keys move past the list's edge.
+  useEffect(() => {
+    if (activeId) document.getElementById(activeId)?.scrollIntoView({ block: 'nearest' });
+  }, [activeId]);
+
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
-      if (!results.length) return;
+      if (!items.length) return;
       const step = event.key === 'ArrowDown' ? 1 : -1;
-      setActive((i) => (i + step + results.length) % results.length);
-    } else if (event.key === 'Enter') {
-      const hit = results[active];
-      if (hit) choose(hit.selection, event.currentTarget);
-    } else if (event.key === 'Escape' && typed) {
-      // First Esc clears what was typed; the app's handler blurs on the next one.
-      event.stopPropagation();
-      setQuery('');
+      setActive((i) => (Math.min(i, items.length - 1) + step + items.length) % items.length);
+    } else if (event.key === 'Enter' && event.target === inputRef.current) {
+      event.preventDefault();
+      activeItem?.run();
     }
   };
 
-  const activeId = showList && results[active] ? `${listId}-${active}` : undefined;
+  // Esc closes from anywhere, not only from inside the dialog: a click on a heading or the dialog's
+  // padding moves focus to the page behind.
+  useEffect(() => {
+    const onEscape = (event: globalThis.KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      onClose();
+    };
+    window.addEventListener('keydown', onEscape);
+    return () => window.removeEventListener('keydown', onEscape);
+  }, [onClose]);
 
+  let n = -1;
   return (
-    <div className="panel__search">
-      <input
-        ref={inputRef}
-        type="text"
-        className="search-input"
-        placeholder="Search pipelines, chokepoints, places, ZIP codes"
-        aria-label="Search"
-        role="combobox"
-        aria-expanded={showList}
-        aria-controls={listId}
-        aria-autocomplete="list"
-        aria-activedescendant={activeId}
-        value={value}
-        onChange={(event) => {
-          setQuery(event.target.value);
-          setActive(0);
-        }}
-        onFocus={(event) => {
-          // Start from what the bar shows, selected, so typing replaces it.
-          if (!editing && context) {
-            setQuery(context);
-            const input = event.currentTarget;
-            requestAnimationFrame(() => input.select());
-          }
-          setEditing(true);
-        }}
-        onBlur={() => setEditing(false)}
-        onKeyDown={onKeyDown}
-        autoComplete="off"
-        spellCheck={false}
-      />
-      {value ? (
-        <button
-          type="button"
-          className="icon-button search-clear"
-          aria-label={typed || !context ? 'Clear search' : 'Close'}
-          title={typed || !context ? 'Clear search' : 'Close  Esc'}
-          // mousedown, so the input's blur doesn't run first and swap what the button does.
-          onMouseDown={(event) => {
-            event.preventDefault();
-            clearOrClose(event.currentTarget.closest('.panel__search')?.querySelector('input') ?? null);
-          }}
-          onClick={(event) => {
-            // Keyboard activation (Enter or Space on the focused button).
-            if (event.detail === 0) clearOrClose(event.currentTarget.closest('.panel__search')?.querySelector('input') ?? null);
-          }}
-        >
-          <XIcon size={16} />
-        </button>
-      ) : (
-        <kbd className="search-hint" aria-hidden="true">/</kbd>
-      )}
-      {showList && (
-        <ul className="search-results" id={listId} role="listbox" aria-label="Search results">
-          {results.length === 0 ? (
-            <li className="search-results__empty muted">
-              {/^\d{5}$/.test(query.trim()) ? "That ZIP code isn't in our table. Try your state or city." : 'No matches'}
-            </li>
-          ) : (
-            results.map((r, i) => (
-              <li
-                key={`${r.selection.kind}/${r.selection.id}/${r.name}`}
-                id={`${listId}-${i}`}
-                role="option"
-                aria-selected={i === active}
-                className="search-results__item"
-                // mousedown, so the pick lands before the input's blur closes the list.
-                onMouseDown={(event) => {
-                  event.preventDefault();
-                  choose(r.selection, event.currentTarget.closest('.panel__search')?.querySelector('input') ?? null);
-                }}
-                onMouseEnter={() => setActive(i)}
-              >
-                <AssetIcon kind={r.selection.kind} commodity={r.commodity} />
-                <span className="search-results__text">
-                  <span className="search-results__name">{r.name}</span>
-                  <span className="search-results__detail">{r.detail}</span>
-                </span>
+    <>
+      <div className="search-scrim" onClick={onClose} aria-hidden="true" />
+      <div className="search-dialog" role="dialog" aria-modal="true" aria-label="Search" onKeyDown={onKeyDown}>
+        <div className="search-dialog__field">
+          <MagnifyingGlassIcon size={24} className="search-bar__icon" aria-hidden="true" />
+          <input
+            ref={inputRef}
+            type="text"
+            className="search-dialog__input"
+            placeholder={PLACEHOLDER}
+            aria-label="Search"
+            role="combobox"
+            aria-expanded={items.length > 0}
+            aria-controls={listId}
+            aria-autocomplete="list"
+            aria-activedescendant={activeId}
+            value={query}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setActive(0);
+            }}
+            autoComplete="off"
+            spellCheck={false}
+          />
+          <button type="button" className="icon-button search-dialog__close" onClick={onClose} aria-label="Close search" title="Close  Esc">
+            <XIcon size={18} />
+          </button>
+        </div>
+        <div className="search-dialog__scopes" role="toolbar" aria-label="Search in">
+          {SEARCH_SCOPES.map((s) => (
+            <button
+              key={s}
+              type="button"
+              className="chip"
+              aria-pressed={scope === s}
+              onClick={() => {
+                setScope(s);
+                setActive(0);
+                inputRef.current?.focus();
+              }}
+            >
+              {SEARCH_SCOPE_LABELS[s]}
+            </button>
+          ))}
+        </div>
+        {items.length === 0 ? (
+          <p className="search-dialog__empty muted">
+            {/^\d{5}$/.test(query.trim()) ? "That ZIP code isn't in our table. Try your state or city." : 'No matches'}
+          </p>
+        ) : (
+          <ul className="search-dialog__results" id={listId} role="listbox" aria-label="Search results">
+            {groups.map((group) => (
+              <li key={group.label} role="presentation">
+                <p className="search-dialog__group" aria-hidden="true">
+                  {group.label}
+                </p>
+                <ul role="group" aria-label={group.label} className="search-dialog__group-list">
+                  {group.items.map((item) => {
+                    n += 1;
+                    const i = n;
+                    return (
+                      <li
+                        key={item.key}
+                        id={`${listId}-${i}`}
+                        role="option"
+                        aria-selected={item === activeItem}
+                        className="search-results__item"
+                        // mousedown, so the pick lands before the input loses focus.
+                        onMouseDown={(event) => {
+                          event.preventDefault();
+                          item.run();
+                        }}
+                        onMouseMove={() => setActive(i)}
+                      >
+                        {item.icon}
+                        <span className="search-results__text">
+                          <span className="search-results__name">{item.name}</span>
+                          <span className="search-results__detail">{item.detail}</span>
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
               </li>
-            ))
-          )}
-        </ul>
-      )}
-    </div>
+            ))}
+          </ul>
+        )}
+        <p className="search-dialog__footer" aria-hidden="true">
+          <kbd>↑</kbd> <kbd>↓</kbd> to move · <kbd>Enter</kbd> to open · <kbd>Esc</kbd> to close
+        </p>
+      </div>
+    </>
   );
 }

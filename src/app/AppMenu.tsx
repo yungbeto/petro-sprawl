@@ -26,7 +26,7 @@ const THEME_LABELS: Record<ThemePreference, string> = {
 };
 
 const SHORTCUTS: [string, string][] = [
-  ['/', 'Search'],
+  ['/', 'Search (or ⌘K)'],
   ['Esc', 'Back, or close this menu'],
   ['[', 'Minimize or reopen the panel'],
   ['L', 'Show or hide the layer list'],

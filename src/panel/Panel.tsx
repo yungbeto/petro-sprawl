@@ -1,3 +1,5 @@
+import { ArrowLeftIcon, XIcon } from '@phosphor-icons/react';
+import { useLayoutEffect, useRef } from 'react';
 import type { Selection, SelectionKind } from '../app/urlState';
 import type { RegionFuel } from '../lib/config';
 import { resolveSelection, type Datasets } from '../lib/data';
@@ -8,9 +10,30 @@ import type { VisitChanges } from '../app/useVisitChanges';
 import { Summary } from './Summary';
 import { FilterList } from './FilterList';
 import type { FilterId, FilterMatches } from '../lib/filters';
+import { VIEW_LABELS, type ViewId } from '../lib/views';
+import { ChokepointsView } from './ChokepointsView';
+import { PipelinesView, type PipelinesViewProps } from './PipelinesView';
+import { TerminalsView, type TerminalsViewProps } from './TerminalsView';
+import { StorageView } from './StorageView';
+import { OriginsView, type OriginsViewProps } from './OriginsView';
 import { BasinDetail, ChokepointDetail, LngDetail, OilTerminalDetail, PipelineDetail, RegionDetail, StorageDetail } from './details';
 
 interface PanelProps {
+  /** The rail view; its list shows when nothing is selected or filtered. Null is home. */
+  view: ViewId | null;
+  /** The pipelines surface's groups and grouping, held by the app. */
+  pipelines: Pick<PipelinesViewProps, 'groups' | 'grouping' | 'onGrouping' | 'openGroup' | 'onToggleGroup'>;
+  /** The terminals surface's kind, groups and grouping, held by the app. */
+  terminals: Omit<TerminalsViewProps, 'data' | 'onSelect'>;
+  /** The fuel origins surface's fuel, held by the app, and its way into search. */
+  origins: Pick<OriginsViewProps, 'fuel' | 'onFuel' | 'onFind'>;
+  /** The rail surface's name, for the close button: "Home" or the view's. */
+  surfaceLabel: string;
+  /** What Back returns to, when this was opened from another item or list in the same surface. */
+  backLabel: string | null;
+  onBack: () => void;
+  /** Returns to the surface's own page. */
+  onClose: () => void;
   collapsed: boolean;
   onToggleCollapsed: () => void;
   selection: Selection | null;
@@ -27,8 +50,7 @@ interface PanelProps {
   freshness: Freshness[];
   now: Date;
   onOpenMenu: (section: MenuSection) => void;
-  onFilter: (filter: FilterId) => void;
-  onShowStorage: () => void;
+  onOpenView: (view: ViewId) => void;
 }
 
 const KIND_LABELS: Record<SelectionKind, string> = {
@@ -45,6 +67,12 @@ const KIND_LABELS: Record<SelectionKind, string> = {
 export function Panel(props: PanelProps) {
   const { collapsed, onToggleCollapsed } = props;
   const { now, freshness } = props;
+  const bodyRef = useRef<HTMLDivElement>(null);
+  // Each new page starts at its top, not where the last one was scrolled to.
+  const pageKey = `${props.view}|${props.filter}|${props.selection?.kind}/${props.selection?.id}`;
+  useLayoutEffect(() => {
+    bodyRef.current?.scrollTo({ top: 0 });
+  }, [pageKey]);
 
   if (collapsed) return null;
 
@@ -59,10 +87,26 @@ export function Panel(props: PanelProps) {
       >
         <ChevronIcon direction="left" />
       </button>
-      {/* The floating search bar sits over the top of the panel; the name is for screen readers. */}
-      <h1 className="visually-hidden">Energy terminal</h1>
-
-      <div className="panel__body">
+      {(props.selection || props.filter) && (
+        <div className="panel__nav">
+          {props.backLabel && (
+            <button type="button" className="panel__back" onClick={props.onBack} title="Back  Esc">
+              <ArrowLeftIcon size={16} aria-hidden="true" />
+              <span className="panel__back-label">Back to {props.backLabel}</span>
+            </button>
+          )}
+          <button
+            type="button"
+            className="icon-button panel__close"
+            onClick={props.onClose}
+            aria-label={`Close, back to ${props.surfaceLabel}`}
+            title={`Close, back to ${props.surfaceLabel}`}
+          >
+            <XIcon size={18} />
+          </button>
+        </div>
+      )}
+      <div ref={bodyRef} className="panel__body">
         {props.selection ? (
           <Detail
             selection={props.selection}
@@ -79,7 +123,18 @@ export function Panel(props: PanelProps) {
             matches={props.matches}
             data={props.data}
             onSelect={props.onSelect}
+            within={props.view ? VIEW_LABELS[props.view] : null}
           />
+        ) : props.view === 'chokepoints' ? (
+          <ChokepointsView data={props.data} onSelect={props.onSelect} />
+        ) : props.view === 'pipelines' ? (
+          <PipelinesView data={props.data} {...props.pipelines} onSelect={props.onSelect} />
+        ) : props.view === 'terminals' ? (
+          <TerminalsView data={props.data} {...props.terminals} onSelect={props.onSelect} />
+        ) : props.view === 'storage' ? (
+          <StorageView data={props.data} onSelect={props.onSelect} />
+        ) : props.view === 'origins' ? (
+          <OriginsView data={props.data} {...props.origins} onSelect={props.onSelect} />
         ) : (
           <Summary
             data={props.data}
@@ -88,8 +143,7 @@ export function Panel(props: PanelProps) {
             visit={props.visit}
             now={now}
             onSelect={props.onSelect}
-            onFilter={props.onFilter}
-            onShowStorage={props.onShowStorage}
+            onOpenView={props.onOpenView}
           />
         )}
       </div>
@@ -171,16 +225,6 @@ function ChevronIcon({ direction }: { direction: 'left' | 'right' }) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-    </svg>
-  );
-}
-
-/** A window with a sidebar: the panel itself. */
-export function PanelIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <rect x="2" y="3" width="12" height="10" rx="1.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M6.5 3v10" stroke="currentColor" strokeWidth="1.5" />
     </svg>
   );
 }

@@ -1,8 +1,9 @@
 // URL is the source of truth for selection and camera.
-// Format: ?sel=<kind>/<id>&fuel=<fuel>&f=<filter>&at=<lon>,<lat>,<zoom>
+// Format: ?view=<view>&sel=<kind>/<id>&fuel=<fuel>&f=<filter>&at=<lon>,<lat>,<zoom>
 
 import { CAMERA_PRECISION, DEFAULT_REGION_FUEL, REGION_FUELS, type RegionFuel } from '../lib/config';
 import { parseFilter, type FilterId } from '../lib/filters';
+import { parseView, type ViewId } from '../lib/views';
 
 export const SELECTION_KINDS = ['pipeline', 'chokepoint', 'basin', 'storage', 'lng', 'terminal', 'region'] as const;
 export type SelectionKind = (typeof SELECTION_KINDS)[number];
@@ -19,6 +20,8 @@ export interface Camera {
 }
 
 export interface UrlState {
+  /** The rail view the panel is in; it stays while you open things from it. Absent means home. */
+  view?: ViewId | null;
   selection: Selection | null;
   /** The active quick filter. Absent from older links, which is the same as none. */
   filter?: FilterId | null;
@@ -57,6 +60,7 @@ export function parseFuel(value: string | null): RegionFuel {
 export function parseUrlState(search: string): UrlState {
   const params = new URLSearchParams(search);
   return {
+    view: parseView(params.get('view')),
     selection: parseSelection(params.get('sel')),
     filter: parseFilter(params.get('f')),
     fuel: parseFuel(params.get('fuel')),
@@ -72,6 +76,8 @@ export function formatCamera({ lon, lat, zoom }: Camera): string {
 /** Returns a search string ("" or "?..."), keeping any unrelated params in `base`. */
 export function serializeUrlState(state: UrlState, base = ''): string {
   const params = new URLSearchParams(base);
+  if (state.view) params.set('view', state.view);
+  else params.delete('view');
   if (state.selection) params.set('sel', `${state.selection.kind}/${state.selection.id}`);
   else params.delete('sel');
   if (state.selection?.kind === 'region' && state.fuel && state.fuel !== DEFAULT_REGION_FUEL) params.set('fuel', state.fuel);

@@ -105,7 +105,7 @@ function Facts({ children }: { children: ReactNode }) {
   );
 }
 
-function SourceLink({ href, children }: { href: string; children: ReactNode }) {
+export function SourceLink({ href, children }: { href: string; children: ReactNode }) {
   return (
     <a href={href} target="_blank" rel="noreferrer">
       {children}

@@ -2,6 +2,7 @@ import type {
   Basin,
   Chokepoint,
   Country,
+  CountryRegion,
   DatasetMeta,
   Disruption,
   FuelOriginRegion,
@@ -15,9 +16,9 @@ import type {
 } from '../types';
 import { chokepointFlow, type ChokepointFlow } from './flow';
 import type { FilterMatches } from './filters';
-import { regionOrigins, type RegionOrigins } from './oilOrigins';
+import { regionOrigins, type OriginRow, type RegionOrigins } from './oilOrigins';
 import { fuelOrigins, type FuelOrigins } from './fuelOrigins';
-import { PORT_CALLS, portCallsSeriesId, portExportsSeriesId, type FuelId } from './config';
+import { PORT_CALLS, portCallsSeriesId, portExportsSeriesId, type FuelId, type RegionFuel } from './config';
 import type { Selection } from '../app/urlState';
 import { lineTouchesPolygon, pointInPolygon } from './geo';
 
@@ -28,6 +29,8 @@ export interface Datasets {
   lngTerminals: LngTerminal[];
   oilTerminals: OilTerminal[];
   countries: Country[];
+  /** Every country's World Bank region, keyed by ISO code. */
+  countryRegions: CountryRegion[];
   series: ObservationSeries[];
   disruptions: Disruption[];
   /** "Where is my oil from?": EIA crude supply by PADD, curated export routes and the US lookup tables. */
@@ -46,6 +49,7 @@ export const EMPTY_DATASETS: Datasets = {
   lngTerminals: [],
   oilTerminals: [],
   countries: [],
+  countryRegions: [],
   series: [],
   disruptions: [],
   oilOrigins: [],
@@ -196,6 +200,25 @@ export function originsFor(data: Datasets, region: OilOriginRegion): RegionOrigi
 export function fuelOriginsFor(data: Datasets, region: string, fuel: FuelId): FuelOrigins | null {
   const record = data.fuelOrigins.find((r) => r.id === `${region}/${fuel}`);
   return record ? fuelOrigins(record) : null;
+}
+
+/** Every US fuel region with where one fuel (or crude) comes from, largest share first. Regions without data are left out. */
+export function originsByRegion(data: Datasets, fuel: RegionFuel): { region: OilOriginRegion; rows: OriginRow[] }[] {
+  return data.oilOrigins.flatMap((region) => {
+    const rows = fuel === 'crude' ? originsFor(data, region)?.rows : fuelOriginsFor(data, region.id, fuel)?.rows;
+    return rows?.length ? [{ region, rows }] : [];
+  });
+}
+
+/** What the fuel origins surface keeps bright: the chokepoints and terminals on any region's crude routes. */
+export function fuelSurfaceHighlight(data: Datasets): FilterMatches {
+  const lit = data.oilOrigins.map((region) => regionHighlight(originsFor(data, region)));
+  return {
+    pipelines: new Set(),
+    chokepoints: new Set(lit.flatMap((l) => [...l.chokepoints])),
+    lng: new Set(),
+    terminals: new Set(lit.flatMap((l) => [...l.terminals])),
+  };
 }
 
 /** What a region view keeps at full strength on the map: chokepoints and terminals on its routes. */

@@ -3,7 +3,7 @@
 :root {
   color-scheme: light;
 
-  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
   --text-xs: 11px;
@@ -18,13 +18,18 @@
   --space-5: 24px;
   --space-6: 32px;
 
-  --panel-width: 400px;
+  --panel-width: 360px;
+  --rail-width: 56px;
+  --header-height: 64px;
   --radius: 4px;
+  --radius-lg: 8px;
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
 
   /* Neutrals */
   --bg: #f4f4f2;
   --surface: #ffffff;
   --surface-sunken: #f0f0ed;
+  --surface-subtle: #f9f9f7;
   --text: #17191c;
   --text-muted: #5f646b;
   --border: #dddcd7;
@@ -56,6 +61,12 @@
   --map-basin-line: #6d6a5c73;
   --map-basin-fill-hover: #6d6a5c1f;
   --map-basin-label: #5c5a4e;
+  /*
+   * The app's base layer, behind the header, rail and cards: a fine grain, like paper, and a faint
+   * light from the top left. The cards keep flat surfaces, so the grain reads as depth around them.
+   */
+  --app-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --app-glow: radial-gradient(120% 80% at 0% 0%, #ffffff 0%, #f6f6f3 100%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -64,6 +75,7 @@
     --bg: #111315;
     --surface: #181a1d;
     --surface-sunken: #1f2225;
+    --surface-subtle: #15171a;
     --text: #e6e7e8;
     --text-muted: #9a9fa6;
     --border: #2c2f33;
@@ -95,6 +107,8 @@
   --map-basin-line: #c4bfa866;
     --map-basin-fill-hover: #c4bfa81f;
     --map-basin-label: #a8a490;
+    --app-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.075 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    --app-glow: radial-gradient(120% 80% at 0% 0%, #1e2125 0%, #15171a 100%);
   }
 }
 
@@ -103,6 +117,7 @@
   --bg: #111315;
   --surface: #181a1d;
   --surface-sunken: #1f2225;
+  --surface-subtle: #15171a;
   --text: #e6e7e8;
   --text-muted: #9a9fa6;
   --border: #2c2f33;
@@ -127,4 +142,6 @@
   --map-basin-line: #c4bfa866;
   --map-basin-fill-hover: #c4bfa81f;
   --map-basin-label: #a8a490;
+  --app-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.075 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --app-glow: radial-gradient(120% 80% at 0% 0%, #1e2125 0%, #15171a 100%);
 }

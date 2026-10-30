@@ -168,6 +168,14 @@ export interface Basin {
 }
 
 /** A country outline, for the storage layer and search. From Natural Earth 1:50m admin-0. */
+/** Which World Bank region a country is in, as Natural Earth records it. For grouping pipelines by region. */
+export interface CountryRegion {
+  /** ISO 3166-1 alpha-2 */
+  id: string;
+  name: string;
+  region: string;
+}
+
 export interface Country {
   /** ISO 3166-1 alpha-2 */
   id: string;

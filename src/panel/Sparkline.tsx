@@ -67,3 +67,24 @@ export function Sparkline({ points, references, unit, label, format = (v) => Str
     </figure>
   );
 }
+
+const MINI_WIDTH = 300;
+const MINI_HEIGHT = 32;
+
+/** A small line for a list row: the last 90 days against one dashed baseline, no caption. */
+export function MiniSparkline({ points, reference, label }: { points: Point[]; reference: number | null; label: string }) {
+  if (points.length < 2) return null;
+  const max = Math.max(...points.map((p) => p.value), reference ?? 0, 1) * 1.05;
+  const x = (i: number) => (i / (points.length - 1)) * MINI_WIDTH;
+  const y = (v: number) => PAD_TOP + (1 - v / max) * (MINI_HEIGHT - PAD_TOP);
+  const path = points.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.value).toFixed(1)}`).join('');
+  return (
+    <svg className="mini-sparkline" viewBox={`0 0 ${MINI_WIDTH} ${MINI_HEIGHT}`} preserveAspectRatio="none" role="img" aria-label={label}>
+      <line className="sparkline__axis" x1="0" x2={MINI_WIDTH} y1={MINI_HEIGHT - 0.5} y2={MINI_HEIGHT - 0.5} />
+      {reference !== null && (
+        <line className="sparkline__ref sparkline__ref--dashed" x1="0" x2={MINI_WIDTH} y1={y(reference)} y2={y(reference)} />
+      )}
+      <path className="sparkline__line" d={path} />
+    </svg>
+  );
+}

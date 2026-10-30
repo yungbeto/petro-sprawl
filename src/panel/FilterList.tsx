@@ -9,10 +9,12 @@ interface FilterListProps {
   matches: FilterMatches;
   data: Datasets;
   onSelect: (selection: Selection) => void;
+  /** The surface the chip belongs to, when it isn't Home: the list keeps to it. */
+  within: string | null;
 }
 
 /** The panel while a chip is on: what matched, each opening its asset. */
-export function FilterList({ filter, matches, data, onSelect }: FilterListProps) {
+export function FilterList({ filter, matches, data, onSelect, within }: FilterListProps) {
   const rows = filterRows(matches, data);
   const shown = rows.slice(0, FILTERS.listLimit);
   return (
@@ -21,6 +23,7 @@ export function FilterList({ filter, matches, data, onSelect }: FilterListProps)
       <p className="muted section__lede">
         <span className="mono">{rows.length.toLocaleString('en-US')}</span> {rows.length === 1 ? 'match' : 'matches'}.{' '}
         {FILTER_DESCRIPTIONS[filter]}
+        {within && ` Only ${within.toLowerCase()} show here.`}
       </p>
       {rows.length === 0 ? (
         <p className="muted">Nothing matches right now.</p>

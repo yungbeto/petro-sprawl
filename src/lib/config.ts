@@ -1,12 +1,30 @@
 // Thresholds and constants shared by the app and the data jobs.
 
 /** Initial camera: the Europe, Russia, Caspian, North Africa and Middle East corridor. [[west, south], [east, north]] */
+/** Inhabited latitudes, for a surface that spans the world. */
+export const WORLD_BOUNDS: [[number, number], [number, number]] = [
+  [-160, -45],
+  [160, 70],
+];
+
 export const THEATER_BOUNDS: [[number, number], [number, number]] = [
   [-15, 10],
   [65, 72],
 ];
 
 /** What the basin and pipeline imports keep: the whole world. The theater above is only where the camera opens. */
+/** Where the gas storage surface frames: the European countries AGSI+ reports, Portugal to Ukraine. */
+export const STORAGE_BOUNDS: [[number, number], [number, number]] = [
+  [-10, 36],
+  [41, 64],
+];
+
+/** Where the fuel origins surface frames: the lower 48 states, where the five fuel regions are. */
+export const US_BOUNDS: [[number, number], [number, number]] = [
+  [-125, 24],
+  [-66, 50],
+];
+
 export const IMPORT_BOUNDS: [[number, number], [number, number]] = [
   [-180, -90],
   [180, 90],
@@ -329,6 +347,7 @@ export const DATASET_FRESHNESS: Record<
   'gas-storage': { label: 'Gas storage', scheduled: true, staleAfterHours: 36, publisher: 'GIE AGSI+' },
   'lng-sendout': { label: 'LNG send-out', scheduled: true, staleAfterHours: 36, publisher: 'GIE ALSI' },
   countries: { label: 'Countries', scheduled: false, publisher: 'Natural Earth' },
+  'country-regions': { label: 'Country regions', scheduled: false, publisher: 'Natural Earth' },
   pipelines: { label: 'Pipelines', scheduled: false, publisher: 'Global Energy Monitor' },
   'lng-terminals': { label: 'LNG terminals', scheduled: false, publisher: 'Global Energy Monitor' },
   'oil-terminals': { label: 'Oil terminals', scheduled: false, publisher: 'Curated; locations from IMF PortWatch and Global Energy Monitor' },
@@ -376,13 +395,26 @@ export const CHANGES = {
   flowSharePts: 15,
 } as const;
 
-export const SEARCH = { limit: 8 } as const;
+/**
+ * Search: how many matches to rank, how many each kind shows when searching everything, and how
+ * many show when narrowed to one kind.
+ */
+export const SEARCH = { limit: 80, perGroup: 4, scopedLimit: 30 } as const;
 
 /** Quick filters: how faint non-matching assets get, and how many matches the panel lists. */
 export const FILTERS = { fadeAlpha: 0.12, listLimit: 300 } as const;
 
 /** Detail views: how many related assets show before "Show all". */
 export const DETAIL = { relatedLimit: 6 } as const;
+
+/**
+ * The pipelines surface: owners with their own group (the rest share "Other owners"), and how many
+ * pipelines an open group lists before "Show all".
+ */
+export const PIPELINE_GROUPS = { ownerGroups: 30, listLimit: 50 } as const;
+
+/** The terminals surface: LNG terminals listed per open group before "Show all". */
+export const TERMINAL_GROUPS = { listLimit: 50 } as const;
 
 /**
  * Weekly claims refresh (jobs/refresh-claims.ts): Claude searches the web for a newer dated source for

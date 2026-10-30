@@ -2,11 +2,11 @@
 
 import type { AssetStatus, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
-import { AGSI, CHANGES, agsiSeriesId } from './config';
+import { AGSI, CHANGES, agsiSeriesId, tankerCargoSeriesId } from './config';
 import { chokepointFlows, seriesById, type Datasets } from './data';
 import { pipelineStatus } from './encoding';
 import { isUnverified, latestClaim, pipelineFlow } from './evidence';
-import type { FlowBand } from './flow';
+import { chokepointFlow, type ChokepointFlow, type FlowBand } from './flow';
 import { storageSummary } from './gasStorage';
 
 /** Display order for status counts: what runs, what doesn't, then what isn't built. */
@@ -22,8 +22,13 @@ export const STATUS_ORDER: AssetStatus[] = [
 ];
 
 export function statusCounts(pipelines: Pipeline[]): { status: AssetStatus; count: number }[] {
+  return countStatuses(pipelines.map(pipelineStatus));
+}
+
+/** How many of each status, in `STATUS_ORDER`, leaving out statuses with none. */
+export function countStatuses(statuses: AssetStatus[]): { status: AssetStatus; count: number }[] {
   const counts = new Map<AssetStatus, number>();
-  for (const p of pipelines) counts.set(pipelineStatus(p), (counts.get(pipelineStatus(p)) ?? 0) + 1);
+  for (const s of statuses) counts.set(s, (counts.get(s) ?? 0) + 1);
   return STATUS_ORDER.flatMap((status) => (counts.get(status) ? [{ status, count: counts.get(status)! }] : []));
 }
 
@@ -86,6 +91,35 @@ export function chokepointRows(data: Datasets): ChokepointRow[] {
   return rows.sort((a, b) => distance(b) - distance(a));
 }
 
+export interface ChokepointViewRow {
+  selection: Selection;
+  name: string;
+  /** EIA's reference volume, for scale when there is no transit data. */
+  eiaReferenceMbd: number;
+  transits: ChokepointFlow | null;
+  cargo: ChokepointFlow | null;
+}
+
+/**
+ * Every chokepoint for the chokepoints view: those with transits furthest from baseline first, as on
+ * the summary, then those without transit data by name.
+ */
+export function chokepointViewRows(data: Datasets): ChokepointViewRow[] {
+  const order = new Map(chokepointRows(data).map((r, i) => [r.selection.id, i]));
+  return data.chokepoints
+    .map((c) => ({
+      selection: { kind: 'chokepoint' as const, id: c.id },
+      name: c.name,
+      eiaReferenceMbd: c.eiaReferenceMbd,
+      transits: chokepointFlow(seriesById(data, c.transitSeriesId)),
+      cargo: chokepointFlow(seriesById(data, tankerCargoSeriesId(c.transitSeriesId.replace(/^portwatch-/, '')))),
+    }))
+    .sort(
+      (a, b) =>
+        (order.get(a.selection.id) ?? Infinity) - (order.get(b.selection.id) ?? Infinity) || a.name.localeCompare(b.name),
+    );
+}
+
 export interface StorageRow {
   selection: Selection;
   country: string;
@@ -93,6 +127,10 @@ export interface StorageRow {
   latestDate: string;
   /** Percentage points against the same date last year; null without last year's point. */
   vsLastYear: number | null;
+  /** Fill on the same date last year. */
+  lastYearFill: number | null;
+  /** Percentage points over the last 7 days. */
+  change7d: number | null;
 }
 
 /** Storage by country, furthest below last year first. Countries without last year's point go last. */
@@ -107,6 +145,8 @@ export function storageRows(data: Datasets): StorageRow[] {
       fill: summary.fill,
       latestDate: summary.latestDate,
       vsLastYear: summary.lastYear ? summary.fill - summary.lastYear.fill : null,
+      lastYearFill: summary.lastYear?.fill ?? null,
+      change7d: summary.change7d,
     });
   }
   return rows.sort((a, b) => (a.vsLastYear ?? Infinity) - (b.vsLastYear ?? Infinity));

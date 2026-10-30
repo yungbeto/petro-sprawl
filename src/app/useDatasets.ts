@@ -3,7 +3,7 @@ import type { DatasetMeta } from '../types';
 import { EMPTY_DATASETS, type Datasets } from '../lib/data';
 import { withMeasuredEvidence, withMeasuredLngEvidence } from '../lib/evidence';
 
-const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'countries', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'lng-sendout', 'disruptions', 'oil-origins', 'fuel-origins', 'oil-routes', 'us-lookup'] as const;
+const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'countries', 'country-regions', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'lng-sendout', 'disruptions', 'oil-origins', 'fuel-origins', 'oil-routes', 'us-lookup'] as const;
 
 async function fetchJson<T>(path: string): Promise<T | null> {
   try {
@@ -57,6 +57,7 @@ export function useDatasets(): DatasetsState {
           lngTerminals: withMeasuredLngEvidence(get('lng-terminals') as Datasets['lngTerminals'], series),
           oilTerminals: get('oil-terminals') as Datasets['oilTerminals'],
           countries: get('countries') as Datasets['countries'],
+          countryRegions: get('country-regions') as Datasets['countryRegions'],
           series,
           disruptions: get('disruptions') as Datasets['disruptions'],
           oilOrigins: get('oil-origins') as Datasets['oilOrigins'],

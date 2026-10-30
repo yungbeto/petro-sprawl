@@ -49,6 +49,7 @@ describe('serializeUrlState', () => {
     const search = serializeUrlState(state);
     expect(search).toBe('?sel=basin/west-siberian&at=30.1235,50.9877,4.26');
     expect(parseUrlState(search)).toEqual({
+      view: null,
       selection: state.selection,
       filter: null,
       fuel: 'gasoline',
@@ -63,6 +64,14 @@ describe('serializeUrlState', () => {
     expect(serializeUrlState({ selection: { kind: 'basin', id: 'permian' }, fuel: 'crude', camera: null })).toBe('?sel=basin/permian');
     expect(parseUrlState('?sel=region/padd-1&fuel=crude').fuel).toBe('crude');
     expect(parseUrlState('?sel=region/padd-1&fuel=kerosene').fuel).toBe('gasoline');
+  });
+
+  it('carries a view alongside what is open in it', () => {
+    const search = serializeUrlState({ view: 'chokepoints', selection: { kind: 'chokepoint', id: 'hormuz' }, camera: null });
+    expect(search).toBe('?view=chokepoints&sel=chokepoint/hormuz');
+    expect(parseUrlState(search).view).toBe('chokepoints');
+    expect(parseUrlState('?view=nonsense').view).toBeNull();
+    expect(serializeUrlState({ view: null, selection: null, camera: null }, '?view=chokepoints')).toBe('');
   });
 
   it('carries a known filter and ignores unknown ones', () => {

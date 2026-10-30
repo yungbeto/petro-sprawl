@@ -7,10 +7,34 @@ import {
   type Selection,
 } from './urlState';
 import type { FilterId } from '../lib/filters';
+import type { ViewId } from '../lib/views';
 import { DEFAULT_REGION_FUEL, type RegionFuel } from '../lib/config';
 
 // Marks history entries this app pushed, so "back" only steps within the app.
 const PUSHED = 'etPushed';
+// Each pushed entry also records the panel state it was pushed from, so the panel can name where Back goes.
+const FROM = 'etFrom';
+
+/** The panel state an entry was opened from: what Back returns to. */
+export interface PanelStep {
+  view: ViewId | null;
+  selection: Selection | null;
+  filter: FilterId | null;
+}
+
+function stepOf(state: ReturnType<typeof currentState>): PanelStep {
+  return { view: state.view ?? null, selection: state.selection, filter: state.filter ?? null };
+}
+
+/** Pushes a new entry, remembering the current panel state as where it came from. */
+function push(search: string) {
+  window.history.pushState({ [PUSHED]: true, [FROM]: stepOf(currentState()) }, '', urlFor(search));
+}
+
+function readFrom(): PanelStep | null {
+  const state = window.history.state as Record<string, unknown> | null;
+  return (state?.[FROM] as PanelStep | undefined) ?? null;
+}
 
 function urlFor(search: string): string {
   return `${window.location.pathname}${search}${window.location.hash}`;
@@ -21,16 +45,20 @@ function currentState() {
 }
 
 export function useUrlState() {
+  const [view, setViewState] = useState<ViewId | null>(() => currentState().view ?? null);
   const [selection, setSelection] = useState<Selection | null>(() => currentState().selection);
   const [filter, setFilterState] = useState<FilterId | null>(() => currentState().filter ?? null);
   const [fuel, setFuelState] = useState<RegionFuel>(() => currentState().fuel ?? DEFAULT_REGION_FUEL);
+  const [from, setFrom] = useState<PanelStep | null>(readFrom);
 
   useEffect(() => {
     const onPopState = () => {
       const state = currentState();
+      setViewState(state.view ?? null);
       setSelection(state.selection);
       setFilterState(state.filter ?? null);
       setFuelState(state.fuel ?? DEFAULT_REGION_FUEL);
+      setFrom(readFrom());
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
@@ -41,7 +69,8 @@ export function useUrlState() {
     const state = currentState();
     if (sameSelection(state.selection, next) && (state.fuel ?? DEFAULT_REGION_FUEL) === nextFuel) return;
     const search = serializeUrlState({ ...state, selection: next, fuel: nextFuel }, window.location.search);
-    window.history.pushState({ [PUSHED]: true }, '', urlFor(search));
+    push(search);
+    setFrom(readFrom());
     setSelection(next);
     setFuelState(nextFuel);
   }, []);
@@ -61,9 +90,25 @@ export function useUrlState() {
     const state = currentState();
     if ((state.filter ?? null) === next && !state.selection) return;
     const search = serializeUrlState({ ...state, filter: next, selection: null }, window.location.search);
-    window.history.pushState({ [PUSHED]: true }, '', urlFor(search));
+    push(search);
+    setFrom(readFrom());
     setFilterState(next);
     setSelection(null);
+  }, []);
+
+  /**
+   * Opens a rail view, or home with null, closing whatever was open so the panel shows the view's list.
+   * A new history entry, so Back returns to where you were.
+   */
+  const setView = useCallback((next: ViewId | null) => {
+    const state = currentState();
+    if ((state.view ?? null) === next && !state.selection && !state.filter) return;
+    const search = serializeUrlState({ ...state, view: next, selection: null, filter: null }, window.location.search);
+    push(search);
+    setFrom(readFrom());
+    setViewState(next);
+    setSelection(null);
+    setFilterState(null);
   }, []);
 
   /** Returns to the previous panel state. Never leaves the app. */
@@ -73,13 +118,19 @@ export function useUrlState() {
       window.history.back();
       return;
     }
-    // Opened from a link: step up one level, selection first, then the filter.
+    // Opened from a link: step up one level, selection first, then the filter, then the view.
     const state = currentState();
-    if (!state.selection && !state.filter) return;
-    const next = state.selection ? { ...state, selection: null } : { ...state, filter: null };
+    if (!state.selection && !state.filter && !state.view) return;
+    const next = state.selection
+      ? { ...state, selection: null }
+      : state.filter
+        ? { ...state, filter: null }
+        : { ...state, view: null };
     window.history.replaceState(null, '', urlFor(serializeUrlState(next, window.location.search)));
+    setFrom(null);
     setSelection(next.selection);
     setFilterState(next.filter ?? null);
+    setViewState(next.view ?? null);
   }, []);
 
   /** Camera changes replace the current entry, so panning doesn't flood history. */
@@ -89,5 +140,5 @@ export function useUrlState() {
     window.history.replaceState(window.history.state, '', urlFor(search));
   }, []);
 
-  return { selection, select, fuel, setFuel, filter, setFilter, back, setCamera, initialCamera: currentState().camera };
+  return { from, view, setView, selection, select, fuel, setFuel, filter, setFilter, back, setCamera, initialCamera: currentState().camera };
 }

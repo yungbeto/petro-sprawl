@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
-import { buildSearchIndex, matchScore, normalize, search } from '../src/lib/search';
+import { buildSearchIndex, groupResults, matchScore, normalize, search, type SearchEntry } from '../src/lib/search';
 import { basin, chokepoint, lngTerminal, pipeline } from './fixtures';
 
 const data: Datasets = {
@@ -63,5 +63,29 @@ describe('search', () => {
 
   it('caps the result count', () => {
     expect(search(index, 'a', 2)).toHaveLength(2);
+  });
+});
+
+describe('groupResults', () => {
+  const e = (kind: SearchEntry['selection']['kind'], id: string): SearchEntry => ({
+    selection: { kind, id },
+    name: id,
+    detail: '',
+    terms: [id],
+    priority: 0,
+  });
+  const ranked = [e('pipeline', 'p1'), e('chokepoint', 'c1'), e('pipeline', 'p2'), e('lng', 'l1'), e('pipeline', 'p3'), e('terminal', 't1')];
+
+  it('groups by kind in the order of the best match of each kind, a few of each', () => {
+    const groups = groupResults(ranked, 'all', { perGroup: 2 });
+    expect(groups.map((g) => g.label)).toEqual(['Pipelines', 'Chokepoints', 'LNG terminals', 'Oil terminals']);
+    expect(groups[0]!.entries.map((x) => x.selection.id)).toEqual(['p1', 'p2']);
+  });
+
+  it('narrows to one scope, which can span kinds, and keeps more of it', () => {
+    const groups = groupResults(ranked, 'terminals', { perGroup: 1, scopedLimit: 10 });
+    expect(groups.map((g) => g.kind)).toEqual(['lng', 'terminal']);
+    expect(groupResults(ranked, 'pipelines', { perGroup: 1, scopedLimit: 2 })[0]!.entries).toHaveLength(2);
+    expect(groupResults(ranked, 'basins')).toEqual([]);
   });
 });

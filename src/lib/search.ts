@@ -162,3 +162,63 @@ export function search(index: SearchEntry[], query: string, limit: number = SEAR
   );
   return hits.slice(0, limit).map((h) => h.entry);
 }
+
+/** What the search can be narrowed to: the rail's surfaces, and basins, which are context only. */
+export const SEARCH_SCOPES = ['all', 'chokepoints', 'pipelines', 'terminals', 'countries', 'us-places', 'basins'] as const;
+export type SearchScope = (typeof SEARCH_SCOPES)[number];
+
+export const SEARCH_SCOPE_LABELS: Record<SearchScope, string> = {
+  all: 'All',
+  chokepoints: 'Chokepoints',
+  pipelines: 'Pipelines',
+  terminals: 'Terminals',
+  countries: 'Countries',
+  'us-places': 'US places',
+  basins: 'Basins',
+};
+
+const SCOPE_OF: Record<Selection['kind'], Exclude<SearchScope, 'all'>> = {
+  chokepoint: 'chokepoints',
+  pipeline: 'pipelines',
+  terminal: 'terminals',
+  lng: 'terminals',
+  storage: 'countries',
+  region: 'us-places',
+  basin: 'basins',
+};
+
+/** Result groups: one per kind, finer than the scopes, so oil and LNG terminals head their own lists. */
+export const SEARCH_GROUP_LABELS: Record<Selection['kind'], string> = {
+  chokepoint: 'Chokepoints',
+  pipeline: 'Pipelines',
+  terminal: 'Oil terminals',
+  lng: 'LNG terminals',
+  storage: 'Countries',
+  region: 'US places',
+  basin: 'Basins',
+};
+
+export interface SearchGroup {
+  kind: Selection['kind'];
+  label: string;
+  entries: SearchEntry[];
+}
+
+/**
+ * Ranked matches in groups by kind. Groups come in the order of their best match, so the kind you
+ * most likely meant leads. Searching everything keeps the first few of each kind; one scope keeps more.
+ */
+export function groupResults(
+  ranked: SearchEntry[],
+  scope: SearchScope,
+  { perGroup = SEARCH.perGroup, scopedLimit = SEARCH.scopedLimit }: { perGroup?: number; scopedLimit?: number } = {},
+): SearchGroup[] {
+  const kept = scope === 'all' ? ranked : ranked.filter((e) => SCOPE_OF[e.selection.kind] === scope).slice(0, scopedLimit);
+  const groups = new Map<Selection['kind'], SearchEntry[]>();
+  for (const entry of kept) groups.set(entry.selection.kind, [...(groups.get(entry.selection.kind) ?? []), entry]);
+  return [...groups].map(([kind, entries]) => ({
+    kind,
+    label: SEARCH_GROUP_LABELS[kind],
+    entries: scope === 'all' ? entries.slice(0, perGroup) : entries,
+  }));
+}

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { VisitChanges } from '../app/useVisitChanges';
 import { formatDate, formatIndexShare, formatNumber } from '../lib/format';
-import type { FilterId } from '../lib/filters';
+import type { ViewId } from '../lib/views';
 import { median, statusGroups, type ChokepointRow, type StatusGroupId, type StorageRow } from '../lib/summary';
 import type { AssetStatus } from '../types';
 
@@ -10,15 +10,14 @@ interface DashboardProps {
   chokepoints: ChokepointRow[];
   storage: StorageRow[];
   visit: VisitChanges | null;
-  onFilter: (filter: FilterId) => void;
-  onShowStorage: () => void;
+  onOpenView: (view: ViewId) => void;
   onShowChanges: () => void;
 }
 
 const pts = (value: number) => `${value >= 0 ? '+' : '−'}${formatNumber(Math.abs(value), 1)} pts`;
 
-/** The home view's headline: four tiles, each one number with a small picture, each opening more. */
-export function Dashboard({ counts, chokepoints, storage, visit, onFilter, onShowStorage, onShowChanges }: DashboardProps) {
+/** The home view's headline: four figures, each one number with a small picture, each opening its surface or more. */
+export function Dashboard({ counts, chokepoints, storage, visit, onOpenView, onShowChanges }: DashboardProps) {
   const below = chokepoints.filter((c) => c.band === 'below');
   // Rows come furthest from baseline first, so the first below-baseline row is the worst.
   const worst = below[0];
@@ -33,6 +32,25 @@ export function Dashboard({ counts, chokepoints, storage, visit, onFilter, onSho
   return (
     <section className="section dashboard" aria-label="Overview">
       <Tile
+        label="Pipelines"
+        value={total ? stopped.toLocaleString('en-US') : null}
+        unit={
+          total ? (
+            <>
+              of {total.toLocaleString('en-US')} <span className="tile__status">offline or idle</span>
+            </>
+          ) : (
+            'No pipelines loaded'
+          )
+        }
+        note={total ? `${share('running')} operating, ${share('unbuilt')} not built` : ''}
+        action="Open pipelines"
+        onClick={() => onOpenView('pipelines')}
+      >
+        {total > 0 && <StatusBar groups={groups} />}
+      </Tile>
+
+      <Tile
         label="Chokepoints"
         value={chokepoints.length ? String(below.length) : null}
         unit={chokepoints.length ? `of ${chokepoints.length} below baseline` : 'No transit data'}
@@ -41,21 +59,10 @@ export function Dashboard({ counts, chokepoints, storage, visit, onFilter, onSho
             ? `${worst.name} at ${formatIndexShare(worst.index)} of its ${worst.baseline} average`
             : 'Tanker transits, last 7 days'
         }
-        action="Show on map"
-        onClick={() => onFilter('below-baseline')}
+        action="Open chokepoints"
+        onClick={() => onOpenView('chokepoints')}
       >
         <BandRings rows={chokepoints} />
-      </Tile>
-
-      <Tile
-        label="Pipelines"
-        value={total ? stopped.toLocaleString('en-US') : null}
-        unit={total ? `of ${total.toLocaleString('en-US')} offline or idle` : 'No pipelines loaded'}
-        note={total ? `${share('running')} operating, ${share('unbuilt')} not built` : ''}
-        action="Show on map"
-        onClick={() => onFilter('offline')}
-      >
-        {total > 0 && <StatusBar groups={groups} />}
       </Tile>
 
       <Tile
@@ -63,8 +70,8 @@ export function Dashboard({ counts, chokepoints, storage, visit, onFilter, onSho
         value={gaps.length ? String(storageBelow) : null}
         unit={gaps.length ? `of ${gaps.length} below last year` : 'No storage data'}
         note={medianGap !== null ? `Median gap ${pts(medianGap)}` : ''}
-        action="Show storage on map"
-        onClick={onShowStorage}
+        action="Open gas storage"
+        onClick={() => onOpenView('storage')}
       >
         {gaps.length > 0 && <GapStrip gaps={gaps} />}
       </Tile>
@@ -93,7 +100,7 @@ function Tile({
   label: string;
   /** Null when there's nothing to count; the unit line then says why. */
   value: string | null;
-  unit: string;
+  unit: ReactNode;
   note: string;
   action: string;
   onClick: () => void;
@@ -112,8 +119,8 @@ function Tile({
 
 /** One ring per chokepoint, drawn as on the map: band color, worst first. */
 function BandRings({ rows }: { rows: ChokepointRow[] }) {
-  const size = 14;
-  const step = size + 6;
+  const size = 16;
+  const step = size + 8;
   return (
     <svg width={rows.length * step} height={size} aria-hidden="true">
       {rows.map((r, i) => (
@@ -137,7 +144,7 @@ const GROUP_CLASS: Record<StatusGroupId, string> = {
 };
 
 /** Share of pipelines in each status group; the stopped group carries the tile's number. */
-function StatusBar({ groups }: { groups: ReturnType<typeof statusGroups> }) {
+export function StatusBar({ groups }: { groups: ReturnType<typeof statusGroups> }) {
   const shown = groups.filter((g) => g.count > 0);
   return (
     <span className="status-bar">

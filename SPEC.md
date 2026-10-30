@@ -52,19 +52,30 @@ Basins and GEM pipelines are imported worldwide (`IMPORT_BOUNDS` in `src/lib/con
 ### Layout (desktop, 1280px and wider)
 
 ```
-+--------------------+---------------------------------------------+
-| [≡ Search        ] | (filter chips)                              |
-| Panel (400px)      |                 Map (full bleed)            |
-|                    |                                             |
-|                    |                                             |
-| Summary / Detail   |                                             |
-|                    |                                             |
-|                    |                                             |
-| Updated 3h ago     | [Layers]                 scale · attribution|
-+--------------------+---------------------------------------------+
++------+----------------------+--------------------------------------+
+| (o) Energy terminal         | [Search                   ] Help  ≡  |
++------+----------------------+--------------------------------------+
+| Home | Panel (360px)        | (filter chips)                       |
+|      |                      |                Map                   |
+|      | Summary / Detail     |                                      |
+|      |                      |                                      |
+| Gear | Updated 3h ago       | [Layers]          scale · attribution|
++------+----------------------+--------------------------------------+
 ```
 
-- Map fills the viewport; the panel sits on the left, flush, full height. Every visit opens on the summary (the home view). The search is one floating bar at the top left, over the top of the panel when it is open, and over the map when the panel is minimized (with a button to reopen it), so it never moves; selecting anything reopens it on that detail (decided 2026-10-28, after Google Maps).
+- A header row holds the name, the search bar (lined up with the map's left edge; it only opens search), Help (opens About) and the app menu. Below it, a narrow rail on the left holds the app's views, with settings at the bottom; the panel and the map sit beside it as two rounded, bordered cards. Every visit opens on the summary (the home view). Minimizing the panel gives its space to the map; a tab on the map's left edge, the rail's Home button or `[` brings it back, and selecting anything reopens it on that detail. The search never moves (decided 2026-10-30, from a Figma layout, replacing the 2026-10-28 floating search). The rail holds Home and the five surfaces below.
+- **Views** (decided 2026-10-30): a rail view is a mode, `view=<id>` in the URL. It fills the panel with a list, sets what stays bright on the map (as a filter does) and frames its assets on opening. It stays lit while you open things from it, so Back from an item returns to the view's list, and pressing it again does the same; Home leaves it. The panel shows, in order: the selection, the filter's matches, the view's list, the summary. Views are defined in `src/lib/views.ts`.
+  - **Chokepoints:** every strait, furthest from its five-year average first: the share, a 90-day transit line against the five-year average, transits a day, and tanker cargo as a share of its own five-year average. Straits without transit data follow, by name, with EIA's reference volume. The map keeps the chokepoints and the oil terminals whose cargo passes one.
+- **Surfaces** (decided 2026-10-30): the rail follows the kinds search groups by, where a kind has live state to rank. Basins are context with no status or flow, so they stay a layer and a search group. Places split, because storage countries and US places answer different questions.
+  1. **Home:** the summary across every surface (the dashboard tiles and what changed since last visit); its figures open their surface. Each surface's own table has moved to that surface.
+  2. **Chokepoints** (built): straits by flow against baseline.
+  3. **Pipelines** (built): every mapped pipeline, with the status split overall, grouped by region (the World Bank region of the start country, from Natural Earth), status, commodity or owner (the parent with the largest share, as GEM traces it; the top 30, then other owners). Groups show a count and a status bar; opening one lists its pipelines, researched ones first, brings them out on the map and frames them. Operator isn't a grouping: only researched lines carry one.
+  4. **Terminals** (built): LNG or oil terminals, with a switch between them, each with its status split. LNG terminals (all GEM tracks) group by facility (export or import), region or status, with measured or cited terminals first and then the largest by capacity in operation. Oil terminals (the curated set) group by route (the straits a tanker leaving has to pass, open sea last), region or status. The switch keeps its kind bright on the map; an open group narrows that to the group and frames it. Chips: offline or idle, unverified claims, metered flow (gas and oil would repeat the switch).
+  5. **Gas storage** (built): each country AGSI+ reports, furthest below the same date last year first, with its fill as a bar, a tick at last year's level, and the 7-day change. Opening it turns the storage layer on, fades every asset and frames Europe (`STORAGE_BOUNDS`). No chips: storage is a layer of countries, not assets.
+  6. **Fuel origins** (built, `view=origins`): a button that opens search on US places (ZIP code, city or state), a fuel switch (gasoline, diesel and heating oil, jet fuel, crude), then the five US regions with their three largest sources for that fuel. A region opens on the chosen fuel. The map keeps bright the chokepoints and terminals on any region's cited crude routes and frames the lower 48 (`US_BOUNDS`). No chips.
+  7. Settings, at the bottom.
+
+  Each surface owns its list, what stays bright on the map, what it frames, and its filter chips, which count and match within the surface only. Search's groups follow the rail: Places becomes Countries and US places, and Basins stays a search-only group. Disruptions attach to assets, so they show in each surface and on Home rather than as a surface of their own. A table on Home moves to its surface once that surface is built. Hold further surfaces (European gas flows, evidence) until one of these proves thin.
 - A compact Layers button sits at the map's bottom left; the layer list opens above it and closes on `L`, Esc or a click elsewhere. Layers default to on, except EU gas storage (see section 5). The top edge is left to the filter chips (decided 2026-10-28, after Google Maps).
 - Initial camera frames the theater (roughly lon -15 to 65, lat 10 to 72).
 
@@ -85,11 +96,11 @@ Basins and GEM pipelines are imported worldwide (`IMPORT_BOUNDS` in `src/lib/con
 
 - **Hover:** highlight the feature and show a minimal tooltip (name plus one key figure).
 - **Click:** select it, fly the camera to fit, open its detail in the panel.
-- **Close / Esc:** the search bar shows the name of whatever is open (an asset, or the active filter). Its × clears typing, or otherwise closes what is open and returns to the previous panel state; Esc does the same. There is no separate Back button (decided 2026-10-28, after Google Maps). Selection and camera are in the URL (shareable, reloadable).
-- **Search:** type-ahead across pipelines, chokepoints, basins and countries.
+- **Back and close** (decided 2026-10-30, replacing the search bar's title and × from 2026-10-28, which suited a Google Maps layout but not one with a rail): an item or a filter list in the panel has its own top bar. Close (×, "Close, back to Home" or the view's name) returns to the page of the surface chosen in the rail: the summary, or the view's list. "← Back to <name>" appears when the item was opened from another item or list in the same surface, and steps back one; Esc and the browser's Back do the same. A shared link has nothing to go back to, so it shows Close only. Each page opens at its top. Selection and camera are in the URL (shareable, reloadable).
+- **Search:** a dialog over the app, opened from the header's search bar, `/` or ⌘K (decided 2026-10-30, once there were seven kinds to search). One box searches chokepoints, pipelines, oil and LNG terminals, countries, basins and US places (regions, states, cities, ZIP codes). Results come in groups by kind, ordered by each group's best match, a few of each (`SEARCH` in config); a scope row (all, chokepoints, pipelines, terminals, countries, US places, basins, following the rail's surfaces) narrows to one and shows more, and lists that scope with nothing typed. An empty box lists the views. Arrow keys move, Enter opens, and Esc (from anywhere while it's open) or its close button closes it; focus returns to the bar.
 - **App menu:** a menu button at the left of the search bar opens a drawer over everything with app-level settings and information: theme, data freshness for each dataset, every dataset's source and license as its job recorded them, keyboard shortcuts, and a short about. Esc or the backdrop closes it (decided 2026-10-28, after Google Maps' main menu).
 - **Quick filters:** a row of chips over the map: offline or idle, below baseline, unverified claims, metered flow, gas, oil, each with its match count. One at a time; matches stay at full strength on the map, the rest fade, and the panel lists the matches in place of the summary. The filter is in the URL (`f=`), and Back or Esc clears it (decided 2026-10-28, after Google Maps' category chips).
-- **Keyboard:** `/` focuses search, `Esc` goes back, `L` toggles the layer control, `[` minimizes or reopens the panel.
+- **Keyboard:** `/` or ⌘K opens search, `Esc` goes back, `L` toggles the layer control, `[` minimizes or reopens the panel.
 
 ## 5. Map layers
 
@@ -309,7 +320,7 @@ Ask before adding dependencies beyond this list.
 
 Minimal Swiss and Japanese design meets the Bloomberg terminal. Legibility and scannability first.
 
-- **Type:** IBM Plex Sans for interface text, IBM Plex Mono for numbers, units, coordinates, timestamps and IDs (Google Fonts). Use tabular figures. Alternative pairing to try later: Inter with JetBrains Mono.
+- **Type:** Inter for interface text, IBM Plex Mono for numbers, units, coordinates, timestamps and IDs (Google Fonts). Use tabular figures. Inter replaced IBM Plex Sans on 2026-10-30, with the Figma layout.
 - **Case:** sentence case everywhere. No uppercase eyebrow labels, no letter-spaced small caps.
 - **Hierarchy:** size and weight, not decoration. Generous spacing in the panel; dense tables where density helps scanning.
 - **Color:** a neutral, quiet base. Semantic tokens only: `status-operating`, `status-reduced`, `status-offline`, `status-unknown`, `flow-below`, `flow-near`, `flow-above`, `data-stale`. Never rely on color alone: pair with line style, shape or a label.

@@ -1,3 +1,4 @@
+import { StackSimpleIcon } from '@phosphor-icons/react';
 import { useEffect, useRef } from 'react';
 import type { LayerId, LayerVisibility } from './layers';
 
@@ -58,20 +59,11 @@ export function LayerControl({ open, onToggleOpen, onClose, visibility, onChange
         aria-expanded={open}
         aria-controls="layer-list"
         onClick={onToggleOpen}
+        aria-label="Layers"
         title="Layers  L"
       >
-        <LayersIcon />
-        Layers
+        <StackSimpleIcon size={24} />
       </button>
     </div>
-  );
-}
-
-function LayersIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M8 2.5 14 5.75 8 9 2 5.75z" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-      <path d="M2 8.75 8 12l6-3.25" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }

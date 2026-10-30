@@ -210,6 +210,12 @@ export const countrySchema = z.object({
   geometry: z.object({ type: z.enum(['Polygon', 'MultiPolygon']), coordinates: z.array(z.any()).min(1) }),
 });
 
+export const countryRegionSchema = z.object({
+  id: z.string().regex(/^[A-Z]{2}$/),
+  name: z.string().min(1),
+  region: z.string().min(1),
+});
+
 const paddRef = z.enum(['padd-1', 'padd-2', 'padd-3', 'padd-4', 'padd-5']);
 const kbbl = z.number().finite().min(0);
 
