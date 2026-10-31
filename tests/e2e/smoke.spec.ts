@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { FEATURES } from '../../src/lib/config';
+import { FEATURES, HOME_HERO } from '../../src/lib/config';
 
 const SHOTS = process.env.SCREENSHOT_DIR;
 
@@ -437,12 +437,22 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
 test('the home hero lists disruptions in effect, newest report first, and measured changes, and opens them', async ({ page }) => {
   await page.goto('/');
   const hero = page.getByRole('region', { name: 'Situation' });
-  // What the site is, then the newest disruption in effect as the lead story, which opens its asset.
+  // What the site is, then a row of cards for the disruptions with the newest reports, each opening its asset.
   await expect(hero.getByRole('heading', { level: 2 })).toHaveText("What's happening");
-  const lead = hero.getByRole('article');
-  await expect(lead).toContainText(/Latest update · (today|yesterday|\d+ days ago|\d{4}-\d{2})/);
-  await expect(lead.getByRole('link')).toHaveAttribute('href', /^https:/);
-  await lead.getByRole('heading', { level: 3 }).getByRole('button').click();
+  const latest = hero.getByRole('region', { name: /^Latest updates/ });
+  const cards = latest.getByRole('article');
+  await expect(cards).toHaveCount(HOME_HERO.cards);
+  const first = cards.first();
+  await expect(first).toContainText(/^(today|yesterday|\d+ days ago|\d{4}-\d{2})/);
+  await expect(first.getByRole('link')).toHaveAttribute('href', /^https:/);
+  // The next button steps the row along; the first card scrolls out of view and back.
+  const row = latest.getByRole('list', { name: /^Latest updates/ });
+  await latest.getByRole('button', { name: 'Next update' }).click();
+  await expect.poll(() => row.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
+  await expect(latest.getByRole('button', { name: 'Previous update' })).toBeEnabled();
+  await latest.getByRole('button', { name: 'Previous update' }).click();
+  await expect.poll(() => row.evaluate((el) => el.scrollLeft)).toBe(0);
+  await first.getByRole('heading', { level: 4 }).getByRole('button').click();
   await expect(page).toHaveURL(/sel=/);
   await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' }).click();
   const rest = hero.getByRole('region', { name: /^Also in effect/ });
@@ -530,7 +540,7 @@ test('with visit changes off, nothing is stored and Home leaves them out', async
   });
   await page.goto('/');
   const hero = page.getByRole('region', { name: 'Situation' });
-  await expect(hero).toContainText(/Latest update/);
+  await expect(hero).toContainText(/Latest updates/);
   await expect(hero).not.toContainText(/since your last visit|First visit/);
   await expect(page.locator('#summary-changes')).toHaveCount(0);
   await expect.poll(() => page.evaluate(() => localStorage.getItem('et.visits'))).toBeNull();

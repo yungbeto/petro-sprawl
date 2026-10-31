@@ -1,6 +1,6 @@
 // The summary panel: headline counts for the theater, and what changed since the last visit. Pure.
 
-import type { AssetStatus, Disruption, Pipeline } from '../types';
+import type { AssetStatus, Disruption, Pipeline, SourceRef } from '../types';
 import type { Selection } from '../app/urlState';
 import { AGSI, CHANGES, HOME_HERO, agsiSeriesId, tankerCargoSeriesId } from './config';
 import { chokepointFlows, seriesById, type Datasets } from './data';
@@ -331,9 +331,15 @@ const SELECTION_OF: Record<Disruption['assetKind'], Selection['kind']> = {
   terminal: 'terminal',
 };
 
+/** A disruption's newest source, the one its card leads with; the first listed wins a tie. */
+export function newestSource(d: Disruption): SourceRef | null {
+  return d.sources.reduce<SourceRef | null>((newest, s) => (!newest || s.publishedAt > newest.publishedAt ? s : newest), null);
+}
+
 /** When a disruption was last reported: the newest of its sources, or its start when none is dated later. */
 export function lastReported(d: Disruption): string {
-  return d.sources.reduce((latest, s) => (s.publishedAt > latest ? s.publishedAt : latest), d.startedAt);
+  const newest = newestSource(d)?.publishedAt;
+  return newest && newest > d.startedAt ? newest : d.startedAt;
 }
 
 /**

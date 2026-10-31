@@ -465,10 +465,11 @@ export const PIPELINE_GROUPS = { ownerGroups: 30, listLimit: 50 } as const;
 export const TERMINAL_GROUPS = { listLimit: 50 } as const;
 
 /**
- * Home's hero: disruptions and measured changes listed before "Show all". A report date up to
- * `recentDays` old reads as "3 days ago"; older ones as the date.
+ * Home's hero: `cards` disruptions in effect, newest report first, as a row of cards; then the rest and
+ * the measured changes, each listing a few before "Show all". A report date up to `recentDays` old reads
+ * as "3 days ago"; older ones as the date.
  */
-export const HOME_HERO = { disruptionsShown: 3, changesShown: 3, recentDays: 14 } as const;
+export const HOME_HERO = { cards: 5, disruptionsShown: 3, changesShown: 3, recentDays: 14 } as const;
 
 /**
  * Measured changes on Home (SPEC M8): the latest `recentDays` of a series against the `priorDays`

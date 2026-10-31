@@ -8,6 +8,7 @@ import {
   firstSentence,
   dateAgo,
   lastReported,
+  newestSource,
   quietSince,
   parseVisitRecord,
   situation,
@@ -265,6 +266,10 @@ describe('situation', () => {
     expect(lastReported(data.disruptions[1]!)).toBe('2026-10-27');
     // With no dated source after it, the start counts as the last report.
     expect(lastReported(disruption({ startedAt: '2026-05-02' }))).toBe('2026-05-02');
+    // The newest source is the one a card quotes, whatever order the sources are listed in.
+    expect(newestSource(data.disruptions[1]!)?.publishedAt).toBe('2026-10-27');
+    expect(newestSource(disruption({ sources: [source('2026-10-27'), source('2026-04-01')] }))?.publishedAt).toBe('2026-10-27');
+    expect(newestSource(disruption({ sources: [] }))).toBeNull();
   });
 
   it('says when a disruption in effect has had no report in STALE_AFTER_DAYS', () => {

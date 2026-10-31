@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react';
-import { NewspaperIcon } from '@phosphor-icons/react';
+import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
+import { CaretLeftIcon, CaretRightIcon, NewspaperIcon } from '@phosphor-icons/react';
 import type { Selection } from '../app/urlState';
 import type { VisitChanges } from '../app/useVisitChanges';
 import { FEATURES, HOME_HERO, MEASURED_CHANGES } from '../lib/config';
 import type { Datasets } from '../lib/data';
 import { describeChange, measuredChanges } from '../lib/measuredChanges';
-import { dateAgo, firstSentence, lastReported, quietSince, situation, type Situation } from '../lib/summary';
+import { dateAgo, firstSentence, lastReported, newestSource, quietSince, situation, type Situation } from '../lib/summary';
 import { AssetIcon } from './AssetIcon';
 import { SourceLink } from './details';
 
@@ -22,9 +22,9 @@ const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString
 type Ongoing = Situation['ongoing'][number];
 
 /**
- * The top of Home, after "what's happening" feeds: what the site is in a line, the disruption in effect
- * with the newest report as the lead story (when it was reported and by whom), then the others in effect,
- * then what the meters and ship counts show moving (SPEC M8).
+ * The top of Home, after "what's happening" feeds: what the site is in a line, a row of cards for the
+ * disruptions in effect with the newest reports (when each was reported and by whom), then the others in
+ * effect, then what the meters and ship counts show moving (SPEC M8).
  */
 export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHeroProps) {
   const s = useMemo(() => situation(data), [data]);
@@ -32,12 +32,10 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
   const [showAll, setShowAll] = useState(false);
   const [showAllChanges, setShowAllChanges] = useState(false);
   const shownChanges = showAllChanges ? changes : changes.slice(0, HOME_HERO.changesShown);
-  const rest = s.ongoing.slice(1);
+  const cards = s.ongoing.slice(0, HOME_HERO.cards);
+  const rest = s.ongoing.slice(HOME_HERO.cards);
   const shown = showAll ? rest : rest.slice(0, HOME_HERO.disruptionsShown);
-  const latest = s.latest;
   const commodityOf = (id: string) => data.pipelines.find((p) => p.id === id)?.commodity;
-  // The newest report behind the lead story.
-  const source = (latest ? [...latest.disruption.sources] : []).sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''))[0];
 
   /** "Oil pipeline", "LNG export terminal": what kind of asset a disruption or a change is on. */
   const kindOf = ({ selection }: { selection: Selection }): string => {
@@ -79,43 +77,13 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
         </p>
       )}
 
-      {latest ? (
-        <article className="hero__lead" aria-labelledby="hero-lead">
-          <p className="hero__kicker">
-            <NewspaperIcon size={16} aria-hidden="true" />
-            <span>
-              Latest update ·{' '}
-              <time
-                dateTime={lastReported(latest.disruption)}
-                title={`Reported ${lastReported(latest.disruption)} · since ${latest.disruption.startedAt}`}
-              >
-                {dateAgo(lastReported(latest.disruption), now)}
-              </time>
-            </span>
-          </p>
-          <h3 className="hero__headline" id="hero-lead">
-            <button type="button" className="hero__headline-link" onClick={() => onSelect(latest.selection)}>
-              {latest.name}
-            </button>
-          </h3>
-          <p className="hero__summary">{firstSentence(latest.disruption.summary)}</p>
-          <p className="hero__byline">
-            {[kindOf(latest), cause(latest)].filter(Boolean).join(' · ')}
-            {source && (
-              <>
-                {' · '}
-                <SourceLink href={source.url}>{source.publisher}</SourceLink>
-              </>
-            )}
-            {source?.unreviewed && <span className="unreviewed__note"> · not yet reviewed</span>}
-          </p>
-          {source?.unreviewed && (
-            <p className="hero__unreviewed">
-              Latest report: “{source.title}”. Added automatically from the news and not yet reviewed;{' '}
-              <SourceLink href={source.url}>read it on {source.publisher}</SourceLink>.
-            </p>
-          )}
-        </article>
+      {cards.length ? (
+        <HeroCards
+          cards={cards}
+          now={now}
+          byline={(o) => [kindOf(o), cause(o)].filter(Boolean).join(' · ')}
+          onSelect={onSelect}
+        />
       ) : (
         <p className="hero__headline">No disruptions in effect.</p>
       )}
@@ -193,7 +161,105 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
   );
 }
 
-/** All disruptions in effect, lead story included, and what they're on. */
+interface HeroCardsProps {
+  cards: Ongoing[];
+  now: Date;
+  byline: (o: Ongoing) => string;
+  onSelect: (selection: Selection) => void;
+}
+
+/**
+ * The newest reports, one card per disruption, newest first, in a row that scrolls sideways. Each card is
+ * narrower than the row so the next one peeks in; buttons and the arrow keys step a card at a time.
+ */
+function HeroCards({ cards, now, byline, onSelect }: HeroCardsProps) {
+  const scroller = useRef<HTMLOListElement>(null);
+  const [edges, setEdges] = useState({ start: true, end: cards.length < 2 });
+
+  const measure = useCallback(() => {
+    const el = scroller.current;
+    if (!el) return;
+    setEdges({ start: el.scrollLeft <= 1, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 1 });
+  }, []);
+  useEffect(() => {
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [measure, cards.length]);
+
+  const step = (direction: 1 | -1) => {
+    const el = scroller.current;
+    const card = el?.firstElementChild as HTMLElement | null;
+    if (!el || !card) return;
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollBy({ left: direction * (card.offsetWidth + gap), behavior: reduce ? 'auto' : 'smooth' });
+  };
+  const onKeyDown = (e: KeyboardEvent<HTMLOListElement>) => {
+    if (e.target !== e.currentTarget) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      step(e.key === 'ArrowRight' ? 1 : -1);
+    }
+  };
+
+  return (
+    <section className="hero__cards" aria-labelledby="hero-latest">
+      <div className="hero__cards-top">
+        <h3 className="section__title" id="hero-latest">
+          Latest updates <span className="section__count">{cards.length}</span>
+        </h3>
+        {cards.length > 1 && (
+          <div className="hero__cards-nav">
+            <button type="button" className="icon-button" aria-label="Previous update" disabled={edges.start} onClick={() => step(-1)}>
+              <CaretLeftIcon size={16} aria-hidden="true" />
+            </button>
+            <button type="button" className="icon-button" aria-label="Next update" disabled={edges.end} onClick={() => step(1)}>
+              <CaretRightIcon size={16} aria-hidden="true" />
+            </button>
+          </div>
+        )}
+      </div>
+      <ol className="hero__cards-row" ref={scroller} tabIndex={0} aria-label="Latest updates, newest first" onScroll={measure} onKeyDown={onKeyDown}>
+        {cards.map((o, i) => {
+          const reported = lastReported(o.disruption);
+          const source = newestSource(o.disruption);
+          const id = `hero-card-${i}`;
+          return (
+            <li key={o.disruption.id} className="hero-card">
+              <article aria-labelledby={id}>
+                <p className="hero__kicker">
+                  <NewspaperIcon size={16} aria-hidden="true" />
+                  <time dateTime={reported} title={`Reported ${reported} · since ${o.disruption.startedAt}`}>
+                    {dateAgo(reported, now)}
+                  </time>
+                </p>
+                <h4 className="hero-card__name" id={id}>
+                  <button type="button" className="hero__headline-link" onClick={() => onSelect(o.selection)}>
+                    {o.name}
+                  </button>
+                </h4>
+                <p className="hero-card__report">{source ? `“${source.title}”` : firstSentence(o.disruption.summary)}</p>
+                <p className="hero__byline">
+                  {byline(o)}
+                  {source && (
+                    <>
+                      {' · '}
+                      <SourceLink href={source.url}>{source.publisher}</SourceLink>
+                    </>
+                  )}
+                </p>
+                {source?.unreviewed && <p className="hero__unreviewed">Added automatically from the news, not yet reviewed.</p>}
+              </article>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  );
+}
+
+/** All disruptions in effect, the cards included, and what they're on. */
 function tally(s: Situation): string {
   const touched = [
     s.assets.chokepoints && plural(s.assets.chokepoints, 'chokepoint'),
