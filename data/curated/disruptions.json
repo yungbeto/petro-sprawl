@@ -488,9 +488,15 @@
     "assetKind": "terminal",
     "assetId": "ras-tanura",
     "startedAt": "2026-10-27",
-    "cause": "other",
+    "cause": "conflict",
     "summary": "Saudi Arabia contained a fire near Ras Tanura, its biggest oil export terminal, in the early hours of 27 October, near facilities operated by Saudi Aramco. The extent of the damage was not immediately clear. Aramco had been stepping up crude exports from the Gulf again in the preceding weeks.",
     "sources": [
+      {
+        "publisher": "Safety4Sea",
+        "title": "Oil prices rise after Houthi attack near Saudi Arabia’s Ras Tanura Terminal",
+        "url": "https://safety4sea.com/oil-prices-rise-after-houthi-attack-near-saudi-arabias-ras-tanura-terminal/",
+        "publishedAt": "2026-10-29"
+      },
       {
         "publisher": "Rigzone",
         "title": "Aramco contains fire near Ras Tanura oil hub",
