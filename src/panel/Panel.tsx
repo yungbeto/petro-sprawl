@@ -16,7 +16,7 @@ import { PipelinesView, type PipelinesViewProps } from './PipelinesView';
 import { TerminalsView, type TerminalsViewProps } from './TerminalsView';
 import { StorageView } from './StorageView';
 import { OriginsView, type OriginsViewProps } from './OriginsView';
-import { BasinDetail, ChokepointDetail, LngDetail, OilTerminalDetail, PipelineDetail, RegionDetail, StorageDetail } from './details';
+import { BasinDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RegionDetail, StorageDetail } from './details';
 
 interface PanelProps {
   /** The rail view; its list shows when nothing is selected or filtered. Null is home. */
@@ -64,6 +64,15 @@ const KIND_LABELS: Record<SelectionKind, string> = {
 };
 
 
+/** The top bar's title: what kind of thing is open, or that a map filter's matches are listed. */
+function navTitle(selection: Selection | null, filter: FilterId | null, data: Datasets): string {
+  if (selection) {
+    const resolved = resolveSelection(selection, data);
+    return resolved ? detailKind(resolved) : KIND_LABELS[selection.kind];
+  }
+  return filter ? 'Map filter' : '';
+}
+
 export function Panel(props: PanelProps) {
   const { collapsed, onToggleCollapsed } = props;
   const { now, freshness } = props;
@@ -90,11 +99,17 @@ export function Panel(props: PanelProps) {
       {(props.selection || props.filter) && (
         <div className="panel__nav">
           {props.backLabel && (
-            <button type="button" className="panel__back" onClick={props.onBack} title="Back  Esc">
-              <ArrowLeftIcon size={16} aria-hidden="true" />
-              <span className="panel__back-label">Back to {props.backLabel}</span>
+            <button
+              type="button"
+              className="icon-button panel__back"
+              onClick={props.onBack}
+              aria-label={`Back to ${props.backLabel}`}
+              title={`Back to ${props.backLabel}  Esc`}
+            >
+              <ArrowLeftIcon size={18} />
             </button>
           )}
+          <p className="panel__title">{navTitle(props.selection, props.filter, props.data)}</p>
           <button
             type="button"
             className="icon-button panel__close"
@@ -144,6 +159,7 @@ export function Panel(props: PanelProps) {
             now={now}
             onSelect={props.onSelect}
             onOpenView={props.onOpenView}
+            onFind={props.origins.onFind}
           />
         )}
       </div>

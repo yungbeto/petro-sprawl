@@ -194,16 +194,38 @@ kbd {
   width: 40px;
   height: 40px;
   padding: 0;
-  color: var(--text);
+  color: var(--text-muted);
   background: none;
   border: 0;
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   cursor: pointer;
+  transition-property: color, background-color, box-shadow, scale;
+  transition-duration: 120ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
 }
 
-.rail__item:hover,
-.rail__item[aria-current='page'] {
+.rail__item:hover {
+  color: var(--text);
   background: var(--surface-sunken);
+}
+
+.rail__item:active {
+  scale: 0.96;
+}
+
+/* The surface you're on: a raised tile with a filled icon, so it reads apart from hover. */
+.rail__item[aria-current='page'] {
+  color: var(--text);
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px var(--border),
+    0 1px 2px rgb(0 0 0 / 0.06);
+}
+
+@media (forced-colors: active) {
+  .rail__item[aria-current='page'] {
+    outline: 2px solid Highlight;
+  }
 }
 
 .rail__item--end {
@@ -483,33 +505,20 @@ kbd {
 }
 
 .panel__back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
+  flex-shrink: 0;
+  width: 32px;
   height: 32px;
-  padding: 0 var(--space-2);
   margin-left: calc(-1 * var(--space-2));
+}
+
+/* What kind of thing is open: the detail below leads with its name. */
+.panel__title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-muted);
-  background: none;
-  border: 0;
-  border-radius: var(--radius);
-  cursor: pointer;
-}
-
-.panel__back:hover {
   color: var(--text);
-  background: var(--surface-sunken);
-}
-
-.panel__back svg {
-  flex-shrink: 0;
-}
-
-.panel__back-label {
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -594,24 +603,17 @@ kbd {
 
 .detail__header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-3);
   margin-bottom: var(--space-5);
 }
 
 .detail__heading {
   min-width: 0;
-  /* Centres the kind line on the icon's middle. */
-  padding-top: 1px;
-}
-
-.detail__kind {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
 }
 
 .detail__header .detail__title {
-  margin: 2px 0 0;
+  margin: 0;
 }
 
 .detail__lede {
@@ -1544,11 +1546,82 @@ a:hover {
   text-underline-offset: 2px;
 }
 
-/* Home dashboard: four figures in a column, one large number each. */
-.dashboard {
+/* Home's hero: the date, the headline figure, then what's in effect. It leads; the figures follow. */
+.hero {
+  padding-bottom: var(--space-5);
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.hero__meta {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.hero__meta .link-button {
+  color: inherit;
+}
+
+.hero__kicker {
+  margin-bottom: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.hero__headline-link {
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.hero__headline-link:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.hero__summary {
+  margin-top: var(--space-2);
+  font-size: var(--text-md);
+  text-wrap: pretty;
+}
+
+.hero__headline {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 30px;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.hero__lede {
+  margin: var(--space-3) 0 var(--space-5);
+  font-size: var(--text-md);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.hero__more {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+/* Home dashboard: four figures, two by two, one number each. */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-4);
 }
 
 .tile {
@@ -1578,8 +1651,9 @@ a:hover {
 }
 
 .tile__value {
-  font-size: 64px;
-  line-height: 80px;
+  font-size: 32px;
+  line-height: 40px;
+  margin-top: var(--space-1);
   letter-spacing: -0.02em;
   /* A standalone figure reads tighter with proportional digits. */
   font-variant-numeric: proportional-nums;
@@ -1605,7 +1679,7 @@ a:hover {
 }
 
 .tile__note {
-  padding-top: var(--space-4);
+  padding-top: var(--space-2);
   color: var(--text-muted);
 }
 

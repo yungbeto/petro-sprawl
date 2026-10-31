@@ -5,15 +5,17 @@ import {
   diffSnapshots,
   median,
   nextVisit,
+  firstSentence,
   parseVisitRecord,
+  situation,
   statusCounts,
   statusGroups,
   storageRows,
   takeSnapshot,
   type Snapshot,
 } from '../src/lib/summary';
-import type { Evidence, ObservationSeries } from '../src/types';
-import { pipeline } from './fixtures';
+import type { Disruption, Evidence, ObservationSeries } from '../src/types';
+import { lngTerminal, oilTerminal, pipeline } from './fixtures';
 
 const claim = (status: Evidence['status'], observedAt: string, sourceType: Evidence['sourceType'] = 'press'): Evidence => ({
   status,
@@ -208,5 +210,47 @@ describe('what changed since last visit', () => {
     expect(parseVisitRecord('{not json')).toBeNull();
     expect(parseVisitRecord(JSON.stringify({ current: { savedAt: 'x' } }))).toBeNull();
     expect(parseVisitRecord(JSON.stringify({ previous: 'junk', current: snapshot() }))?.previous).toBeNull();
+  });
+});
+
+describe('situation', () => {
+  const disruption = (over: Partial<Disruption>): Disruption => ({
+    id: 'd',
+    assetKind: 'pipeline',
+    assetId: 'test-line',
+    startedAt: '2026-01',
+    cause: 'conflict',
+    summary: '',
+    sources: [],
+    recordedAt: '2026-10-01',
+    ...over,
+  });
+
+  it('lists disruptions still in effect, newest first, and counts the assets they touch', () => {
+    const data: Datasets = {
+      ...EMPTY_DATASETS,
+      pipelines: [pipeline(), pipeline({ id: 'other', name: 'Other line' })],
+      lngTerminals: [lngTerminal()],
+      oilTerminals: [oilTerminal()],
+      disruptions: [
+        disruption({ id: 'a', startedAt: '2022-09-26' }),
+        disruption({ id: 'b', startedAt: '2026-03', assetId: 'test-line' }),
+        disruption({ id: 'c', startedAt: '2026-07', endedAt: '2026-08', assetId: 'other' }),
+        disruption({ id: 'd', startedAt: '2026-10-27', assetKind: 'terminal', assetId: 'test-terminal' }),
+        disruption({ id: 'e', startedAt: '2026-03', assetKind: 'lng', assetId: 'gem-t1-export' }),
+        disruption({ id: 'f', startedAt: '2026-05', assetId: 'missing' }),
+      ],
+    };
+    const s = situation(data);
+    expect(s.ongoing.map((o) => o.disruption.id)).toEqual(['d', 'b', 'e', 'a']);
+    expect(s.ongoing[0]).toMatchObject({ name: 'Test terminal', selection: { kind: 'terminal', id: 'test-terminal' } });
+    expect(s.assets).toEqual({ chokepoints: 0, pipelines: 1, terminals: 2 });
+    expect(s.latest?.disruption.id).toBe('d');
+  });
+
+  it('takes the first sentence of a summary', () => {
+    expect(firstSentence('Iran closed the strait on 2026-03-02. Traffic fell.')).toBe('Iran closed the strait on 2026-03-02.');
+    expect(firstSentence('About 650,000 b/d. U.S. data agree')).toBe('About 650,000 b/d.');
+    expect(firstSentence('No full stop')).toBe('No full stop');
   });
 });

@@ -315,7 +315,7 @@ export function App() {
             onClick={() => openView(null)}
             aria-label="Home"
           >
-            <HouseIcon size={24} />
+            <HouseIcon size={24} weight={!view ? 'fill' : 'regular'} />
             <span className="rail__tooltip" aria-hidden="true">
               Home
             </span>
@@ -331,7 +331,7 @@ export function App() {
                 onClick={() => openView(id)}
                 aria-label={VIEW_LABELS[id]}
               >
-                <Icon size={24} />
+                <Icon size={24} weight={view === id ? 'fill' : 'regular'} />
                 <span className="rail__tooltip" aria-hidden="true">
                   {VIEW_LABELS[id]}
                 </span>

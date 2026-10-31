@@ -395,7 +395,9 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
   await expect(chokepoints).toContainText(/of 7 below baseline/);
   await expect(overview.getByRole('button', { name: /^Pipelines/ })).toContainText(/of [\d,]+ offline or idle/);
   await expect(overview.getByRole('button', { name: /^EU gas storage/ })).toContainText(/of \d+ below last year|No storage data/);
-  await expect(overview.getByRole('button', { name: /^Since last visit/ })).toContainText('First visit on this browser');
+  await expect(overview.getByRole('button', { name: /^Terminals/ })).toContainText(/of [\d,]+ offline or idle/);
+  const hero = page.getByRole('region', { name: 'Situation' });
+  await expect(hero).toContainText('First visit on this browser');
 
   // A figure opens its surface; the storage figure turns the storage layer on.
   const rail = page.getByRole('navigation', { name: 'Views' });
@@ -418,6 +420,25 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
   await openLayers(page);
   await expect(page.getByRole('checkbox', { name: /EU gas storage/ })).toBeChecked();
   if (SHOTS) await page.goto('/'), await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/summary.png` });
+});
+
+test('the home hero lists disruptions in effect, newest first, and opens them', async ({ page }) => {
+  await page.goto('/');
+  const hero = page.getByRole('region', { name: 'Situation' });
+  // The newest disruption in effect is the headline, and opens its asset.
+  await expect(hero).toContainText(/Latest disruption, since \d{4}-\d{2}/);
+  await hero.getByRole('heading', { level: 2 }).getByRole('button').click();
+  await expect(page).toHaveURL(/sel=/);
+  await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' }).click();
+  const items = hero.getByRole('list').getByRole('button');
+  await expect(items).toHaveCount(3);
+  await hero.getByRole('button', { name: /^Show all \d+/ }).click();
+  await expect(items.nth(3)).toBeVisible();
+  await items.first().click();
+  await expect(page).toHaveURL(/sel=/);
+  await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' }).click();
+  await hero.getByRole('button', { name: 'Where is my fuel from?' }).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
 });
 
 test('search finds assets by name or alias and opens them', async ({ page }) => {

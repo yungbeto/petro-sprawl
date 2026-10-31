@@ -1,23 +1,22 @@
 import type { ReactNode } from 'react';
-import type { VisitChanges } from '../app/useVisitChanges';
-import { formatDate, formatIndexShare, formatNumber } from '../lib/format';
+import { formatIndexShare, formatNumber } from '../lib/format';
 import type { ViewId } from '../lib/views';
 import { median, statusGroups, type ChokepointRow, type StatusGroupId, type StorageRow } from '../lib/summary';
 import type { AssetStatus } from '../types';
 
 interface DashboardProps {
   counts: { status: AssetStatus; count: number }[];
+  /** LNG and oil terminals together. */
+  terminalCounts: { status: AssetStatus; count: number }[];
   chokepoints: ChokepointRow[];
   storage: StorageRow[];
-  visit: VisitChanges | null;
   onOpenView: (view: ViewId) => void;
-  onShowChanges: () => void;
 }
 
 const pts = (value: number) => `${value >= 0 ? '+' : '−'}${formatNumber(Math.abs(value), 1)} pts`;
 
-/** The home view's headline: four figures, each one number with a small picture, each opening its surface or more. */
-export function Dashboard({ counts, chokepoints, storage, visit, onOpenView, onShowChanges }: DashboardProps) {
+/** Home's figures under the hero: four in a grid, each one number with a small picture, each opening its surface or more. */
+export function Dashboard({ counts, terminalCounts, chokepoints, storage, onOpenView }: DashboardProps) {
   const below = chokepoints.filter((c) => c.band === 'below');
   // Rows come furthest from baseline first, so the first below-baseline row is the worst.
   const worst = below[0];
@@ -28,6 +27,9 @@ export function Dashboard({ counts, chokepoints, storage, visit, onOpenView, onS
   const storageBelow = gaps.filter((g) => g < 0).length;
   const medianGap = median(gaps);
   const share = (id: StatusGroupId) => formatIndexShare(groups.find((g) => g.id === id)!.count / total);
+  const terminalGroups = statusGroups(terminalCounts);
+  const terminals = terminalGroups.reduce((n, g) => n + g.count, 0);
+  const terminalsStopped = terminalGroups.find((g) => g.id === 'stopped')!.count;
 
   return (
     <section className="section dashboard" aria-label="Overview">
@@ -48,6 +50,25 @@ export function Dashboard({ counts, chokepoints, storage, visit, onOpenView, onS
         onClick={() => onOpenView('pipelines')}
       >
         {total > 0 && <StatusBar groups={groups} />}
+      </Tile>
+
+      <Tile
+        label="Terminals"
+        value={terminals ? terminalsStopped.toLocaleString('en-US') : null}
+        unit={
+          terminals ? (
+            <>
+              of {terminals.toLocaleString('en-US')} <span className="tile__status">offline or idle</span>
+            </>
+          ) : (
+            'No terminals loaded'
+          )
+        }
+        note={terminals ? 'LNG and oil' : ''}
+        action="Open terminals"
+        onClick={() => onOpenView('terminals')}
+      >
+        {terminals > 0 && <StatusBar groups={terminalGroups} />}
       </Tile>
 
       <Tile
@@ -76,14 +97,6 @@ export function Dashboard({ counts, chokepoints, storage, visit, onOpenView, onS
         {gaps.length > 0 && <GapStrip gaps={gaps} />}
       </Tile>
 
-      <Tile
-        label="Since last visit"
-        value={visit?.since ? String(visit.changes.length) : null}
-        unit={visit?.since ? (visit.changes.length === 1 ? 'change' : 'changes') : 'Not yet'}
-        note={visit?.since ? `Last visit ${formatDate(visit.since)}` : 'First visit on this browser'}
-        action="Show the list"
-        onClick={onShowChanges}
-      />
     </section>
   );
 }
@@ -119,8 +132,8 @@ function Tile({
 
 /** One ring per chokepoint, drawn as on the map: band color, worst first. */
 function BandRings({ rows }: { rows: ChokepointRow[] }) {
-  const size = 16;
-  const step = size + 8;
+  const size = 12;
+  const step = size + 6;
   return (
     <svg width={rows.length * step} height={size} aria-hidden="true">
       {rows.map((r, i) => (
@@ -162,8 +175,8 @@ export function StatusBar({ groups }: { groups: ReturnType<typeof statusGroups> 
 
 /** One tick per country on a shared scale around zero: left of the line is below last year. */
 function GapStrip({ gaps }: { gaps: number[] }) {
-  const width = 160;
-  const height = 18;
+  const width = 128;
+  const height = 16;
   const extent = Math.max(5, ...gaps.map(Math.abs));
   const x = (v: number) => width / 2 + (v / extent) * (width / 2 - 2);
   return (

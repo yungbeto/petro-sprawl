@@ -1,6 +1,6 @@
 // The summary panel: headline counts for the theater, and what changed since the last visit. Pure.
 
-import type { AssetStatus, Pipeline } from '../types';
+import type { AssetStatus, Disruption, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import { AGSI, CHANGES, agsiSeriesId, tankerCargoSeriesId } from './config';
 import { chokepointFlows, seriesById, type Datasets } from './data';
@@ -307,4 +307,55 @@ export function statusGroups(counts: { status: AssetStatus; count: number }[]): 
     label: g.label,
     count: counts.filter((c) => (g.statuses as readonly AssetStatus[]).includes(c.status)).reduce((n, c) => n + c.count, 0),
   }));
+}
+
+export interface OngoingDisruption {
+  disruption: Disruption;
+  selection: Selection;
+  name: string;
+}
+
+export interface Situation {
+  /** The disruption in effect that started most recently: the hero's headline. */
+  latest: OngoingDisruption | null;
+  /** Disruptions with no end date, most recent start first. */
+  ongoing: OngoingDisruption[];
+  /** How many assets of each kind have one in effect; LNG and oil terminals count together. */
+  assets: { chokepoints: number; pipelines: number; terminals: number };
+}
+
+const SELECTION_OF: Record<Disruption['assetKind'], Selection['kind']> = {
+  chokepoint: 'chokepoint',
+  pipeline: 'pipeline',
+  lng: 'lng',
+  terminal: 'terminal',
+};
+
+/** The home hero: the newest disruption in effect, then every disruption in effect and what they touch. */
+export function situation(data: Datasets): Situation {
+  const names = new Map<string, string>([
+    ...data.chokepoints.map((c) => [`chokepoint/${c.id}`, c.name] as const),
+    ...data.pipelines.map((p) => [`pipeline/${p.id}`, p.name] as const),
+    ...data.lngTerminals.map((t) => [`lng/${t.id}`, t.name] as const),
+    ...data.oilTerminals.map((t) => [`terminal/${t.id}`, t.name] as const),
+  ]);
+  const ongoing = data.disruptions
+    .filter((d) => !d.endedAt)
+    .sort((a, b) => b.startedAt.localeCompare(a.startedAt) || a.id.localeCompare(b.id))
+    .flatMap((d) => {
+      const name = names.get(`${d.assetKind}/${d.assetId}`);
+      return name ? [{ disruption: d, selection: { kind: SELECTION_OF[d.assetKind], id: d.assetId }, name }] : [];
+    });
+  const distinct = (kinds: Disruption['assetKind'][]) =>
+    new Set(ongoing.filter((o) => kinds.includes(o.disruption.assetKind)).map((o) => o.disruption.assetId)).size;
+  return {
+    latest: ongoing[0] ?? null,
+    ongoing,
+    assets: { chokepoints: distinct(['chokepoint']), pipelines: distinct(['pipeline']), terminals: distinct(['lng', 'terminal']) },
+  };
+}
+
+/** A summary's first sentence, for a headline's lede. A full stop only ends one before a capital. */
+export function firstSentence(text: string): string {
+  return text.split(/(?<=\.)\s+(?=[A-Z])/)[0] ?? text;
 }

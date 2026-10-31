@@ -37,6 +37,7 @@ import {
   type PortCalls,
   systemSections,
   type Datasets,
+  type Resolved,
 } from '../lib/data';
 import { chokepointFlow, type ChokepointFlow, type FlowBand } from '../lib/flow';
 import { formatIndex, formatIndexShare, formatNumber, formatTonnes } from '../lib/format';
@@ -61,13 +62,37 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-/** Icon, kind and name, with an optional line under the name for what places the asset. */
-function Header({ kind, name, icon, lede }: { kind: string; name: string; icon: ReactNode; lede?: ReactNode }) {
+/**
+ * What kind of thing a detail shows, for the panel's top bar: "LNG export terminal", "Gas pipeline ·
+ * corridor". The detail itself leads with the name.
+ */
+export function detailKind(resolved: Resolved): string {
+  switch (resolved.kind) {
+    case 'chokepoint':
+      return 'Chokepoint';
+    case 'basin':
+      return `Basin · ${resolved.item.provinceType === 'priority' ? 'priority' : 'boutique'} province`;
+    case 'pipeline':
+      return `${COMMODITY_PIPELINE[resolved.item.commodity]}${resolved.item.sources.includes('curated') ? ' · corridor' : ''}`;
+    case 'storage':
+      return 'Gas storage';
+    case 'lng': {
+      const t = resolved.item;
+      return [LNG_FACILITY[t.facility], t.floating && 'floating', t.offshore && !t.floating && 'offshore'].filter(Boolean).join(' · ');
+    }
+    case 'terminal':
+      return OIL_ROLE[resolved.item.role];
+    case 'region':
+      return 'US fuel region';
+  }
+}
+
+/** Icon and name, with an optional line under the name for what places the asset. */
+function Header({ name, icon, lede }: { name: string; icon: ReactNode; lede?: ReactNode }) {
   return (
     <header className="detail__header">
       {icon}
       <div className="detail__heading">
-        <p className="detail__kind">{kind}</p>
         <h2 className="detail__title">{name}</h2>
         {lede && <p className="detail__lede">{lede}</p>}
       </div>
@@ -142,7 +167,7 @@ export function ChokepointDetail({ item, data, onSelect }: { item: Chokepoint; d
   const disruptions = disruptionsFor(data, 'chokepoint', item.id);
   return (
     <>
-      <Header kind="Chokepoint" name={item.name} icon={<AssetIcon kind="chokepoint" large />} />
+      <Header name={item.name} icon={<AssetIcon kind="chokepoint" large />} />
       {flow ? (
         <>
           <section className="flow-headline">
@@ -341,10 +366,9 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
     data,
   );
   const terminalRows = filterRows({ pipelines: none, chokepoints: none, lng: new Set(terminals.map((t) => t.id)), terminals: none }, data);
-  const province = item.provinceType === 'priority' ? 'Priority province' : 'Boutique province';
   return (
     <>
-      <Header kind={`Basin · ${province.toLowerCase()}`} name={item.name} icon={<AssetIcon kind="basin" large />} />
+      <Header name={item.name} icon={<AssetIcon kind="basin" large />} />
       <Stats>
         <Stat label="Pipelines" value={data.pipelines.length ? pipelines.length.toLocaleString('en-US') : notAvailable} aside="crossing it" />
         <Stat label="Chokepoints" value={String(chokepoints.length)} aside="inside it" />
@@ -436,7 +460,6 @@ export function PipelineDetail({
   return (
     <>
       <Header
-        kind={`${COMMODITY_PIPELINE[item.commodity]}${curated ? ' · corridor' : ''}`}
         name={item.name}
         icon={<AssetIcon kind="pipeline" commodity={item.commodity} large />}
         lede={route ? <span className="mono">{route}</span> : undefined}
@@ -685,7 +708,7 @@ export function StorageDetail({ item, data }: { item: Country; data: Datasets })
   const pct = (value: number) => `${formatNumber(value, 1)}%`;
   return (
     <>
-      <Header kind="Gas storage" name={item.name} icon={<AssetIcon kind="storage" large />} />
+      <Header name={item.name} icon={<AssetIcon kind="storage" large />} />
       {summary ? (
         <>
           <section className="flow-headline">
@@ -752,13 +775,10 @@ export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datase
   const current = item.evidence[0];
   const claim = current?.sourceType === 'measured' ? latestClaim(item) : undefined;
   const sendOut = pipelineFlow(seriesById(data, item.sendOutSeriesId));
-  const kind = [LNG_FACILITY[item.facility], item.floating && 'floating', item.offshore && !item.floating && 'offshore']
-    .filter(Boolean)
-    .join(' · ');
   const place = [item.country && formatCountry(item.country), item.pointApprox && 'location approximate'].filter(Boolean).join(' · ');
   return (
     <>
-      <Header kind={kind} name={item.name} icon={<AssetIcon kind="lng" large />} lede={place || undefined} />
+      <Header name={item.name} icon={<AssetIcon kind="lng" large />} lede={place || undefined} />
       <dl className="status-card">
         <dt className="visually-hidden">Status</dt>
         <dd>
@@ -932,7 +952,6 @@ export function OilTerminalDetail({ item, data, now, onSelect }: { item: OilTerm
   return (
     <>
       <Header
-        kind={OIL_ROLE[item.role]}
         name={item.name}
         icon={<AssetIcon kind="terminal" large />}
         lede={[formatCountry(item.country), item.pointApprox && 'location approximate'].filter(Boolean).join(' · ')}
@@ -1152,7 +1171,7 @@ export function RegionDetail({
   const stateList = states.length > 1 ? `${states.slice(0, -1).join(', ')} and ${states.at(-1)}` : (states[0] ?? '');
   return (
     <>
-      <Header kind="US fuel region" name={item.name} icon={<AssetIcon kind="region" large />} lede={stateList} />
+      <Header name={item.name} icon={<AssetIcon kind="region" large />} lede={stateList} />
       <div className="fuel-switch" role="group" aria-label="Fuel">
         {REGION_FUELS.map((f) => (
           <button key={f} type="button" className="chip" aria-pressed={f === fuel} onClick={() => onFuel(f)}>

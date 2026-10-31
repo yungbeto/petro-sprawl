@@ -421,6 +421,9 @@ export const PIPELINE_GROUPS = { ownerGroups: 30, listLimit: 50 } as const;
 /** The terminals surface: LNG terminals listed per open group before "Show all". */
 export const TERMINAL_GROUPS = { listLimit: 50 } as const;
 
+/** The home hero: disruptions in effect listed before "Show all". */
+export const HOME_HERO = { disruptionsShown: 3 } as const;
+
 /**
  * Weekly claims refresh (jobs/refresh-claims.ts): Claude searches the web for a newer dated source for
  * each cited claim older than STALE_AFTER_DAYS, and code checks every draft against the page itself.

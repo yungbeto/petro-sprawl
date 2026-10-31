@@ -4,9 +4,11 @@ import type { VisitChanges } from '../app/useVisitChanges';
 import { DATASET_FRESHNESS } from '../lib/config';
 import type { Datasets } from '../lib/data';
 import { formatDate, formatIndexShare, formatNumber } from '../lib/format';
-import { chokepointRows, statusCounts, storageRows, type Change } from '../lib/summary';
+import { chokepointRows, countStatuses, statusCounts, storageRows, type Change } from '../lib/summary';
+import { lngStatus, terminalStatus } from '../lib/encoding';
 import { statusLabel } from './details';
 import { Dashboard } from './Dashboard';
+import { HomeHero } from './HomeHero';
 import { AssetIcon } from './AssetIcon';
 import type { Commodity } from '../types';
 import type { ViewId } from '../lib/views';
@@ -21,12 +23,18 @@ interface SummaryProps {
   now: Date;
   onSelect: OnSelect;
   onOpenView: (view: ViewId) => void;
+  /** Opens search on US places, for "Where is my fuel from?". */
+  onFind: () => void;
 }
 
 const pct = (value: number) => `${formatNumber(value, 1)}%`;
 
-export function Summary({ data, loaded, failed, visit, onSelect, onOpenView }: SummaryProps) {
+export function Summary({ data, loaded, failed, visit, now, onSelect, onOpenView, onFind }: SummaryProps) {
   const counts = useMemo(() => statusCounts(data.pipelines), [data]);
+  const terminalCounts = useMemo(
+    () => countStatuses([...data.lngTerminals.map(lngStatus), ...data.oilTerminals.map(terminalStatus)]),
+    [data],
+  );
   const chokepoints = useMemo(() => chokepointRows(data), [data]);
   const storage = useMemo(() => storageRows(data), [data]);
 
@@ -45,14 +53,16 @@ export function Summary({ data, loaded, failed, visit, onSelect, onOpenView }: S
         </section>
       )}
 
-      <Dashboard
-        counts={counts}
-        chokepoints={chokepoints}
-        storage={storage}
+      <HomeHero
+        data={data}
         visit={visit}
-        onOpenView={onOpenView}
+        now={now}
+        onSelect={onSelect}
+        onFind={onFind}
         onShowChanges={() => document.getElementById('summary-changes')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
       />
+
+      <Dashboard counts={counts} terminalCounts={terminalCounts} chokepoints={chokepoints} storage={storage} onOpenView={onOpenView} />
 
       <ChangesSection visit={visit} onSelect={onSelect} commodityOf={(id) => data.pipelines.find((p) => p.id === id)?.commodity} />
 
