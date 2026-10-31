@@ -40,6 +40,8 @@ Node 22. Package manager: npm.
 | `npm run import:us-lookup` | Manual: Census ZCTA relationship file and city populations from `data/raw/census/`, EIA refinery locations from `data/raw/eia/refineries/` and Natural Earth label points to `public/data/us-lookup.json` (ZIP to state, cities, PADD hubs, country points) |
 | `npm run import:chokepoints` | PortWatch locations plus EIA volumes (from `src/lib/config.ts`) to `public/data/chokepoints.json` |
 
+Hosting is Vercel (`vercel.json`): a static Vite build of `dist/`, with Deployment Protection set to All Deployments (Vercel Authentication), so every URL, production included, needs a Vercel login. Production is https://energy-terminal-omega.vercel.app. With the GitHub repo connected, every push to main deploys, including the data commits. `vercel curl <url>` fetches through the protection; `.vercelignore` keeps raw data, saved articles and secrets out of CLI uploads.
+
 Scheduled jobs run every 6 hours in `.github/workflows/data.yml` and commit `public/data` when it changes. The claims refresh runs weekly in `.github/workflows/claims.yml`: confirmations go to main, other drafts open a pull request (the repository must allow GitHub Actions to create pull requests). Every job writes through `publishDataset` in `jobs/lib/output.ts`: new data must pass its zod schema or the previous file stays and the failure is recorded in `meta/<id>.json`.
 
 ## Gotchas

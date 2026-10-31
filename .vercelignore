@@ -1,0 +1,13 @@
+# Uploads from `vercel deploy` need only the app source and public/. Raw imports, saved articles,
+# reports and local secrets stay here.
+node_modules
+dist
+.env
+.env.*
+data/raw
+data/reports
+docs/research
+test-results
+playwright-report
+.DS_Store
+*.log
