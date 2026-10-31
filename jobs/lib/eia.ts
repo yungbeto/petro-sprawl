@@ -49,8 +49,9 @@ export function partnerName(description: string): string | null {
 
 /**
  * Imports by PADD (`move/impcp`) for one product, by country: crude by PADD of processing (IP0), fuels
- * by PADD of entry (IM0). Group rows (OPEC, Persian Gulf and the like) are dropped; each PADD-month's
- * countries must add up to its total.
+ * by PADD of entry (IM0). Group rows (OPEC, Persian Gulf and the like) are dropped. Each PADD-month's
+ * countries must add up to its total; what EIA's total holds beyond the countries it names becomes one
+ * `EIA.unnamedPartner` row, and countries adding up to more than the total is an error.
  */
 export function importsByPadd(rows: EiaRow[]): ByPeriod<CrudeMonth['imports']> {
   const out: ByPeriod<CrudeMonth['imports']> = new Map();
@@ -73,10 +74,13 @@ export function importsByPadd(rows: EiaRow[]): ByPeriod<CrudeMonth['imports']> {
     for (const [period, list] of periods) {
       const total = totals.get(`${padd} ${period}`);
       const sum = list.reduce((a, c) => a + c.kbbl, 0);
-      if (total === undefined || Math.abs(sum - total) > Math.max(5, total * 0.02)) {
+      if (total === undefined || sum - total > Math.max(5, total * 0.02)) {
         throw new Error(`${padd} ${period}: countries add up to ${sum}, EIA total is ${total ?? 'missing'}`);
       }
       list.sort((a, b) => b.kbbl - a.kbbl);
+      if (total - sum > Math.max(5, total * 0.02)) {
+        list.push({ code: EIA.unnamedPartner, name: 'Countries EIA does not name', kbbl: total - sum });
+      }
     }
   }
   return out;

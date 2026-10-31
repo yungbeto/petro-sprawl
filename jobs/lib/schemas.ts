@@ -1,6 +1,7 @@
 // zod schemas for everything the jobs publish. A file is only replaced when its new contents pass.
 
 import { z } from 'zod';
+import { EIA } from '../../src/lib/config';
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/);
 const lonLat = z.tuple([z.number().min(-180).max(180), z.number().min(-90).max(90)]);
@@ -218,6 +219,10 @@ export const countryRegionSchema = z.object({
 
 const paddRef = z.enum(['padd-1', 'padd-2', 'padd-3', 'padd-4', 'padd-5']);
 const kbbl = z.number().finite().min(0);
+/** Imports by partner: a country's ISO code, or EIA.unnamedPartner for what EIA's total holds beyond them. */
+const importsList = z.array(
+  z.object({ code: z.union([z.string().regex(/^[A-Z]{3}$/), z.literal(EIA.unnamedPartner)]), name: z.string().min(1), kbbl }),
+);
 
 export const oilOriginRegionSchema = z.object({
   id: paddRef,
@@ -227,7 +232,7 @@ export const oilOriginRegionSchema = z.object({
       z.object({
         period: z.string().regex(/^\d{4}-\d{2}$/),
         refineryInput: kbbl,
-        imports: z.array(z.object({ code: z.string().regex(/^[A-Z]{3}$/), name: z.string().min(1), kbbl })),
+        imports: importsList,
         receipts: z.array(z.object({ from: paddRef, kbbl, pipeline: kbbl, tankerBarge: kbbl, rail: kbbl })),
         production: z.array(z.object({ area: z.string().min(1), kbbl })),
       }),
@@ -238,7 +243,7 @@ export const oilOriginRegionSchema = z.object({
     .optional(),
 });
 
-const importsList = z.array(z.object({ code: z.string().regex(/^[A-Z]{3}$/), name: z.string().min(1), kbbl }));
+
 const receiptsList = z.array(z.object({ from: paddRef, kbbl, pipeline: kbbl, tankerBarge: kbbl, rail: kbbl }));
 
 export const fuelOriginRegionSchema = z.object({

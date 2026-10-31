@@ -38,6 +38,18 @@ describe('fuelOrigins', () => {
     expect(Math.round(o.suppliedPerDay)).toBe(Math.round(1_200_000 / 365));
   });
 
+  it('folds imports EIA does not name by country into other countries, whatever their share', () => {
+    const imports = [
+      { code: 'CAN', name: 'Canada', kbbl: 10 },
+      { code: 'unnamed', name: 'Countries EIA does not name', kbbl: 5 },
+    ];
+    const rows = fuelOrigins(record(year({ imports })))!.rows;
+    expect(rows.find((r) => r.key === 'country/unnamed')).toBeUndefined();
+    expect(rows.find((r) => r.key === 'other')).toMatchObject({ label: 'Other countries', detail: 'Some EIA does not name', share: 0.05 });
+    const mixed = fuelOrigins(record(year({ imports: [...imports, { code: 'NOR', name: 'Norway', kbbl: 0.5 }] })))!.rows;
+    expect(mixed.find((r) => r.key === 'other')).toMatchObject({ label: '1 other country', detail: 'Each under 1%, some EIA does not name' });
+  });
+
   it('says how each part arrives', () => {
     const rows = fuelOrigins(record())!.rows;
     expect(rows.find((r) => r.key === 'region/padd-3')).toMatchObject({ label: 'Gulf Coast', detail: 'Mostly by pipeline (90%)' });

@@ -311,6 +311,11 @@ export const EIA = {
   offshore: { R3FM: 'padd-3', R5F: 'padd-5' } as Record<string, PaddId>,
   /** Origins below this share of a region's crude fold into "other countries". */
   minShare: 0.01,
+  /**
+   * The partner code for imports EIA counts in a PADD's total but doesn't break out by country (seen
+   * for Gulf Coast gasoline blending components, 2026-08). Always folds into "other countries".
+   */
+  unnamedPartner: 'unnamed',
 } as const;
 
 /**

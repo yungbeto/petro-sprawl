@@ -26,6 +26,12 @@ describe('EIA crude rows', () => {
       { code: 'CAN', name: 'Canada', kbbl: 200 },
       { code: 'MEX', name: 'Mexico', kbbl: 100 },
     ]);
+    // EIA's total holding more than the countries it names: the rest is one unnamed row.
+    const short = rows.filter((r) => r.duoarea !== 'R30-NMX');
+    expect(importsByPadd(short).get('padd-3')?.get('2026-07')).toEqual([
+      { code: 'CAN', name: 'Canada', kbbl: 200 },
+      { code: 'unnamed', name: 'Countries EIA does not name', kbbl: 100 },
+    ]);
     expect(() => importsByPadd([...rows, row('R30-NVE', 90, 'Gulf Coast (PADD 3) Imports by PADD of Processing from Venezuela of Crude Oil', { 'area-name': 'VEN' })])).toThrow(/add up/);
   });
 

@@ -76,7 +76,9 @@ jobs:
             echo "No data changes"
           else
             git commit -m "Update data $(date -u +%Y-%m-%dT%H:%MZ)"
-            git push
+            # A push to main during the run (a code change, or the claims job) would reject ours, so
+            # rebase onto it first; this job only touches public/data. Retry once if it moves again.
+            git pull --rebase origin main && git push || (sleep 10 && git pull --rebase origin main && git push)
           fi
 
       - name: Fail if any fetch failed

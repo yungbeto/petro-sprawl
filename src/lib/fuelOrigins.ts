@@ -73,10 +73,12 @@ export function fuelOrigins(
   }
   let otherKbbl = 0;
   let otherCount = 0;
+  let unnamed = false;
   for (const [code, kbbl] of byCountry) {
-    if (kbbl / total < minShare) {
+    if (kbbl / total < minShare || code === EIA.unnamedPartner) {
       otherKbbl += kbbl;
-      otherCount += 1;
+      if (code === EIA.unnamedPartner) unnamed = true;
+      else otherCount += 1;
       continue;
     }
     rows.push({ key: `country/${code}`, kind: 'country', label: names.get(code) ?? code, detail: 'Imported', kbbl, share: kbbl / total, code });
@@ -106,8 +108,11 @@ export function fuelOrigins(
     rows.push({
       key: 'other',
       kind: 'other',
-      label: `${otherCount} other ${otherCount === 1 ? 'country' : 'countries'}`,
-      detail: `Each under ${Math.round(minShare * 100)}%`,
+      label: otherCount ? `${otherCount} other ${otherCount === 1 ? 'country' : 'countries'}` : 'Other countries',
+      detail: [otherCount && `Each under ${Math.round(minShare * 100)}%`, unnamed && 'some EIA does not name']
+        .filter(Boolean)
+        .join(', ')
+        .replace(/^s/, 'S'),
       kbbl: otherKbbl,
       share: otherKbbl / total,
     });
