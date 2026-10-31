@@ -7,6 +7,7 @@ import type { Datasets } from '../lib/data';
 import { describeChange, measuredChanges } from '../lib/measuredChanges';
 import { dateAgo, firstSentence, lastReported, newestSource, quietSince, situation, type Situation } from '../lib/summary';
 import { AssetIcon } from './AssetIcon';
+import { Info } from './Info';
 import { SourceLink } from './details';
 
 interface HomeHeroProps {
@@ -126,14 +127,18 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
       )}
 
       <section className="hero__rest" aria-labelledby="hero-measured">
-        <h3 className="section__title" id="hero-measured">
-          Measured changes {changes.length > 0 && <span className="section__count">{changes.length}</span>}
-        </h3>
-        <p className="hero__tally">
-          {changes.length
-            ? `The latest ${MEASURED_CHANGES.recentDays} days of meters and ship counts against the ${MEASURED_CHANGES.priorDays / 7} weeks before. What moved, not why.`
-            : `Nothing past its threshold in the latest ${MEASURED_CHANGES.recentDays} days of meters and ship counts.`}
-        </p>
+        <div className="title-row">
+          <h3 className="section__title" id="hero-measured">
+            Measured changes {changes.length > 0 && <span className="section__count">{changes.length}</span>}
+          </h3>
+          <Info label="About measured changes">
+            The latest {MEASURED_CHANGES.recentDays} days of meters and ship counts against the {MEASURED_CHANGES.priorDays / 7} weeks
+            before. What moved, not why.
+          </Info>
+        </div>
+        {changes.length === 0 && (
+          <p className="hero__tally">Nothing past its threshold in the latest {MEASURED_CHANGES.recentDays} days of meters and ship counts.</p>
+        )}
         {changes.length > 0 && (
           <ul className="changes">
             {shownChanges.map((c) => (

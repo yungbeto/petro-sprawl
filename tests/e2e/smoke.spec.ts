@@ -465,8 +465,11 @@ test('the home hero lists disruptions in effect, newest report first, and measur
   await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' }).click();
   // Measured changes say what moved and which meter says so, or that nothing passed a threshold.
   const measured = hero.getByRole('region', { name: /^Measured changes/ });
-  await expect(measured).toContainText(/What moved, not why|Nothing past its threshold/);
+  await measured.getByRole('button', { name: 'About measured changes' }).click();
+  await expect(page.getByRole('note', { name: 'About measured changes' })).toContainText('What moved, not why.');
+  await page.keyboard.press('Escape');
   const changes = measured.getByRole('list').getByRole('button');
+  if (!(await changes.count())) await expect(measured).toContainText('Nothing past its threshold');
   if (await changes.count()) {
     await expect(changes.first()).toContainText(/\((IMF PortWatch|ENTSOG|GIE ALSI)\)/);
     await changes.first().click();
