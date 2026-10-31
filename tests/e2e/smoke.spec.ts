@@ -635,11 +635,11 @@ test('where is my oil from: a ZIP code opens its region on gasoline, with crude 
   expect(page.url()).not.toContain('fuel=');
   const panel = page.getByLabel('Panel', { exact: true });
   await expect(panel.getByRole('heading', { name: 'West Coast' })).toBeVisible();
-  await expect(panel.getByRole('button', { name: 'Gasoline' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(panel.getByRole('tab', { name: 'Gasoline' })).toHaveAttribute('aria-selected', 'true');
   await expect(panel.getByText('Made in the region or drawn from stocks')).toBeVisible();
 
   // Crude shows the chokepoints on cited routes; one opens the chokepoint.
-  await panel.getByRole('button', { name: 'Crude' }).click();
+  await panel.getByRole('tab', { name: 'Crude' }).click();
   await expect(page).toHaveURL(/fuel=crude/);
   await panel.getByRole('button', { name: /^Strait of Hormuz/ }).click();
   await expect(page).toHaveURL(/sel=chokepoint\/hormuz/);
@@ -652,7 +652,7 @@ test('where is my oil from: a ZIP code opens its region on gasoline, with crude 
   await expect(page).toHaveURL(/sel=region\/padd-1/);
   await panel.getByRole('button', { name: /^Gulf Coast/ }).click();
   await expect(page).toHaveURL(/sel=region\/padd-3.*fuel=crude/);
-  await expect(panel.getByRole('button', { name: 'Crude' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(panel.getByRole('tab', { name: 'Crude' })).toHaveAttribute('aria-selected', 'true');
 });
 
 test('the chokepoints view stays lit while you open a strait from it, and Back returns to its list', async ({ page }) => {
@@ -760,8 +760,14 @@ test('the fuel origins surface finds a region through search and opens it on the
   expect(page.url()).not.toContain('90012');
 
   await panel.getByRole('button', { name: 'Close, back to Fuel origins' }).click();
-  await panel.getByRole('button', { name: 'Diesel and heating oil' }).click();
+  await panel.getByRole('tab', { name: 'Diesel and heating oil' }).click();
   await regions.getByRole('button', { name: /^Midwest/ }).click();
   await expect(page).toHaveURL(/sel=region\/padd-2.*fuel=diesel/);
-  await expect(panel.getByRole('button', { name: 'Diesel and heating oil' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(panel.getByRole('tab', { name: 'Diesel and heating oil' })).toHaveAttribute('aria-selected', 'true');
+  // The fuel tabs move with the arrow keys, selecting as they go.
+  await panel.getByRole('tab', { name: 'Diesel and heating oil' }).focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(panel.getByRole('tab', { name: 'Jet fuel' })).toHaveAttribute('aria-selected', 'true');
+  await expect(panel.getByRole('tab', { name: 'Jet fuel' })).toBeFocused();
+  await expect(page).toHaveURL(/fuel=jet/);
 });

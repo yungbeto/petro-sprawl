@@ -11,7 +11,6 @@ import {
   FUELS,
   PADDS,
   PADD_SOURCE,
-  REGION_FUELS,
   REGION_FUEL_LABELS,
   agsiSeriesId,
   type FuelId,
@@ -48,6 +47,7 @@ import { lngStatus, pipelineAge, pipelineStatus, shareCoverage, terminalStatus }
 import { filterRows, type FilterRow } from '../lib/filters';
 import { chokepointRows } from '../lib/summary';
 import { AssetIcon, COMMODITY_PIPELINE } from './AssetIcon';
+import { FuelTabs } from './FuelTabs';
 import type { OriginRow } from '../lib/oilOrigins';
 
 /** A region can open on a given fuel (M7); everything else ignores it. */
@@ -1172,18 +1172,13 @@ export function RegionDetail({
   return (
     <>
       <Header name={item.name} icon={<AssetIcon kind="region" large />} lede={stateList} />
-      <div className="fuel-switch" role="group" aria-label="Fuel">
-        {REGION_FUELS.map((f) => (
-          <button key={f} type="button" className="chip" aria-pressed={f === fuel} onClick={() => onFuel(f)}>
-            {REGION_FUEL_LABELS[f]}
-          </button>
-        ))}
-      </div>
-      {fuel === 'crude' ? (
-        <CrudeOrigins item={item} data={data} onSelect={onSelect} />
-      ) : (
-        <FuelOriginsView item={item} fuel={fuel} data={data} onSelect={onSelect} />
-      )}
+      <FuelTabs fuel={fuel} onFuel={onFuel}>
+        {fuel === 'crude' ? (
+          <CrudeOrigins item={item} data={data} onSelect={onSelect} />
+        ) : (
+          <FuelOriginsView item={item} fuel={fuel} data={data} onSelect={onSelect} />
+        )}
+      </FuelTabs>
     </>
   );
 }

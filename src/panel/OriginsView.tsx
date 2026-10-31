@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 import { MagnifyingGlassIcon } from '@phosphor-icons/react';
 import type { Selection } from '../app/urlState';
-import { REGION_FUELS, REGION_FUEL_LABELS, type RegionFuel } from '../lib/config';
+import { REGION_FUEL_LABELS, type RegionFuel } from '../lib/config';
 import { originsByRegion, type Datasets } from '../lib/data';
 import { SourceLink } from './details';
+import { FuelTabs } from './FuelTabs';
 
 export interface OriginsViewProps {
   data: Datasets;
@@ -40,40 +41,35 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
       </section>
 
       <section className="section">
-        <div className="fuel-switch" role="group" aria-label="Fuel">
-          {REGION_FUELS.map((f) => (
-            <button key={f} type="button" className="chip" aria-pressed={f === fuel} onClick={() => onFuel(f)}>
-              {REGION_FUEL_LABELS[f]}
-            </button>
-          ))}
-        </div>
-        {regions.length === 0 ? (
-          <p className="muted">No data for {noun}.</p>
-        ) : (
-          <ul className="view-list" aria-label="US fuel regions">
-            {regions.map(({ region, rows }) => {
-              return (
-                <li key={region.id}>
-                  <button type="button" className="view-row" onClick={() => onSelect({ kind: 'region', id: region.id }, fuel)}>
-                    <span className="view-row__name">{region.name}</span>
-                    {/* Spans, not a list: a button holds phrasing content only. */}
-                    <span className="origin-tops">
-                      {rows.slice(0, TOP).map((row) => (
-                        <span key={row.key} className="origin-tops__row">
-                          <span className="origin-tops__label">{row.label}</span>
-                          <span className="origin-tops__bar" aria-hidden="true">
-                            <span style={{ width: `${Math.min(100, row.share * 100)}%` }} />
+        <FuelTabs fuel={fuel} onFuel={onFuel}>
+          {regions.length === 0 ? (
+            <p className="muted">No data for {noun}.</p>
+          ) : (
+            <ul className="view-list" aria-label="US fuel regions">
+              {regions.map(({ region, rows }) => {
+                return (
+                  <li key={region.id}>
+                    <button type="button" className="view-row" onClick={() => onSelect({ kind: 'region', id: region.id }, fuel)}>
+                      <span className="view-row__name">{region.name}</span>
+                      {/* Spans, not a list: a button holds phrasing content only. */}
+                      <span className="origin-tops">
+                        {rows.slice(0, TOP).map((row) => (
+                          <span key={row.key} className="origin-tops__row">
+                            <span className="origin-tops__label">{row.label}</span>
+                            <span className="origin-tops__bar" aria-hidden="true">
+                              <span style={{ width: `${Math.min(100, row.share * 100)}%` }} />
+                            </span>
+                            <span className="mono num">{share(row.share)}</span>
                           </span>
-                          <span className="mono num">{share(row.share)}</span>
-                        </span>
-                      ))}
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+                        ))}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </FuelTabs>
       </section>
 
       <p className="source">

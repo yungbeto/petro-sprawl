@@ -298,9 +298,8 @@ kbd {
   font-size: var(--text-sm);
   pointer-events: none;
   background: var(--surface);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
+  box-shadow: var(--shadow-float);
 }
 
 .map-tooltip__name {
@@ -331,15 +330,15 @@ kbd {
   height: 40px;
   padding: 0;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-float);
   cursor: pointer;
 }
 
 .layer-control__toggle:hover,
 .layer-control__toggle[aria-expanded='true'] {
-  border-color: var(--border-strong);
+  box-shadow: var(--shadow-float-hover);
 }
 
 .layer-control__list {
@@ -348,9 +347,8 @@ kbd {
   padding: 6px 0;
   list-style: none;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
 }
 
 .layer-control__item {
@@ -405,10 +403,19 @@ kbd {
   margin-top: -24px;
   color: var(--text-muted);
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 0;
+  border: 0;
   border-radius: 0 var(--radius) var(--radius) 0;
+  box-shadow: var(--shadow-float);
+  /* Keep the ring off the panel side, where the tab meets the panel's own border. */
+  clip-path: inset(-12px -12px -12px 0);
   cursor: pointer;
+}
+
+/* A thin tab: its hit area reaches 40px wide onto the map. */
+.panel__tab::after {
+  content: '';
+  position: absolute;
+  inset: 0 -18px 0 0;
 }
 
 .panel__tab:hover {
@@ -533,7 +540,8 @@ kbd {
 .panel__body {
   flex: 1;
   overflow-y: auto;
-  padding: var(--space-5) var(--space-5) var(--space-4);
+  /* 16px sides, the same as the top bar, so a 360px panel gives its content 328px. */
+  padding: var(--space-5) var(--space-4) var(--space-4);
 }
 
 .panel__footer {
@@ -541,7 +549,7 @@ kbd {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-4);
   font-size: var(--text-sm);
   border-top: 1px solid var(--border);
 }
@@ -603,13 +611,18 @@ kbd {
 
 .detail__header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-3);
   margin-bottom: var(--space-5);
 }
 
+/* As tall as the icon at least: a short heading centres on it, a long one starts level with it. */
 .detail__heading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   min-width: 0;
+  min-height: 40px;
 }
 
 .detail__header .detail__title {
@@ -659,7 +672,9 @@ kbd {
   font-size: var(--text-lg);
   font-weight: 500;
   line-height: 1.25;
-  overflow-wrap: anywhere;
+  /* Break between words; hyphenate a word only if it can't fit a column on its own. */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .stats__unit {
@@ -1108,16 +1123,19 @@ a:hover {
   padding: 2px;
   background: var(--surface-sunken);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  /* Concentric: the option's 4px plus the 2px padding. */
+  border-radius: 6px;
 }
 
 .segmented__option {
-  padding: 1px var(--space-2);
+  position: relative;
+  min-height: 28px;
+  padding: 0 var(--space-2);
   font-size: var(--text-sm);
   color: var(--text-muted);
   background: none;
   border: 0;
-  border-radius: 3px;
+  border-radius: var(--radius);
   cursor: pointer;
 }
 
@@ -1181,7 +1199,8 @@ a:hover {
 }
 
 .search-results__item {
-  border-radius: var(--radius);
+  /* The same corners as the panel's list rows. */
+  border-radius: var(--radius-lg);
 }
 
 /* The search dialog: one box over the app, results grouped by kind. */
@@ -1204,9 +1223,8 @@ a:hover {
   overflow: hidden;
   transform: translateX(-50%);
   background: var(--surface);
-  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  box-shadow: 0 16px 48px rgb(0 0 0 / 0.24);
+  box-shadow: var(--shadow-float), 0 16px 48px rgb(0 0 0 / 0.24);
 }
 
 .search-dialog__field {
@@ -1426,20 +1444,19 @@ a:hover {
   font-weight: 500;
   white-space: nowrap;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-float);
   cursor: pointer;
 }
 
 .chip:hover {
-  border-color: var(--border-strong);
+  box-shadow: var(--shadow-float-hover);
 }
 
 .chip[aria-pressed='true'] {
   color: var(--surface);
   background: var(--text);
-  border-color: var(--text);
 }
 
 .chip__count {
@@ -1911,17 +1928,56 @@ a:hover {
 }
 
 /* The region view's fuel switch: the map chips, flat, wrapping in the panel. */
-.fuel-switch {
+/* Fuel tabs: one line under a rule, scrolling sideways when the labels don't fit. */
+.fuel-tabs {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: var(--space-4);
   margin-bottom: var(--space-4);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  box-shadow: inset 0 -1px var(--border);
 }
 
-.fuel-switch .chip {
-  height: 30px;
-  font-size: var(--text-sm);
-  box-shadow: none;
+.fuel-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.fuel-tabs__tab {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--text-muted);
+  background: none;
+  border: 0;
+  /* The selected tab's underline sits on the row's rule. */
+  box-shadow: inset 0 -2px transparent;
+  cursor: pointer;
+  transition-property: color, box-shadow;
+  transition-duration: 120ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.fuel-tabs__tab:hover {
+  color: var(--text);
+}
+
+.fuel-tabs__tab[aria-selected='true'] {
+  color: var(--text);
+  box-shadow: inset 0 -2px var(--text);
+}
+
+.fuel-tabs__tab:focus-visible {
+  outline-offset: -2px;
+}
+
+@media (forced-colors: active) {
+  .fuel-tabs__tab[aria-selected='true'] {
+    border-bottom: 2px solid Highlight;
+  }
 }
 
 .origins__detail {
@@ -2193,4 +2249,122 @@ a:hover {
   height: 100%;
   background: var(--border-strong);
   border-radius: 2px;
+}
+
+/* Interaction details: quick, interruptible state changes; press feedback on compact controls;
+   40px hit areas on small icon buttons; one-shot entrances for the search dialog and the menu. */
+
+.button,
+.chip,
+.icon-button,
+.segmented__option,
+.layer-control__toggle,
+.panel__tab,
+.find-region,
+.tile,
+.view-row,
+.group-row,
+.change,
+.link-button,
+.search-results__item,
+.layer-control__item {
+  transition-property: color, background-color, border-color, box-shadow, text-decoration-color, scale;
+  transition-duration: 120ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.button:active,
+.chip:active,
+.icon-button:active,
+.segmented__option:active,
+.layer-control__toggle:active,
+.find-region:active {
+  scale: 0.96;
+}
+
+/* Icon buttons draw at 28 to 32px; the hit area is 40px. */
+.icon-button {
+  position: relative;
+}
+
+.icon-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 40px);
+  height: max(100%, 40px);
+  translate: -50% -50%;
+}
+
+/* Segmented options sit side by side, so only their height grows. */
+.segmented__option::after {
+  content: '';
+  position: absolute;
+  inset: -6px 0;
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    translate: 0 -6px;
+    scale: 0.98;
+  }
+}
+
+@keyframes drawer-in {
+  from {
+    opacity: 0;
+    translate: -16px 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.search-dialog {
+  animation: dialog-in 160ms var(--ease-out);
+}
+
+.menu {
+  animation: drawer-in 200ms var(--ease-out);
+}
+
+.search-scrim,
+.menu-scrim {
+  animation: fade-in 160ms var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-dialog,
+  .menu,
+  .search-scrim,
+  .menu-scrim {
+    animation: none;
+  }
+
+  .button:active,
+  .chip:active,
+  .icon-button:active,
+  .segmented__option:active,
+  .layer-control__toggle:active,
+  .find-region:active,
+  .rail__item:active {
+    scale: none;
+  }
+}
+
+/* Forced colors drop box-shadow; surfaces that rely on it get a border back. */
+@media (forced-colors: active) {
+  .chip,
+  .layer-control__toggle,
+  .layer-control__list,
+  .map-tooltip,
+  .search-dialog,
+  .panel__tab {
+    border: 1px solid CanvasText;
+  }
 }

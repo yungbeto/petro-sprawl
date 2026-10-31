@@ -24,6 +24,10 @@
   --radius: 4px;
   --radius-lg: 8px;
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
+  /* Controls floating on the map: a hairline ring and two soft layers, so the edge holds on any basemap. */
+  --shadow-float: 0 0 0 1px rgb(0 0 0 / 0.08), 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 8px -2px rgb(0 0 0 / 0.1);
+  --shadow-float-hover: 0 0 0 1px rgb(0 0 0 / 0.14), 0 2px 4px rgb(0 0 0 / 0.08), 0 6px 14px -4px rgb(0 0 0 / 0.16);
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
 
   /* Neutrals */
   --bg: #f4f4f2;
@@ -109,6 +113,10 @@
     --map-basin-label: #a8a490;
     --app-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.075 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
     --app-glow: radial-gradient(120% 80% at 0% 0%, #1e2125 0%, #15171a 100%);
+  --shadow-float: 0 0 0 1px rgb(255 255 255 / 0.1), 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 8px -2px rgb(0 0 0 / 0.4);
+  --shadow-float-hover: 0 0 0 1px rgb(255 255 255 / 0.16), 0 2px 4px rgb(0 0 0 / 0.35), 0 6px 14px -4px rgb(0 0 0 / 0.5);
+    --shadow-float: 0 0 0 1px rgb(255 255 255 / 0.1), 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 8px -2px rgb(0 0 0 / 0.4);
+    --shadow-float-hover: 0 0 0 1px rgb(255 255 255 / 0.16), 0 2px 4px rgb(0 0 0 / 0.35), 0 6px 14px -4px rgb(0 0 0 / 0.5);
   }
 }
 
