@@ -434,7 +434,7 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
   if (SHOTS) await page.goto('/'), await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/summary.png` });
 });
 
-test('the home hero lists disruptions in effect, newest first, and opens them', async ({ page }) => {
+test('the home hero lists disruptions in effect, newest report first, and measured changes, and opens them', async ({ page }) => {
   await page.goto('/');
   const hero = page.getByRole('region', { name: 'Situation' });
   // What the site is, then the newest disruption in effect as the lead story, which opens its asset.
@@ -445,12 +445,23 @@ test('the home hero lists disruptions in effect, newest first, and opens them', 
   await lead.getByRole('heading', { level: 3 }).getByRole('button').click();
   await expect(page).toHaveURL(/sel=/);
   await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' }).click();
-  const items = hero.getByRole('list').getByRole('button');
+  const rest = hero.getByRole('region', { name: /^Also in effect/ });
+  const items = rest.getByRole('list').getByRole('button');
   await expect(items).toHaveCount(3);
-  await hero.getByRole('button', { name: /^Show all \d+/ }).click();
+  await rest.getByRole('button', { name: /^Show all \d+/ }).click();
   await expect(items.nth(3)).toBeVisible();
   await items.first().click();
   await expect(page).toHaveURL(/sel=/);
+  await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' }).click();
+  // Measured changes say what moved and which meter says so, or that nothing passed a threshold.
+  const measured = hero.getByRole('region', { name: /^Measured changes/ });
+  await expect(measured).toContainText(/What moved, not why|Nothing past its threshold/);
+  const changes = measured.getByRole('list').getByRole('button');
+  if (await changes.count()) {
+    await expect(changes.first()).toContainText(/\((IMF PortWatch|ENTSOG|GIE ALSI)\)/);
+    await changes.first().click();
+    await expect(page).toHaveURL(/sel=(chokepoint|pipeline|lng)\//);
+  }
   await expect(page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Where is my fuel from?' })).toHaveCount(0);
 });

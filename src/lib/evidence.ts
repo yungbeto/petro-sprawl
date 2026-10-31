@@ -105,7 +105,7 @@ function observedEnd(observedAt: string): number {
  * Symmetric aging (SPEC 6): a claim older than staleDays is unverified, whatever its status.
  * The status itself never changes.
  */
-export function isUnverified(evidence: Evidence | undefined, now: Date, staleDays = STALE_AFTER_DAYS): boolean {
+export function isUnverified(evidence: Pick<Evidence, 'observedAt'> | undefined, now: Date, staleDays = STALE_AFTER_DAYS): boolean {
   if (!evidence) return false;
   return now.getTime() - observedEnd(evidence.observedAt) > staleDays * 86_400_000;
 }

@@ -316,9 +316,9 @@ export interface OngoingDisruption {
 }
 
 export interface Situation {
-  /** The disruption in effect that started most recently: the hero's headline. */
+  /** The disruption in effect with the newest report: the hero's headline. */
   latest: OngoingDisruption | null;
-  /** Disruptions with no end date, most recent start first. */
+  /** Disruptions with no end date, newest report first, then most recent start. */
   ongoing: OngoingDisruption[];
   /** How many assets of each kind have one in effect; LNG and oil terminals count together. */
   assets: { chokepoints: number; pipelines: number; terminals: number };
@@ -331,7 +331,24 @@ const SELECTION_OF: Record<Disruption['assetKind'], Selection['kind']> = {
   terminal: 'terminal',
 };
 
-/** The home hero: the newest disruption in effect, then every disruption in effect and what they touch. */
+/** When a disruption was last reported: the newest of its sources, or its start when none is dated later. */
+export function lastReported(d: Disruption): string {
+  return d.sources.reduce((latest, s) => (s.publishedAt > latest ? s.publishedAt : latest), d.startedAt);
+}
+
+/**
+ * A disruption in effect whose newest report is older than STALE_AFTER_DAYS ages as a claim does: the
+ * date of that report, so the hero can say "no report since". Null while it is recent.
+ */
+export function quietSince(d: Disruption, now: Date): string | null {
+  const reported = lastReported(d);
+  return isUnverified({ observedAt: reported }, now) ? reported : null;
+}
+
+/**
+ * The home hero: the disruption in effect with the newest report, then every disruption in effect and
+ * what they touch. Ordered by report, not start, so news on a months-old disruption brings it back up.
+ */
 export function situation(data: Datasets): Situation {
   const names = new Map<string, string>([
     ...data.chokepoints.map((c) => [`chokepoint/${c.id}`, c.name] as const),
@@ -341,7 +358,10 @@ export function situation(data: Datasets): Situation {
   ]);
   const ongoing = data.disruptions
     .filter((d) => !d.endedAt)
-    .sort((a, b) => b.startedAt.localeCompare(a.startedAt) || a.id.localeCompare(b.id))
+    .sort(
+      (a, b) =>
+        lastReported(b).localeCompare(lastReported(a)) || b.startedAt.localeCompare(a.startedAt) || a.id.localeCompare(b.id),
+    )
     .flatMap((d) => {
       const name = names.get(`${d.assetKind}/${d.assetId}`);
       return name ? [{ disruption: d, selection: { kind: SELECTION_OF[d.assetKind], id: d.assetId }, name }] : [];
@@ -361,15 +381,15 @@ export function firstSentence(text: string): string {
 }
 
 /**
- * When a disruption started, as news reads it: "today", "yesterday", "3 days ago", then the date once
- * it's older than HOME_HERO.recentDays. A month-only start (no day given) stays the month. Counted in
+ * A report or start date as news reads it: "today", "yesterday", "3 days ago", then the date once
+ * it's older than HOME_HERO.recentDays. A month-only date (no day given) stays the month. Counted in
  * the reader's calendar days, as the date above it is.
  */
-export function startedAgo(startedAt: string, now: Date): string {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(startedAt)) return startedAt;
+export function dateAgo(date: string, now: Date): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
   const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-  const days = Math.round((today - Date.parse(`${startedAt}T00:00:00Z`)) / 86_400_000);
+  const days = Math.round((today - Date.parse(`${date}T00:00:00Z`)) / 86_400_000);
   if (days <= 0) return 'today';
   if (days === 1) return 'yesterday';
-  return days <= HOME_HERO.recentDays ? `${days} days ago` : startedAt;
+  return days <= HOME_HERO.recentDays ? `${days} days ago` : date;
 }

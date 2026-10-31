@@ -464,9 +464,27 @@ export const PIPELINE_GROUPS = { ownerGroups: 30, listLimit: 50 } as const;
 /** The terminals surface: LNG terminals listed per open group before "Show all". */
 export const TERMINAL_GROUPS = { listLimit: 50 } as const;
 
-/** The home hero: disruptions in effect listed before "Show all". */
-/** Home's hero. A start date up to `recentDays` old reads as "3 days ago"; older ones as the date. */
-export const HOME_HERO = { disruptionsShown: 3, recentDays: 14 } as const;
+/**
+ * Home's hero: disruptions and measured changes listed before "Show all". A report date up to
+ * `recentDays` old reads as "3 days ago"; older ones as the date.
+ */
+export const HOME_HERO = { disruptionsShown: 3, changesShown: 3, recentDays: 14 } as const;
+
+/**
+ * Measured changes on Home (SPEC M8): the latest `recentDays` of a series against the `priorDays`
+ * before them. A series whose latest point is older than `maxAgeDays` is left out. Chokepoint transits
+ * count when they move by `minRelative` on a prior mean of at least `minPriorMean` a day; pipelines when
+ * they stop, resume or move `CHANGES.flowSharePts` points of capacity; LNG send-out only when it stops
+ * or resumes, since it follows cargo arrivals and swings widely from week to week.
+ */
+export const MEASURED_CHANGES = {
+  recentDays: 7,
+  priorDays: 28,
+  minRecentPoints: 5,
+  minPriorPoints: 20,
+  maxAgeDays: 14,
+  transits: { minRelative: 0.25, minPriorMean: 3 },
+} as const;
 
 /**
  * Weekly claims refresh (jobs/refresh-claims.ts): Claude searches the web for a newer dated source for

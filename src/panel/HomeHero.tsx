@@ -2,9 +2,10 @@ import { useMemo, useState } from 'react';
 import { NewspaperIcon } from '@phosphor-icons/react';
 import type { Selection } from '../app/urlState';
 import type { VisitChanges } from '../app/useVisitChanges';
-import { FEATURES, HOME_HERO } from '../lib/config';
+import { FEATURES, HOME_HERO, MEASURED_CHANGES } from '../lib/config';
 import type { Datasets } from '../lib/data';
-import { firstSentence, situation, startedAgo, type Situation } from '../lib/summary';
+import { describeChange, measuredChanges } from '../lib/measuredChanges';
+import { dateAgo, firstSentence, lastReported, quietSince, situation, type Situation } from '../lib/summary';
 import { AssetIcon } from './AssetIcon';
 import { SourceLink } from './details';
 
@@ -21,12 +22,16 @@ const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString
 type Ongoing = Situation['ongoing'][number];
 
 /**
- * The top of Home, after "what's happening" feeds: what the site is in a line, the newest disruption in
- * effect as the lead story (when it started and who reported it), then the others in effect, newest first.
+ * The top of Home, after "what's happening" feeds: what the site is in a line, the disruption in effect
+ * with the newest report as the lead story (when it was reported and by whom), then the others in effect,
+ * then what the meters and ship counts show moving (SPEC M8).
  */
 export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHeroProps) {
   const s = useMemo(() => situation(data), [data]);
+  const changes = useMemo(() => measuredChanges(data, now), [data, now]);
   const [showAll, setShowAll] = useState(false);
+  const [showAllChanges, setShowAllChanges] = useState(false);
+  const shownChanges = showAllChanges ? changes : changes.slice(0, HOME_HERO.changesShown);
   const rest = s.ongoing.slice(1);
   const shown = showAll ? rest : rest.slice(0, HOME_HERO.disruptionsShown);
   const latest = s.latest;
@@ -34,15 +39,15 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
   // The newest report behind the lead story.
   const source = (latest ? [...latest.disruption.sources] : []).sort((a, b) => (b.publishedAt ?? '').localeCompare(a.publishedAt ?? ''))[0];
 
-  /** "Oil pipeline", "LNG export terminal": what kind of asset a disruption is on. */
-  const kindOf = (o: Ongoing): string => {
-    switch (o.selection.kind) {
+  /** "Oil pipeline", "LNG export terminal": what kind of asset a disruption or a change is on. */
+  const kindOf = ({ selection }: { selection: Selection }): string => {
+    switch (selection.kind) {
       case 'pipeline': {
-        const commodity = commodityOf(o.selection.id);
+        const commodity = commodityOf(selection.id);
         return commodity === 'gas' ? 'Gas pipeline' : commodity === 'oil' ? 'Oil pipeline' : 'Pipeline';
       }
       case 'lng': {
-        const facility = data.lngTerminals.find((t) => t.id === o.selection.id)?.facility;
+        const facility = data.lngTerminals.find((t) => t.id === selection.id)?.facility;
         return facility ? `LNG ${facility} terminal` : 'LNG terminal';
       }
       case 'terminal':
@@ -80,8 +85,11 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
             <NewspaperIcon size={16} aria-hidden="true" />
             <span>
               Latest update ·{' '}
-              <time dateTime={latest.disruption.startedAt} title={`Since ${latest.disruption.startedAt}`}>
-                {startedAgo(latest.disruption.startedAt, now)}
+              <time
+                dateTime={lastReported(latest.disruption)}
+                title={`Reported ${lastReported(latest.disruption)} · since ${latest.disruption.startedAt}`}
+              >
+                {dateAgo(lastReported(latest.disruption), now)}
               </time>
             </span>
           </p>
@@ -112,19 +120,27 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
           </h3>
           <p className="hero__tally">{tally(s)}</p>
           <ul className="changes">
-            {shown.map((o) => (
-              <li key={o.disruption.id}>
-                <button type="button" className="change" onClick={() => onSelect(o.selection)}>
-                  <AssetIcon kind={o.selection.kind} commodity={commodityOf(o.selection.id)} />
-                  <span className="change__text">
-                    <span className="change__name">{o.name}</span>
-                    <span className="change__what">
-                      {[kindOf(o), cause(o)].filter(Boolean).join(' · ')} · since <span className="mono">{o.disruption.startedAt}</span>
+            {shown.map((o) => {
+              const quiet = quietSince(o.disruption, now);
+              return (
+                <li key={o.disruption.id}>
+                  <button type="button" className="change" onClick={() => onSelect(o.selection)}>
+                    <AssetIcon kind={o.selection.kind} commodity={commodityOf(o.selection.id)} />
+                    <span className="change__text">
+                      <span className="change__name">{o.name}</span>
+                      <span className="change__what">
+                        {[kindOf(o), cause(o)].filter(Boolean).join(' · ')} · since <span className="mono">{o.disruption.startedAt}</span>
+                        {quiet && (
+                          <>
+                            {' · '}no report since <span className="mono">{quiet}</span>
+                          </>
+                        )}
+                      </span>
                     </span>
-                  </span>
-                </button>
-              </li>
-            ))}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
           {rest.length > shown.length && (
             <button type="button" className="link-button hero__more" onClick={() => setShowAll(true)}>
@@ -133,6 +149,39 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
           )}
         </section>
       )}
+
+      <section className="hero__rest" aria-labelledby="hero-measured">
+        <h3 className="section__title" id="hero-measured">
+          Measured changes {changes.length > 0 && <span className="section__count">{changes.length}</span>}
+        </h3>
+        <p className="hero__tally">
+          {changes.length
+            ? `The latest ${MEASURED_CHANGES.recentDays} days of meters and ship counts against the ${MEASURED_CHANGES.priorDays / 7} weeks before. What moved, not why.`
+            : `Nothing past its threshold in the latest ${MEASURED_CHANGES.recentDays} days of meters and ship counts.`}
+        </p>
+        {changes.length > 0 && (
+          <ul className="changes">
+            {shownChanges.map((c) => (
+              <li key={`${c.selection.kind}/${c.selection.id}`}>
+                <button type="button" className="change" onClick={() => onSelect(c.selection)}>
+                  <AssetIcon kind={c.selection.kind} commodity={commodityOf(c.selection.id)} />
+                  <span className="change__text">
+                    <span className="change__name">{c.name}</span>
+                    <span className="change__what">
+                      {kindOf(c)} · {describeChange(c)} · to <span className="mono">{c.latestDate}</span> ({c.source.name})
+                    </span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        {changes.length > shownChanges.length && (
+          <button type="button" className="link-button hero__more" onClick={() => setShowAllChanges(true)}>
+            Show all {changes.length}
+          </button>
+        )}
+      </section>
     </section>
   );
 }

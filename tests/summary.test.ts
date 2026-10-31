@@ -6,7 +6,9 @@ import {
   median,
   nextVisit,
   firstSentence,
-  startedAgo,
+  dateAgo,
+  lastReported,
+  quietSince,
   parseVisitRecord,
   situation,
   statusCounts,
@@ -249,6 +251,28 @@ describe('situation', () => {
     expect(s.latest?.disruption.id).toBe('d');
   });
 
+  it('leads with the newest report, so news on an old disruption brings it back up', () => {
+    const source = (publishedAt: string) => ({ publisher: 'P', title: 'T', url: 'https://example.com/', publishedAt });
+    const data: Datasets = {
+      ...EMPTY_DATASETS,
+      pipelines: [pipeline()],
+      disruptions: [
+        disruption({ id: 'new-start', startedAt: '2026-10-20', sources: [source('2026-10-20')] }),
+        disruption({ id: 'old-start', startedAt: '2026-03', sources: [source('2026-04-01'), source('2026-10-27')] }),
+      ],
+    };
+    expect(situation(data).ongoing.map((o) => o.disruption.id)).toEqual(['old-start', 'new-start']);
+    expect(lastReported(data.disruptions[1]!)).toBe('2026-10-27');
+    // With no dated source after it, the start counts as the last report.
+    expect(lastReported(disruption({ startedAt: '2026-05-02' }))).toBe('2026-05-02');
+  });
+
+  it('says when a disruption in effect has had no report in STALE_AFTER_DAYS', () => {
+    const source = (publishedAt: string) => ({ publisher: 'P', title: 'T', url: 'https://example.com/', publishedAt });
+    expect(quietSince(disruption({ sources: [source('2026-08-07')] }), now)).toBe('2026-08-07');
+    expect(quietSince(disruption({ sources: [source('2026-10-20')] }), now)).toBeNull();
+  });
+
   it('takes the first sentence of a summary', () => {
     expect(firstSentence('Iran closed the strait on 2026-03-02. Traffic fell.')).toBe('Iran closed the strait on 2026-03-02.');
     expect(firstSentence('About 650,000 b/d. U.S. data agree')).toBe('About 650,000 b/d.');
@@ -256,16 +280,16 @@ describe('situation', () => {
   });
 });
 
-describe('startedAgo', () => {
+describe('dateAgo', () => {
   // Noon local time, 30 October.
   const now = new Date(2026, 9, 30, 12);
   it('reads recent days as news does', () => {
-    expect(startedAgo('2026-10-30', now)).toBe('today');
-    expect(startedAgo('2026-10-29', now)).toBe('yesterday');
-    expect(startedAgo('2026-10-27', now)).toBe('3 days ago');
+    expect(dateAgo('2026-10-30', now)).toBe('today');
+    expect(dateAgo('2026-10-29', now)).toBe('yesterday');
+    expect(dateAgo('2026-10-27', now)).toBe('3 days ago');
   });
   it('gives the date once it is older, and keeps a month as it is', () => {
-    expect(startedAgo('2026-07-20', now)).toBe('2026-07-20');
-    expect(startedAgo('2026-05', now)).toBe('2026-05');
+    expect(dateAgo('2026-07-20', now)).toBe('2026-07-20');
+    expect(dateAgo('2026-05', now)).toBe('2026-05');
   });
 });
