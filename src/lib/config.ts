@@ -524,3 +524,98 @@ export const CLAIMS_REFRESH = {
   ],
   price: { inputPerM: 0.1, outputPerM: 0.5, perSearch: 0.01 },
 } as const;
+
+/**
+ * News scan (jobs/scan-news.ts, SPEC M9), every 12 hours. Headlines from GDELT and Google News RSS over
+ * the last `lookbackDays` are matched to mapped assets by name. An asset's new articles form a story;
+ * a story is a candidate when `minPublishers` outlets carry it, a trusted domain does, or the asset shows
+ * a measured change. Claude drafts from the article pages, and code checks each draft as for claims.
+ * Drafting stops once a run's estimated cost passes `maxCostPerRunUsd`. Disruptions with no report in
+ * STALE_AFTER_DAYS, or whose measured flow has recovered, get a search for an end report at most every
+ * `endCheckDays`, `maxEndChecksPerRun` at a time.
+ */
+export const NEWS = {
+  lookbackDays: 3,
+  /** Articles published longer ago than this can't be drafted from, however recently a feed listed them. */
+  maxArticleAgeDays: 14,
+  minPublishers: 2,
+  maxStoriesPerRun: 20,
+  maxCostPerRunUsd: 0.25,
+  /** Article pages read per story, and how much of each page's text Claude sees. */
+  pagesPerStory: 3,
+  pageChars: 12_000,
+  /** Searches allowed when a story's only links are Google News redirects, limited to its publishers' sites. */
+  maxSearches: 2,
+  endCheckDays: 7,
+  maxEndChecksPerRun: 3,
+  maxEndSearches: 3,
+  /** Long-settled stops; searching weekly for their end won't find one. */
+  endCheckSkip: [
+    'ukraine-transit-end-2025-upu',
+    'ukraine-transit-end-2025-progress',
+    'soyuz-2022-sokhranivka',
+    'druzhba-north-2023-poland-halt',
+    'gme-2021-algeria-halt',
+  ],
+  /** Seen article keys are kept this long, so the same headline is never drafted from twice. */
+  seenDays: 21,
+  /** Google News failing this many runs in a row turns the run red; each run still tries it first. */
+  googleNewsMaxFailures: 3,
+  /** Terms per feed query, and the gap GDELT asks for between requests. */
+  termsPerQuery: 8,
+  /** GDELT asks for 5 seconds between requests but answers 429 at that pace; a 429 waits `gdeltBackoffMs`. */
+  gdeltGapMs: 8_000,
+  gdeltBackoffMs: 30_000,
+  /** A feed failing this many queries in a row is skipped for the rest of the run. */
+  maxFailuresInARow: 3,
+  googleGapMs: 1_500,
+  requestTimeoutMs: 40_000,
+  /** Names news uses for chokepoints, which their display names don't give. */
+  extraTerms: {
+    'chokepoint/hormuz': ['Hormuz'],
+    'chokepoint/malacca': ['Malacca Strait'],
+    'chokepoint/suez': ['Suez Canal'],
+    'chokepoint/babelm': ['Bab al-Mandab'],
+    'chokepoint/danish': ['Great Belt', 'Oresund'],
+    'chokepoint/turkish': ['Bosphorus', 'Bosporus', 'Dardanelles'],
+    'pipeline/sumed': ['SUMED pipeline'],
+  } as Record<string, string[]>,
+  /** Parts of display names that aren't names ("Druzhba (northern branch)"). */
+  dropTerms: [
+    'northern branch',
+    'southern branch',
+    'suez canal and sumed',
+    'yamburg western border',
+    'egypt jordan',
+    'jordan syria',
+    'orenburg western border',
+    'suez mediterranean',
+  ],
+  /**
+   * Names that are also common words, places or tickers: they count only in a headline that also has an
+   * energy word. Short acronyms (four letters or fewer) always do.
+   */
+  weakTerms: [
+    'druzhba',
+    'progress',
+    'brotherhood',
+    'soyuz',
+    'friendship pipeline',
+    'basra',
+    'yanbu',
+    'esmeraldas',
+    'punta gorda',
+    'corpus christi',
+    'bonny',
+    'liza',
+    'enrico mattei',
+    'suez canal',
+    'panama canal',
+    'great belt',
+    'oresund',
+    'bosphorus',
+    'bosporus',
+    'dardanelles',
+    'baltic pipeline system',
+  ],
+} as const;

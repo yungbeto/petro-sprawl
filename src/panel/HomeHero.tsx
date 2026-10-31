@@ -107,7 +107,14 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
                 <SourceLink href={source.url}>{source.publisher}</SourceLink>
               </>
             )}
+            {source?.unreviewed && <span className="unreviewed__note"> · not yet reviewed</span>}
           </p>
+          {source?.unreviewed && (
+            <p className="hero__unreviewed">
+              Latest report: “{source.title}”. Added automatically from the news and not yet reviewed;{' '}
+              <SourceLink href={source.url}>read it on {source.publisher}</SourceLink>.
+            </p>
+          )}
         </article>
       ) : (
         <p className="hero__headline">No disruptions in effect.</p>

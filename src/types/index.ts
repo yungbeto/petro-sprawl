@@ -219,6 +219,8 @@ export interface SourceRef {
   url: string;
   /** ISO date the source was published. */
   publishedAt: string;
+  /** Added by the news scan (M9) without a person checking it; the page says so beside the link. */
+  unreviewed?: true;
 }
 
 /**

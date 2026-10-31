@@ -126,3 +126,8 @@ Thirty-two corridor pipelines are curated in `data/curated/pipelines-evidence.js
 - The gasoline remainder ("made in the region or drawn from stocks") also absorbs ethanol stock changes and any blending of other components (butane, for example). It is small on the East Coast (7%) and large where refineries are local.
 - Renewable diesel and biodiesel move separately (`EPOORD`); they aren't in distillate, so they're left out of "diesel and heating oil". Worth a row on the West Coast, where renewable diesel is a real share.
 
+## News scan (M9)
+
+- **Feed terms.** Google News RSS says its feeds are "solely for the purpose of rendering Google News results within a personal feed reader for personal, non-commercial use" (read 2026-10-31). This is a personal tool, which fits; revisit before opening the site to others. GDELT's DOC API asks for one request every 5 seconds and suggests its ngrams dataset for heavy use; at 16 queries twice a day we are well inside that, but check its terms for attribution.
+- **Google News links.** Resolving a Google News redirect to the article needs an undocumented Google endpoint, so the scan doesn't. If GDELT coverage proves thin for a publisher, look for that publisher's own RSS feed.
+

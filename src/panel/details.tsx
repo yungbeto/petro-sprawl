@@ -332,6 +332,20 @@ function TonnesSection({ title, flow, noun, label }: { title: string; flow: Chok
   );
 }
 
+/**
+ * A source the news scan added without a person checking it (SPEC M9): its headline, and a note saying
+ * so. The link beside it is the way to check.
+ */
+export function Unreviewed({ title }: { title: string }) {
+  return (
+    <span className="unreviewed">
+      {': '}
+      {title}
+      <span className="unreviewed__note"> · Not yet reviewed: added automatically from the news. Read the source to check it.</span>
+    </span>
+  );
+}
+
 function DisruptionList({ disruptions }: { disruptions: Disruption[] }) {
   if (disruptions.length === 0) return null;
   return (
@@ -349,6 +363,7 @@ function DisruptionList({ disruptions }: { disruptions: Disruption[] }) {
               {d.sources.map((s) => (
                 <li key={s.url}>
                   <SourceLink href={s.url}>{s.publisher}</SourceLink>, <span className="mono">{s.publishedAt}</span>
+                  {s.unreviewed && <Unreviewed title={s.title} />}
                 </li>
               ))}
             </ul>

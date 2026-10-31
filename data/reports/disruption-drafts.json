@@ -1,0 +1,15 @@
+[
+  {
+    "ref": "terminal/ras-tanura",
+    "reason": "cause changes from other to conflict",
+    "action": "add_source",
+    "source": {
+      "publisher": "Safety4Sea",
+      "title": "Oil prices rise after Houthi attack near Saudi Arabia’s Ras Tanura Terminal",
+      "url": "https://safety4sea.com/oil-prices-rise-after-houthi-attack-near-saudi-arabias-ras-tanura-terminal/",
+      "publishedAt": "2026-10-29"
+    },
+    "disruptionId": "ras-tanura-2026-10-fire",
+    "cause": "conflict"
+  }
+]

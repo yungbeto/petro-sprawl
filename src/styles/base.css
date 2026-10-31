@@ -1196,6 +1196,19 @@ a:hover {
   color: var(--text-muted);
 }
 
+/* A source the news scan added without review (SPEC M9): the note reads in body color so it isn't lost in the muted source line. */
+.unreviewed__note {
+  color: var(--text);
+}
+
+.hero__unreviewed {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
 /* Controls */
 
 .icon-button {

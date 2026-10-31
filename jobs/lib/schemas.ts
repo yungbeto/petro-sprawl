@@ -43,6 +43,7 @@ export const sourceRefSchema = z.object({
   title: z.string().min(1),
   url: z.string().url(),
   publishedAt: isoDate,
+  unreviewed: z.literal(true).optional(),
 });
 
 const evidenceSchema = z.object({
