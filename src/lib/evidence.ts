@@ -109,3 +109,35 @@ export function isUnverified(evidence: Evidence | undefined, now: Date, staleDay
   if (!evidence) return false;
   return now.getTime() - observedEnd(evidence.observedAt) > staleDays * 86_400_000;
 }
+
+/** A report's own words, who it credits and the site it links to, for showing it as an item of its own. */
+export interface ReportParts {
+  text: string;
+  /** Whoever the statement credits in its closing parentheses ("Bloomberg, via Energy Connects"). */
+  publisher?: string;
+  /** The linked site, without "www." */
+  host?: string;
+}
+
+/** Claims from people and publications, as opposed to datasets and meters. */
+export function isReport(evidence: Evidence): boolean {
+  return evidence.sourceType !== 'dataset' && evidence.sourceType !== 'measured';
+}
+
+/**
+ * Splits a curated statement's closing credit from its text: "… far below pre-war levels (Bloomberg,
+ * via Energy Connects)." gives the text without it and the publisher. Statements without one keep their
+ * text whole. Pure.
+ */
+export function reportParts(evidence: Evidence): ReportParts {
+  const statement = (evidence.statement ?? '').trim();
+  const match = /^(.*\S)\s*\(([^()]+)\)\.?$/s.exec(statement);
+  const text = match ? `${match[1]!.replace(/[.;,]$/, '')}.` : statement;
+  let host: string | undefined;
+  try {
+    if (evidence.url) host = new URL(evidence.url).hostname.replace(/^www\./, '');
+  } catch {
+    host = undefined;
+  }
+  return { text, ...(match ? { publisher: match[2]!.trim() } : {}), ...(host ? { host } : {}) };
+}

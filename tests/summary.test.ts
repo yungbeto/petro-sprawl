@@ -6,6 +6,7 @@ import {
   median,
   nextVisit,
   firstSentence,
+  startedAgo,
   parseVisitRecord,
   situation,
   statusCounts,
@@ -252,5 +253,19 @@ describe('situation', () => {
     expect(firstSentence('Iran closed the strait on 2026-03-02. Traffic fell.')).toBe('Iran closed the strait on 2026-03-02.');
     expect(firstSentence('About 650,000 b/d. U.S. data agree')).toBe('About 650,000 b/d.');
     expect(firstSentence('No full stop')).toBe('No full stop');
+  });
+});
+
+describe('startedAgo', () => {
+  // Noon local time, 30 October.
+  const now = new Date(2026, 9, 30, 12);
+  it('reads recent days as news does', () => {
+    expect(startedAgo('2026-10-30', now)).toBe('today');
+    expect(startedAgo('2026-10-29', now)).toBe('yesterday');
+    expect(startedAgo('2026-10-27', now)).toBe('3 days ago');
+  });
+  it('gives the date once it is older, and keeps a month as it is', () => {
+    expect(startedAgo('2026-07-20', now)).toBe('2026-07-20');
+    expect(startedAgo('2026-05', now)).toBe('2026-05');
   });
 });

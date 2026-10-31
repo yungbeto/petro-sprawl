@@ -607,6 +607,103 @@ kbd {
   text-wrap: balance;
 }
 
+/* An ⓘ beside a title opens the explanation that used to sit under it (Info.tsx). It sits beside the
+   heading, not inside it, so the heading's name stays its text. The row takes the title's margins. */
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.title-row:has(> .detail__title) {
+  margin: var(--space-1) 0 var(--space-3);
+}
+
+.title-row > :is(.section__title, .detail__title) {
+  margin: 0;
+}
+
+.info {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  vertical-align: middle;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition-property: color, background-color, scale;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.info::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+}
+
+.info:hover,
+.info:focus-visible {
+  color: var(--text);
+  background: var(--surface-sunken);
+}
+
+.info:active {
+  scale: 0.96;
+}
+
+.info-popover {
+  position: fixed;
+  inset: auto;
+  width: max-content;
+  max-width: min(320px, calc(100vw - 16px));
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-float);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  text-wrap: pretty;
+  opacity: 0;
+  translate: 0 -2px;
+  transition-property: opacity, translate;
+  transition-duration: 140ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.info-popover[data-placed] {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.info-popover p + p {
+  margin-top: var(--space-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .info-popover {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .info-popover {
+    border: 1px solid CanvasText;
+  }
+}
+
 /* Detail views: header, then the headline number or status, then stats, then everything else. */
 
 .detail__header {
@@ -817,54 +914,61 @@ a:hover {
   text-underline-offset: 2px;
 }
 
-.timeline {
+/* Reports: each dated claim an item of its own, newest first. Meta, then the words, then a link out. */
+.reports {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.timeline__item {
-  position: relative;
+.report {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+
+.report:last-child {
+  padding-bottom: 0;
+}
+
+/* The status it supports on top, then what kind of source, who and when. */
+.report__meta {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 2px;
-  padding: 0 0 var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
 }
 
-/* The line down the left joins the claims, newest first. */
-.timeline__item::before {
-  content: '';
-  position: absolute;
-  top: 6px;
-  bottom: -6px;
-  left: 3px;
-  border-left: 1px solid var(--border-strong);
-}
-
-.timeline__item:last-child::before {
-  display: none;
-}
-
-.timeline__item > .status::before {
-  position: absolute;
-  top: 6px;
-  left: 0;
-}
-
-.timeline__item > .status {
+.report__meta .status {
+  color: var(--text);
   font-weight: 500;
 }
 
-.timeline__detail {
+.report__text {
+  margin-top: var(--space-2);
+  font-size: var(--text-md);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.report__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: var(--space-2);
   font-size: var(--text-sm);
   color: var(--text-muted);
-  text-wrap: pretty;
+  text-underline-offset: 2px;
+}
+
+.report__link:hover {
+  color: var(--text);
 }
 
 /* Dates and figures in running text never break across lines. */
 .stats__aside .mono,
 .status-card .mono,
-.timeline__detail .mono,
 .facts__aside .mono {
   white-space: nowrap;
 }
@@ -1563,31 +1667,68 @@ a:hover {
   text-underline-offset: 2px;
 }
 
-/* Home's hero: the date, the headline figure, then what's in effect. It leads; the figures follow. */
+/* Home's hero, after "what's happening" feeds: the section and date, what the site is in a line, the
+   lead story (when, what, who reported it), then the rest in effect. It leads; the figures follow. */
 .hero {
   padding-bottom: var(--space-5);
   margin-bottom: var(--space-5);
   border-bottom: 1px solid var(--border);
 }
 
-.hero__meta {
+.hero__top {
   display: flex;
-  flex-wrap: wrap;
+  align-items: baseline;
   justify-content: space-between;
-  gap: var(--space-1) var(--space-3);
-  margin-bottom: var(--space-3);
+  gap: var(--space-3);
+}
+
+.hero__title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.hero__date {
+  flex: none;
   font-size: var(--text-sm);
   color: var(--text-muted);
 }
 
-.hero__meta .link-button {
+.hero__intro {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.hero__visit {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.hero__visit .link-button {
   color: inherit;
 }
 
+.hero__lead {
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
 .hero__kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
   margin-bottom: var(--space-1);
   font-size: var(--text-sm);
   color: var(--text-muted);
+}
+
+.hero__kicker svg {
+  flex: none;
+  color: var(--text);
 }
 
 .hero__headline-link {
@@ -1608,12 +1749,6 @@ a:hover {
   text-underline-offset: 4px;
 }
 
-.hero__summary {
-  margin-top: var(--space-2);
-  font-size: var(--text-md);
-  text-wrap: pretty;
-}
-
 .hero__headline {
   font-size: 24px;
   font-weight: 600;
@@ -1622,11 +1757,34 @@ a:hover {
   text-wrap: balance;
 }
 
-.hero__lede {
-  margin: var(--space-3) 0 var(--space-5);
+.hero__summary {
+  margin-top: var(--space-2);
   font-size: var(--text-md);
-  color: var(--text-muted);
   text-wrap: pretty;
+}
+
+.hero__byline {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.hero__byline a {
+  color: inherit;
+}
+
+.hero__rest {
+  margin-top: var(--space-5);
+}
+
+.hero__rest .section__title {
+  margin-bottom: 0;
+}
+
+.hero__tally {
+  margin: var(--space-1) 0 var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
 }
 
 .hero__more {
@@ -1851,10 +2009,6 @@ a:hover {
 }
 
 /* "Where is my oil from?": ranked origins with a share bar under each name. */
-.region__caveat {
-  margin-top: var(--space-3);
-}
-
 .origins {
   margin: 0;
   padding: 0;
@@ -2366,5 +2520,263 @@ a:hover {
   .search-dialog,
   .panel__tab {
     border: 1px solid CanvasText;
+  }
+}
+
+/* Phones: the map fills the screen; the search pill and chips float at the top, the panel is a
+   bottom sheet (its height in --sheet-h, set by useSheet) and the rail is a tab bar. Matches
+   MOBILE.maxWidthPx in config. */
+@media (max-width: 720px) {
+  .app {
+    --tabbar-h: calc(56px + env(safe-area-inset-bottom));
+    --sheet-h: 148px;
+    display: block;
+    height: 100dvh;
+    padding: 0;
+  }
+
+  .map {
+    position: fixed;
+    inset: 0;
+    border: 0;
+    border-radius: 0;
+  }
+
+  /* The search pill and the menu, floating over the map. */
+  .app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 4;
+    gap: var(--space-2);
+    padding: calc(env(safe-area-inset-top) + var(--space-2)) var(--space-3) 0;
+    pointer-events: none;
+  }
+
+  .app-header > * {
+    pointer-events: auto;
+  }
+
+  .app-header__brand,
+  .app-header__actions .button {
+    display: none;
+  }
+
+  .app-header__actions {
+    margin-left: 0;
+  }
+
+  .search-bar {
+    height: 48px;
+    background: var(--surface);
+    border-radius: 24px;
+    box-shadow: var(--shadow-float);
+  }
+
+  .search-bar__trigger {
+    border-radius: 24px;
+  }
+
+  /* Key hints mean nothing on a touch screen. */
+  .search-hint,
+  .search-dialog__footer {
+    display: none;
+  }
+
+  .app-header__actions .icon-button--lg {
+    width: 48px;
+    height: 48px;
+    background: var(--surface);
+    border-radius: 50%;
+    box-shadow: var(--shadow-float);
+  }
+
+  .chips {
+    top: calc(env(safe-area-inset-top) + var(--space-2) + 48px + var(--space-2));
+    left: 0;
+    right: 0;
+    padding: 2px var(--space-3);
+  }
+
+  /* The rail becomes the tab bar. Settings live in the menu. */
+  .rail {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 6;
+    flex-direction: row;
+    justify-content: space-around;
+    height: var(--tabbar-h);
+    padding: var(--space-1) var(--space-1) calc(env(safe-area-inset-bottom) + var(--space-1));
+    background: var(--surface);
+    box-shadow: inset 0 1px var(--border);
+  }
+
+  /* Icon over a short name, like the tab bars of map apps; the names that were tooltips show here. */
+  .rail__item {
+    flex: 1;
+    grid-template-rows: 24px auto;
+    gap: 2px;
+    width: auto;
+    min-width: 0;
+    height: 48px;
+    place-content: center;
+  }
+
+  /* The filled icon and full-strength name mark the surface you're on; a tap leaves no hover fill. */
+  .rail__item:hover,
+  .rail__item[aria-current='page'] {
+    background: none;
+    box-shadow: none;
+  }
+
+  .rail__tooltip,
+  .rail__item:is(:hover, :focus-visible) .rail__tooltip {
+    position: static;
+    padding: 0;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 12px;
+    color: inherit;
+    background: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
+    transition-delay: 0ms;
+  }
+
+  .rail__item--end {
+    display: none;
+  }
+
+  /* No hover on touch, so no hover tooltip. */
+  .map-tooltip {
+    display: none;
+  }
+
+  /* The scale bar crowds the layers button on a narrow map. */
+  .maplibregl-ctrl-scale {
+    display: none;
+  }
+
+  /* The panel becomes the sheet, resting on the tab bar. */
+  .panel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: var(--tabbar-h);
+    z-index: 5;
+    height: var(--sheet-h);
+    border: 0;
+    border-radius: 16px 16px 0 0;
+    box-shadow: var(--shadow-float), 0 -8px 24px rgb(0 0 0 / 0.12);
+    transition: height 260ms var(--ease-out);
+  }
+
+  .app[data-sheet-dragging='true'] .panel {
+    transition: none;
+  }
+
+  .sheet-handle {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 100%;
+    height: 24px;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 16px 16px 0 0;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .sheet-handle__bar {
+    width: 36px;
+    height: 4px;
+    background: var(--border-strong);
+    border-radius: 2px;
+  }
+
+  .panel__nav {
+    height: 40px;
+    touch-action: none;
+  }
+
+  .panel__body {
+    padding-top: var(--space-2);
+  }
+
+  /* At peek there's only room for the top of the page. */
+  .app[data-sheet='peek'] .panel__footer {
+    display: none;
+  }
+
+  /* Below full the page doesn't scroll: a drag on it moves the sheet (useSheet), as in map apps.
+     Rows that scroll sideways, like the fuel tabs, keep their own horizontal pan. */
+  .app:is([data-sheet='peek'], [data-sheet='half']) .panel__body {
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  .app:is([data-sheet='peek'], [data-sheet='half']) .fuel-tabs {
+    touch-action: pan-x;
+  }
+
+  .app[data-sheet='full'] .panel__body {
+    overscroll-behavior-y: contain;
+  }
+
+  /* Map controls ride on the sheet, and step aside when it's full. */
+  .layer-control,
+  .maplibregl-ctrl-bottom-left,
+  .maplibregl-ctrl-bottom-right {
+    bottom: calc(var(--tabbar-h) + var(--sheet-h));
+    transition: bottom 260ms var(--ease-out);
+  }
+
+  .layer-control {
+    bottom: calc(var(--tabbar-h) + var(--sheet-h) + var(--space-3));
+    left: var(--space-3);
+  }
+
+  .app[data-sheet-dragging='true'] :is(.layer-control, .maplibregl-ctrl-bottom-left, .maplibregl-ctrl-bottom-right) {
+    transition: none;
+  }
+
+  .app[data-sheet='full'] :is(.layer-control, .maplibregl-ctrl-bottom-left, .maplibregl-ctrl-bottom-right) {
+    visibility: hidden;
+  }
+
+  .maplibregl-ctrl-bottom-right .maplibregl-ctrl-attrib {
+    max-width: calc(100vw - 72px);
+  }
+
+  /* The menu and search take the whole screen. */
+  .menu {
+    width: 100vw;
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .search-dialog {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100dvh;
+    max-height: none;
+    padding-top: env(safe-area-inset-top);
+    transform: none;
+    border-radius: 0;
+  }
+}
+
+@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+  .panel,
+  .layer-control,
+  .maplibregl-ctrl-bottom-left,
+  .maplibregl-ctrl-bottom-right {
+    transition: none;
   }
 }

@@ -363,6 +363,7 @@ export const DATASET_FRESHNESS: Record<
   'fuel-origins': { label: 'US fuel origins', scheduled: true, staleAfterHours: 72, publisher: 'EIA' },
   'oil-routes': { label: 'Oil export routes', scheduled: false },
   'us-lookup': { label: 'US places', scheduled: false, publisher: 'U.S. Census Bureau, EIA and Natural Earth' },
+  'us-regions': { label: 'US fuel regions', scheduled: false, publisher: 'U.S. Census Bureau and EIA' },
 };
 
 /**
@@ -377,11 +378,53 @@ export const BASIN_LABEL_MIN_ZOOM = 4.5;
 /** Padding (px) when the camera fits a selected feature. */
 export const FIT_PADDING = 80;
 
+/**
+ * Phones (decided 2026-10-31): below `maxWidthPx` the map fills the screen, the panel is a bottom
+ * sheet at three heights (peek, half, full) and the rail is a tab bar. Tablets keep the desktop layout.
+ */
+export const MOBILE = {
+  maxWidthPx: 720,
+  /** The handle and the top of the panel: on Home, "What's happening" down to the latest disruption's name. */
+  peekPx: 192,
+  /** Half: this share of the space above the tab bar. */
+  halfShare: 0.5,
+  /** Full stops this far below the search bar. */
+  gapBelowHeaderPx: 8,
+  /** Room the filter chips take under the search bar, kept clear when framing the map. */
+  chipsPx: 56,
+  /** Padding around what the map frames; the desktop's FIT_PADDING leaves no room above a half sheet. */
+  fitPaddingPx: 16,
+  /** A drag shorter than this is a tap. */
+  dragThresholdPx: 6,
+  /** How far ahead a flick's speed carries the sheet before it snaps, in ms of travel. */
+  flickMs: 160,
+  /**
+   * Pixel density the map draws at, at most. Phones are 3x; at 2x thin lines stay sharp and the GPU
+   * fills 55% fewer pixels a frame.
+   */
+  maxPixelRatio: 2,
+} as const;
+
 /** Origin arcs in a region view: width in px from the smallest share shown to the whole supply. */
 export const ORIGIN_ARC = { minPx: 1.5, maxPx: 14 } as const;
 
+/**
+ * The fuel regions as outlines, the only thing on the map on the fuel origins surface and in a
+ * region view (decided 2026-10-30). Alphas are of the map's ink.
+ */
+export const REGION_OUTLINE = { fillAlpha: 0.05, selectedFillAlpha: 0.12, lineAlpha: 0.5, linePx: 1.5, selectedLinePx: 3, labelPx: 13, labelMinZoom: 2.5 } as const;
+
 /** Zoom used when flying to a point feature. */
 export const POINT_FOCUS_ZOOM = 6;
+
+/**
+ * Features that are built but switched off. `visitChanges` ("What changed since last visit") keeps a
+ * snapshot of the data in this browser's localStorage between visits; off, nothing is stored, any
+ * stored snapshot is removed, and Home leaves out the count and the list (decided 2026-10-31).
+ */
+export const FEATURES = {
+  visitChanges: false,
+} as const;
 
 export const STORAGE_KEYS = {
   theme: 'et.theme',
@@ -422,7 +465,8 @@ export const PIPELINE_GROUPS = { ownerGroups: 30, listLimit: 50 } as const;
 export const TERMINAL_GROUPS = { listLimit: 50 } as const;
 
 /** The home hero: disruptions in effect listed before "Show all". */
-export const HOME_HERO = { disruptionsShown: 3 } as const;
+/** Home's hero. A start date up to `recentDays` old reads as "3 days ago"; older ones as the date. */
+export const HOME_HERO = { disruptionsShown: 3, recentDays: 14 } as const;
 
 /**
  * Weekly claims refresh (jobs/refresh-claims.ts): Claude searches the web for a newer dated source for

@@ -1,10 +1,10 @@
 import { ArcLayer, GeoJsonLayer, IconLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
 import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon, Position } from 'geojson';
 import type { Layer } from '@deck.gl/core';
-import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, OilTerminal, Pipeline } from '../types';
+import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, OilTerminal, Pipeline, UsRegion } from '../types';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, ORIGIN_ARC, PIPELINE_WIDTH, TERMINAL_MARKER } from '../lib/config';
+import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, ORIGIN_ARC, PIPELINE_WIDTH, REGION_OUTLINE, TERMINAL_MARKER } from '../lib/config';
 import type { OriginArc } from '../lib/oilOrigins';
 import type { FilterMatches } from '../lib/filters';
 import {
@@ -30,7 +30,8 @@ export type PickedObject =
   | { kind: 'chokepoint'; item: Chokepoint }
   | { kind: 'storage'; item: Country }
   | { kind: 'lng'; item: LngTerminal }
-  | { kind: 'terminal'; item: OilTerminal };
+  | { kind: 'terminal'; item: OilTerminal }
+  | { kind: 'region'; item: UsRegion };
 
 interface PipelinePath {
   pipeline: Pipeline;
@@ -88,6 +89,13 @@ const storageCollection = memoLast(
   }),
 );
 
+const regionCollection = memoLast(
+  (regions: UsRegion[]): FeatureCollection<Polygon | MultiPolygon, UsRegion> => ({
+    type: 'FeatureCollection',
+    features: regions.map((region) => ({ type: 'Feature', geometry: region.geometry, properties: region })),
+  }),
+);
+
 const pathsCache = new WeakMap<Pipeline[], PipelinePath[]>();
 
 /**
@@ -134,6 +142,10 @@ interface BuildLayersInput {
   hoveredPipelineId: string | null;
   /** A region view's origin arcs ("Where is my oil from?"); empty otherwise. */
   originArcs: OriginArc[];
+  /** The fuel origins surface or a region view: the region outlines and arcs only, every other layer off. */
+  regionsOnly: boolean;
+  /** Below this zoom the five names would overlap. */
+  regionLabelMinZoom: number;
   colors: MapColors;
   zoom: number;
   basinLabelMinZoom: number;
@@ -150,11 +162,14 @@ export function buildLayers({
   highlight,
   hoveredPipelineId,
   originArcs,
+  regionsOnly,
+  regionLabelMinZoom,
   colors,
   zoom,
   basinLabelMinZoom,
   fontFamily,
 }: BuildLayersInput): Layer[] {
+  if (regionsOnly) visibility = { storage: false, basins: false, pipelines: false, lng: false, terminals: false, chokepoints: false };
   const isSelected = (kind: Selection['kind'], id: string) => selection?.kind === kind && selection.id === id;
   // A quick filter fades whatever it doesn't match; the selection always stays at full strength.
   const pipelineFade = (id: string) =>
@@ -293,6 +308,42 @@ export function buildLayers({
       capRounded: true,
       jointRounded: true,
       updateTriggers: { getWidth: [pipelineShares], getColor: [colors] },
+    }),
+    // The fuel regions: a light fill to tap and an outline; the open region is drawn stronger.
+    new GeoJsonLayer<UsRegion>({
+      id: 'regions',
+      data: regionCollection(data.usRegions),
+      visible: regionsOnly,
+      pickable: true,
+      stroked: true,
+      filled: true,
+      getFillColor: (f: Feature<Geometry, UsRegion>) =>
+        withAlpha(colors.ink, isSelected('region', f.properties.id) ? REGION_OUTLINE.selectedFillAlpha : REGION_OUTLINE.fillAlpha),
+      getLineColor: (f: Feature<Geometry, UsRegion>) =>
+        isSelected('region', f.properties.id) ? colors.selection : withAlpha(colors.ink, REGION_OUTLINE.lineAlpha),
+      getLineWidth: (f: Feature<Geometry, UsRegion>) =>
+        isSelected('region', f.properties.id) ? REGION_OUTLINE.selectedLinePx : REGION_OUTLINE.linePx,
+      lineWidthUnits: 'pixels',
+      lineJointRounded: true,
+      autoHighlight: true,
+      highlightColor: colors.basinFillHover,
+      updateTriggers: { getFillColor: [selection, colors], getLineColor: [selection, colors], getLineWidth: [selection] },
+    }),
+    new TextLayer<UsRegion>({
+      id: 'region-labels',
+      data: data.usRegions,
+      visible: regionsOnly && zoom >= regionLabelMinZoom,
+      getPosition: (r) => r.labelPoint,
+      getText: (r) => r.name,
+      getSize: REGION_OUTLINE.labelPx,
+      getColor: colors.ink,
+      fontFamily,
+      fontWeight: 600,
+      characterSet: 'auto',
+      outlineWidth: 2,
+      outlineColor: colors.halo,
+      fontSettings: { sdf: true },
+      updateTriggers: { getColor: [colors] },
     }),
     // Where a region's crude comes from: schematic arcs, width by share, foreign and domestic in two tones.
     new ArcLayer<OriginArc>({
@@ -471,6 +522,8 @@ export function toPicked(layerId: string | undefined, object: unknown): PickedOb
       return { kind: 'lng', item: object as LngTerminal };
     case 'terminals':
       return { kind: 'terminal', item: object as OilTerminal };
+    case 'regions':
+      return { kind: 'region', item: (object as Feature<Polygon | MultiPolygon, UsRegion>).properties };
     default:
       return null;
   }

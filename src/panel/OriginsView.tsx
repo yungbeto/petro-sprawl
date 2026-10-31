@@ -5,6 +5,7 @@ import { REGION_FUEL_LABELS, type RegionFuel } from '../lib/config';
 import { originsByRegion, type Datasets } from '../lib/data';
 import { SourceLink } from './details';
 import { FuelTabs } from './FuelTabs';
+import { Info } from './Info';
 
 export interface OriginsViewProps {
   data: Datasets;
@@ -29,11 +30,13 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
   return (
     <>
       <section className="section">
-        <h2 className="detail__title">Fuel origins</h2>
-        <p className="section__lede">
-          Where the fuel used in each US fuel region comes from: other regions, imports by country, and what's made or
-          pumped there.
-        </p>
+        <div className="title-row">
+          <h2 className="detail__title">Fuel origins</h2>
+          <Info label="About this list">
+            Where the fuel used in each US fuel region comes from: other regions, imports by country, and what's made or
+            pumped there.
+          </Info>
+        </div>
         <button type="button" className="find-region" onClick={onFind}>
           <MagnifyingGlassIcon size={18} aria-hidden="true" />
           Find your region by ZIP code, city or state

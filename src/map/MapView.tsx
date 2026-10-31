@@ -8,7 +8,10 @@ import {
   BASIN_LABEL_MIN_ZOOM,
   EIA_REFERENCE_YEAR,
   FIT_PADDING,
+  MOBILE,
+  PADDS,
   POINT_FOCUS_ZOOM,
+  REGION_OUTLINE,
   THEATER_BOUNDS,
 } from '../lib/config';
 import type { Theme } from '../lib/theme';
@@ -47,8 +50,12 @@ interface MapViewProps {
   fuel: RegionFuel;
   /** Assets matching the active quick filter; everything else fades. Null shows all. */
   highlight: FilterMatches | null;
+  /** The fuel origins surface or a region view: only the region outlines (and a region's arcs) show. */
+  regionsOnly: boolean;
   onSelect: (selection: Selection) => void;
   focus: FocusRequest | null;
+  /** On phones, the search bar and chips above and the sheet below: the camera frames what's between. */
+  insets?: { top: number; bottom: number } | null;
   children?: ReactNode;
 }
 
@@ -88,6 +95,10 @@ function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>,
       const role = picked.item.role === 'export' ? 'Export terminal' : 'Import terminal';
       return `${role} · ${statusLabel(terminalStatus(picked.item)).toLowerCase()}`;
     }
+    case 'region': {
+      const states = PADDS.find((p) => p.id === picked.item.id)?.states.length;
+      return `PADD ${picked.item.id.slice(-1)}${states ? ` · ${states} states` : ''}`;
+    }
     case 'storage': {
       const fill = fills.get(picked.item.id);
       return fill != null ? `Storage ${formatNumber(fill, 1)}% full` : 'No storage data';
@@ -95,11 +106,14 @@ function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>,
   }
 }
 
+/** Fit padding: phones have little map left between the search bar and the sheet. */
+const fitPadding = () => (window.matchMedia(`(max-width: ${MOBILE.maxWidthPx}px)`).matches ? MOBILE.fitPaddingPx : FIT_PADDING);
+
 /** Stable empty arcs, so the arc layer keeps its data between rebuilds outside a region view. */
 const NO_ARCS: OriginArc[] = [];
 
 export function MapView(props: MapViewProps) {
-  const { theme, initialCamera, data, visibility, selection, fuel, highlight, focus } = props;
+  const { theme, initialCamera, data, visibility, selection, fuel, highlight, regionsOnly, focus } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const overlayRef = useRef<MapboxOverlay | null>(null);
@@ -128,8 +142,12 @@ export function MapView(props: MapViewProps) {
       ? { center: [initialCamera.lon, initialCamera.lat] as [number, number], zoom: initialCamera.zoom }
       : { bounds: THEATER_BOUNDS, fitBoundsOptions: { padding: 24 } };
 
+    // Phones draw at no more than MOBILE.maxPixelRatio; the basemap and the overlay agree.
+    const phone = window.matchMedia(`(max-width: ${MOBILE.maxWidthPx}px)`).matches;
+    const pixelRatio = phone ? Math.min(window.devicePixelRatio, MOBILE.maxPixelRatio) : window.devicePixelRatio;
     const map = new maplibregl.Map({
       container: containerRef.current,
+      pixelRatio,
       style: BASEMAP_STYLES[appliedThemeRef.current],
       ...camera,
       dragRotate: false,
@@ -153,8 +171,11 @@ export function MapView(props: MapViewProps) {
 
     const overlay = new MapboxOverlay({
       interleaved: false,
+      useDevicePixels: pixelRatio,
       layers: [],
       onHover: (info) => {
+        // Touch has no hover: a pick on every move of a pan would only cost frames.
+        if (phone) return;
         const picked = toPicked(info.layer?.id, info.object);
         map.getCanvas().style.cursor = picked ? 'pointer' : '';
         setHover(picked ? { picked, x: info.x, y: info.y } : null);
@@ -207,6 +228,12 @@ export function MapView(props: MapViewProps) {
     return origins ? { arcs: originArcs(origins, resolved.item.id, data.usLookup), highlight: regionHighlight(origins) } : null;
   }, [selection, fuel, data]);
 
+  // A region frames its own states and where its fuel comes from.
+  const regionFrame = useMemo(() => {
+    const outline = selection?.kind === 'region' ? data.usRegions.find((r) => r.id === selection.id)?.frame ?? [] : [];
+    return [...outline, ...(regionView?.arcs.flatMap((a) => [a.from, a.to]) ?? [])];
+  }, [selection, data, regionView]);
+
   // An id, not the hover itself, so moving along one pipeline doesn't rebuild the layers.
   const hoveredPipelineId = hover?.picked.kind === 'pipeline' ? hover.picked.item.id : null;
 
@@ -223,19 +250,21 @@ export function MapView(props: MapViewProps) {
         highlight: regionView?.highlight ?? highlight,
         hoveredPipelineId,
         originArcs: regionView?.arcs ?? NO_ARCS,
+        regionsOnly,
+        regionLabelMinZoom: fontsReady ? REGION_OUTLINE.labelMinZoom : Infinity,
         colors,
         zoom,
         basinLabelMinZoom: fontsReady ? BASIN_LABEL_MIN_ZOOM : Infinity,
         fontFamily: `"${LABEL_FONT}", sans-serif`,
       }),
     });
-  }, [data, flows, pipelineShares, fills, visibility, selection, highlight, regionView, hoveredPipelineId, colors, zoom, fontsReady]);
+  }, [data, flows, pipelineShares, fills, visibility, selection, highlight, regionsOnly, regionView, hoveredPipelineId, colors, zoom, fontsReady]);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !focus) return;
     if ('points' in focus) {
-      if (focus.points.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: focus.points }), { padding: FIT_PADDING, maxZoom: 5 });
+      if (focus.points.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: focus.points }), { padding: fitPadding(), maxZoom: 5 });
       return;
     }
     const resolved = resolveSelection(focus.selection, data);
@@ -243,13 +272,21 @@ export function MapView(props: MapViewProps) {
     if (resolved.kind === 'chokepoint' || resolved.kind === 'lng' || resolved.kind === 'terminal') {
       map.flyTo({ center: resolved.item.point, zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM) });
     } else if (resolved.kind === 'region') {
-      const points = regionView?.arcs.flatMap((a) => [a.from, a.to]) ?? [];
-      if (points.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: points }), { padding: FIT_PADDING, maxZoom: 5 });
+      if (regionFrame.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: regionFrame }), { padding: fitPadding(), maxZoom: 5 });
     } else {
-      map.fitBounds(boundsOf(resolved.item.geometry), { padding: FIT_PADDING, maxZoom: 8 });
+      map.fitBounds(boundsOf(resolved.item.geometry), { padding: fitPadding(), maxZoom: 8 });
     }
     // Only a new focus request moves the camera, not data or selection changes.
   }, [focus]);
+
+  // The sheet's height is camera padding, so centring and fitting happen in the map left visible.
+  const insetTop = props.insets?.top ?? 0;
+  const insetBottom = props.insets?.bottom ?? 0;
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.easeTo({ padding: { top: insetTop, bottom: insetBottom, left: 0, right: 0 }, duration: 240 });
+  }, [insetTop, insetBottom]);
 
   // Switching a region's fuel changes its arcs (gasoline is mostly domestic, crude global), so reframe.
   const framedFuel = useRef(fuel);
@@ -257,9 +294,8 @@ export function MapView(props: MapViewProps) {
     const map = mapRef.current;
     if (framedFuel.current === fuel) return;
     framedFuel.current = fuel;
-    const points = regionView?.arcs.flatMap((a) => [a.from, a.to]) ?? [];
-    if (map && points.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: points }), { padding: FIT_PADDING, maxZoom: 5 });
-  }, [fuel, regionView]);
+    if (map && regionFrame.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: regionFrame }), { padding: fitPadding(), maxZoom: 5 });
+  }, [fuel, regionFrame]);
 
   return (
     <div className="map" role="region" aria-label="Map">

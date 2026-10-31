@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { FEATURES } from '../../src/lib/config';
 
 const SHOTS = process.env.SCREENSHOT_DIR;
 
@@ -131,9 +132,16 @@ test('an LNG terminal link shows its units, and search and the layer list know t
   // Cited reports set the status over GEM's; GEM's own claim stays in the history.
   const status = panel.locator('dt', { hasText: 'Status' }).locator('xpath=following-sibling::dd[1]');
   await expect(status).toContainText('Reduced');
-  await expect(status.getByRole('link', { name: /restored LNG exports in September/ })).toHaveAttribute('href', /semafor\.com/);
+  await expect(status).toContainText('Press report from Semafor, citing Bloomberg');
+  // Each report is an item of its own under Reports, with a link out; GEM's claim is among them.
+  const reports = panel.getByRole('region', { name: /^Reports/ });
+  const semafor = reports.getByRole('listitem').filter({ hasText: 'restored LNG exports in September' });
+  await expect(semafor.getByRole('link', { name: 'Read on semafor.com' })).toHaveAttribute('href', /semafor\.com/);
+  await expect(reports).toContainText('Global Energy Monitor');
   await expect(panel.getByRole('heading', { name: 'Disruptions' })).toBeVisible();
-  await expect(panel.getByText(/Global Energy Monitor's, as of/)).toBeVisible();
+  await panel.getByRole('button', { name: 'About the units' }).click();
+  await expect(page.getByRole('note', { name: 'About the units' })).toContainText("Global Energy Monitor's, as of");
+  await page.keyboard.press('Escape');
   await expect(panel.getByRole('heading', { name: 'Units' })).toBeVisible();
   await expect(panel.getByRole('table').getByRole('row')).toHaveCount(5);
 
@@ -158,7 +166,9 @@ test('an EU import terminal takes its status from measured send-out, with a char
   await expect(status).toContainText('Latest claim, operating');
   await expect(panel.locator('dt', { hasText: 'Send-out' }).locator('xpath=following-sibling::dd[1]')).toContainText('GWh/d');
   await expect(panel.getByRole('heading', { name: 'Daily send-out, last 90 days' })).toBeVisible();
-  await expect(panel.getByText('The status above comes from measured send-out.')).toBeVisible();
+  await panel.getByRole('button', { name: 'About the units' }).click();
+  await expect(page.getByRole('note', { name: 'About the units' })).toContainText('The status above comes from measured send-out.');
+  await page.keyboard.press('Escape');
   await expect(panel.locator('.source').getByRole('link', { name: 'GIE ALSI' })).toBeVisible();
 });
 
@@ -295,10 +305,10 @@ test('Nord Stream 1 shows offline with its cited evidence and the sabotage', asy
   const panel = page.getByLabel('Panel');
   const status = panel.locator('dt', { hasText: 'Status' }).locator('xpath=following-sibling::dd[1]');
   await expect(status).toContainText('Offline');
-  await expect(status.getByRole('link', { name: /Hamburg sabotage trial/ })).toHaveAttribute('href', /aljazeera\.com/);
   await expect(status).toContainText('2026-10-14');
   await expect(panel.getByText(/2022-09-26, ongoing · sabotage/)).toBeVisible();
-  await expect(panel.getByRole('heading', { name: 'Status history' })).toBeVisible();
+  const report = panel.getByRole('region', { name: /^Reports/ }).getByRole('listitem').filter({ hasText: /Hamburg sabotage trial/ });
+  await expect(report.getByRole('link', { name: /^Read on / })).toHaveAttribute('href', /aljazeera\.com/);
 });
 
 test('Ukraine transit shows no measured flow beside the January 2025 claim', async ({ page }) => {
@@ -347,7 +357,9 @@ test('a pipeline ending at a reported port shows its tanker calls', async ({ pag
   await page.goto('/?sel=pipeline/habshan-fujairah');
   const panel = page.getByLabel('Panel');
   await expect(panel.getByRole('heading', { name: 'Tanker calls at Fujairah, last 90 days' })).toBeVisible();
-  await expect(panel.getByText(/not flow on this pipeline/)).toBeVisible();
+  await panel.getByRole('button', { name: 'About tanker calls at Fujairah' }).click();
+  await expect(page.getByRole('note', { name: 'About tanker calls at Fujairah' })).toContainText('not flow on this pipeline');
+  await page.keyboard.press('Escape');
   await expect(panel.getByText(/Estimated exports by tanker: [\d,.]+ (million )?t per day/)).toBeVisible();
 });
 
@@ -397,7 +409,7 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
   await expect(overview.getByRole('button', { name: /^EU gas storage/ })).toContainText(/of \d+ below last year|No storage data/);
   await expect(overview.getByRole('button', { name: /^Terminals/ })).toContainText(/of [\d,]+ offline or idle/);
   const hero = page.getByRole('region', { name: 'Situation' });
-  await expect(hero).toContainText('First visit on this browser');
+  if (FEATURES.visitChanges) await expect(hero).toContainText('First visit on this browser');
 
   // A figure opens its surface; the storage figure turns the storage layer on.
   const rail = page.getByRole('navigation', { name: 'Views' });
@@ -425,9 +437,12 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
 test('the home hero lists disruptions in effect, newest first, and opens them', async ({ page }) => {
   await page.goto('/');
   const hero = page.getByRole('region', { name: 'Situation' });
-  // The newest disruption in effect is the headline, and opens its asset.
-  await expect(hero).toContainText(/Latest disruption, since \d{4}-\d{2}/);
-  await hero.getByRole('heading', { level: 2 }).getByRole('button').click();
+  // What the site is, then the newest disruption in effect as the lead story, which opens its asset.
+  await expect(hero.getByRole('heading', { level: 2 })).toHaveText("What's happening");
+  const lead = hero.getByRole('article');
+  await expect(lead).toContainText(/Latest update · (today|yesterday|\d+ days ago|\d{4}-\d{2})/);
+  await expect(lead.getByRole('link')).toHaveAttribute('href', /^https:/);
+  await lead.getByRole('heading', { level: 3 }).getByRole('button').click();
   await expect(page).toHaveURL(/sel=/);
   await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' }).click();
   const items = hero.getByRole('list').getByRole('button');
@@ -436,9 +451,8 @@ test('the home hero lists disruptions in effect, newest first, and opens them', 
   await expect(items.nth(3)).toBeVisible();
   await items.first().click();
   await expect(page).toHaveURL(/sel=/);
-  await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' }).click();
-  await hero.getByRole('button', { name: 'Where is my fuel from?' }).click();
-  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Where is my fuel from?' })).toHaveCount(0);
 });
 
 test('search finds assets by name or alias and opens them', async ({ page }) => {
@@ -494,7 +508,25 @@ test('search finds assets by name or alias and opens them', async ({ page }) => 
   await expect(page).toHaveURL(/view=chokepoints/);
 });
 
+test('with visit changes off, nothing is stored and Home leaves them out', async ({ page }) => {
+  test.skip(FEATURES.visitChanges, 'FEATURES.visitChanges is on');
+  // A snapshot an earlier version stored is removed.
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem('seeded')) {
+      localStorage.setItem('et.visits', '{"previous":null,"current":null}');
+      sessionStorage.setItem('seeded', '1');
+    }
+  });
+  await page.goto('/');
+  const hero = page.getByRole('region', { name: 'Situation' });
+  await expect(hero).toContainText(/Latest update/);
+  await expect(hero).not.toContainText(/since your last visit|First visit/);
+  await expect(page.locator('#summary-changes')).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('et.visits'))).toBeNull();
+});
+
 test('what changed since last visit lists changes that link to their asset', async ({ page }) => {
+  test.skip(!FEATURES.visitChanges, 'FEATURES.visitChanges is off');
   await page.goto('/');
   await expect(page.locator('#summary-changes').getByText(/First visit on this browser/)).toBeVisible();
   // Pretend the last visit, two days ago, saw TurkStream offline and German storage at 10%.
@@ -770,4 +802,40 @@ test('the fuel origins surface finds a region through search and opens it on the
   await expect(panel.getByRole('tab', { name: 'Jet fuel' })).toHaveAttribute('aria-selected', 'true');
   await expect(panel.getByRole('tab', { name: 'Jet fuel' })).toBeFocused();
   await expect(page).toHaveURL(/fuel=jet/);
+});
+
+test('the fuel origins surface shows only the region outlines, and a region opens from the map', async ({ page }) => {
+  await page.goto('/?view=origins');
+  await expect(page.getByRole('button', { name: 'Layers' })).toHaveCount(0);
+  // Let the camera settle on the US before finding Texas.
+  await page.waitForTimeout(500);
+  await page.waitForFunction(() => !(window as unknown as { __etMap: { isMoving(): boolean } }).__etMap.isMoving());
+  const texas = await screenPoint(page, [-99.5, 31.5]);
+  await page.mouse.move(texas.x, texas.y);
+  await expect(page.getByRole('tooltip')).toContainText('Gulf Coast');
+  await expect(page.getByRole('tooltip')).toContainText('PADD 3 · 6 states');
+  await page.mouse.click(texas.x, texas.y);
+  await expect(page).toHaveURL(/sel=region\/padd-3/);
+  await expect(page.getByRole('heading', { name: 'Gulf Coast' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Layers' })).toHaveCount(0);
+  // Back on Home the layers return.
+  await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' }).click();
+  await expect(page.getByRole('button', { name: 'Layers' })).toBeVisible();
+});
+
+test('an ⓘ beside a title opens its explanation, and Escape closes it', async ({ page }) => {
+  await page.goto('/?sel=region/padd-3');
+  await expect(page.getByRole('heading', { name: 'Gulf Coast' })).toBeVisible();
+  const note = page.getByRole('note', { name: "About where the region's gasoline comes from" });
+  await expect(note).toBeHidden();
+  await page.getByRole('button', { name: "About where the region's gasoline comes from" }).click();
+  await expect(note).toBeVisible();
+  await expect(note).toContainText("not any one station's");
+  // It opens on screen, below its button.
+  const button = (await page.getByRole('button', { name: "About where the region's gasoline comes from" }).boundingBox())!;
+  const box = (await note.boundingBox())!;
+  expect(box.y).toBeGreaterThan(button.y);
+  expect(box.x).toBeGreaterThanOrEqual(0);
+  await page.keyboard.press('Escape');
+  await expect(note).toBeHidden();
 });

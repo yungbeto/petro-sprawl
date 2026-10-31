@@ -14,6 +14,7 @@ import { statusCounts, statusGroups } from '../lib/summary';
 import type { Pipeline } from '../types';
 import { SourceLink, statusLabel } from './details';
 import { GroupItem, Segmented, StatusSummary } from './GroupList';
+import { Info } from './Info';
 
 export interface PipelinesViewProps {
   data: Datasets;
@@ -37,11 +38,13 @@ export function PipelinesView({ data, groups, grouping, onGrouping, openGroup, o
   return (
     <>
       <section className="section">
-        <h2 className="detail__title">Pipelines</h2>
-        <p className="section__lede">
-          All <span className="mono">{total.toLocaleString('en-US')}</span> mapped pipelines. Researched ones, with
-          cited claims or metered flow, are marked and come first in each group.
-        </p>
+        <div className="title-row">
+          <h2 className="detail__title">Pipelines</h2>
+          <Info label="About this list">
+            All <span className="mono">{total.toLocaleString('en-US')}</span> mapped pipelines. Researched ones, with
+            cited claims or metered flow, are marked and come first in each group.
+          </Info>
+        </div>
         <StatusSummary groups={overall} total={total} />
       </section>
 

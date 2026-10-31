@@ -1,4 +1,5 @@
 import { useId, useState, type ReactNode } from 'react';
+import { ArrowUpRightIcon } from '@phosphor-icons/react';
 import type { AssetStatus, Basin, Chokepoint, Country, Evidence, LngTerminal, LngUnit, OilOriginRegion, OilTerminal, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import {
@@ -18,7 +19,7 @@ import {
   tankerCargoSeriesId,
 } from '../lib/config';
 import { storageSummary } from '../lib/gasStorage';
-import { ALSI_URL, ENTSOG_URL, isUnverified, latestClaim, pipelineFlow } from '../lib/evidence';
+import { ALSI_URL, ENTSOG_URL, isReport, isUnverified, latestClaim, pipelineFlow, reportParts } from '../lib/evidence';
 import {
   chokepointFlows,
   chokepointsInBasin,
@@ -49,6 +50,7 @@ import { chokepointRows } from '../lib/summary';
 import { AssetIcon, COMMODITY_PIPELINE } from './AssetIcon';
 import { FuelTabs } from './FuelTabs';
 import type { OriginRow } from '../lib/oilOrigins';
+import { Info } from './Info';
 
 /** A region can open on a given fuel (M7); everything else ignores it. */
 type OnSelect = (selection: Selection, fuel?: RegionFuel) => void;
@@ -257,7 +259,14 @@ function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: bo
   const { port, flow, exports } = calls;
   return (
     <section className="section">
-      <h3 className="section__title">Tanker calls at {port}, last 90 days</h3>
+      <div className="title-row">
+        <h3 className="section__title">Tanker calls at {port}, last 90 days</h3>
+        <Info label={`About tanker calls at ${port}`}>
+          Calls by tankers of any cargo, from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>.{' '}
+          {terminal ? 'They count all tanker traffic at the port, not crude loadings.' : 'They show traffic at the port, not flow on this pipeline.'}
+          {exports?.recent && " Exports are PortWatch's estimate from the change in each tanker's draft, in metric tons of any liquid cargo."}
+        </Info>
+      </div>
       <p className="section__lede">
         <span className="mono">{perDay(flow.recent?.mean)}</span> per day over the 7 days to{' '}
         <span className="mono">{flow.latestDate}</span>
@@ -288,11 +297,6 @@ function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: bo
           .
         </p>
       )}
-      <p className="note">
-        Calls by tankers of any cargo, from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>.{' '}
-        {terminal ? 'They count all tanker traffic at the port, not crude loadings.' : 'They show traffic at the port, not flow on this pipeline.'}
-        {exports?.recent && ' Exports are PortWatch\'s estimate from the change in each tanker\'s draft, in metric tons of any liquid cargo.'}
-      </p>
     </section>
   );
 }
@@ -434,6 +438,73 @@ function EvidenceLine({ evidence }: { evidence: Evidence }) {
   );
 }
 
+/** What a report is, in the status card: "Press report", "Operator statement". */
+const REPORT_KIND: Record<Evidence['sourceType'], string> = {
+  operator: 'Operator statement',
+  regulator: 'Regulator notice',
+  government: 'Government statement',
+  press: 'Press report',
+  dataset: 'Dataset',
+  measured: 'Measured',
+};
+
+/**
+ * The status card's line for the current evidence. A report is named, credited and dated here, and read
+ * in full under Reports; datasets and meters keep their one-line statement.
+ */
+function StatusSource({ evidence }: { evidence: Evidence }) {
+  if (!isReport(evidence)) return <EvidenceLine evidence={evidence} />;
+  const { publisher, host } = reportParts(evidence);
+  const from = publisher ?? host;
+  return (
+    <>
+      {REPORT_KIND[evidence.sourceType]}
+      {from && ` from ${from}`}, <span className="mono">{evidence.observedAt}</span>
+    </>
+  );
+}
+
+/**
+ * Every dated claim behind an asset's status, newest first, each an item of its own: what kind of source
+ * and who, when, the status it supports, the statement, and a link out. Datasets join the list when
+ * there's at least one report beside them; meters are shown with their charts.
+ */
+function Reports({ evidence }: { evidence: Evidence[] }) {
+  const titleId = useId();
+  const items = evidence.filter((e) => e.sourceType !== 'measured');
+  if (!items.some(isReport)) return null;
+  return (
+    <section className="section" aria-labelledby={titleId}>
+      <h3 className="section__title" id={titleId}>
+        Reports <span className="section__count">{items.length}</span>
+      </h3>
+      <ol className="reports">
+        {items.map((e, i) => {
+          const { text, publisher, host } = reportParts(e);
+          return (
+            <li key={i} className="report">
+              <p className="report__meta">
+                <span className={`status status--${e.status}`}>{statusLabel(e.status)}</span>
+                <span>
+                  {SOURCE_TYPE_LABELS[e.sourceType]}
+                  {publisher && ` · ${publisher}`} · <time className="mono">{e.observedAt}</time>
+                </span>
+              </p>
+              <p className="report__text">{text || SOURCE_TYPE_LABELS[e.sourceType]}</p>
+              {e.url && (
+                <a className="report__link" href={e.url} target="_blank" rel="noreferrer">
+                  Read on {host ?? 'the source'}
+                  <ArrowUpRightIcon size={14} aria-hidden="true" />
+                </a>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  );
+}
+
 export function PipelineDetail({
   item,
   data,
@@ -473,10 +544,10 @@ export function PipelineDetail({
               Unverified since <span className="mono">{current!.observedAt}</span>
             </span>
           )}
-          <span className="status-card__line">{current ? <EvidenceLine evidence={current} /> : 'No sourced claim yet'}</span>
+          <span className="status-card__line">{current ? <StatusSource evidence={current} /> : 'No sourced claim yet'}</span>
           {claim && (
             <span className="status-card__line">
-              Latest claim, {statusLabel(claim.status).toLowerCase()}: <EvidenceLine evidence={claim} />
+              Latest claim, {statusLabel(claim.status).toLowerCase()}: <StatusSource evidence={claim} />
             </span>
           )}
         </dd>
@@ -545,21 +616,7 @@ export function PipelineDetail({
         <RelatedList title="Ends at" empty="" rows={endTerminals} data={data} onSelect={onSelect} />
       )}
       <DisruptionList disruptions={disruptions} />
-      {item.evidence.length > 1 && (
-        <section className="section">
-          <h3 className="section__title">Status history</h3>
-          <ol className="timeline">
-            {item.evidence.map((e, i) => (
-              <li key={i} className="timeline__item">
-                <span className={`status status--${e.status}`}>{statusLabel(e.status)}</span>
-                <span className="timeline__detail">
-                  <EvidenceLine evidence={e} />
-                </span>
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
+      <Reports evidence={item.evidence} />
       {hasPipelineFacts(item, route) && (
         <Facts>
           {!route ? (
@@ -788,10 +845,10 @@ export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datase
               Unverified since <span className="mono">{current!.observedAt}</span>
             </span>
           )}
-          <span className="status-card__line">{current ? <EvidenceLine evidence={current} /> : 'No sourced claim yet'}</span>
+          <span className="status-card__line">{current ? <StatusSource evidence={current} /> : 'No sourced claim yet'}</span>
           {claim && (
             <span className="status-card__line">
-              Latest claim, {statusLabel(claim.status).toLowerCase()}: <EvidenceLine evidence={claim} />
+              Latest claim, {statusLabel(claim.status).toLowerCase()}: <StatusSource evidence={claim} />
             </span>
           )}
         </dd>
@@ -848,32 +905,20 @@ export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datase
         </section>
       )}
       <DisruptionList disruptions={disruptions} />
-      {item.evidence.length > 1 && (
-        <section className="section">
-          <h3 className="section__title">Status history</h3>
-          <ol className="timeline">
-            {item.evidence.map((e, k) => (
-              <li key={k} className="timeline__item">
-                <span className={`status status--${e.status}`}>{statusLabel(e.status)}</span>
-                <span className="timeline__detail">
-                  <EvidenceLine evidence={e} />
-                </span>
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
+      <Reports evidence={item.evidence} />
       <section className="section">
-        <h3 className="section__title">Units</h3>
-        {current && current.sourceType !== 'dataset' && (
-          <p className="muted section__lede">
-            Unit statuses and capacities are Global Energy Monitor's, as of{' '}
-            <span className="mono">{item.evidence.find((e) => e.sourceType === 'dataset')?.observedAt ?? 'its release'}</span>.{' '}
-            {current.sourceType === 'measured'
-              ? 'The status above comes from measured send-out.'
-              : 'The status above comes from later cited reports.'}
-          </p>
-        )}
+        <div className="title-row">
+          <h3 className="section__title">Units</h3>
+          {current && current.sourceType !== 'dataset' && (
+            <Info label="About the units">
+              Unit statuses and capacities are Global Energy Monitor's, as of{' '}
+              <span className="mono">{item.evidence.find((e) => e.sourceType === 'dataset')?.observedAt ?? 'its release'}</span>.{' '}
+              {current.sourceType === 'measured'
+                ? 'The status above comes from measured send-out.'
+                : 'The status above comes from later cited reports.'}
+            </Info>
+          )}
+        </div>
         <table className="table">
           <thead>
             <tr>
@@ -966,7 +1011,7 @@ export function OilTerminalDetail({ item, data, now, onSelect }: { item: OilTerm
             </span>
           )}
           <span className="status-card__line">
-            {current ? <EvidenceLine evidence={current} /> : 'No dated source on its current status yet'}
+            {current ? <StatusSource evidence={current} /> : 'No dated source on its current status yet'}
           </span>
         </dd>
       </dl>
@@ -992,21 +1037,7 @@ export function OilTerminalDetail({ item, data, now, onSelect }: { item: OilTerm
       </Stats>
       {calls && <PortCallsSection calls={calls} terminal />}
       <DisruptionList disruptions={disruptions} />
-      {item.evidence.length > 1 && (
-        <section className="section">
-          <h3 className="section__title">Status history</h3>
-          <ol className="timeline">
-            {item.evidence.map((e, i) => (
-              <li key={i} className="timeline__item">
-                <span className={`status status--${e.status}`}>{statusLabel(e.status)}</span>
-                <span className="timeline__detail">
-                  <EvidenceLine evidence={e} />
-                </span>
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
+      <Reports evidence={item.evidence} />
       {pipelineRows.length > 0 && (
         <RelatedList title="Pipelines ending here" empty="" rows={pipelineRows} data={data} onSelect={onSelect} />
       )}
@@ -1224,9 +1255,8 @@ function FuelOriginsView({ item, fuel, data, onSelect }: { item: OilOriginRegion
   if (!origins) return <p className="muted">Not enough months of EIA data loaded for this fuel yet.</p>;
   return (
     <>
-      <p className="section__lede region__caveat">
-        Where the {label} used in the region comes from, over the 12 months to <span className="mono">{monthLabel(origins.to)}</span>.
-        Fuel from different refineries mixes in pipelines and terminals, so this is the region's picture, not any one station's.
+      <p className="section__lede">
+        Over the 12 months to <span className="mono">{monthLabel(origins.to)}</span>.
       </p>
       <Stats>
         <Stat label="Used" value={millionsPerDay(origins.suppliedPerDay)} unit="million b/d" aside="EIA product supplied" />
@@ -1237,12 +1267,17 @@ function FuelOriginsView({ item, fuel, data, onSelect }: { item: OilOriginRegion
         />
       </Stats>
       <section className="section">
-        <h3 className="section__title">Where it comes from</h3>
-        {origins.basis === 'inflow' && (
-          <p className="note">More flowed in than the region used, so it passes some on. The shares are of what flowed in.</p>
-        )}
+        <div className="title-row">
+          <h3 className="section__title">Where it comes from</h3>
+          <Info label={`About where the region's ${label} comes from`}>
+            <p>
+              Where the {label} used in the region comes from. Fuel from different refineries mixes in pipelines and
+              terminals, so this is the region's picture, not any one station's.
+            </p>
+            {origins.basis === 'inflow' && <p>More flowed in than the region used, so it passes some on. The shares are of what flowed in.</p>}
+          </Info>
+        </div>
         <OriginList rows={origins.rows} onRegion={(id) => onSelect({ kind: 'region', id }, 'crude')} />
-        <p className="note">Another region opens on its crude: what its refineries run on.</p>
       </section>
       <p className="source">
         Monthly EIA data from <span className="mono">{monthLabel(origins.from)}</span> to{' '}
@@ -1296,10 +1331,8 @@ function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: D
         <p className="muted">Not enough months of EIA data loaded for this region yet.</p>
       ) : (
         <>
-          <p className="section__lede region__caveat">
-            Where the crude flowing into the region comes from, over the 12 months to{' '}
-            <span className="mono">{monthLabel(origins.to)}</span>. Refineries blend crude from many sources and fuel travels
-            after refining, so this is the region's picture, not any one town's.
+          <p className="section__lede">
+            Over the 12 months to <span className="mono">{monthLabel(origins.to)}</span>.
           </p>
           <Stats>
             <Stat label="Crude in" value={millionsPerDay(origins.barrelsPerDay)} unit="million b/d" aside="imported, received or pumped" />
@@ -1321,12 +1354,25 @@ function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: D
             )}
           </Stats>
           <section className="section">
-            <h3 className="section__title">Where it comes from</h3>
+            <div className="title-row">
+              <h3 className="section__title">Where it comes from</h3>
+              <Info label="About where the region's crude comes from">
+                Where the crude flowing into the region comes from: imported, received from other regions or pumped there.
+                Refineries blend crude from many sources and fuel travels after refining, so this is the region's picture,
+                not any one town's.
+              </Info>
+            </div>
             <OriginList rows={origins.rows} onRegion={(id) => onSelect({ kind: 'region', id }, 'crude')} />
           </section>
           {origins.exposure.length > 0 && (
             <section className="section">
-              <h3 className="section__title">Chokepoints on the way</h3>
+              <div className="title-row">
+                <h3 className="section__title">Chokepoints on the way</h3>
+                <Info label="About chokepoints on the way">
+                  "Up to" where a country can also load at a terminal that avoids the chokepoint. Only countries with a cited
+                  route are counted.
+                </Info>
+              </div>
               <ul className="origins">
                 {origins.exposure.map((e) => {
                   const chokepoint = data.chokepoints.find((c) => c.id === e.chokepoint);
@@ -1355,10 +1401,6 @@ function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: D
                   );
                 })}
               </ul>
-              <p className="note">
-                "Up to" where a country can also load at a terminal that avoids the chokepoint. Only countries with a cited
-                route are counted.
-              </p>
             </section>
           )}
           {origins.routes.length > 0 && (

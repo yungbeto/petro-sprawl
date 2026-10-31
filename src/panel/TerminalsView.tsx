@@ -17,6 +17,7 @@ import {
 import type { LngTerminal, OilTerminal } from '../types';
 import { SourceLink, statusLabel } from './details';
 import { GroupItem, Segmented, StatusSummary } from './GroupList';
+import { Info } from './Info';
 
 export type TerminalListing =
   | { kind: 'lng'; groups: TerminalGroup<LngTerminal>[] }
@@ -50,19 +51,23 @@ export function TerminalsView({ data, listing, onKind, grouping, onGrouping, ope
   return (
     <>
       <section className="section">
-        <h2 className="detail__title">Terminals</h2>
+        <div className="title-row">
+          <h2 className="detail__title">Terminals</h2>
+          <Info label="About this list">
+            {kind === 'lng' ? (
+              <>
+                All <span className="mono">{total.toLocaleString('en-US')}</span> LNG terminals Global Energy Monitor tracks,
+                built or not. Terminals with measured send-out or cited claims come first in each group, then the largest.
+              </>
+            ) : (
+              <>
+                <span className="mono">{total.toLocaleString('en-US')}</span> crude oil terminals, researched one by one:
+                where a pipeline meets the sea, or a major export port. Without a cited claim the status stays unknown.
+              </>
+            )}
+          </Info>
+        </div>
         <Segmented id="terminals-kind" label="Kind" options={TERMINAL_KINDS} labels={TERMINAL_KIND_LABELS} value={kind} onChange={onKind} />
-        {kind === 'lng' ? (
-          <p className="section__lede">
-            All <span className="mono">{total.toLocaleString('en-US')}</span> LNG terminals Global Energy Monitor tracks,
-            built or not. Terminals with measured send-out or cited claims come first in each group, then the largest.
-          </p>
-        ) : (
-          <p className="section__lede">
-            <span className="mono">{total.toLocaleString('en-US')}</span> crude oil terminals, researched one by one:
-            where a pipeline meets the sea, or a major export port. Without a cited claim the status stays unknown.
-          </p>
-        )}
         <StatusSummary groups={overall} total={total} />
       </section>
 

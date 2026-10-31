@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { STORAGE_KEYS } from '../lib/config';
+import { FEATURES, STORAGE_KEYS } from '../lib/config';
 import { resolveSelection, type Datasets } from '../lib/data';
 import { formatCountry } from '../lib/format';
 import { readStorage, writeStorage } from '../lib/storage';
@@ -14,12 +14,17 @@ export interface VisitChanges {
 
 /**
  * Compares the loaded data with the last visit, once per page load. Nothing is stored when a
- * dataset failed to load, so a bad load never becomes the next visit's baseline.
+ * dataset failed to load, so a bad load never becomes the next visit's baseline. With
+ * `FEATURES.visitChanges` off it stores nothing, removes what an earlier visit stored, and returns null.
  */
 export function useVisitChanges(data: Datasets, loaded: boolean, failed: string[]): VisitChanges | null {
   const [result, setResult] = useState<VisitChanges | null>(null);
 
   useEffect(() => {
+    if (!FEATURES.visitChanges) {
+      writeStorage(STORAGE_KEYS.visits, null);
+      return;
+    }
     if (!loaded || result) return;
     const snapshot = takeSnapshot(data, new Date());
     const { compareTo, record } = nextVisit(parseVisitRecord(readStorage(STORAGE_KEYS.visits)), snapshot);

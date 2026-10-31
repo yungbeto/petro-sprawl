@@ -2,6 +2,7 @@ import type {
   Basin,
   Chokepoint,
   Country,
+  UsRegion,
   CountryRegion,
   DatasetMeta,
   Disruption,
@@ -39,6 +40,8 @@ export interface Datasets {
   fuelOrigins: FuelOriginRegion[];
   oilRoutes: OilRoute[];
   usLookup: UsLookup | null;
+  /** The PADDs as outlines, for the fuel origins map. */
+  usRegions: UsRegion[];
   meta: DatasetMeta[];
 }
 
@@ -56,6 +59,7 @@ export const EMPTY_DATASETS: Datasets = {
   fuelOrigins: [],
   oilRoutes: [],
   usLookup: null,
+  usRegions: [],
   meta: [],
 };
 

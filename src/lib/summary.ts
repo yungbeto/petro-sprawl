@@ -2,7 +2,7 @@
 
 import type { AssetStatus, Disruption, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
-import { AGSI, CHANGES, agsiSeriesId, tankerCargoSeriesId } from './config';
+import { AGSI, CHANGES, HOME_HERO, agsiSeriesId, tankerCargoSeriesId } from './config';
 import { chokepointFlows, seriesById, type Datasets } from './data';
 import { pipelineStatus } from './encoding';
 import { isUnverified, latestClaim, pipelineFlow } from './evidence';
@@ -358,4 +358,18 @@ export function situation(data: Datasets): Situation {
 /** A summary's first sentence, for a headline's lede. A full stop only ends one before a capital. */
 export function firstSentence(text: string): string {
   return text.split(/(?<=\.)\s+(?=[A-Z])/)[0] ?? text;
+}
+
+/**
+ * When a disruption started, as news reads it: "today", "yesterday", "3 days ago", then the date once
+ * it's older than HOME_HERO.recentDays. A month-only start (no day given) stays the month. Counted in
+ * the reader's calendar days, as the date above it is.
+ */
+export function startedAgo(startedAt: string, now: Date): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(startedAt)) return startedAt;
+  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  const days = Math.round((today - Date.parse(`${startedAt}T00:00:00Z`)) / 86_400_000);
+  if (days <= 0) return 'today';
+  if (days === 1) return 'yesterday';
+  return days <= HOME_HERO.recentDays ? `${days} days ago` : startedAt;
 }

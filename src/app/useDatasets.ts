@@ -3,7 +3,7 @@ import type { DatasetMeta } from '../types';
 import { EMPTY_DATASETS, type Datasets } from '../lib/data';
 import { withMeasuredEvidence, withMeasuredLngEvidence } from '../lib/evidence';
 
-const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'countries', 'country-regions', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'lng-sendout', 'disruptions', 'oil-origins', 'fuel-origins', 'oil-routes', 'us-lookup'] as const;
+const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'countries', 'country-regions', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'lng-sendout', 'disruptions', 'oil-origins', 'fuel-origins', 'oil-routes', 'us-lookup', 'us-regions'] as const;
 
 async function fetchJson<T>(path: string): Promise<T | null> {
   try {
@@ -65,6 +65,7 @@ export function useDatasets(): DatasetsState {
           oilRoutes: get('oil-routes') as Datasets['oilRoutes'],
           // One record holding every table.
           usLookup: (get('us-lookup')[0] as Datasets['usLookup']) ?? null,
+          usRegions: get('us-regions') as Datasets['usRegions'],
           meta: results.flatMap((r) => (r.meta ? [r.meta] : [])),
         },
       });

@@ -8,6 +8,8 @@ import {
   pipelineFlow,
   withMeasuredEvidence,
   withMeasuredLngEvidence,
+  isReport,
+  reportParts,
 } from '../src/lib/evidence';
 import { toSendOutSeries } from '../jobs/lib/alsi';
 import { flowLineWidthPx } from '../src/lib/encoding';
@@ -167,5 +169,31 @@ describe('flow encodings', () => {
 
   it('formats kWh/d as GWh/d', () => {
     expect(formatEnergyPerDay(565_504_000)).toBe('565.5 GWh/d');
+  });
+});
+
+describe('reportParts', () => {
+  const base = { status: 'operating' as const, sourceType: 'press' as const, observedAt: '2026-09-04', recordedAt: '2026-09-05' };
+  it('splits the closing credit from the text', () => {
+    expect(
+      reportParts({ ...base, statement: 'Gulf LNG exports remain far below pre-war levels (Bloomberg, via Energy Connects).', url: 'https://www.energyconnects.com/a' }),
+    ).toEqual({ text: 'Gulf LNG exports remain far below pre-war levels.', publisher: 'Bloomberg, via Energy Connects', host: 'energyconnects.com' });
+  });
+  it('keeps a statement without a credit whole', () => {
+    const statement = 'Pumping to Ceyhan steady, a North Oil Company source told Shafaq News.';
+    expect(reportParts({ ...base, statement })).toEqual({ text: statement });
+  });
+  it('only takes a credit at the very end', () => {
+    expect(reportParts({ ...base, statement: 'Flows (about 1.7 bcm) held in March.' }).publisher).toBeUndefined();
+  });
+});
+
+describe('isReport', () => {
+  it('counts claims from people and publications, not datasets or meters', () => {
+    const e = { status: 'operating' as const, observedAt: '2026-09-04', recordedAt: '2026-09-05' };
+    expect(isReport({ ...e, sourceType: 'press' })).toBe(true);
+    expect(isReport({ ...e, sourceType: 'operator' })).toBe(true);
+    expect(isReport({ ...e, sourceType: 'dataset' })).toBe(false);
+    expect(isReport({ ...e, sourceType: 'measured' })).toBe(false);
   });
 });

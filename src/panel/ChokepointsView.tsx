@@ -5,6 +5,7 @@ import { formatIndexShare, formatMbd, formatNumber } from '../lib/format';
 import { chokepointViewRows, type ChokepointViewRow } from '../lib/summary';
 import { Band, SourceLink } from './details';
 import { MiniSparkline } from './Sparkline';
+import { Info } from './Info';
 
 /** The chokepoints view: every strait on one page, furthest from its five-year average first. */
 export function ChokepointsView({ data, onSelect }: { data: Datasets; onSelect: (selection: Selection) => void }) {
@@ -13,11 +14,13 @@ export function ChokepointsView({ data, onSelect }: { data: Datasets; onSelect: 
   return (
     <>
       <section className="section">
-        <h2 className="detail__title">Chokepoints</h2>
-        <p className="section__lede">
-          Daily tanker transits over the 7 days to <span className="mono">{latest ?? 'n/a'}</span>, against each strait's
-          five-year average (dashed). Furthest from it first.
-        </p>
+        <div className="title-row">
+          <h2 className="detail__title">Chokepoints</h2>
+          <Info label="About this list">
+            Daily tanker transits over the 7 days to <span className="mono">{latest ?? 'n/a'}</span>, against each strait's
+            five-year average (dashed). Furthest from it first.
+          </Info>
+        </div>
       </section>
       <ul className="view-list" aria-label="Chokepoints">
         {rows.map((row) => (

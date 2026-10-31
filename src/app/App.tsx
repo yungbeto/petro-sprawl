@@ -23,6 +23,7 @@ import { useDatasets } from './useDatasets';
 import { resolveSelection } from '../lib/data';
 import { SURFACE_FILTERS, VIEW_IDS, VIEW_LABELS, scopeMatches, viewHighlight, viewPoints, type ViewId } from '../lib/views';
 import { useVisitChanges } from './useVisitChanges';
+import { useIsPhone, useSheet } from './useSheet';
 import type { Selection } from './urlState';
 
 /** Each line's two ends: enough to frame a group of pipelines without walking every vertex. */
@@ -58,6 +59,11 @@ export function App() {
   }));
   const [focus, setFocus] = useState<FocusRequest | null>(null);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
+  const appRef = useRef<HTMLDivElement>(null);
+  // Phones: the panel is a bottom sheet over a full-screen map, and the rail a tab bar.
+  const phone = useIsPhone();
+  const sheet = useSheet(phone, appRef);
+  const { detent: sheetDetent, setDetent: setSheetDetent } = sheet;
   // The open search's starting scope, or null while it's closed.
   const [searchScope, setSearchScope] = useState<SearchScope | null>(null);
   const searchOpen = searchScope !== null;
@@ -139,6 +145,10 @@ export function App() {
     );
     return { pipelines: none(), chokepoints: none(), lng: terminalKind === 'lng' ? ids : none(), terminals: terminalKind === 'oil' ? ids : none() };
   }, [openGroup, view, openTerminals, terminalKind, data]);
+
+  // Fuel origins shows only the regions: on its own page, and on a region opened from anywhere. Opening
+  // anything else from the surface brings the other layers back.
+  const regionsOnly = selection ? selection.kind === 'region' : view === 'origins';
 
   // A filter narrows the map; otherwise an open group, otherwise the open view, sets what stays bright.
   const viewMatches = useMemo(() => (view ? viewHighlight(view, data) : null), [view, data]);
@@ -273,12 +283,24 @@ export function App() {
     requestAnimationFrame(() => searchButtonRef.current?.focus());
   }, []);
 
+  // On phones, opening an item, a surface or a filter lifts the sheet from peek so its page shows.
+  const pageKey = `${view}|${filter}|${selection?.kind}/${selection?.id}`;
+  const lastPage = useRef<string | null>(null);
+  useEffect(() => {
+    const previous = lastPage.current;
+    lastPage.current = pageKey;
+    if (previous === pageKey) return;
+    // A shared link to an item opens with the item showing; Home opens at peek.
+    if (previous === null && !selection && !filter && !view) return;
+    if (phone) setSheetDetent((d) => (d === 'peek' ? 'half' : d));
+  }, [pageKey, phone]);
+
   const setLayerVisible = useCallback((id: LayerId, visible: boolean) => {
     setVisibility((v) => ({ ...v, [id]: visible }));
   }, []);
 
   return (
-    <div className="app" data-panel-collapsed={collapsed}>
+    <div ref={appRef} className="app" data-panel-collapsed={!phone && collapsed} data-sheet={phone ? sheetDetent : undefined}>
       {/* Everything but the menu; inert while the menu is open, so focus and clicks stay in it. */}
       <div className="app__content" inert={menu !== null || searchOpen}>
         <header className="app-header">
@@ -373,8 +395,9 @@ export function App() {
           backLabel={backLabel}
           onBack={back}
           onClose={() => setView(view)}
-          collapsed={collapsed}
+          collapsed={!phone && collapsed}
           onToggleCollapsed={toggleCollapsed}
+          sheet={phone ? sheet : null}
           selection={selection}
           onSelect={selectAndFocus}
           fuel={fuel}
@@ -399,8 +422,10 @@ export function App() {
           selection={selection}
           fuel={fuel}
           highlight={highlight}
+          regionsOnly={regionsOnly}
           onSelect={selectAndFocus}
           focus={focus}
+          insets={sheet.insets}
         >
           <FilterChips
             active={filter}
@@ -408,7 +433,7 @@ export function App() {
             counts={Object.fromEntries(FILTER_IDS.map((id) => [id, matchCount(surfaceMatches[id])])) as Record<FilterId, number>}
             onChange={changeFilter}
           />
-          {collapsed && (
+          {!phone && collapsed && (
             <button
               type="button"
               className="panel__tab panel__tab--expand"
@@ -419,7 +444,8 @@ export function App() {
               <CaretRightIcon size={16} />
             </button>
           )}
-          <LayerControl
+          {/* The layers have nothing to switch while only the regions show. */}
+          {!regionsOnly && <LayerControl
             open={layersOpen}
             onToggleOpen={() => setLayersOpen((open) => !open)}
             onClose={closeLayers}
@@ -433,7 +459,7 @@ export function App() {
               terminals: data.oilTerminals.length,
               chokepoints: data.chokepoints.length,
             }}
-          />
+          />}
         </MapView>
       </div>
       {searchOpen && (

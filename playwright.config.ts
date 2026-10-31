@@ -1,4 +1,4 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 5287;
 
@@ -14,6 +14,11 @@ export default defineConfig({
     launchOptions:
       process.platform === 'darwin' ? { args: ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist'] } : {},
   },
+  projects: [
+    { name: 'desktop', testMatch: 'smoke.spec.ts' },
+    // The phone layout (below MOBILE.maxWidthPx): an iPhone's screen and touch, in Chromium for the GPU flags above.
+    { name: 'phone', testMatch: 'phone.spec.ts', use: { ...devices['iPhone 15'], browserName: 'chromium' } },
+  ],
   webServer: {
     command: `npm run dev -- --port ${PORT} --strictPort`,
     url: `http://localhost:${PORT}`,

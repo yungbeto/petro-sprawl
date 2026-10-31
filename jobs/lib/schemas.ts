@@ -211,6 +211,14 @@ export const countrySchema = z.object({
   geometry: z.object({ type: z.enum(['Polygon', 'MultiPolygon']), coordinates: z.array(z.any()).min(1) }),
 });
 
+export const usRegionSchema = z.object({
+  id: z.string().regex(/^padd-[1-5]$/),
+  name: z.string().min(1),
+  labelPoint: z.tuple([z.number().min(-180).max(180), z.number().min(-90).max(90)]),
+  frame: z.tuple([z.tuple([z.number(), z.number()]), z.tuple([z.number(), z.number()])]),
+  geometry: z.object({ type: z.enum(['Polygon', 'MultiPolygon']), coordinates: z.array(z.any()).min(1) }),
+});
+
 export const countryRegionSchema = z.object({
   id: z.string().regex(/^[A-Z]{2}$/),
   name: z.string().min(1),

@@ -7,6 +7,7 @@ import { formatDate } from '../lib/format';
 import { formatAge, formatUtcClock, overallFreshness, type Freshness } from '../lib/freshness';
 import type { MenuSection } from '../app/AppMenu';
 import type { VisitChanges } from '../app/useVisitChanges';
+import type { Sheet } from '../app/useSheet';
 import { Summary } from './Summary';
 import { FilterList } from './FilterList';
 import type { FilterId, FilterMatches } from '../lib/filters';
@@ -51,6 +52,8 @@ interface PanelProps {
   now: Date;
   onOpenMenu: (section: MenuSection) => void;
   onOpenView: (view: ViewId) => void;
+  /** On phones the panel is a bottom sheet: a handle to drag or tap, and the top bar drags it too. */
+  sheet?: Sheet | null;
 }
 
 const KIND_LABELS: Record<SelectionKind, string> = {
@@ -63,6 +66,12 @@ const KIND_LABELS: Record<SelectionKind, string> = {
   region: 'US fuel region',
 };
 
+
+const SHEET_HANDLE_LABELS: Record<Sheet['detent'], string> = {
+  peek: 'Expand panel',
+  half: 'Expand panel to full height',
+  full: 'Collapse panel',
+};
 
 /** The top bar's title: what kind of thing is open, or that a map filter's matches are listed. */
 function navTitle(selection: Selection | null, filter: FilterId | null, data: Datasets): string {
@@ -84,20 +93,33 @@ export function Panel(props: PanelProps) {
   }, [pageKey]);
 
   if (collapsed) return null;
+  const { sheet } = props;
 
   return (
     <aside className="panel" aria-label="Panel">
-      <button
-        type="button"
-        className="panel__tab"
-        onClick={onToggleCollapsed}
-        aria-label="Collapse panel"
-        title="Collapse panel  ["
-      >
-        <ChevronIcon direction="left" />
-      </button>
+      {sheet ? (
+        <button
+          type="button"
+          className="sheet-handle"
+          onPointerDown={sheet.onDragStart}
+          onClick={sheet.cycle}
+          aria-label={SHEET_HANDLE_LABELS[sheet.detent]}
+        >
+          <span className="sheet-handle__bar" aria-hidden="true" />
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="panel__tab"
+          onClick={onToggleCollapsed}
+          aria-label="Collapse panel"
+          title="Collapse panel  ["
+        >
+          <ChevronIcon direction="left" />
+        </button>
+      )}
       {(props.selection || props.filter) && (
-        <div className="panel__nav">
+        <div className="panel__nav" onPointerDown={sheet?.onDragStart}>
           {props.backLabel && (
             <button
               type="button"
@@ -121,7 +143,7 @@ export function Panel(props: PanelProps) {
           </button>
         </div>
       )}
-      <div ref={bodyRef} className="panel__body">
+      <div ref={bodyRef} className="panel__body" onPointerDown={sheet?.onContentPointerDown}>
         {props.selection ? (
           <Detail
             selection={props.selection}
@@ -159,7 +181,6 @@ export function Panel(props: PanelProps) {
             now={now}
             onSelect={props.onSelect}
             onOpenView={props.onOpenView}
-            onFind={props.origins.onFind}
           />
         )}
       </div>

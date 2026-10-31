@@ -4,6 +4,7 @@ import type { Datasets } from '../lib/data';
 import { formatCountry, formatDate, formatNumber } from '../lib/format';
 import { median, storageRows, type StorageRow } from '../lib/summary';
 import { SourceLink } from './details';
+import { Info } from './Info';
 
 const pts = (value: number) => `${value >= 0 ? '+' : '−'}${formatNumber(Math.abs(value), 1)} pts`;
 
@@ -21,11 +22,13 @@ export function StorageView({ data, onSelect }: { data: Datasets; onSelect: (sel
   return (
     <>
       <section className="section">
-        <h2 className="detail__title">Gas storage</h2>
-        <p className="section__lede">
-          How full each country's gas storage is, as a share of its working capacity, against the same date last year.
-          Furthest below last year first.
-        </p>
+        <div className="title-row">
+          <h2 className="detail__title">Gas storage</h2>
+          <Info label="About this list">
+            How full each country's gas storage is, as a share of its working capacity, against the same date last year.
+            Furthest below last year first.
+          </Info>
+        </div>
         {gaps.length > 0 && (
           <p className="storage-headline">
             <span className="mono">{below}</span> of <span className="mono">{gaps.length}</span> countries below last

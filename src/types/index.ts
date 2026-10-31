@@ -168,6 +168,17 @@ export interface Basin {
 }
 
 /** A country outline, for the storage layer and search. From Natural Earth 1:50m admin-0. */
+/** A PADD as an outline: its states merged into one shape (Census 1:20m). For the fuel origins map. */
+export interface UsRegion {
+  id: PaddRef;
+  name: string;
+  /** Inside the region's contiguous states, where its name goes. */
+  labelPoint: [number, number];
+  /** West-south and east-north corners of the contiguous states, what the map frames. */
+  frame: [[number, number], [number, number]];
+  geometry: Polygon | MultiPolygon;
+}
+
 /** Which World Bank region a country is in, as Natural Earth records it. For grouping pipelines by region. */
 export interface CountryRegion {
   /** ISO 3166-1 alpha-2 */

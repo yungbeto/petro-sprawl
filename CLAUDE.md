@@ -23,7 +23,7 @@ Node 22. Package manager: npm.
 | `npm run build` | Typecheck (`tsc -b`) and production build to `dist/` |
 | `npm run typecheck` | Typecheck only |
 | `npm test` | Unit tests (Vitest, `tests/*.test.ts`) |
-| `npx playwright test` | Smoke test (`tests/e2e/`); starts its own dev server on port 5287 |
+| `npx playwright test` | Smoke tests (`tests/e2e/`): `smoke.spec.ts` on a desktop window, `phone.spec.ts` on an iPhone-sized one (`--project desktop` or `--project phone` for either); starts its own dev server on port 5287 |
 | `npm run fetch:portwatch` | Scheduled: PortWatch daily tanker transits and estimated tanker cargo (metric tons) to `public/data/chokepoint-transits.json`, and tanker port calls and estimated exports at the ports in `PORT_CALLS` to `public/data/port-calls.json` |
 | `npm run fetch:entsog` | Scheduled: ENTSOG physical flows and technical capacity at the points in `ENTSOG.points` to `public/data/gas-flows.json` |
 | `npm run fetch:agsi` | Scheduled: AGSI+ storage fill by country to `public/data/gas-storage.json`. Needs `AGSI_API_KEY` in `.env` (and as an Actions secret) |
@@ -38,6 +38,7 @@ Node 22. Package manager: npm.
 | `npm run import:gem` | Manual: GEM gas and oil pipeline GeoJSON from `data/raw/gem/` to `data/derived/gem-pipelines.json`; skip counts in `data/reports/import-gem.json`. Run `build:curated` after it |
 | `npm run import:lng` | Manual: GEM LNG terminals (one row per unit) from `data/raw/gem/` to `data/derived/gem-lng-terminals.json`, grouped into terminals; report in `data/reports/import-lng.json`. Run `build:curated` after it |
 | `npm run import:us-lookup` | Manual: Census ZCTA relationship file and city populations from `data/raw/census/`, EIA refinery locations from `data/raw/eia/refineries/` and Natural Earth label points to `public/data/us-lookup.json` (ZIP to state, cities, PADD hubs, country points) |
+| `npm run import:us-regions` | Manual: Census 1:20m state outlines from `data/raw/census/` merged into the five PADDs (`PADDS` in `src/lib/config.ts`) to `public/data/us-regions.json`, for the fuel origins map |
 | `npm run import:chokepoints` | PortWatch locations plus EIA volumes (from `src/lib/config.ts`) to `public/data/chokepoints.json` |
 
 Hosting is Vercel (`vercel.json`): a static Vite build of `dist/`, with Deployment Protection set to All Deployments (Vercel Authentication), so every URL, production included, needs a Vercel login. Production is https://energy-terminal-omega.vercel.app. With the GitHub repo connected, every push to main deploys, including the data commits. `vercel curl <url>` fetches through the protection; `.vercelignore` keeps raw data, saved articles and secrets out of CLI uploads.
@@ -58,4 +59,4 @@ Scheduled jobs run every 6 hours in `.github/workflows/data.yml` and commit `pub
 - "Where is my fuel from?" (M7): EIA's refinery and blender net production of gasoline counts blending of components shipped in, so it is never "made in the region". That share is what the region used minus receipts and imports. The region view's fuel is `fuel=` in the URL, left out for gasoline.
 - EIA's import totals by PADD can hold more than the countries it names (Gulf Coast gasoline blending components, 2026-08: 834 total, 765 named). The rest is kept as one `EIA.unnamedPartner` row and always folds into "other countries"; countries adding up to more than the total still fail the fetch.
 - "Where is my oil from?" (M6) shares are of crude flowing into a PADD (imports, receipts from other PADDs, field production), not of refinery input; the residual method went negative for the Midwest. A ZIP code or city never goes in the URL, only `region/padd-n`.
-- "What changed since last visit" lives in `localStorage` under `et.visits` (`src/lib/summary.ts`). To see changes locally, edit the stored `current` snapshot (older `savedAt`, a different status) and reload; the smoke test does the same.
+- "What changed since last visit" is off (`FEATURES.visitChanges` in `src/lib/config.ts`); its smoke test skips while it is. When on, it lives in `localStorage` under `et.visits` (`src/lib/summary.ts`). To see changes locally, edit the stored `current` snapshot (older `savedAt`, a different status) and reload; the smoke test does the same.
