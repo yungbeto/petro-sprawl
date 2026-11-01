@@ -58,3 +58,13 @@ export function formatTonnes(tonnes: number): string {
   if (tonnes >= 1e3) return `${(Math.round(tonnes / 1e3) * 1e3).toLocaleString('en-US')} t`;
   return `${Math.round(tonnes).toLocaleString('en-US')} t`;
 }
+
+/**
+ * A USGS volume in million barrels or billion cubic feet, shown in billion barrels or trillion cubic feet:
+ * 235696 -> "235.7", 8 -> "<0.1", 0 -> "0".
+ */
+export function formatThousandfold(value: number): string {
+  if (value === 0) return '0';
+  const scaled = value / 1000;
+  return scaled < 0.05 ? '<0.1' : formatNumber(scaled, 1);
+}

@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { formatCapacity, formatLonLat, formatMbd } from '../src/lib/format';
+import { formatCapacity, formatLonLat, formatMbd, formatThousandfold } from '../src/lib/format';
+
+describe('formatThousandfold', () => {
+  it('shows millions as billions, with a floor for tiny values', () => {
+    expect(formatThousandfold(235696)).toBe('235.7');
+    expect(formatThousandfold(1536)).toBe('1.5');
+    expect(formatThousandfold(8)).toBe('<0.1');
+    expect(formatThousandfold(0)).toBe('0');
+  });
+});
 
 describe('format', () => {
   it('keeps source precision for capacity', () => {

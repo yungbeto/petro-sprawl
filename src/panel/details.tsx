@@ -40,7 +40,7 @@ import {
   type Resolved,
 } from '../lib/data';
 import { chokepointFlow, type ChokepointFlow, type FlowBand } from '../lib/flow';
-import { formatIndex, formatIndexShare, formatNumber, formatTonnes } from '../lib/format';
+import { formatIndex, formatIndexShare, formatNumber, formatThousandfold, formatTonnes } from '../lib/format';
 import type { Disruption } from '../types';
 import { Sparkline } from './Sparkline';
 import { formatCapacity, formatCountry, formatEnergyPerDay, formatLonLat, formatMbd } from '../lib/format';
@@ -397,6 +397,7 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
           aside="petroleum type"
         />
       </Stats>
+      <BasinVolumesSection basin={item} />
       <RelatedList
         title="Pipelines crossing it"
         empty={data.pipelines.length ? 'None in the loaded data.' : 'Pipelines not loaded yet.'}
@@ -429,6 +430,59 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
         ; countries from <SourceLink href="https://www.naturalearthdata.com/">Natural Earth</SourceLink>
       </p>
     </>
+  );
+}
+
+/** Oil and gas produced, remaining and undiscovered, as USGS assessed them in 2000. Never today's reserves. */
+function BasinVolumesSection({ basin }: { basin: Basin }) {
+  const { volumes } = basin;
+  const titleId = useId();
+  const cell = (value: number | null) => (value === null ? <span className="muted">–</span> : formatThousandfold(value));
+  return (
+    <section className="section" aria-labelledby={titleId}>
+      <div className="title-row">
+        <h3 className="section__title" id={titleId}>
+          Oil and gas, as assessed in 2000
+        </h3>
+        <Info label="About these volumes">
+          From the USGS World Petroleum Assessment 2000. Produced and remaining are for fields discovered by 1996, from an
+          industry database; undiscovered is the assessment's mean estimate of what is yet to be found. Nothing produced or
+          found since is counted, so remaining is not what is left today.
+        </Info>
+      </div>
+      {volumes ? (
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Petroleum</th>
+              <th className="num">Produced</th>
+              <th className="num">Remaining</th>
+              <th className="num">Undiscovered</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(
+              [
+                ['Oil, billion barrels', volumes.oil],
+                ['Gas, trillion ft³', volumes.gas],
+              ] as const
+            ).map(([label, v]) => (
+              <tr key={label}>
+                <td>{label}</td>
+                <td className="num mono">{cell(v.produced)}</td>
+                <td className="num mono">{cell(v.remaining)}</td>
+                <td className="num mono">{cell(v.undiscovered)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="muted">
+          No volumes for this province.
+          {basin.countries.includes('US') && ' The 2000 assessment left out the United States, which USGS assesses on its own.'}
+        </p>
+      )}
+    </section>
   );
 }
 

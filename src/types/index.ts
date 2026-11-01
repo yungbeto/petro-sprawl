@@ -164,7 +164,20 @@ export interface Basin {
   labelPoint: [number, number];
   /** ISO 3166-1 alpha-2 codes of countries whose land the province overlaps. Empty offshore. */
   countries: string[];
+  /** Volumes as assessed in 2000: oil in million barrels, gas in billion cubic feet. Null when none is given. */
+  volumes: { oil: BasinVolumes; gas: BasinVolumes } | null;
   geometry: Polygon | MultiPolygon;
+}
+
+/**
+ * One commodity's volumes in a USGS province. Produced and remaining are for discovered fields, from a 1996
+ * industry database; undiscovered is the assessment's mean estimate. Null where USGS gives no value or an
+ * inconsistent (negative) one.
+ */
+export interface BasinVolumes {
+  produced: number | null;
+  remaining: number | null;
+  undiscovered: number | null;
 }
 
 /** A country outline, for the storage layer and search. From Natural Earth 1:50m admin-0. */

@@ -8,7 +8,19 @@ export interface UsgsProvinceProps {
   O_G: string;
   lx: number;
   ly: number;
+  /** "1" when the province was assessed in 2000. */
+  STUDIED?: string | null;
+  /** Million barrels of oil, billion cubic feet of gas; -9999 for no data. */
+  CUM_OIL?: number | null;
+  REM_OIL?: number | null;
+  UNDS_OIL?: number | null;
+  CUM_GAS?: number | null;
+  REM_GAS?: number | null;
+  UNDS_GAS?: number | null;
 }
+
+/** The USGS fields toBasin reads volumes from. */
+export const USGS_VOLUME_FIELDS = ['STUDIED', 'CUM_OIL', 'REM_OIL', 'UNDS_OIL', 'CUM_GAS', 'REM_GAS', 'UNDS_GAS'] as const;
 
 const ROUND = 1e4;
 const round = (n: number) => Math.round(n * ROUND) / ROUND;
@@ -42,6 +54,27 @@ export function mergeBasinCountries(matches: BasinCountryMatch[]): { countries: 
   return { countries, skipped: [...skipped].sort() };
 }
 
+/** A USGS volume, or null for no data (-9999) and for the negative values its metadata calls inconsistencies. */
+const volume = (value: number | null | undefined): number | null =>
+  typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : null;
+
+/**
+ * Produced and remaining come from the fields in a province, so they're kept as given. Undiscovered is only
+ * an estimate where the province was assessed: elsewhere USGS writes 0 for "not estimated", not "none".
+ */
+export function basinVolumes(props: UsgsProvinceProps): Basin['volumes'] {
+  const assessed = String(props.STUDIED ?? '').trim() === '1';
+  const of = (produced: number | null | undefined, remaining: number | null | undefined, undiscovered: number | null | undefined) => ({
+    produced: volume(produced),
+    remaining: volume(remaining),
+    undiscovered: assessed ? volume(undiscovered) : null,
+  });
+  const oil = of(props.CUM_OIL, props.REM_OIL, props.UNDS_OIL);
+  const gas = of(props.CUM_GAS, props.REM_GAS, props.UNDS_GAS);
+  const any = [oil, gas].some((v) => Object.values(v).some((n) => n !== null));
+  return any ? { oil, gas } : null;
+}
+
 /** USGS province record to Basin. Returns null for province types we don't show. */
 export function toBasin(
   props: UsgsProvinceProps,
@@ -59,6 +92,7 @@ export function toBasin(
     dominant: og === 'oil' || og === 'gas' ? og : null,
     labelPoint: [round(props.lx), round(props.ly)],
     countries,
+    volumes: basinVolumes(props),
     geometry,
   };
 }

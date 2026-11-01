@@ -111,6 +111,9 @@ test('a basin link selects and shows its detail', async ({ page }) => {
   await expect(page.getByText('Priority province')).toBeVisible();
   const panel = page.getByLabel('Panel');
   await expect(panel.locator('dt', { hasText: 'Countries' }).locator('xpath=following-sibling::dd[1]')).toHaveText('Russia');
+  // USGS volumes as assessed in 2000: West Siberia's oil, in billion barrels.
+  const oil = panel.getByRole('row', { name: /^Oil, billion barrels/ });
+  await expect(oil.getByRole('cell')).toHaveText(['Oil, billion barrels', '46.5', '93.4', '55.2']);
   // Related pipelines are counted, with a few rows showing and the rest behind Show all.
   const related = panel.getByRole('region', { name: /Pipelines crossing it/ });
   const total = Number((await related.locator('.section__count').textContent())!.replace(/,/g, ''));

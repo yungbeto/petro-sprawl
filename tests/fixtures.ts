@@ -8,6 +8,7 @@ export const basin: Basin = {
   dominant: 'oil',
   labelPoint: [5, 5],
   countries: ['SA'],
+  volumes: null,
   geometry: {
     type: 'Polygon',
     coordinates: [[[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]]],

@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-10-29",
+  "recordedAt": "2026-10-31",
   "countriesWithoutIsoCode": [],
   "basinsWithoutCountries": [
     "South Barents Basin",
@@ -14,5 +14,32 @@
     "Labrador-Newfoundland Shelf",
     "Malvinas Basin",
     "Tobago Trough"
+  ],
+  "basinsWithoutVolumes": [
+    "Fergana Basin",
+    "Saigon Basin",
+    "East Java Basin",
+    "Penyu/West Natuna Basin",
+    "Faeroes-Shetland-Orkney Basin",
+    "Northern Alaska",
+    "San Juan Basin",
+    "Powder River Basin",
+    "Big Horn Basin",
+    "Southwestern Wyoming",
+    "Palo Duro Basin",
+    "Permian Basin",
+    "Bend Arch-Fort Worth Basin",
+    "Western Gulf",
+    "East Texas Basin",
+    "Louisiana-Mississippi Salt Basins",
+    "Cambridge Arch-Central Kansas Uplift",
+    "Nemaha Uplift",
+    "Andarko Basin",
+    "Southern Oklahoma",
+    "Arkoma Basin",
+    "Illinois Basin",
+    "Gulf Cenozoic OCS",
+    "Baffin Basin",
+    "Sverdrup Basin"
   ]
 }

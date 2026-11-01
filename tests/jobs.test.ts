@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mergeBasinCountries, toBasin } from '../jobs/lib/basins';
+import { basinVolumes, mergeBasinCountries, toBasin } from '../jobs/lib/basins';
 import { buildChokepoints } from '../jobs/lib/chokepoints';
 
 const square = { type: 'Polygon' as const, coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]]] };
@@ -19,6 +19,33 @@ describe('toBasin', () => {
   it('keeps an empty dominant type as null and drops other province types', () => {
     expect(toBasin({ CODE: 1, NAME: 'X', TYPE: 'b', O_G: '', lx: 0, ly: 0 }, square)?.dominant).toBeNull();
     expect(toBasin({ CODE: 2, NAME: 'Y', TYPE: '', O_G: 'Gas', lx: 0, ly: 0 }, square)).toBeNull();
+  });
+});
+
+describe('basinVolumes', () => {
+  const props = { CODE: 2024, NAME: 'Mesopotamian Foredeep Basin', TYPE: 'p', O_G: 'Oil', lx: 0, ly: 0 };
+
+  it('keeps USGS volumes, oil in million barrels and gas in billion cubic feet', () => {
+    expect(
+      basinVolumes({ ...props, STUDIED: '1', CUM_OIL: 56746, REM_OIL: 235696, UNDS_OIL: 61134, CUM_GAS: 10, REM_GAS: 0, UNDS_GAS: 500 }),
+    ).toEqual({
+      oil: { produced: 56746, remaining: 235696, undiscovered: 61134 },
+      gas: { produced: 10, remaining: 0, undiscovered: 500 },
+    });
+  });
+
+  it('turns no data and negative values into null, and gives none when nothing is left', () => {
+    const azov = basinVolumes({ ...props, STUDIED: '1', CUM_OIL: 1000, REM_OIL: -750, UNDS_OIL: 5, CUM_GAS: -9999, REM_GAS: 11118, UNDS_GAS: 0 });
+    expect(azov?.oil.remaining).toBeNull();
+    expect(azov?.gas.produced).toBeNull();
+    const permian = { CUM_OIL: -9999, REM_OIL: -9999, UNDS_OIL: -9999, CUM_GAS: -9999, REM_GAS: -9999, UNDS_GAS: -9999 };
+    expect(basinVolumes({ ...props, STUDIED: '', ...permian })).toBeNull();
+    expect(basinVolumes(props)).toBeNull();
+  });
+
+  it('gives an undiscovered estimate only where the province was assessed', () => {
+    const carnarvon = basinVolumes({ ...props, STUDIED: '', CUM_OIL: 16, REM_OIL: 19, UNDS_OIL: 0, CUM_GAS: 32, REM_GAS: 70, UNDS_GAS: 0 });
+    expect(carnarvon?.oil).toEqual({ produced: 16, remaining: 19, undiscovered: null });
   });
 });
 

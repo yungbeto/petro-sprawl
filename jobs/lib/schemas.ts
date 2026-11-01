@@ -27,6 +27,9 @@ export const chokepointSchema = z.object({
   transitSeriesId: z.string().min(1),
 });
 
+const volume = z.number().nonnegative().nullable();
+const basinVolumesSchema = z.object({ produced: volume, remaining: volume, undiscovered: volume });
+
 export const basinSchema = z.object({
   id: z.string().regex(/^usgs-\d+$/),
   code: z.number().int(),
@@ -35,6 +38,12 @@ export const basinSchema = z.object({
   dominant: z.enum(['oil', 'gas']).nullable(),
   labelPoint: lonLat,
   countries: z.array(z.string().regex(/^[A-Z]{2}$/)),
+  volumes: z
+    .object({
+      oil: basinVolumesSchema,
+      gas: basinVolumesSchema,
+    })
+    .nullable(),
   geometry: z.object({ type: z.enum(['Polygon', 'MultiPolygon']), coordinates: z.array(z.any()).min(1) }),
 });
 

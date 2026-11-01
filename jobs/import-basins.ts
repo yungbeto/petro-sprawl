@@ -9,7 +9,7 @@ import mapshaper from 'mapshaper';
 import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 import { BASIN_COUNTRY_OVERLAP, IMPORT_BOUNDS } from '../src/lib/config';
 import type { Basin } from '../src/types';
-import { mergeBasinCountries, toBasin, type BasinCountryMatch, type UsgsProvinceProps } from './lib/basins';
+import { mergeBasinCountries, toBasin, USGS_VOLUME_FIELDS, type BasinCountryMatch, type UsgsProvinceProps } from './lib/basins';
 import { publishDataset, report, sha256File } from './lib/output';
 import { basinSchema } from './lib/schemas';
 
@@ -65,7 +65,7 @@ const result = await publishDataset({
         `-filter '${filter}'`,
         `-simplify ${SIMPLIFY} keep-shapes`,
         `-each 'lx=this.innerX, ly=this.innerY'`,
-        '-filter-fields CODE,NAME,TYPE,O_G,lx,ly',
+        `-filter-fields CODE,NAME,TYPE,O_G,lx,ly,${USGS_VOLUME_FIELDS.join(',')}`,
         '-o out.json format=geojson precision=0.001',
       ].join(' '),
     );
@@ -89,6 +89,7 @@ const result = await publishDataset({
           recordedAt: new Date().toISOString().slice(0, 10),
           countriesWithoutIsoCode: skipped,
           basinsWithoutCountries: basins.filter((b) => !b.countries.length).map((b) => b.name),
+          basinsWithoutVolumes: basins.filter((b) => !b.volumes).map((b) => b.name),
         },
         null,
         2,
