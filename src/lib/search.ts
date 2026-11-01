@@ -7,6 +7,7 @@ import type { Datasets } from './data';
 import type { Commodity } from '../types';
 import { formatCountry } from './format';
 import { paddForState, stateForZip } from './oilOrigins';
+import { viewEnabled } from './views';
 
 export interface SearchEntry {
   selection: Selection;
@@ -58,7 +59,8 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
         commodity: p.commodity,
       };
     }),
-    ...data.countries.map((c) =>
+    // A country opens its gas storage, and a US place its fuel origins: only while those surfaces are on.
+    ...(viewEnabled('storage') ? data.countries : []).map((c) =>
       entry(
         { kind: 'storage', id: c.id.toLowerCase() },
         c.name,
@@ -92,7 +94,7 @@ function usPlaceEntries(
   data: Datasets,
   entry: (selection: Selection, name: string, detail: string, aliases: string[], priority: number) => SearchEntry,
 ): SearchEntry[] {
-  if (!data.oilOrigins.length) return [];
+  if (!data.oilOrigins.length || !viewEnabled('origins')) return [];
   const regions = PADDS.map((p, i) =>
     entry({ kind: 'region', id: p.id }, `${p.name} fuel region`, `US region · ${WHERE}`, [p.name, `PADD ${i + 1}`, 'where is my oil from'], 2),
   );
@@ -115,7 +117,7 @@ function usPlaceEntries(
  */
 export function zipEntry(data: Datasets, query: string): SearchEntry | null {
   const zip = query.trim();
-  if (!/^\d{5}$/.test(zip) || !data.usLookup || !data.oilOrigins.length) return null;
+  if (!/^\d{5}$/.test(zip) || !data.usLookup || !data.oilOrigins.length || !viewEnabled('origins')) return null;
   const state = stateForZip(data.usLookup, zip);
   const padd = state ? paddForState(state) : null;
   if (!state || !padd) return null;
@@ -166,6 +168,11 @@ export function search(index: SearchEntry[], query: string, limit: number = SEAR
 /** What the search can be narrowed to: the rail's surfaces, and basins, which are context only. */
 export const SEARCH_SCOPES = ['all', 'chokepoints', 'pipelines', 'terminals', 'countries', 'us-places', 'basins'] as const;
 export type SearchScope = (typeof SEARCH_SCOPES)[number];
+
+/** The scopes the search offers: countries and US places only while gas storage and fuel origins are on. */
+export const ENABLED_SEARCH_SCOPES: readonly SearchScope[] = SEARCH_SCOPES.filter(
+  (s) => (s !== 'countries' || viewEnabled('storage')) && (s !== 'us-places' || viewEnabled('origins')),
+);
 
 export const SEARCH_SCOPE_LABELS: Record<SearchScope, string> = {
   all: 'All',

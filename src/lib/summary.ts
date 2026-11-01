@@ -1,6 +1,6 @@
 // The summary panel: headline counts for the theater, and what changed since the last visit. Pure.
 
-import type { AssetStatus, Disruption, Pipeline, SourceRef } from '../types';
+import type { AssetStatus, Basin, Disruption, Pipeline, SourceRef } from '../types';
 import type { Selection } from '../app/urlState';
 import { AGSI, CHANGES, HOME_HERO, agsiSeriesId, tankerCargoSeriesId } from './config';
 import { chokepointFlows, seriesById, type Datasets } from './data';
@@ -89,6 +89,21 @@ export function chokepointRows(data: Datasets): ChokepointRow[] {
   }
   const distance = (r: ChokepointRow) => (r.index === null ? -1 : Math.abs(Math.log(r.index)));
   return rows.sort((a, b) => distance(b) - distance(a));
+}
+
+/**
+ * The basins view: oil-rich first, by oil remaining in discovered fields as USGS assessed it in 2000, then
+ * the provinces it gives no oil figure for, by name.
+ */
+export function basinViewRows(basins: Basin[]): Basin[] {
+  const remaining = (b: Basin) => b.volumes?.oil.remaining ?? null;
+  return [...basins].sort((a, b) => {
+    const ra = remaining(a);
+    const rb = remaining(b);
+    if (ra !== null && rb !== null && ra !== rb) return rb - ra;
+    if ((ra === null) !== (rb === null)) return ra === null ? 1 : -1;
+    return a.name.localeCompare(b.name) || a.id.localeCompare(b.id);
+  });
 }
 
 export interface ChokepointViewRow {

@@ -383,6 +383,7 @@ test('an oil terminal opens with its claim, disruptions and route to sea', async
 });
 
 test('storage fills a country and opens its detail', async ({ page }) => {
+  test.skip(!FEATURES.gasStorage, 'FEATURES.gasStorage is off');
   // Test-only series: storage needs an AGSI+ key, so the smoke test serves its own file.
   const days = Array.from({ length: 400 }, (_, i) =>
     new Date(Date.parse('2026-10-27T00:00:00Z') - (399 - i) * 86_400_000).toISOString().slice(0, 10),
@@ -413,7 +414,13 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
   const chokepoints = overview.getByRole('button', { name: /^Chokepoints/ });
   await expect(chokepoints).toContainText(/of 7 below baseline/);
   await expect(overview.getByRole('button', { name: /^Pipelines/ })).toContainText(/of [\d,]+ offline or idle/);
-  await expect(overview.getByRole('button', { name: /^EU gas storage/ })).toContainText(/of \d+ below last year|No storage data/);
+  if (FEATURES.gasStorage) {
+    await expect(overview.getByRole('button', { name: /^EU gas storage/ })).toContainText(/of \d+ below last year|No storage data/);
+  } else {
+    // Basins take the storage figure's place while storage is switched off.
+    await expect(overview.getByRole('button', { name: /^EU gas storage/ })).toHaveCount(0);
+    await expect(overview.getByRole('button', { name: /^Basins/ })).toContainText(/\d+\s*oil and gas provinces/);
+  }
   await expect(overview.getByRole('button', { name: /^Terminals/ })).toContainText(/of [\d,]+ offline or idle/);
   const hero = page.getByRole('region', { name: 'Situation' });
   if (FEATURES.visitChanges) await expect(hero).toContainText('First visit on this browser');
@@ -434,10 +441,14 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
   await expect(page).toHaveURL(/view=pipelines&sel=pipeline\/nord-stream-1/);
   await expect(page.getByRole('heading', { name: 'Nord Stream 1' })).toBeVisible();
   await rail.getByRole('button', { name: 'Home' }).click();
-  await overview.getByRole('button', { name: /^EU gas storage/ }).click();
-  await expect(page).toHaveURL(/view=storage/);
-  await openLayers(page);
-  await expect(page.getByRole('checkbox', { name: /EU gas storage/ })).toBeChecked();
+  if (FEATURES.gasStorage) {
+    await overview.getByRole('button', { name: /^EU gas storage/ }).click();
+    await expect(page).toHaveURL(/view=storage/);
+  } else {
+    await overview.getByRole('button', { name: /^Basins/ }).click();
+    await expect(page).toHaveURL(/view=basins/);
+    await expect(rail.getByRole('button', { name: 'Basins' })).toHaveAttribute('aria-current', 'page');
+  }
   if (SHOTS) await page.goto('/'), await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/summary.png` });
 });
 
@@ -499,13 +510,18 @@ test('search finds assets by name or alias and opens them', async ({ page }) => 
   await expect(page.getByRole('dialog', { name: 'Search' })).toHaveCount(0);
   await expect(page.getByLabel('Panel', { exact: true }).getByRole('heading', { name: 'Urengoy–Pomary–Uzhhorod (Brotherhood)' })).toBeVisible();
 
-  // A country opens its storage and turns the storage layer on.
+  // A country opens its storage and turns the storage layer on; while storage is off, countries aren't found.
   search = await openSearch(page);
   await search.fill('germ');
-  await page.getByRole('option', { name: /^Germany/ }).click();
-  await expect(page).toHaveURL(/sel=storage\/de/);
-  await openLayers(page);
-  await expect(page.getByRole('checkbox', { name: /EU gas storage/ })).toBeChecked();
+  if (FEATURES.gasStorage) {
+    await page.getByRole('option', { name: /^Germany/ }).click();
+    await expect(page).toHaveURL(/sel=storage\/de/);
+    await openLayers(page);
+    await expect(page.getByRole('checkbox', { name: /EU gas storage/ })).toBeChecked();
+  } else {
+    await expect(page.getByRole('option', { name: /^Germany/ })).toHaveCount(0);
+    await page.keyboard.press('Escape');
+  }
 
   // Results come grouped by kind, and a scope narrows them.
   search = await openSearch(page);
@@ -686,6 +702,7 @@ test('the panel bar goes back to what an item was opened from, and closes to the
 });
 
 test('where is my oil from: a ZIP code opens its region on gasoline, with crude and its chokepoints a click away', async ({ page }) => {
+  test.skip(!FEATURES.fuelOrigins, 'FEATURES.fuelOrigins is off');
   await page.goto('/');
   await expect(page.getByRole('region', { name: 'Overview' })).toBeVisible();
   let search = await openSearch(page);
@@ -795,6 +812,7 @@ test('the terminals surface switches between LNG and oil, and keeps its group wh
 });
 
 test('the gas storage surface lists countries and turns the storage layer on', async ({ page }) => {
+  test.skip(!FEATURES.gasStorage, 'FEATURES.gasStorage is off');
   await page.goto('/');
   await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Gas storage' }).click();
   await expect(page).toHaveURL(/view=storage/);
@@ -808,7 +826,33 @@ test('the gas storage surface lists countries and turns the storage layer on', a
   await expect(page).toHaveURL(/view=storage.*sel=storage\/de/);
 });
 
+test('the basins surface lists basins by oil remaining and shows only their outlines on the map', async ({ page }) => {
+  await page.goto('/?view=basins');
+  const panel = page.getByLabel('Panel', { exact: true });
+  const list = panel.getByRole('list', { name: 'Basins' });
+  await expect(list.getByRole('button').first()).toContainText('Mesopotamian Foredeep Basin');
+  await expect(list.getByRole('button').first()).toContainText('Billion barrels of oil remaining');
+  // Only the outlines show, so the layer list has nothing to switch.
+  await expect(page.getByRole('button', { name: 'Layers' })).toHaveCount(0);
+  await page.waitForTimeout(500);
+  await page.waitForFunction(() => !(window as unknown as { __etMap: { isMoving(): boolean } }).__etMap.isMoving());
+  // Hormuz is a chokepoint on Home; here nothing but basins answers the pointer.
+  const hormuz = await screenPoint(page, [56.8598, 26.2969]);
+  await page.mouse.move(hormuz.x, hormuz.y);
+  await expect(page.getByRole('tooltip')).not.toContainText('Strait of Hormuz');
+  const siberia = await screenPoint(page, [72, 62]);
+  await page.mouse.move(siberia.x, siberia.y);
+  await expect(page.getByRole('tooltip')).toContainText('West Siberian Basin');
+  await list.getByRole('button').first().click();
+  await expect(page).toHaveURL(/view=basins/);
+  await expect(page).toHaveURL(/sel=basin\/usgs-2024/);
+  await expect(page.getByRole('button', { name: 'Layers' })).toHaveCount(0);
+  await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' }).click();
+  await expect(page.getByRole('button', { name: 'Layers' })).toBeVisible();
+});
+
 test('the fuel origins surface finds a region through search and opens it on the chosen fuel', async ({ page }) => {
+  test.skip(!FEATURES.fuelOrigins, 'FEATURES.fuelOrigins is off');
   await page.goto('/?view=origins');
   const panel = page.getByLabel('Panel', { exact: true });
   const regions = panel.getByRole('list', { name: 'US fuel regions' });
@@ -836,6 +880,7 @@ test('the fuel origins surface finds a region through search and opens it on the
 });
 
 test('the fuel origins surface shows only the region outlines, and a region opens from the map', async ({ page }) => {
+  test.skip(!FEATURES.fuelOrigins, 'FEATURES.fuelOrigins is off');
   await page.goto('/?view=origins');
   await expect(page.getByRole('button', { name: 'Layers' })).toHaveCount(0);
   // Let the camera settle on the US before finding Texas.
@@ -855,15 +900,15 @@ test('the fuel origins surface shows only the region outlines, and a region open
 });
 
 test('an ⓘ beside a title opens its explanation, and Escape closes it', async ({ page }) => {
-  await page.goto('/?sel=region/padd-3');
-  await expect(page.getByRole('heading', { name: 'Gulf Coast' })).toBeVisible();
-  const note = page.getByRole('note', { name: "About where the region's gasoline comes from" });
+  await page.goto('/?sel=basin/usgs-1174');
+  await expect(page.getByRole('heading', { name: 'West Siberian Basin' })).toBeVisible();
+  const note = page.getByRole('note', { name: 'About these volumes' });
   await expect(note).toBeHidden();
-  await page.getByRole('button', { name: "About where the region's gasoline comes from" }).click();
+  await page.getByRole('button', { name: 'About these volumes' }).click();
   await expect(note).toBeVisible();
-  await expect(note).toContainText("not any one station's");
+  await expect(note).toContainText('remaining is not what is left today');
   // It opens on screen, below its button.
-  const button = (await page.getByRole('button', { name: "About where the region's gasoline comes from" }).boundingBox())!;
+  const button = (await page.getByRole('button', { name: 'About these volumes' }).boundingBox())!;
   const box = (await note.boundingBox())!;
   expect(box.y).toBeGreaterThan(button.y);
   expect(box.x).toBeGreaterThanOrEqual(0);

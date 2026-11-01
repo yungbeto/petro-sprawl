@@ -3,6 +3,8 @@ import { parseHexColor, type Rgba } from '../lib/color';
 const TOKENS = {
   basinLine: '--map-basin-line',
   basinFillHover: '--map-basin-fill-hover',
+  basinLineFocus: '--map-basin-line-focus',
+  basinFillFocus: '--map-basin-fill-focus',
   basinLabel: '--map-basin-label',
   ink: '--map-ink',
   halo: '--map-halo',

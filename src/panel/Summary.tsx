@@ -59,7 +59,7 @@ export function Summary({ data, loaded, failed, visit, now, onSelect, onOpenView
         onShowChanges={() => document.getElementById('summary-changes')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
       />
 
-      <Dashboard counts={counts} terminalCounts={terminalCounts} chokepoints={chokepoints} storage={storage} onOpenView={onOpenView} />
+      <Dashboard counts={counts} terminalCounts={terminalCounts} chokepoints={chokepoints} storage={storage} basins={data.basins} onOpenView={onOpenView} />
 
       {FEATURES.visitChanges && (
         <ChangesSection visit={visit} onSelect={onSelect} commodityOf={(id) => data.pipelines.find((p) => p.id === id)?.commodity} />

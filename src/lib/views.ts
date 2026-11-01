@@ -1,23 +1,91 @@
-// The app's surfaces: what the rail opens. Each fills the panel with a list, sets what the map shows,
-// and has its own filter chips. Home is the summary across all of them. Pure.
+// The app's surfaces: what the rail opens. Each fills the panel with a list, shows only its own layers
+// on the map, and has its own filter chips. Home is the summary across all of them. Pure.
 
-import { STORAGE_BOUNDS, US_BOUNDS, WORLD_BOUNDS } from './config';
+import type { SelectionKind } from '../app/urlState';
+import { FEATURES, STORAGE_BOUNDS, US_BOUNDS, WORLD_BOUNDS } from './config';
 import type { FilterId, FilterMatches } from './filters';
 import { fuelSurfaceHighlight, type Datasets } from './data';
 
-export const VIEW_IDS = ['chokepoints', 'pipelines', 'terminals', 'storage', 'origins'] as const;
+/** The map's switchable layers. */
+export type LayerId = 'storage' | 'basins' | 'pipelines' | 'lng' | 'terminals' | 'chokepoints';
+export type LayerVisibility = Record<LayerId, boolean>;
+
+export const VIEW_IDS = ['chokepoints', 'pipelines', 'terminals', 'basins', 'storage', 'origins'] as const;
 export type ViewId = (typeof VIEW_IDS)[number];
 
 export const VIEW_LABELS: Record<ViewId, string> = {
   chokepoints: 'Chokepoints',
   pipelines: 'Pipelines',
   terminals: 'Terminals',
+  basins: 'Basins',
   storage: 'Gas storage',
   origins: 'Fuel origins',
 };
 
+/** Whether a surface is switched on (`FEATURES`); one that's off can't be opened, linked or searched. */
+export function viewEnabled(view: ViewId): boolean {
+  if (view === 'storage') return FEATURES.gasStorage;
+  if (view === 'origins') return FEATURES.fuelOrigins;
+  return true;
+}
+
+/** The surfaces the rail and search offer, in rail order. */
+export const ENABLED_VIEWS: readonly ViewId[] = VIEW_IDS.filter(viewEnabled);
+
+/** Whether a kind of selection belongs to a surface that's switched on: a country is storage, a region fuel origins. */
+export function selectionEnabled(kind: SelectionKind): boolean {
+  if (kind === 'storage') return viewEnabled('storage');
+  if (kind === 'region') return viewEnabled('origins');
+  return true;
+}
+
 export function parseView(value: string | null): ViewId | null {
-  return (VIEW_IDS as readonly string[]).includes(value ?? '') ? (value as ViewId) : null;
+  return (ENABLED_VIEWS as readonly string[]).includes(value ?? '') ? (value as ViewId) : null;
+}
+
+/**
+ * The map layers each surface shows; the rest are off while it's open (decided 2026-11-01). Chokepoints
+ * keep the oil terminals, since their cargo is what passes the straits. Fuel origins draws only its region
+ * outlines, which aren't a layer here.
+ */
+export const VIEW_LAYERS: Record<ViewId, LayerId[]> = {
+  chokepoints: ['chokepoints', 'terminals'],
+  pipelines: ['pipelines'],
+  terminals: ['lng', 'terminals'],
+  basins: ['basins'],
+  storage: ['storage'],
+  origins: [],
+};
+
+const SELECTION_LAYERS: Record<SelectionKind, LayerId | null> = {
+  pipeline: 'pipelines',
+  chokepoint: 'chokepoints',
+  basin: 'basins',
+  storage: 'storage',
+  lng: 'lng',
+  terminal: 'terminals',
+  region: null,
+};
+
+/**
+ * What the map draws. In a surface, its own layers and the open item's, whatever the layer list says.
+ * On Home, the layer list, with the open item's layer always on, and storage only while it's switched on.
+ */
+export function visibleLayers(view: ViewId | null, selection: { kind: SelectionKind } | null, chosen: LayerVisibility): LayerVisibility {
+  const selected = selection ? SELECTION_LAYERS[selection.kind] : null;
+  const shown = (id: LayerId) => {
+    if (id === 'storage' && !FEATURES.gasStorage) return false;
+    if (id === selected) return true;
+    return view ? VIEW_LAYERS[view].includes(id) : chosen[id];
+  };
+  return {
+    storage: shown('storage'),
+    basins: shown('basins'),
+    pipelines: shown('pipelines'),
+    lng: shown('lng'),
+    terminals: shown('terminals'),
+    chokepoints: shown('chokepoints'),
+  };
 }
 
 /**
@@ -30,7 +98,8 @@ export const SURFACE_FILTERS: Record<ViewId | 'home', FilterId[]> = {
   pipelines: ['offline', 'unverified', 'metered', 'gas', 'oil'],
   // Gas and oil would repeat the surface's own LNG and oil switch.
   terminals: ['offline', 'unverified', 'metered'],
-  // Storage is a layer of countries, not assets the chips match.
+  // Basins and storage are areas, not assets the chips match.
+  basins: [],
   storage: [],
   origins: [],
 };
@@ -57,8 +126,9 @@ export function viewHighlight(view: ViewId, data: Datasets): FilterMatches {
         lng: new Set(data.lngTerminals.map((t) => t.id)),
         terminals: new Set(data.oilTerminals.map((t) => t.id)),
       };
+    case 'basins':
     case 'storage':
-      // Every asset fades so the storage fill stands out.
+      // No assets show; the outlines or the fill are the whole map.
       return { pipelines: none(), chokepoints: none(), lng: none(), terminals: none() };
     case 'origins':
       return fuelSurfaceHighlight(data);
@@ -85,7 +155,8 @@ export function viewPoints(view: ViewId, data: Datasets): [number, number][] {
       return data.chokepoints.map((c) => c.point);
     case 'pipelines':
     case 'terminals':
-      // Every mapped pipeline or terminal, worldwide.
+    case 'basins':
+      // Every mapped pipeline, terminal or basin, worldwide.
       return WORLD_BOUNDS;
     case 'storage':
       return STORAGE_BOUNDS;

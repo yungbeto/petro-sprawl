@@ -3,7 +3,7 @@
 
 import { CAMERA_PRECISION, DEFAULT_REGION_FUEL, REGION_FUELS, type RegionFuel } from '../lib/config';
 import { parseFilter, type FilterId } from '../lib/filters';
-import { parseView, type ViewId } from '../lib/views';
+import { parseView, selectionEnabled, type ViewId } from '../lib/views';
 
 export const SELECTION_KINDS = ['pipeline', 'chokepoint', 'basin', 'storage', 'lng', 'terminal', 'region'] as const;
 export type SelectionKind = (typeof SELECTION_KINDS)[number];
@@ -39,6 +39,8 @@ export function parseSelection(value: string | null): Selection | null {
   const kind = value.slice(0, slash);
   const id = value.slice(slash + 1);
   if (!(SELECTION_KINDS as readonly string[]).includes(kind)) return null;
+  // A country or a region opens a surface that's switched off: the link opens Home instead.
+  if (!selectionEnabled(kind as SelectionKind)) return null;
   if (!ID_PATTERN.test(id)) return null;
   return { kind: kind as SelectionKind, id };
 }

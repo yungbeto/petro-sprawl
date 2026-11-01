@@ -21,8 +21,8 @@ import type { ChokepointFlow, FlowBand } from '../lib/flow';
 import { mixColors, withAlpha } from '../lib/color';
 import type { MapColors } from './colors';
 
-export type LayerId = 'storage' | 'basins' | 'pipelines' | 'lng' | 'terminals' | 'chokepoints';
-export type LayerVisibility = Record<LayerId, boolean>;
+import type { LayerId, LayerVisibility } from '../lib/views';
+export type { LayerId, LayerVisibility };
 
 export type PickedObject =
   | { kind: 'basin'; item: Basin }
@@ -144,6 +144,8 @@ interface BuildLayersInput {
   originArcs: OriginArc[];
   /** The fuel origins surface or a region view: the region outlines and arcs only, every other layer off. */
   regionsOnly: boolean;
+  /** The basins surface: stronger outlines with a faint fill, since they're all the map shows. */
+  basinsFocus: boolean;
   /** Below this zoom the five names would overlap. */
   regionLabelMinZoom: number;
   colors: MapColors;
@@ -163,6 +165,7 @@ export function buildLayers({
   hoveredPipelineId,
   originArcs,
   regionsOnly,
+  basinsFocus,
   regionLabelMinZoom,
   colors,
   zoom,
@@ -215,14 +218,18 @@ export function buildLayers({
       pickable: true,
       stroked: true,
       filled: true,
-      getFillColor: [0, 0, 0, 0],
+      getFillColor: basinsFocus ? colors.basinFillFocus : [0, 0, 0, 0],
       getLineColor: (f: Feature<Geometry, Basin>) =>
-        isSelected('basin', f.properties.id) ? colors.selection : colors.basinLine,
-      getLineWidth: (f: Feature<Geometry, Basin>) => (isSelected('basin', f.properties.id) ? 2 : 1),
+        isSelected('basin', f.properties.id) ? colors.selection : basinsFocus ? colors.basinLineFocus : colors.basinLine,
+      getLineWidth: (f: Feature<Geometry, Basin>) => (isSelected('basin', f.properties.id) ? 2 : basinsFocus ? 1.5 : 1),
       lineWidthUnits: 'pixels',
       autoHighlight: true,
       highlightColor: colors.basinFillHover,
-      updateTriggers: { getLineColor: [selection, colors], getLineWidth: [selection] },
+      updateTriggers: {
+        getFillColor: [basinsFocus, colors],
+        getLineColor: [selection, basinsFocus, colors],
+        getLineWidth: [selection, basinsFocus],
+      },
     }),
     new TextLayer<Basin>({
       id: 'basin-labels',

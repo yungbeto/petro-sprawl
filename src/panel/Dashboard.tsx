@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
-import { formatIndexShare, formatNumber } from '../lib/format';
+import { FEATURES } from '../lib/config';
+import { formatIndexShare, formatNumber, formatThousandfold } from '../lib/format';
 import type { ViewId } from '../lib/views';
-import { median, statusGroups, type ChokepointRow, type StatusGroupId, type StorageRow } from '../lib/summary';
-import type { AssetStatus } from '../types';
+import { basinViewRows, median, statusGroups, type ChokepointRow, type StatusGroupId, type StorageRow } from '../lib/summary';
+import type { AssetStatus, Basin } from '../types';
 
 interface DashboardProps {
   counts: { status: AssetStatus; count: number }[];
@@ -10,13 +11,15 @@ interface DashboardProps {
   terminalCounts: { status: AssetStatus; count: number }[];
   chokepoints: ChokepointRow[];
   storage: StorageRow[];
+  /** Shown in storage's place while gas storage is switched off. */
+  basins: Basin[];
   onOpenView: (view: ViewId) => void;
 }
 
 const pts = (value: number) => `${value >= 0 ? '+' : '−'}${formatNumber(Math.abs(value), 1)} pts`;
 
 /** Home's figures under the hero: four in a grid, each one number with a small picture, each opening its surface or more. */
-export function Dashboard({ counts, terminalCounts, chokepoints, storage, onOpenView }: DashboardProps) {
+export function Dashboard({ counts, terminalCounts, chokepoints, storage, basins, onOpenView }: DashboardProps) {
   const below = chokepoints.filter((c) => c.band === 'below');
   // Rows come furthest from baseline first, so the first below-baseline row is the worst.
   const worst = below[0];
@@ -86,18 +89,37 @@ export function Dashboard({ counts, terminalCounts, chokepoints, storage, onOpen
         <BandRings rows={chokepoints} />
       </Tile>
 
-      <Tile
-        label="EU gas storage"
-        value={gaps.length ? String(storageBelow) : null}
-        unit={gaps.length ? `of ${gaps.length} below last year` : 'No storage data'}
-        note={medianGap !== null ? `Median gap ${pts(medianGap)}` : ''}
-        action="Open gas storage"
-        onClick={() => onOpenView('storage')}
-      >
-        {gaps.length > 0 && <GapStrip gaps={gaps} />}
-      </Tile>
-
+      {FEATURES.gasStorage ? (
+        <Tile
+          label="EU gas storage"
+          value={gaps.length ? String(storageBelow) : null}
+          unit={gaps.length ? `of ${gaps.length} below last year` : 'No storage data'}
+          note={medianGap !== null ? `Median gap ${pts(medianGap)}` : ''}
+          action="Open gas storage"
+          onClick={() => onOpenView('storage')}
+        >
+          {gaps.length > 0 && <GapStrip gaps={gaps} />}
+        </Tile>
+      ) : (
+        <BasinsTile basins={basins} onOpen={() => onOpenView('basins')} />
+      )}
     </section>
+  );
+}
+
+/** How many basins are mapped, and the one with the most oil remaining as USGS assessed it in 2000. */
+function BasinsTile({ basins, onOpen }: { basins: Basin[]; onOpen: () => void }) {
+  const top = basinViewRows(basins)[0];
+  const oil = top?.volumes?.oil.remaining ?? null;
+  return (
+    <Tile
+      label="Basins"
+      value={basins.length ? basins.length.toLocaleString('en-US') : null}
+      unit={basins.length ? 'oil and gas provinces' : 'No basins loaded'}
+      note={top && oil !== null ? `Most oil remaining in 2000: ${top.name}, ${formatThousandfold(oil)} billion barrels` : ''}
+      action="Open basins"
+      onClick={onOpen}
+    />
   );
 }
 

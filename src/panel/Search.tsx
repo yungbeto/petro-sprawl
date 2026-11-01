@@ -4,7 +4,7 @@ import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
 import {
   SEARCH_GROUP_LABELS,
-  SEARCH_SCOPES,
+  ENABLED_SEARCH_SCOPES,
   SEARCH_SCOPE_LABELS,
   buildSearchIndex,
   groupResults,
@@ -14,12 +14,15 @@ import {
   type SearchEntry,
   type SearchScope,
 } from '../lib/search';
-import { VIEW_IDS, VIEW_LABELS, type ViewId } from '../lib/views';
-import { SEARCH } from '../lib/config';
+import { ENABLED_VIEWS, VIEW_LABELS, type ViewId } from '../lib/views';
+import { FEATURES, SEARCH } from '../lib/config';
 import { AssetIcon } from './AssetIcon';
 import { HOME_ICON, VIEW_ICONS } from '../app/viewIcons';
 
-const PLACEHOLDER = 'Search pipelines, chokepoints, places, ZIP codes';
+// Places and ZIP codes open fuel origins, so they're offered only while it's on.
+const PLACEHOLDER = FEATURES.fuelOrigins
+  ? 'Search pipelines, chokepoints, places, ZIP codes'
+  : 'Search pipelines, chokepoints, terminals, basins';
 
 interface SearchBarProps {
   onOpen: () => void;
@@ -94,7 +97,7 @@ export function SearchDialog({ data, onSelect, onView, onClose, initialScope = '
               label: 'Views',
               items: [
                 { id: null, label: 'Home' },
-                ...VIEW_IDS.map((id) => ({ id, label: VIEW_LABELS[id] })),
+                ...ENABLED_VIEWS.map((id) => ({ id, label: VIEW_LABELS[id] })),
               ]
                 .filter((v) => !q || normalize(v.label).startsWith(q))
                 .map((v) => {
@@ -194,7 +197,7 @@ export function SearchDialog({ data, onSelect, onView, onClose, initialScope = '
           </button>
         </div>
         <div className="search-dialog__scopes" role="toolbar" aria-label="Search in">
-          {SEARCH_SCOPES.map((s) => (
+          {ENABLED_SEARCH_SCOPES.map((s) => (
             <button
               key={s}
               type="button"

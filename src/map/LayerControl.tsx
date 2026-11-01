@@ -1,5 +1,6 @@
 import { StackSimpleIcon } from '@phosphor-icons/react';
 import { useEffect, useRef } from 'react';
+import { FEATURES } from '../lib/config';
 import type { LayerId, LayerVisibility } from './layers';
 
 const LAYERS: { id: LayerId; label: string }[] = [
@@ -9,7 +10,7 @@ const LAYERS: { id: LayerId; label: string }[] = [
   { id: 'lng', label: 'LNG terminals' },
   { id: 'terminals', label: 'Oil terminals' },
   { id: 'chokepoints', label: 'Chokepoints' },
-];
+].filter((layer) => layer.id !== 'storage' || FEATURES.gasStorage) as { id: LayerId; label: string }[];
 
 interface LayerControlProps {
   open: boolean;

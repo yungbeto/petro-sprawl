@@ -5,7 +5,7 @@ import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
 import { MapboxOverlay } from '@deck.gl/mapbox';
 import {
   BASEMAP_STYLES,
-  BASIN_LABEL_MIN_ZOOM,
+  BASIN_FOCUS, BASIN_LABEL_MIN_ZOOM,
   EIA_REFERENCE_YEAR,
   FIT_PADDING,
   MOBILE,
@@ -52,6 +52,8 @@ interface MapViewProps {
   highlight: FilterMatches | null;
   /** The fuel origins surface or a region view: only the region outlines (and a region's arcs) show. */
   regionsOnly: boolean;
+  /** The basins surface: the outlines drawn stronger and named sooner. */
+  basinsFocus: boolean;
   onSelect: (selection: Selection) => void;
   focus: FocusRequest | null;
   /** On phones, the search bar and chips above and the sheet below: the camera frames what's between. */
@@ -113,7 +115,7 @@ const fitPadding = () => (window.matchMedia(`(max-width: ${MOBILE.maxWidthPx}px)
 const NO_ARCS: OriginArc[] = [];
 
 export function MapView(props: MapViewProps) {
-  const { theme, initialCamera, data, visibility, selection, fuel, highlight, regionsOnly, focus } = props;
+  const { theme, initialCamera, data, visibility, selection, fuel, highlight, regionsOnly, basinsFocus, focus } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const overlayRef = useRef<MapboxOverlay | null>(null);
@@ -251,14 +253,15 @@ export function MapView(props: MapViewProps) {
         hoveredPipelineId,
         originArcs: regionView?.arcs ?? NO_ARCS,
         regionsOnly,
+        basinsFocus,
         regionLabelMinZoom: fontsReady ? REGION_OUTLINE.labelMinZoom : Infinity,
         colors,
         zoom,
-        basinLabelMinZoom: fontsReady ? BASIN_LABEL_MIN_ZOOM : Infinity,
+        basinLabelMinZoom: fontsReady ? (basinsFocus ? BASIN_FOCUS.labelMinZoom : BASIN_LABEL_MIN_ZOOM) : Infinity,
         fontFamily: `"${LABEL_FONT}", sans-serif`,
       }),
     });
-  }, [data, flows, pipelineShares, fills, visibility, selection, highlight, regionsOnly, regionView, hoveredPipelineId, colors, zoom, fontsReady]);
+  }, [data, flows, pipelineShares, fills, visibility, selection, highlight, regionsOnly, basinsFocus, regionView, hoveredPipelineId, colors, zoom, fontsReady]);
 
   useEffect(() => {
     const map = mapRef.current;

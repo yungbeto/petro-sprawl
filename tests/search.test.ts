@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { FEATURES } from '../src/lib/config';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
 import { buildSearchIndex, groupResults, matchScore, normalize, search, type SearchEntry } from '../src/lib/search';
 import { basin, chokepoint, lngTerminal, pipeline } from './fixtures';
@@ -49,7 +50,8 @@ describe('search', () => {
     expect(ids('hormuz')).toEqual(['chokepoint/hormuz']);
     expect(ids('zagros')).toEqual(['basin/usgs-1']);
     expect(ids('bratstvo')).toEqual(['pipeline/urengoy-pomary-uzhhorod']);
-    expect(ids('ger')).toEqual(['storage/de']);
+    // A country opens gas storage, so it's only searchable while that surface is on.
+    expect(ids('ger')).toEqual(FEATURES.gasStorage ? ['storage/de'] : []);
     expect(ids('ras laffan')).toEqual(['lng/gem-t1-export']);
     expect(ids('')).toEqual([]);
   });
@@ -57,7 +59,7 @@ describe('search', () => {
   it('describes each result', () => {
     const byId = new Map(index.map((e) => [e.selection.id, e.detail]));
     expect(byId.get('urengoy-pomary-uzhhorod')).toBe('Gas pipeline · RU → UA → SK');
-    expect(byId.get('de')).toBe('Country · gas storage');
+    expect(byId.get('de')).toBe(FEATURES.gasStorage ? 'Country · gas storage' : undefined);
     expect(byId.get('gem-t1-export')).toBe('LNG export terminal · QA');
   });
 

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { ENABLED_VIEWS } from '../../src/lib/views';
 
 const sheetOf = (page: Page) => page.locator('.app');
 
@@ -6,7 +7,7 @@ test('on a phone the map fills the screen, Home peeks from the bottom and the ra
   await page.goto('/');
   await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'peek');
   const tabs = page.getByRole('navigation', { name: 'Views' });
-  await expect(tabs.getByRole('button')).toHaveCount(6);
+  await expect(tabs.getByRole('button')).toHaveCount(1 + ENABLED_VIEWS.length);
   await expect(tabs.getByRole('button', { name: 'Home' })).toHaveAttribute('aria-current', 'page');
   await expect(page.getByRole('button', { name: 'Settings' })).toBeHidden();
   // The map reaches the screen's edges, behind the sheet.

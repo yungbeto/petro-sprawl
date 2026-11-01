@@ -421,10 +421,19 @@ export const POINT_FOCUS_ZOOM = 6;
  * Features that are built but switched off. `visitChanges` ("What changed since last visit") keeps a
  * snapshot of the data in this browser's localStorage between visits; off, nothing is stored, any
  * stored snapshot is removed, and Home leaves out the count and the list (decided 2026-10-31).
+ *
+ * `gasStorage` and `fuelOrigins` are surfaces held back until they reach past the EU and the US
+ * (decided 2026-11-01). Off, the surface leaves the rail and search, its links open Home, its map
+ * layer stays off, and Home leaves out its figure. Their scheduled fetches keep running.
  */
 export const FEATURES = {
   visitChanges: false,
+  gasStorage: false,
+  fuelOrigins: false,
 } as const;
+
+/** The basins surface draws the outlines stronger, with a faint fill, and names them sooner. */
+export const BASIN_FOCUS = { labelMinZoom: 3 } as const;
 
 export const STORAGE_KEYS = {
   theme: 'et.theme',

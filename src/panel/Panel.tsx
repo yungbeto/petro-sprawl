@@ -12,6 +12,7 @@ import { Summary } from './Summary';
 import { FilterList } from './FilterList';
 import type { FilterId, FilterMatches } from '../lib/filters';
 import { VIEW_LABELS, type ViewId } from '../lib/views';
+import { BasinsView } from './BasinsView';
 import { ChokepointsView } from './ChokepointsView';
 import { PipelinesView, type PipelinesViewProps } from './PipelinesView';
 import { TerminalsView, type TerminalsViewProps } from './TerminalsView';
@@ -168,6 +169,8 @@ export function Panel(props: PanelProps) {
           <PipelinesView data={props.data} {...props.pipelines} onSelect={props.onSelect} />
         ) : props.view === 'terminals' ? (
           <TerminalsView data={props.data} {...props.terminals} onSelect={props.onSelect} />
+        ) : props.view === 'basins' ? (
+          <BasinsView data={props.data} onSelect={props.onSelect} />
         ) : props.view === 'storage' ? (
           <StorageView data={props.data} onSelect={props.onSelect} />
         ) : props.view === 'origins' ? (

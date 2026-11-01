@@ -21,7 +21,7 @@ import { DEFAULT_REGION_FUEL, type RegionFuel } from '../lib/config';
 import type { SearchScope } from '../lib/search';
 import { useDatasets } from './useDatasets';
 import { resolveSelection } from '../lib/data';
-import { SURFACE_FILTERS, VIEW_IDS, VIEW_LABELS, scopeMatches, viewHighlight, viewPoints, type ViewId } from '../lib/views';
+import { ENABLED_VIEWS, SURFACE_FILTERS, VIEW_LABELS, scopeMatches, viewHighlight, viewPoints, visibleLayers, type ViewId } from '../lib/views';
 import { useVisitChanges } from './useVisitChanges';
 import { useIsPhone, useSheet } from './useSheet';
 import type { Selection } from './urlState';
@@ -48,9 +48,10 @@ export function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [layersOpen, setLayersOpen] = useState(false);
   const closeLayers = useCallback(() => setLayersOpen(false), []);
-  // Storage fills whole countries, so it starts off unless a shared link selects a country.
+  // Home's layer list. Storage fills whole countries, so it starts off; a selected country turns it on
+  // (`visibleLayers`). A surface shows its own layers whatever this says.
   const [visibility, setVisibility] = useState<LayerVisibility>(() => ({
-    storage: selection?.kind === 'storage' || view === 'storage',
+    storage: false,
     basins: true,
     pipelines: true,
     lng: true,
@@ -68,11 +69,6 @@ export function App() {
   const [searchScope, setSearchScope] = useState<SearchScope | null>(null);
   const searchOpen = searchScope !== null;
   const [initialCameraOnce] = useState(initialCamera);
-
-  // A country selected from search or a list, or the storage surface, needs the storage fill visible.
-  useEffect(() => {
-    if (selection?.kind === 'storage' || view === 'storage') setVisibility((v) => (v.storage ? v : { ...v, storage: true }));
-  }, [selection, view]);
 
   const selectAndFocus = useCallback(
     (next: Selection, nextFuel?: RegionFuel) => {
@@ -149,6 +145,9 @@ export function App() {
   // Fuel origins shows only the regions: on its own page, and on a region opened from anywhere. Opening
   // anything else from the surface brings the other layers back.
   const regionsOnly = selection ? selection.kind === 'region' : view === 'origins';
+
+  // Each surface draws only its own layers, and the open item's (decided 2026-11-01).
+  const mapLayers = useMemo(() => visibleLayers(view, selection, visibility), [view, selection, visibility]);
 
   // A filter narrows the map; otherwise an open group, otherwise the open view, sets what stays bright.
   const viewMatches = useMemo(() => (view ? viewHighlight(view, data) : null), [view, data]);
@@ -265,7 +264,8 @@ export function App() {
         setSearchScope('all');
       } else if (event.key === '[') {
         toggleCollapsed();
-      } else if (event.key === 'l' || event.key === 'L') {
+      } else if ((event.key === 'l' || event.key === 'L') && !view && !regionsOnly) {
+        // The layer list is Home's; a surface draws its own layers.
         setLayersOpen((open) => !open);
       } else if (event.key === 'Escape') {
         // An open layer list closes before the panel steps back.
@@ -275,7 +275,7 @@ export function App() {
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [back, toggleCollapsed, menu, closeMenu, layersOpen, searchOpen]);
+  }, [back, toggleCollapsed, menu, closeMenu, layersOpen, searchOpen, view, regionsOnly]);
 
   // Closing search puts focus back on the header's search button, once the page is no longer inert.
   const closeSearch = useCallback(() => {
@@ -342,7 +342,7 @@ export function App() {
               Home
             </span>
           </button>
-          {VIEW_IDS.map((id) => {
+          {ENABLED_VIEWS.map((id) => {
             const Icon = VIEW_ICONS[id];
             return (
               <button
@@ -418,11 +418,12 @@ export function App() {
           initialCamera={initialCameraOnce}
           onCameraChange={setCamera}
           data={data}
-          visibility={visibility}
+          visibility={mapLayers}
           selection={selection}
           fuel={fuel}
           highlight={highlight}
           regionsOnly={regionsOnly}
+          basinsFocus={view === 'basins'}
           onSelect={selectAndFocus}
           focus={focus}
           insets={sheet.insets}
@@ -444,8 +445,8 @@ export function App() {
               <CaretRightIcon size={16} />
             </button>
           )}
-          {/* The layers have nothing to switch while only the regions show. */}
-          {!regionsOnly && <LayerControl
+          {/* Home's alone: a surface shows its own layers, and the regions view only its outlines. */}
+          {!view && !regionsOnly && <LayerControl
             open={layersOpen}
             onToggleOpen={() => setLayersOpen((open) => !open)}
             onClose={closeLayers}

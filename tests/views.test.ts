@@ -1,10 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { STORAGE_BOUNDS, US_BOUNDS } from '../src/lib/config';
+import { FEATURES, STORAGE_BOUNDS, US_BOUNDS } from '../src/lib/config';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
-import { chokepointViewRows } from '../src/lib/summary';
-import { SURFACE_FILTERS, parseView, scopeMatches, viewHighlight, viewPoints } from '../src/lib/views';
+import { basinViewRows, chokepointViewRows } from '../src/lib/summary';
+import {
+  ENABLED_VIEWS,
+  SURFACE_FILTERS,
+  parseView,
+  scopeMatches,
+  selectionEnabled,
+  viewHighlight,
+  viewPoints,
+  visibleLayers,
+  type LayerVisibility,
+} from '../src/lib/views';
+import { parseSelection } from '../src/app/urlState';
 import type { ObservationSeries } from '../src/types';
-import { chokepoint, lngTerminal, oilTerminal, pipeline } from './fixtures';
+import { basin, chokepoint, lngTerminal, oilTerminal, pipeline } from './fixtures';
 
 /** Daily transits from 2020 to the end date: `usual` every day, then `recent` for the last week. */
 const transits = (id: string, usual: number, recent: number): ObservationSeries => {
@@ -26,8 +37,60 @@ const data: Datasets = {
 describe('parseView', () => {
   it('accepts known views only', () => {
     expect(parseView('chokepoints')).toBe('chokepoints');
+    expect(parseView('basins')).toBe('basins');
     expect(parseView('nonsense')).toBeNull();
     expect(parseView(null)).toBeNull();
+  });
+
+  it('opens Home for a surface that is switched off, and drops its selections from links', () => {
+    expect(parseView('storage')).toBe(FEATURES.gasStorage ? 'storage' : null);
+    expect(parseView('origins')).toBe(FEATURES.fuelOrigins ? 'origins' : null);
+    expect(ENABLED_VIEWS.includes('storage')).toBe(FEATURES.gasStorage);
+    expect(selectionEnabled('storage')).toBe(FEATURES.gasStorage);
+    expect(selectionEnabled('region')).toBe(FEATURES.fuelOrigins);
+    expect(parseSelection('storage/de')).toEqual(FEATURES.gasStorage ? { kind: 'storage', id: 'de' } : null);
+    expect(parseSelection('region/padd-1')).toEqual(FEATURES.fuelOrigins ? { kind: 'region', id: 'padd-1' } : null);
+    expect(parseSelection('basin/usgs-1174')).toEqual({ kind: 'basin', id: 'usgs-1174' });
+  });
+});
+
+describe('visibleLayers', () => {
+  const all: LayerVisibility = { storage: true, basins: true, pipelines: true, lng: true, terminals: true, chokepoints: true };
+  const shown = (v: LayerVisibility) => Object.entries(v).filter(([, on]) => on).map(([id]) => id);
+
+  it('shows only the layers of a surface, whatever the layer list says', () => {
+    expect(shown(visibleLayers('pipelines', null, all))).toEqual(['pipelines']);
+    expect(shown(visibleLayers('basins', null, all))).toEqual(['basins']);
+    expect(shown(visibleLayers('terminals', null, all))).toEqual(['lng', 'terminals']);
+    expect(shown(visibleLayers('chokepoints', null, all))).toEqual(['terminals', 'chokepoints']);
+    expect(shown(visibleLayers('origins', null, all))).toEqual([]);
+  });
+
+  it('adds the layer of the open item, so a chokepoint opened from a pipeline still shows', () => {
+    expect(shown(visibleLayers('pipelines', { kind: 'chokepoint' }, all))).toEqual(['pipelines', 'chokepoints']);
+    expect(shown(visibleLayers(null, { kind: 'basin' }, { ...all, basins: false }))).toContain('basins');
+  });
+
+  it('follows the layer list on Home, with storage only while it is switched on', () => {
+    expect(shown(visibleLayers(null, null, { ...all, lng: false }))).toEqual(
+      [FEATURES.gasStorage && 'storage', 'basins', 'pipelines', 'terminals', 'chokepoints'].filter(Boolean),
+    );
+  });
+});
+
+describe('basinViewRows', () => {
+  const volumes = (remaining: number | null) => ({
+    oil: { produced: null, remaining, undiscovered: null },
+    gas: { produced: null, remaining: null, undiscovered: null },
+  });
+  it('puts the most oil remaining first, then basins with no oil figure by name', () => {
+    const rows = basinViewRows([
+      { ...basin, id: 'usgs-3', name: 'Permian Basin', volumes: null },
+      { ...basin, id: 'usgs-4', name: 'Azov-Kuban Basin', volumes: volumes(null) },
+      { ...basin, id: 'usgs-1', name: 'North Sea Graben', volumes: volumes(21427) },
+      { ...basin, id: 'usgs-2', name: 'Mesopotamian Foredeep Basin', volumes: volumes(235696) },
+    ]);
+    expect(rows.map((b) => b.name)).toEqual(['Mesopotamian Foredeep Basin', 'North Sea Graben', 'Azov-Kuban Basin', 'Permian Basin']);
   });
 });
 
