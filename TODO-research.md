@@ -133,3 +133,16 @@ Thirty-two corridor pipelines are curated in `data/curated/pipelines-evidence.js
 - **Feed terms.** Google News RSS says its feeds are "solely for the purpose of rendering Google News results within a personal feed reader for personal, non-commercial use" (read 2026-10-31). This is a personal tool, which fits; revisit before opening the site to others. GDELT's DOC API asks for one request every 5 seconds and suggests its ngrams dataset for heavy use; at 16 queries twice a day we are well inside that, but check its terms for attribution.
 - **Google News links.** Resolving a Google News redirect to the article needs an undocumented Google endpoint, so the scan doesn't. If GDELT coverage proves thin for a publisher, look for that publisher's own RSS feed.
 
+## M10: beyond the EU and the US
+
+For each, check before building: what it covers, licence and attribution, how often it updates and how far it lags, format and whether it needs a key. None of these has been checked yet; the notes are from memory and need confirming.
+
+- **EIA weekly natural gas storage report.** Lower 48 by storage region, weekly, through the EIA API we already use. Confirm the series IDs and that the regions map cleanly to a detail view.
+- **Japan, METI LNG inventories at power utilities.** Weekly. Confirm where it's published, the format, and the terms for reuse. It's LNG in tanks, not underground storage.
+- **JODI Gas.** Monthly, many countries. Confirm which countries report storage or stock levels, which measure it is (working gas, closing stocks), the lag, and the licence.
+- **Canada gas storage.** No free regular official series known. Look for one (Canada Energy Regulator, Statistics Canada).
+- **Russia, China, Iran storage.** Confirm whether anything is published regularly; if not, name them on the surface as not covered.
+- **Eurostat crude and product imports by partner** (for example the monthly oil supply tables). Confirm the dataset codes, the units, the lag and the licence (Eurostat is usually CC BY 4.0).
+- **UN Comtrade.** Crude (HS 2709) and refined products (HS 2710) by partner. Confirm the free API's limits, the licence and redistribution terms, the lag, quantity units (kg) and how to convert to barrels.
+- **National crude import statistics.** Japan (METI), South Korea (KNOC Petronet), Canada (Canada Energy Regulator or Statistics Canada), UK (DESNZ Energy Trends), China (customs), India (PPAC). For each, whether it gives origins by country, how fresh it is, and the terms.
+- **The 30 largest crude importers.** Build the list from the data once it's in, not by hand.

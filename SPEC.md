@@ -474,6 +474,9 @@ Done when: a new source on an old disruption puts its card first; a disruption w
 **M9: News that keeps disruptions current.** A scheduled job reads energy news, matches stories to mapped assets, and drafts new reports, new disruptions and end dates, each checked in code against the page it cites. Detail below.
 Done when: a run on a week of real news adds at least one verified report to a disruption in effect, opens a pull request for anything new, suggests an end date only with a cited source, logs its cost, and can be turned off with a repository variable.
 
+**M10: Beyond the EU and the US.** Gas storage and fuel origins come back from behind their flags once each reaches past one region, and the phone's tab bar learns to hold more sections than fit. Detail below.
+Done when: storage shows every country or region that publishes it on the sources below, and names the large holders that don't; "Where is a country's oil from?" answers for the 30 largest crude importers, each share with its source and period; the US keeps its regional view; and with every section on, the phone bar shows five slots with More holding the rest.
+
 ### M8 and M9 detail: a self-updating "What's happening"
 
 **Why.** Disruptions are hand-curated, so the hero only changed when someone edited `data/curated/disruptions.json`, and it was ordered by start date, so the newest report on Hormuz (started March) could never lead. Trending lists on Twitter, Bluesky and Reddit work by spotting what is moving against its own normal, grouping mentions into one story, ranking, and only then naming it. This site has its own version of each step: a measured series against its own recent weeks is the spike, an asset is the story mentions group into, and a cited source is the name. The aim is a hero that keeps itself current while never saying something no source or meter supports.
@@ -512,6 +515,33 @@ Each change says what moved, by how much, over which dates, and which meter or c
 
 **Not in these milestones:** a news layer on the map, placing stories by company, place or country, story clustering beyond one asset, and showing headlines that aren't attached to a disruption.
 
+### M10 detail: beyond the EU and the US
+
+**Why.** Gas storage covers the EU and its neighbours through AGSI+, and fuel origins covers the United States through EIA; each answers for one region while the rest of the map is worldwide. Both went behind flags on 2026-11-01 until they don't (`FEATURES.gasStorage`, `FEATURES.fuelOrigins`). Real data sets the bar: what governments and operators publish, said plainly where they don't.
+
+**Gas storage: the bar to turn it on.**
+
+| Coverage | Source | Cadence | Notes |
+| --- | --- | --- | --- |
+| EU, UK, Ukraine and the others it reports | GIE AGSI+ (in use) | Daily | Working gas in storage, by country |
+| United States, by EIA storage region | EIA weekly natural gas storage report (same API key) | Weekly | Shown as the US with its regions in the detail, not as countries |
+| Japan | METI weekly LNG inventories at power utilities | Weekly | LNG in tanks, not underground storage; labelled so |
+| Countries without their own series | JODI Gas, where it reports stocks | Monthly | Lags and gaps vary by country; each shows its month |
+
+Countries that hold large storage but don't publish it regularly (Russia, China, Iran, to confirm) are named on the surface as not covered rather than left blank. The fill on the map stays by country. Turn the flag on when the first three rows are built; JODI can follow.
+
+**Fuel origins: reframed as "Where is a country's oil from?".** Outside the US, no one publishes crude moving between regions inside a country, what each region's refineries run, or refined fuel arriving from other regions, so the US view can't be repeated elsewhere. What is published is imports by partner country. The surface becomes country-first:
+
+- Crude imports by origin for the 30 largest crude importers (the list from the data, not by hand). Eurostat for the 27 EU countries (monthly); national statistics where fresher (Japan, South Korea, Canada, the UK, China's customs, India: each to check); UN Comtrade (crude HS 2709) for the rest, with its lag. Every share links to its source and gives the period it covers, as M6 does.
+- Refined products by partner (Eurostat, Comtrade HS 2710) where reported, worded as imports, never as where the fuel was made.
+- Chokepoints only on cited routes, as in M6.
+- The United States keeps its regional view (M6, M7) as the deeper layer under its country page: ZIP codes, cities and states still open a region.
+- A country's page holds both its storage and its oil origins, so search's Countries group opens one page, not two surfaces.
+
+**Phone navigation.** The tab bar holds at most five slots. With more sections on, the last slot is More: it opens the bottom sheet at half with the sections that don't fit, each with its icon and name. While one of those is open, the More slot shows its icon and name and the current state, so where you are stays visible; tapping it returns to the list. The bar keeps the sections with the most live state (Chokepoints, Pipelines, Terminals); Basins, Gas storage and Fuel origins go under More. The rule follows the number of sections switched on, not the flags themselves. The desktop rail keeps every section. Whether the bar's order becomes the user's choice waits until the phone layout has been used for a while.
+
+**Open for M10.** Licences and attribution for UN Comtrade, JODI and each national source; whether Comtrade's free API allows a monthly job at this size; Canada's storage (no free regular series known); which storage figure JODI reports and how it compares with AGSI+'s working gas. Candidate sources and what to check are in `TODO-research.md`.
+
 ## 12. Working notes for Claude Code
 
 - Read this spec fully before starting. Build milestone by milestone and stop for review at the end of each.
@@ -528,4 +558,5 @@ Each change says what moved, by how much, over which dates, and which meter or c
 - M6 decided: shares over the trailing 12 months; the 300 largest US cities in search; refined fuel from other regions left out of the first version.
 - M7 decided: the region view opens on gasoline; distillate is labelled "Diesel and heating oil".
 - M9 decided 2026-10-31: GDELT and Google News RSS, falling back to GDELT alone when Google News fails; every 12 hours; a new source from a trusted domain on a disruption in effect is committed without review and marked as unreviewed on the page.
+- M10 decided 2026-11-01: storage and fuel origins return once they reach past the EU and the US, on the sources in M10; fuel origins becomes country-first with the US regional view kept underneath; the phone bar gets a More slot rather than an off-canvas menu.
 - Later: story placement beyond assets (company, then place, then country), and matching companies to assets via GEM's ownership tracker.
