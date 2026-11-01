@@ -1,6 +1,6 @@
 import { useId, useState, type ReactNode } from 'react';
 import { ArrowUpRightIcon } from '@phosphor-icons/react';
-import type { AssetStatus, Basin, Chokepoint, Country, Evidence, LngTerminal, LngUnit, OilOriginRegion, OilTerminal, Pipeline } from '../types';
+import type { AssetStatus, Basin, Chokepoint, Company, Country, Evidence, LngTerminal, LngUnit, OilOriginRegion, OilTerminal, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import {
   CHOKEPOINT_NOTES,
@@ -587,6 +587,8 @@ export function PipelineDetail({
 }) {
   const status = pipelineStatus(item);
   const current = item.evidence[0];
+  // GEM's page for the line: its ownership section cites where the owners and parents come from.
+  const gemPage = item.evidence.find((e) => e.sourceType === 'dataset' && /^https:\/\/(www\.)?gem\.wiki\//.test(e.url ?? ''))?.url;
   const claim = current?.sourceType === 'measured' ? latestClaim(item) : undefined;
   const flow = pipelineFlow(seriesById(data, item.flowSeriesId));
   const disruptions = pipelineDisruptions(data, item.id);
@@ -735,17 +737,20 @@ export function PipelineDetail({
           {item.owners && item.owners.length > 0 && (
             <Row label="Owners">
               <CompanyList companies={item.owners} />
-              {item.ownersSource && (
+              {item.ownersSource ? (
                 <span className="facts__line muted">
                   <SourceLink href={item.ownersSource.url}>{item.ownersSource.publisher}</SourceLink>, read{' '}
                   <span className="mono">{item.ownersSource.accessedAt}</span>
                 </span>
+              ) : (
+                !item.parents?.length && gemPage && <GemOwnership url={gemPage} />
               )}
             </Row>
           )}
           {item.parents && item.parents.length > 0 && (
             <Row label="Parent companies">
               <CompanyList companies={item.parents} />
+              {gemPage && <GemOwnership url={gemPage} />}
             </Row>
           )}
         </Facts>
@@ -788,13 +793,23 @@ function hasPipelineFacts(item: Pipeline, route: string): boolean {
 }
 
 /** Companies with their shares, and a note when the listed shares don't add up to the whole. */
-function CompanyList({ companies }: { companies: { name: string; sharePct?: number }[] }) {
+/** GEM's page for the pipeline, where its ownership section cites what the shares come from. */
+function GemOwnership({ url }: { url: string }) {
+  return (
+    <span className="facts__line muted">
+      Ownership per <SourceLink href={url}>Global Energy Monitor</SourceLink>
+    </span>
+  );
+}
+
+/** Owners or parents with their shares; a name links to the company's home page where GEM gives one. */
+function CompanyList({ companies }: { companies: Company[] }) {
   const covered = shareCoverage(companies);
   return (
     <>
       {companies.map((c) => (
         <span key={c.name} className="facts__line">
-          {c.name}
+          {c.url ? <SourceLink href={c.url}>{c.name}</SourceLink> : c.name}
           {c.sharePct !== undefined && <span className="mono muted"> {c.sharePct}%</span>}
         </span>
       ))}

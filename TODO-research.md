@@ -26,6 +26,7 @@ Items that couldn't be sourced or that need a decision. See CLAUDE.md: unsourced
 
 ## Pipelines
 
+- **Owner and parent home pages cover about half the companies** (added 2026-11-01). 2,731 of 5,072 parent entries on published pipelines link. The tracker has no home page for several state companies (GAZ-SYSTEM, PipeChina's branches, QazaqGaz, Gas TSO of Ukraine), and GEM lists 905 parents as "unknown". Names two companies share stay unlinked without the row's ID (Gazprom on some rows). A home page shows a company exists, not that it owns the line; GEM's page for the line is the corroboration. Stronger: cited ownership claims per corridor pipeline (filings, annual reports), checked in code like `refresh:claims`. LNG terminal owners aren't linked yet; check whether GEM's LNG file carries entity IDs.
 - **GEM rows without a route can't be drawn.** 530 gas rows and 332 oil rows worldwide have no geometry and no endpoint coordinates, so the SPEC's great-circle fallback has nothing to connect. Some are in the theater (for example Druzhba's Freundschaft 1 and 2 segments). Endpoints would need geocoding from `StartLocation` / `EndLocation`; decide in M4 alongside the curated list.
 - ~~`geometryApprox` covers GEM's low-accuracy routes.~~ Confirmed 2026-10-28; SPEC 5 updated.
 - **GEM status is a dataset claim with old dates.** It goes in as `sourceType: 'dataset'` dated by GEM's `LastUpdated`. Since M4, cited claims outrank it whatever the dates (SPEC 6); GEM's claim stays in the status history.

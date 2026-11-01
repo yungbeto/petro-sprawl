@@ -34,14 +34,14 @@ export interface Pipeline {
   toCountry: string;
   transitCountries: string[];
   operator?: string;
-  owners?: { name: string; sharePct?: number }[];
+  owners?: Company[];
   capacity?: { value: number; unit: 'bcm/yr' | 'mb/d' };
   /** Cited source when a curated record sets the capacity; GEM capacities cite GEM. */
   capacitySource?: SourceRef | PageRef;
   /** Cited source when a curated record sets the owners; GEM owners cite GEM. */
   ownersSource?: PageRef;
   /** Ultimate parent companies behind the owners, as GEM traces them. */
-  parents?: { name: string; sharePct?: number }[];
+  parents?: Company[];
   history?: PipelineHistory;
   /** GEM's known length, or its estimate from the mapped route. */
   lengthKm?: { value: number; estimated: boolean };
@@ -103,7 +103,7 @@ export interface LngTerminal {
   floating: boolean;
   offshore: boolean;
   operator?: string;
-  owners?: { name: string; sharePct?: number }[];
+  owners?: Company[];
   /** Million tonnes a year: units operating, and units under construction or proposed. */
   capacityMtpa: { operating: number; planned: number };
   units: LngUnit[];
@@ -150,6 +150,13 @@ export interface Chokepoint {
   point: [number, number];
   eiaReferenceMbd: number;
   transitSeriesId: string;
+}
+
+/** An owner or parent company and its share. `url` is its home page as GEM's ownership tracker gives it. */
+export interface Company {
+  name: string;
+  sharePct?: number;
+  url?: string;
 }
 
 /** USGS World Petroleum Assessment 2000 province. Not in SPEC section 6; added in M1. */

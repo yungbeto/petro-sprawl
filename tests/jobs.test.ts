@@ -91,7 +91,20 @@ describe('buildChokepoints', () => {
 });
 
 import { countryToIso } from '../jobs/lib/countries';
-import { gemDiameter, gemHistory, gemLength, gemRowToPipeline, joinLineParts, mapGemStatus, parseOwners, parseYear, sameCompanies, type GemRow } from '../jobs/lib/gem';
+import {
+  companyHomePage,
+  gemDiameter,
+  gemHistory,
+  gemLength,
+  gemRowToPipeline,
+  joinLineParts,
+  mapGemStatus,
+  parseOwners,
+  parseYear,
+  sameCompanies,
+  type CompanyDirectory,
+  type GemRow,
+} from '../jobs/lib/gem';
 import { lngTerminals, type GemLngRow } from '../jobs/lib/lng';
 import { linkSendOut, mergeLngEvidence } from '../jobs/lib/curated-lng';
 import { lngTerminal } from './fixtures';
@@ -183,6 +196,40 @@ describe('GEM transforms', () => {
     // Under 1,000 b/d, three decimals of mb/d would round to zero.
     const small = gemRowToPipeline({ ...oil, CapacityBOEd: '420.4' }, line, ctx);
     expect(small.ok && small.pipeline.capacity).toEqual({ value: 0.00042, unit: 'mb/d' });
+  });
+
+  it('links owners and parents to home pages from the ownership tracker, by the row\'s IDs first', () => {
+    const companies: CompanyDirectory = {
+      byId: {
+        E1: { names: ['TC Energy', 'TC Energy Corp'], homePage: 'https://www.tcenergy.com/' },
+        E2: { names: ['Exxon Mobil', 'Exxon Mobil Corp'], homePage: 'https://corporate.exxonmobil.com/' },
+        E3: { names: ['Gazprom PJSC'], homePage: 'http://www.gazprom.ru/' },
+      },
+      byName: { 'gazprom pjsc': 'E3' },
+    };
+    // The IDs aren't in the names' order; each name finds its own.
+    const result = gemRowToPipeline(
+      { ...row, Owner: 'Gazprom PJSC [50%]; Unlisted Co [50%]', Parent: 'Exxon Mobil Corp [50%]; TC Energy Corp [50%]', ParentEntityIDs: 'E1; E2' },
+      line,
+      { ...ctx, companies },
+    );
+    if (!result.ok) throw new Error('expected a pipeline');
+    expect(result.pipeline.parents).toEqual([
+      { name: 'Exxon Mobil Corp', sharePct: 50, url: 'https://corporate.exxonmobil.com/' },
+      { name: 'TC Energy Corp', sharePct: 50, url: 'https://www.tcenergy.com/' },
+    ]);
+    // Not on the row, but a name only one company has; and no link for a name the tracker doesn't know.
+    expect(result.pipeline.owners).toEqual([
+      { name: 'Gazprom PJSC', sharePct: 50, url: 'http://www.gazprom.ru/' },
+      { name: 'Unlisted Co', sharePct: 50 },
+    ]);
+    // A name shared by two companies is missing from byName, so it stays unlinked without the row's ID.
+    expect(companyHomePage('Exxon Mobil', [], companies)).toBeUndefined();
+    expect(companyHomePage('exxon  mobil corp', ['E2'], companies)).toBe('https://corporate.exxonmobil.com/');
+    // Without the directory, nothing links.
+    const plain = gemRowToPipeline(row, line, ctx);
+    if (!plain.ok) throw new Error('expected a pipeline');
+    expect(plain.pipeline.owners).toEqual([{ name: 'Gazprom PJSC', sharePct: 100 }]);
   });
 
   it('skips cancelled rows, rows without a route, and expansion-only rows', () => {

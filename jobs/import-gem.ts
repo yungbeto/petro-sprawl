@@ -2,6 +2,7 @@
 // npm run build:curated then merges these rows with the curated corridor records into public/data/pipelines.json.
 // Put the trackers' GeoJSON downloads in data/raw/gem/ (paths below), then: npm run import:gem
 // Writes data/reports/import-gem.json with counts of every row skipped and why.
+// Owners and parents link to their home pages from data/derived/gem-companies.json (npm run import:gem-companies).
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import mapshaper from 'mapshaper';
@@ -9,7 +10,7 @@ import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import { IMPORT_BOUNDS } from '../src/lib/config';
 import { boundsOf } from '../src/lib/geo';
 import type { Pipeline } from '../src/types';
-import { gemRowToPipeline, type GemRow } from './lib/gem';
+import { gemRowToPipeline, type CompanyDirectory, type GemRow } from './lib/gem';
 import { publishDataset, report as reportResult, sha256File } from './lib/output';
 import { pipelineSchema } from './lib/schemas';
 
@@ -27,6 +28,7 @@ const TRACKERS = [
 ];
 // Douglas-Peucker tolerance in metres: the same detail everywhere, whatever a region's share of vertices.
 const SIMPLIFY = 'interval=500';
+const COMPANIES_PATH = 'data/derived/gem-companies.json';
 const REPORT_PATH = 'data/reports/import-gem.json';
 
 const [[west, south], [east, north]] = IMPORT_BOUNDS;
@@ -37,7 +39,8 @@ function inBounds(geometry: Geometry): boolean {
 
 const recordedAt = new Date().toISOString().slice(0, 10);
 const pipelines: Pipeline[] = [];
-const report: Record<string, unknown> = { recordedAt, simplify: SIMPLIFY, trackers: [] };
+const companyFile = JSON.parse(await readFile(COMPANIES_PATH, 'utf8')) as CompanyDirectory & { source: string };
+const report: Record<string, unknown> = { recordedAt, simplify: SIMPLIFY, companies: companyFile.source, trackers: [] };
 
 for (const tracker of TRACKERS) {
   const collection = JSON.parse(await readFile(tracker.path, 'utf8')) as FeatureCollection<Geometry | null, GemRow>;
@@ -52,6 +55,7 @@ for (const tracker of TRACKERS) {
       recordedAt,
       releaseDate: tracker.releaseDate,
       sourceId: tracker.sourceId,
+      companies: companyFile,
     });
     if (!result.ok) {
       skipped[result.reason] = (skipped[result.reason] ?? 0) + 1;
@@ -73,11 +77,18 @@ for (const tracker of TRACKERS) {
     sha256: await sha256File(tracker.path),
     rows: collection.features.length,
     kept,
+    companiesLinked: countLinks(pipelines.slice(-kept)),
     outsideBounds,
     skipped,
     unresolvedCountries,
     keptWithoutLastUpdated: missingLastUpdated,
   });
+}
+
+/** Owner and parent entries, and how many link to a home page. */
+function countLinks(records: Pipeline[]) {
+  const companies = records.flatMap((p) => [...(p.owners ?? []), ...(p.parents ?? [])]);
+  return { companies: companies.length, withHomePage: companies.filter((c) => c.url).length };
 }
 
 // Simplify all lines in one pass, then put the geometry back on each record by id.

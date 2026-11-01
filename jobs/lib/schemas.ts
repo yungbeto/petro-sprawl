@@ -30,6 +30,12 @@ export const chokepointSchema = z.object({
 const volume = z.number().nonnegative().nullable();
 const basinVolumesSchema = z.object({ produced: volume, remaining: volume, undiscovered: volume });
 
+const companySchema = z.object({
+  name: z.string(),
+  sharePct: z.number().optional(),
+  url: z.string().url().regex(/^https?:\/\//).optional(),
+});
+
 export const basinSchema = z.object({
   id: z.string().regex(/^usgs-\d+$/),
   code: z.number().int(),
@@ -83,11 +89,11 @@ export const pipelineSchema = z.object({
   toCountry: z.string(),
   transitCountries: z.array(z.string()),
   operator: z.string().optional(),
-  owners: z.array(z.object({ name: z.string(), sharePct: z.number().optional() })).optional(),
+  owners: z.array(companySchema).optional(),
   capacity: z.object({ value: z.number().positive(), unit: z.enum(['bcm/yr', 'mb/d']) }).optional(),
   capacitySource: z.union([sourceRefSchema, pageRefSchema]).optional(),
   ownersSource: pageRefSchema.optional(),
-  parents: z.array(z.object({ name: z.string(), sharePct: z.number().optional() })).optional(),
+  parents: z.array(companySchema).optional(),
   history: z
     .object({
       startYears: z.array(year),
@@ -121,7 +127,7 @@ export const lngTerminalSchema = z.object({
   floating: z.boolean(),
   offshore: z.boolean(),
   operator: z.string().optional(),
-  owners: z.array(z.object({ name: z.string(), sharePct: z.number().optional() })).optional(),
+  owners: z.array(companySchema).optional(),
   capacityMtpa: z.object({ operating: z.number().nonnegative(), planned: z.number().nonnegative() }),
   units: z
     .array(

@@ -1,7 +1,7 @@
 // Pure transforms from GEM Global Gas / Oil Infrastructure Tracker pipeline rows to Pipeline records.
 
 import type { Geometry, LineString, MultiLineString, Position } from 'geojson';
-import type { AssetStatus, Commodity, Evidence, Pipeline, PipelineHistory } from '../../src/types';
+import type { AssetStatus, Commodity, Company, Evidence, Pipeline, PipelineHistory } from '../../src/types';
 import { countryToIso } from './countries';
 
 /** The GEM fields the import reads. Both trackers share these names. */
@@ -20,6 +20,9 @@ export interface GemRow {
   EndCountryOrArea: string;
   Owner?: string;
   Parent?: string;
+  /** GEM entity IDs of the owners or parents (gas tracker: parents; oil: owners), not in the names' order. */
+  ParentEntityIDs?: string;
+  OwnerEntityIDs?: string;
   StartYear1?: string;
   StartYear2?: string;
   StartYear3?: string;
@@ -239,6 +242,39 @@ export interface GemImportContext {
   /** Tracker release month (YYYY-MM), used when a row has no LastUpdated. Not padded to a day we don't know. */
   releaseDate: string;
   sourceId: string;
+  /** Company home pages from GEM's ownership tracker (import:gem-companies). Without it, companies have no links. */
+  companies?: CompanyDirectory;
+}
+
+/** data/derived/gem-companies.json: home pages by GEM entity ID, and the entity behind each name only one company has. */
+export interface CompanyDirectory {
+  byId: Record<string, { names: string[]; homePage: string }>;
+  byName: Record<string, string>;
+}
+
+/** The same key import-gem-companies.py writes names under. */
+export const companyNameKey = (name: string) => name.replace(/\s+/g, ' ').trim().toLowerCase();
+
+/**
+ * A company's home page, as GEM gives it. First from the row's own entity IDs, by the one whose names
+ * include it (the IDs aren't in the names' order), then by a name no other company in the tracker has.
+ */
+export function companyHomePage(name: string, rowIds: string[], directory: CompanyDirectory): string | undefined {
+  const key = companyNameKey(name);
+  for (const id of rowIds) {
+    const company = directory.byId[id];
+    if (company?.names.some((n) => companyNameKey(n) === key)) return company.homePage;
+  }
+  const id = directory.byName[key];
+  return id ? directory.byId[id]?.homePage : undefined;
+}
+
+function withHomePages(companies: Company[], rowIds: string[], directory: CompanyDirectory | undefined): Company[] {
+  if (!directory) return companies;
+  return companies.map((c) => {
+    const url = companyHomePage(c.name, rowIds, directory);
+    return url ? { ...c, url } : c;
+  });
 }
 
 export type GemRowResult =
@@ -280,8 +316,9 @@ export function gemRowToPipeline(row: GemRow, geometry: Geometry | null, ctx: Ge
     observedAt: /^\d{4}-\d{2}-\d{2}$/.test(row.LastUpdated?.trim() ?? '') ? row.LastUpdated!.trim() : ctx.releaseDate,
     recordedAt: ctx.recordedAt,
   };
-  const owners = parseOwners(row.Owner);
-  const parents = parseOwners(row.Parent);
+  const rowIds = splitList(`${row.ParentEntityIDs ?? ''};${row.OwnerEntityIDs ?? ''}`, /[;,]/);
+  const owners = withHomePages(parseOwners(row.Owner), rowIds, ctx.companies);
+  const parents = withHomePages(parseOwners(row.Parent), rowIds, ctx.companies);
   const capacity = gemCapacity(row, commodity);
   const history = gemHistory(row);
   const lengthKm = gemLength(row);

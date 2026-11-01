@@ -88,7 +88,7 @@ Basins and GEM pipelines are imported worldwide (`IMPORT_BOUNDS` in `src/lib/con
    - "What changed since last visit" list: status changes, flow swings, storage moves. Each row links to the asset on the map. Last visit timestamp lives in `localStorage` (wrapped in try/catch; render fine without it). Switched off behind `FEATURES.visitChanges` (decided 2026-10-31): unsure about keeping a record of each visit, even one that never leaves the browser. Off, nothing is stored, a stored snapshot is removed, and Home shows neither the count nor the list. The code and its tests stay for turning it back on.
    - Data age in the panel footer ("Updated 3 h ago"), which opens the app menu at the full freshness table.
    - As built (M5): storage is counted by country ("16 of 20 countries below the same date last year") rather than as one EU fill, because a fair EU figure needs each country's working gas volume. Loads less than 30 minutes apart count as one visit, so a reload doesn't swallow the changes. Flow swings are listed at 15 points of capacity or more, storage moves at 2 points or more (`CHANGES` in `src/lib/config.ts`). A load where a dataset failed isn't saved as the next visit's baseline.
-2. **Pipeline detail:** name, commodity, route (from → transit → to), operator and owners, capacity, age (year in service) and history, length and diameter, current status with its evidence (source type, statement, link, date), measured flow where available (sparkline, last 90 days, flow as share of capacity), disruption history.
+2. **Pipeline detail:** name, commodity, route (from → transit → to), operator and owners, capacity, age (year in service) and history, length and diameter, current status with its evidence (source type, statement, link, date), measured flow where available (sparkline, last 90 days, flow as share of capacity), disruption history. Owners and parents link to each company's home page where GEM's ownership tracker gives one, and the list ends with "Ownership per Global Energy Monitor", linking GEM's page for the line, whose ownership section cites its sources (decided 2026-11-01). A company with no home page in the tracker, or a name two companies share without the row's ID to tell them apart, stays plain text.
 3. **Chokepoint detail:** EIA reference volume (mb/d, 2024), daily tanker transits with the 7-day average against two baselines: the trailing 365-day average and the five-year average before that year. Flow index for each, 90-day sparkline with both baselines drawn, and sourced disruptions. The map colors by the five-year index, because a trailing year absorbs a long disruption within twelve months (decided 2026-10-28, after Hormuz transits fell from about 43 a day to about 1 in March 2026).
 4. **Basin detail:** name, countries it spans, oil and gas volumes as USGS assessed them in 2000 (produced, remaining in discovered fields, mean undiscovered; decided 2026-10-31), pipelines and chokepoints inside or touching it. The volumes are labelled with their year and an ⓘ says they predate everything produced or found since, so remaining is never read as today's reserves. Provinces with no volumes (the United States, left out of the 2000 assessment, and others not assessed) say so.
 5. **Storage detail (country):** fill level, trend, same date last year.
@@ -155,9 +155,9 @@ interface Pipeline {
   toCountry: string;
   transitCountries: string[];
   operator?: string;
-  owners?: { name: string; sharePct?: number }[];
+  owners?: Company[];        // { name, sharePct?, url? }: url is the home page from GEM's ownership tracker
   ownersSource?: PageRef;    // when a curated record cites the owners (replaces GEM's, drops parents)
-  parents?: { name: string; sharePct?: number }[];  // GEM's ultimate parents, kept only when they differ from the owners
+  parents?: Company[];  // GEM's ultimate parents, kept only when they differ from the owners
   capacity?: { value: number; unit: 'bcm/yr' | 'mb/d' };
   history?: {                // GEM: start years per section (targets when expected), proposal, construction, stop
     startYears: number[]; expected: boolean;
@@ -255,6 +255,7 @@ interface DatasetMeta {
 | Dataset | Gives | Access | Cadence | License / terms |
 | --- | --- | --- | --- | --- |
 | [Global Energy Monitor](https://globalenergymonitor.org/) Oil and Gas Infrastructure trackers | Pipeline inventory, routes, capacity, owners | Free download after registration; manual import | Quarterly, by hand | CC-BY 4.0, attribution required |
+| GEM Global Energy Ownership Tracker | Company home pages for pipeline owners and parents, by GEM entity ID and name | Free download after registration; manual import (`npm run import:gem-companies`, Python standard library, since it's a spreadsheet) | With each GEM pipeline import | CC-BY 4.0, attribution required |
 | GEM Global Gas Infrastructure Tracker, LNG terminals | Export and import terminals by unit: status, capacity (mtpa), owners, location | Free download after registration; manual import (`npm run import:lng`) | Quarterly, by hand | CC-BY 4.0, attribution required |
 | Curated evidence file (`data/curated/pipelines-evidence.json`) | Status claims for corridor pipelines | Hand-researched, every claim cited | As events happen | Ours |
 | [ENTSOG Transparency Platform](https://transparency.entsog.eu/) | Physical gas flows and technical capacity at EU entry points | Public REST API, no key ([docs](https://transparency.entsog.eu/pdf/TP_REG715_Documentation_TP_API_v1.3.pdf)) | Daily | Check terms; attribute |

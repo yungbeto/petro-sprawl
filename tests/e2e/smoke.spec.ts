@@ -333,6 +333,10 @@ test('a pipeline shows its age, size and owners, with GEM gaps and cited owners 
   await expect(fact('Length')).toContainText('1,768 km');
   await expect(fact('Parent companies')).toContainText('BP PLC');
   await expect(fact('Parent companies')).toContainText('Listed shares cover 89.2%');
+  // Parents link to their home pages where GEM's ownership tracker gives one, and to GEM's page for the line.
+  await expect(fact('Parent companies').getByRole('link', { name: 'BP PLC' })).toHaveAttribute('href', 'https://www.bp.com/');
+  await expect(fact('Parent companies').getByRole('link', { name: 'Azerbaijan (BTC) Ltd' })).toHaveCount(0);
+  await expect(fact('Parent companies').getByRole('link', { name: 'Global Energy Monitor' })).toHaveAttribute('href', /gem\.wiki\/Baku-Tbilisi-Ceyhan/);
 
   await page.goto('/?sel=pipeline/cpc');
   await expect(fact('Owners')).toContainText('IC CPC Company');

@@ -1,6 +1,7 @@
 {
-  "recordedAt": "2026-10-29",
+  "recordedAt": "2026-11-01",
   "simplify": "interval=500",
+  "companies": "GEM Global Energy Ownership Tracker 2026-09; Global-Energy-Ownership-Tracker-September-2026-V2.xlsx sha256:0be5aa5cb5a68b0ae84a00de06a10b6d3b789956d83b30fd0313fff261fc85eb",
   "trackers": [
     {
       "sourceId": "gem-ggit-gas-pipelines-2025-11",
@@ -8,6 +9,10 @@
       "sha256": "c74e54eb04a70ad008cd9a82fa93875fc987389475e7a958bbeec7ebffb93eaa",
       "rows": 4246,
       "kept": 3224,
+      "companiesLinked": {
+        "companies": 7259,
+        "withHomePage": 3498
+      },
       "outsideBounds": 0,
       "skipped": {
         "excluded_status": 346,
@@ -27,6 +32,10 @@
       "sha256": "bea592558dfce7ff5ff69b3b4dd485fe2f07c7989e649ac7c4da5ac3a4b8ef7b",
       "rows": 1926,
       "kept": 1456,
+      "companiesLinked": {
+        "companies": 3364,
+        "withHomePage": 1780
+      },
       "outsideBounds": 0,
       "skipped": {
         "no_route": 332,
