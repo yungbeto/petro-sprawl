@@ -303,3 +303,20 @@ export const oilRouteSchema = z.object({
   note: z.string().min(1),
   sources: z.array(sourceRefSchema).min(1),
 });
+
+export const countryCrudeImportsSchema = z.object({
+  id: z.string().regex(/^[A-Z]{2}$/),
+  iso3: z.string().regex(/^[A-Z]{3}$/).nullable(),
+  source: z.enum(['eurostat', 'comtrade', 'eia']),
+  basis: z.enum(['weight', 'value']),
+  unit: z.enum(['thousand tonnes', 'tonnes', 'US$', 'thousand barrels']),
+  from: z.string().regex(/^\d{4}(-\d{2})?$/),
+  to: z.string().regex(/^\d{4}(-\d{2})?$/),
+  monthsReported: z.number().int().min(1).max(12).nullable(),
+  total: z.number().positive(),
+  partners: z
+    .array(z.object({ iso2: z.string().regex(/^[A-Z]{2}$/).nullable(), iso3: z.string().regex(/^[A-Z]{3}$/).nullable(), label: z.string().min(1), value: z.number().positive() }))
+    .min(1),
+  importsUsd: z.object({ year: z.string().regex(/^\d{4}$/), value: z.number().positive() }).nullable(),
+  retrieved: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+});

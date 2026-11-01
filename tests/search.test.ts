@@ -51,7 +51,7 @@ describe('search', () => {
     expect(ids('zagros')).toEqual(['basin/usgs-1']);
     expect(ids('bratstvo')).toEqual(['pipeline/urengoy-pomary-uzhhorod']);
     // A country opens gas storage, so it's only searchable while that surface is on.
-    expect(ids('ger')).toEqual(FEATURES.gasStorage ? ['storage/de'] : []);
+    expect(ids('ger')).toEqual(FEATURES.gasStorage ? ['country/de'] : []);
     expect(ids('ras laffan')).toEqual(['lng/gem-t1-export']);
     expect(ids('')).toEqual([]);
   });

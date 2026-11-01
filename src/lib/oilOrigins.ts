@@ -178,7 +178,7 @@ function listOr(names: string[]): string {
  * The share of the region's crude whose country's terminals ship through each chokepoint. Certain
  * only when every terminal the country can load at passes it; otherwise it's an upper bound.
  */
-export function exposure(rows: OriginRow[]): ChokepointExposure[] {
+export function exposure(rows: Pick<OriginRow, 'terminals' | 'share' | 'label'>[]): ChokepointExposure[] {
   const out = new Map<ChokepointId, ChokepointExposure>();
   for (const row of rows) {
     if (!row.terminals?.length) continue;

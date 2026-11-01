@@ -2,6 +2,7 @@ import type {
   Basin,
   Chokepoint,
   Country,
+  CountryCrudeImports,
   UsRegion,
   CountryRegion,
   DatasetMeta,
@@ -39,6 +40,8 @@ export interface Datasets {
   /** "Where is my fuel from?" (M7): gasoline, diesel and jet fuel by PADD. */
   fuelOrigins: FuelOriginRegion[];
   oilRoutes: OilRoute[];
+  /** Crude imports by partner, by country (M10). */
+  crudeImports: CountryCrudeImports[];
   usLookup: UsLookup | null;
   /** The PADDs as outlines, for the fuel origins map. */
   usRegions: UsRegion[];
@@ -58,6 +61,7 @@ export const EMPTY_DATASETS: Datasets = {
   oilOrigins: [],
   fuelOrigins: [],
   oilRoutes: [],
+  crudeImports: [],
   usLookup: null,
   usRegions: [],
   meta: [],
@@ -114,7 +118,7 @@ export type Resolved =
   | { kind: 'pipeline'; item: Pipeline }
   | { kind: 'chokepoint'; item: Chokepoint }
   | { kind: 'basin'; item: Basin }
-  | { kind: 'storage'; item: Country }
+  | { kind: 'country'; item: Country }
   | { kind: 'lng'; item: LngTerminal }
   | { kind: 'terminal'; item: OilTerminal }
   | { kind: 'region'; item: OilOriginRegion };
@@ -135,9 +139,9 @@ export function resolveSelection(selection: Selection | null, data: Datasets): R
       const item = data.basins.find((b) => b.id === selection.id);
       return item ? { kind: 'basin', item } : null;
     }
-    case 'storage': {
+    case 'country': {
       const item = data.countries.find((c) => c.id.toLowerCase() === selection.id);
-      return item ? { kind: 'storage', item } : null;
+      return item ? { kind: 'country', item } : null;
     }
     case 'lng': {
       const item = data.lngTerminals.find((t) => t.id === selection.id);

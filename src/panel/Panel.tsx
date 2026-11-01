@@ -19,7 +19,7 @@ import { TerminalsView, type TerminalsViewProps } from './TerminalsView';
 import { StorageView } from './StorageView';
 import { MoreView } from './MoreView';
 import { OriginsView, type OriginsViewProps } from './OriginsView';
-import { BasinDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RegionDetail, StorageDetail } from './details';
+import { BasinDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RegionDetail, CountryDetail } from './details';
 
 interface PanelProps {
   /** The rail view; its list shows when nothing is selected or filtered. Null is home. */
@@ -64,7 +64,7 @@ const KIND_LABELS: Record<SelectionKind, string> = {
   pipeline: 'Pipeline',
   chokepoint: 'Chokepoint',
   basin: 'Basin',
-  storage: 'Gas storage',
+  country: 'Country',
   lng: 'LNG terminal',
   terminal: 'Oil terminal',
   region: 'US fuel region',
@@ -152,6 +152,7 @@ export function Panel(props: PanelProps) {
           <MoreView views={props.more.views} current={props.view} onOpen={props.more.onOpen} />
         ) : props.selection ? (
           <Detail
+            view={props.view}
             selection={props.selection}
             data={props.data}
             loaded={props.loaded}
@@ -229,7 +230,9 @@ function Detail({
   fuel,
   onFuel,
   now,
+  view,
 }: {
+  view: ViewId | null;
   selection: Selection;
   data: Datasets;
   loaded: boolean;
@@ -244,7 +247,7 @@ function Detail({
       {resolved?.kind === 'chokepoint' && <ChokepointDetail item={resolved.item} data={data} onSelect={onSelect} />}
       {resolved?.kind === 'basin' && <BasinDetail item={resolved.item} data={data} onSelect={onSelect} />}
       {resolved?.kind === 'pipeline' && <PipelineDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
-      {resolved?.kind === 'storage' && <StorageDetail item={resolved.item} data={data} />}
+      {resolved?.kind === 'country' && <CountryDetail item={resolved.item} data={data} view={view} onSelect={onSelect} />}
       {resolved?.kind === 'lng' && <LngDetail item={resolved.item} data={data} now={now} />}
       {resolved?.kind === 'terminal' && <OilTerminalDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'region' && <RegionDetail item={resolved.item} data={data} onSelect={onSelect} fuel={fuel} onFuel={onFuel} />}

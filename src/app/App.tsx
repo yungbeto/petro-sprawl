@@ -147,7 +147,8 @@ export function App() {
 
   // Fuel origins shows only the regions: on its own page, and on a region opened from anywhere. Opening
   // anything else from the surface brings the other layers back.
-  const regionsOnly = selection ? selection.kind === 'region' : view === 'origins';
+  // A US fuel region shows only its outlines and arcs; the oil origins surface itself shows countries (M10).
+  const regionsOnly = selection?.kind === 'region';
 
   // Each surface draws only its own layers, and the open item's (decided 2026-11-01).
   const mapLayers = useMemo(() => visibleLayers(view, selection, visibility), [view, selection, visibility]);
@@ -437,6 +438,7 @@ export function App() {
           highlight={highlight}
           regionsOnly={regionsOnly}
           basinsFocus={view === 'basins'}
+          countryMode={view === 'origins' ? 'imports' : 'storage'}
           onSelect={selectAndFocus}
           focus={focus}
           insets={sheet.insets}

@@ -74,6 +74,15 @@ jobs:
         continue-on-error: true
         run: npm run fetch:storage
 
+      # Eurostat monthly (no key), UN Comtrade annual (refreshed weekly; COMTRADE_API_KEY, or the public
+      # preview without one) and the US from the EIA file written above.
+      - name: Crude imports by country
+        id: crude
+        continue-on-error: true
+        env:
+          COMTRADE_API_KEY: ${{ secrets.COMTRADE_API_KEY }}
+        run: npm run fetch:crude-imports
+
       - name: Commit changed data
         run: |
           git config user.name "github-actions[bot]"
@@ -89,7 +98,7 @@ jobs:
           fi
 
       - name: Fail if any fetch failed
-        if: steps.portwatch.outcome == 'failure' || steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure' || steps.alsi.outcome == 'failure' || steps.eia.outcome == 'failure' || steps.storage.outcome == 'failure'
+        if: steps.portwatch.outcome == 'failure' || steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure' || steps.alsi.outcome == 'failure' || steps.eia.outcome == 'failure' || steps.storage.outcome == 'failure' || steps.crude.outcome == 'failure'
         run: |
           echo "::error::One or more fetch jobs failed; previous data was kept. See the step logs above."
           exit 1

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FEATURES, STORAGE_BOUNDS, US_BOUNDS } from '../src/lib/config';
+import { FEATURES, STORAGE_BOUNDS, WORLD_BOUNDS } from '../src/lib/config';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
 import { basinViewRows, chokepointViewRows } from '../src/lib/summary';
 import {
@@ -47,9 +47,11 @@ describe('parseView', () => {
     expect(parseView('storage')).toBe(FEATURES.gasStorage ? 'storage' : null);
     expect(parseView('origins')).toBe(FEATURES.fuelOrigins ? 'origins' : null);
     expect(ENABLED_VIEWS.includes('storage')).toBe(FEATURES.gasStorage);
-    expect(selectionEnabled('storage')).toBe(FEATURES.gasStorage);
+    expect(selectionEnabled('country')).toBe(FEATURES.gasStorage || FEATURES.fuelOrigins);
     expect(selectionEnabled('region')).toBe(FEATURES.fuelOrigins);
-    expect(parseSelection('storage/de')).toEqual(FEATURES.gasStorage ? { kind: 'storage', id: 'de' } : null);
+    // A country was `storage/<code>` before M10; old links open the country page.
+    expect(parseSelection('storage/de')).toEqual(FEATURES.gasStorage ? { kind: 'country', id: 'de' } : null);
+    expect(parseSelection('country/de')).toEqual(FEATURES.gasStorage ? { kind: 'country', id: 'de' } : null);
     expect(parseSelection('region/padd-1')).toEqual(FEATURES.fuelOrigins ? { kind: 'region', id: 'padd-1' } : null);
     expect(parseSelection('basin/usgs-1174')).toEqual({ kind: 'basin', id: 'usgs-1174' });
   });
@@ -64,7 +66,7 @@ describe('visibleLayers', () => {
     expect(shown(visibleLayers('basins', null, all))).toEqual(['basins']);
     expect(shown(visibleLayers('terminals', null, all))).toEqual(['lng', 'terminals']);
     expect(shown(visibleLayers('chokepoints', null, all))).toEqual(['terminals', 'chokepoints']);
-    expect(shown(visibleLayers('origins', null, all))).toEqual([]);
+    expect(shown(visibleLayers('origins', null, all))).toEqual(['storage', 'terminals', 'chokepoints']);
   });
 
   it('adds the layer of the open item, so a chokepoint opened from a pipeline still shows', () => {
@@ -118,15 +120,15 @@ describe('the chokepoints view on the map', () => {
   });
 });
 
-describe('the storage and fuel origins views on the map', () => {
-  it('fade every asset for storage, and frame Europe and the lower 48', () => {
+describe('the storage and oil origins views on the map', () => {
+  it('fade every asset for storage, and frame the countries each covers', () => {
     const lit = viewHighlight('storage', data);
     expect(lit.pipelines.size + lit.chokepoints.size + lit.lng.size + lit.terminals.size).toBe(0);
     expect(viewPoints('storage', data)).toEqual(STORAGE_BOUNDS);
-    expect(viewPoints('origins', data)).toEqual(US_BOUNDS);
+    expect(viewPoints('origins', data)).toEqual(WORLD_BOUNDS);
   });
 
-  it('keep nothing bright for fuel origins without regions', () => {
+  it('keep nothing bright for oil origins without import data', () => {
     const lit = viewHighlight('origins', data);
     expect(lit.chokepoints.size + lit.terminals.size).toBe(0);
   });

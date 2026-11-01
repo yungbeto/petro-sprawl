@@ -29,7 +29,7 @@ export type PickedObject =
   | { kind: 'basin'; item: Basin }
   | { kind: 'pipeline'; item: Pipeline }
   | { kind: 'chokepoint'; item: Chokepoint }
-  | { kind: 'storage'; item: Country }
+  | { kind: 'country'; item: Country }
   | { kind: 'lng'; item: LngTerminal }
   | { kind: 'terminal'; item: OilTerminal }
   | { kind: 'region'; item: UsRegion };
@@ -94,6 +94,17 @@ const storageCollection = memoLast(
 );
 const NOT_COVERED = new Set(STORAGE_NOT_COVERED.map((c) => c.country));
 
+/** Countries with crude import data, for the oil origins surface. */
+const importerCollection = memoLast(
+  (countries: Country[], importers: Set<string>): FeatureCollection<Polygon | MultiPolygon, Country> => ({
+    type: 'FeatureCollection',
+    features: countries.filter((c) => importers.has(c.id)).map((country) => ({ type: 'Feature', geometry: country.geometry, properties: country })),
+  }),
+);
+
+/** What the country layer shows: gas storage against last year, or which countries have crude import data. */
+export type CountryMode = 'storage' | 'imports';
+
 
 const regionCollection = memoLast(
   (regions: UsRegion[]): FeatureCollection<Polygon | MultiPolygon, UsRegion> => ({
@@ -141,6 +152,9 @@ interface BuildLayersInput {
   pipelineShares: Map<string, number>;
   /** Gas storage by country id. */
   storage: Map<string, CountryStorage>;
+  countryMode: CountryMode;
+  /** Countries with crude import data, by id. */
+  importers: Set<string>;
   visibility: LayerVisibility;
   selection: Selection | null;
   highlight: FilterMatches | null;
@@ -165,6 +179,8 @@ export function buildLayers({
   flows,
   pipelineShares,
   storage,
+  countryMode,
+  importers,
   visibility,
   selection,
   highlight,
@@ -196,25 +212,32 @@ export function buildLayers({
   const hoveredPaths = paths.filter((p) => p.pipeline.id === hoveredPipelineId);
   const flowPaths = paths.filter((p) => (pipelineShares.get(p.pipeline.id) ?? 0) > 0 && pipelineFade(p.pipeline.id) === 1);
 
-  const storageFeatures = storageCollection(data.countries, storage);
+  const imports = countryMode === 'imports';
+  const countryFeatures = imports ? importerCollection(data.countries, importers) : storageCollection(data.countries, storage);
 
   return [
-    // Gas storage: each country against last year on a diverging scale, under everything else (SPEC M10).
+    // Countries, under everything else (SPEC M10): gas storage against last year on a diverging scale, or
+    // on oil origins every country with crude import data in one neutral fill, the open one darker.
     new GeoJsonLayer<Country>({
       id: 'storage',
-      data: storageFeatures,
+      data: countryFeatures,
       visible: visibility.storage,
       pickable: true,
       stroked: true,
       filled: true,
-      getFillColor: (f: Feature<Geometry, Country>) => storageColor(storage.get(f.properties.id), colors),
+      getFillColor: (f: Feature<Geometry, Country>) =>
+        imports
+          ? isSelected('country', f.properties.id.toLowerCase())
+            ? colors.importerOpen
+            : colors.importer
+          : storageColor(storage.get(f.properties.id), colors),
       getLineColor: (f: Feature<Geometry, Country>) =>
-        isSelected('storage', f.properties.id.toLowerCase()) ? colors.selection : colors.storageLine,
-      getLineWidth: (f: Feature<Geometry, Country>) => (isSelected('storage', f.properties.id.toLowerCase()) ? 2 : 0.5),
+        isSelected('country', f.properties.id.toLowerCase()) ? colors.selection : colors.storageLine,
+      getLineWidth: (f: Feature<Geometry, Country>) => (isSelected('country', f.properties.id.toLowerCase()) ? 2 : 0.5),
       lineWidthUnits: 'pixels',
       autoHighlight: true,
       highlightColor: colors.basinFillHover,
-      updateTriggers: { getFillColor: [storage, colors], getLineColor: [selection, colors], getLineWidth: [selection] },
+      updateTriggers: { getFillColor: [storage, imports, selection, colors], getLineColor: [selection, colors], getLineWidth: [selection] },
     }),
     new GeoJsonLayer<Basin>({
       id: 'basins',
@@ -529,7 +552,7 @@ export function toPicked(layerId: string | undefined, object: unknown): PickedOb
     case 'chokepoints':
       return { kind: 'chokepoint', item: object as Chokepoint };
     case 'storage':
-      return { kind: 'storage', item: (object as Feature<Polygon | MultiPolygon, Country>).properties };
+      return { kind: 'country', item: (object as Feature<Polygon | MultiPolygon, Country>).properties };
     case 'lng':
       return { kind: 'lng', item: object as LngTerminal };
     case 'terminals':
@@ -543,5 +566,5 @@ export function toPicked(layerId: string | undefined, object: unknown): PickedOb
 
 /** The id a picked item has in the URL. Country codes are uppercase ISO, URL ids lowercase. */
 export function selectionId(picked: PickedObject): string {
-  return picked.kind === 'storage' ? picked.item.id.toLowerCase() : picked.item.id;
+  return picked.kind === 'country' ? picked.item.id.toLowerCase() : picked.item.id;
 }

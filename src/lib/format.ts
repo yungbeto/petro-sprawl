@@ -85,3 +85,8 @@ export function formatSignedPct(value: number, digits = 0): string {
   return `${rounded > 0 ? '+' : '−'}${formatNumber(Math.abs(rounded), digits)}%`;
 }
 
+
+/** Shares to the nearest percent; "<1%" for anything smaller. */
+export function formatShare(share: number): string {
+  return share < 0.005 ? '<1%' : `${Math.round(share * 100)}%`;
+}

@@ -30,7 +30,7 @@ export function useVisitChanges(data: Datasets, loaded: boolean, failed: string[
     const { compareTo, record } = nextVisit(parseVisitRecord(readStorage(STORAGE_KEYS.visits)), snapshot);
     if (failed.length === 0) writeStorage(STORAGE_KEYS.visits, JSON.stringify(record));
     const name = (selection: Selection) =>
-      selection.kind === 'storage'
+      selection.kind === 'country'
         ? formatCountry(selection.id.toUpperCase())
         : (resolveSelection(selection, data)?.item.name ?? selection.id);
     setResult({

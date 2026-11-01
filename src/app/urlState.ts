@@ -5,7 +5,7 @@ import { CAMERA_PRECISION, DEFAULT_REGION_FUEL, REGION_FUELS, type RegionFuel } 
 import { parseFilter, type FilterId } from '../lib/filters';
 import { parseView, selectionEnabled, type ViewId } from '../lib/views';
 
-export const SELECTION_KINDS = ['pipeline', 'chokepoint', 'basin', 'storage', 'lng', 'terminal', 'region'] as const;
+export const SELECTION_KINDS = ['pipeline', 'chokepoint', 'basin', 'country', 'lng', 'terminal', 'region'] as const;
 export type SelectionKind = (typeof SELECTION_KINDS)[number];
 
 export interface Selection {
@@ -36,7 +36,8 @@ export function parseSelection(value: string | null): Selection | null {
   if (!value) return null;
   const slash = value.indexOf('/');
   if (slash < 0) return null;
-  const kind = value.slice(0, slash);
+  // A country page was `storage/<code>` before it held oil imports too (M10); old links still open it.
+  const kind = value.slice(0, slash) === 'storage' ? 'country' : value.slice(0, slash);
   const id = value.slice(slash + 1);
   if (!(SELECTION_KINDS as readonly string[]).includes(kind)) return null;
   // A country or a region opens a surface that's switched off: the link opens Home instead.

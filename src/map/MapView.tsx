@@ -23,11 +23,12 @@ import { pipelineFlow } from '../lib/evidence';
 import { storageByCountry, type CountryStorage } from '../lib/gasStorage';
 import type { ChokepointFlow } from '../lib/flow';
 import { boundsOf } from '../lib/geo';
-import { formatCapacity, formatIndexShare, formatMbd, formatNumber, formatSignedPct } from '../lib/format';
+import { formatCapacity, formatIndexShare, formatMbd, formatNumber, formatShare, formatSignedPct } from '../lib/format';
 import type { FilterMatches } from '../lib/filters';
 import { terminalStatus } from '../lib/encoding';
 import { statusLabel } from '../panel/details';
-import { buildLayers, selectionId, toPicked, type LayerVisibility, type PickedObject } from './layers';
+import { buildLayers, selectionId, toPicked, type CountryMode, type LayerVisibility, type PickedObject } from './layers';
+import { countryArcs, countryHighlight, countryOrigins, importPeriod, originsOfCountry } from '../lib/crudeImports';
 import { readMapColors, type MapColors } from './colors';
 
 // MapLibre finds its worker relative to its own module URL, which Vite's dependency
@@ -54,6 +55,8 @@ interface MapViewProps {
   regionsOnly: boolean;
   /** The basins surface: the outlines drawn stronger and named sooner. */
   basinsFocus: boolean;
+  /** What the country layer shows: storage against last year, or (on oil origins) the importers, with an open country's arcs. */
+  countryMode: CountryMode;
   onSelect: (selection: Selection) => void;
   focus: FocusRequest | null;
   /** On phones, the search bar and chips above and the sheet below: the camera frames what's between. */
@@ -67,7 +70,12 @@ interface Hover {
   y: number;
 }
 
-function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>, storage: Map<string, CountryStorage>): string {
+function tooltipFigure(
+  picked: PickedObject,
+  flows: Map<string, ChokepointFlow>,
+  storage: Map<string, CountryStorage>,
+  { countryMode, data }: { countryMode: CountryMode; data: Datasets },
+): string {
   switch (picked.kind) {
     case 'chokepoint': {
       const index = flows.get(picked.item.id)?.indexFiveYear;
@@ -101,7 +109,13 @@ function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>,
       const states = PADDS.find((p) => p.id === picked.item.id)?.states.length;
       return `PADD ${picked.item.id.slice(-1)}${states ? ` · ${states} states` : ''}`;
     }
-    case 'storage': {
+    case 'country': {
+      if (countryMode === 'imports') {
+        const record = data.crudeImports.find((r) => r.id === picked.item.id);
+        if (!record) return 'No crude import data';
+        const largest = countryOrigins(record).rows.find((r) => r.kind === 'country');
+        return largest ? `Largest source ${largest.label}, ${formatShare(largest.share)} · ${importPeriod(record)}` : `Sources not named · ${importPeriod(record)}`;
+      }
       const s = storage.get(picked.item.id);
       if (!s) return 'No regular storage data';
       const vs = s.vsLastYearPct !== null ? `${formatSignedPct(s.vsLastYearPct)} vs last year` : 'Nothing to compare last year';
@@ -117,7 +131,7 @@ const fitPadding = () => (window.matchMedia(`(max-width: ${MOBILE.maxWidthPx}px)
 const NO_ARCS: OriginArc[] = [];
 
 export function MapView(props: MapViewProps) {
-  const { theme, initialCamera, data, visibility, selection, fuel, highlight, regionsOnly, basinsFocus, focus } = props;
+  const { theme, initialCamera, data, visibility, selection, fuel, highlight, regionsOnly, basinsFocus, countryMode, focus } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const overlayRef = useRef<MapboxOverlay | null>(null);
@@ -232,6 +246,15 @@ export function MapView(props: MapViewProps) {
     return origins ? { arcs: originArcs(origins, resolved.item.id, data.usLookup), highlight: regionHighlight(origins) } : null;
   }, [selection, fuel, data]);
 
+  // On oil origins, an open country draws arcs from its partners and keeps its routes' chokepoints bright.
+  const countryView = useMemo(() => {
+    if (countryMode !== 'imports' || selection?.kind !== 'country' || !data.usLookup) return null;
+    const origins = originsOfCountry(data, selection.id.toUpperCase());
+    return origins ? { arcs: countryArcs(origins, data.usLookup.countryPoints), highlight: countryHighlight(origins) } : null;
+  }, [countryMode, selection, data]);
+  const originView = regionView ?? countryView;
+  const importers = useMemo(() => new Set(data.crudeImports.map((r) => r.id)), [data]);
+
   // A region frames its own states and where its fuel comes from.
   const regionFrame = useMemo(() => {
     const outline = selection?.kind === 'region' ? data.usRegions.find((r) => r.id === selection.id)?.frame ?? [] : [];
@@ -251,9 +274,11 @@ export function MapView(props: MapViewProps) {
         storage,
         visibility,
         selection,
-        highlight: regionView?.highlight ?? highlight,
+        highlight: originView?.highlight ?? highlight,
         hoveredPipelineId,
-        originArcs: regionView?.arcs ?? NO_ARCS,
+        originArcs: originView?.arcs ?? NO_ARCS,
+        countryMode,
+        importers,
         regionsOnly,
         basinsFocus,
         regionLabelMinZoom: fontsReady ? REGION_OUTLINE.labelMinZoom : Infinity,
@@ -263,7 +288,7 @@ export function MapView(props: MapViewProps) {
         fontFamily: `"${LABEL_FONT}", sans-serif`,
       }),
     });
-  }, [data, flows, pipelineShares, storage, visibility, selection, highlight, regionsOnly, basinsFocus, regionView, hoveredPipelineId, colors, zoom, fontsReady]);
+  }, [data, flows, pipelineShares, storage, visibility, selection, highlight, regionsOnly, basinsFocus, originView, countryMode, importers, hoveredPipelineId, colors, zoom, fontsReady]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -276,6 +301,10 @@ export function MapView(props: MapViewProps) {
     if (!resolved) return;
     if (resolved.kind === 'chokepoint' || resolved.kind === 'lng' || resolved.kind === 'terminal') {
       map.flyTo({ center: resolved.item.point, zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM) });
+    } else if (resolved.kind === 'country' && countryView?.arcs.length) {
+      // The country and every partner it draws an arc from.
+      const points: [number, number][] = [...boundsOf(resolved.item.geometry), ...countryView.arcs.map((a) => a.from)];
+      map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: points }), { padding: fitPadding(), maxZoom: 5 });
     } else if (resolved.kind === 'region') {
       if (regionFrame.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: regionFrame }), { padding: fitPadding(), maxZoom: 5 });
     } else {
@@ -308,7 +337,7 @@ export function MapView(props: MapViewProps) {
       {hover && (
         <div className="map-tooltip" style={{ left: hover.x, top: hover.y }} role="tooltip">
           <span className="map-tooltip__name">{hover.picked.item.name}</span>
-          <span className="map-tooltip__figure mono">{tooltipFigure(hover.picked, flows, storage)}</span>
+          <span className="map-tooltip__figure mono">{tooltipFigure(hover.picked, flows, storage, { countryMode, data })}</span>
         </div>
       )}
       {props.children}

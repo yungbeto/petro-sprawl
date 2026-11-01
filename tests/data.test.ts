@@ -19,7 +19,7 @@ describe('resolveSelection', () => {
   it('returns null for missing items and no selection', () => {
     expect(resolveSelection(null, data)).toBeNull();
     expect(resolveSelection({ kind: 'basin', id: 'usgs-2' }, data)).toBeNull();
-    expect(resolveSelection({ kind: 'storage', id: 'de' }, data)).toBeNull();
+    expect(resolveSelection({ kind: 'country', id: 'de' }, data)).toBeNull();
   });
 });
 

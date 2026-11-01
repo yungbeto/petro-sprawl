@@ -341,3 +341,28 @@ export interface OilRoute {
   note: string;
   sources: SourceRef[];
 }
+
+/** One country's crude imports by partner over its latest window (SPEC M10). */
+export interface CountryCrudeImports {
+  /** Reporter, ISO 3166 alpha-2. */
+  id: string;
+  /** Reporter, ISO 3166 alpha-3, for its label point on the map. */
+  iso3: string | null;
+  /** EIA for the United States, from M6's data. */
+  source: 'eurostat' | 'comtrade' | 'eia';
+  /** Shares by net weight, or by value where the reporter gives no weight. */
+  basis: 'weight' | 'value';
+  unit: 'thousand tonnes' | 'tonnes' | 'US$' | 'thousand barrels';
+  /** First and last period: "2025-09" to "2026-08", or "2025" to "2025" for a year. */
+  from: string;
+  to: string;
+  /** Months with a reported total inside the window (Eurostat); null for a year. */
+  monthsReported: number | null;
+  total: number;
+  /** Largest first. Groups Eurostat or Comtrade don't split by country have no codes. */
+  partners: { iso2: string | null; iso3: string | null; label: string; value: number }[];
+  /** Comtrade's value of the country's crude imports in its latest year, for ranking. */
+  importsUsd: { year: string; value: number } | null;
+  /** The date the partner rows were retrieved from the source (Comtrade's are reused for a week). */
+  retrieved: string;
+}

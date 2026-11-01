@@ -154,4 +154,12 @@ Checked 2026-11-01 against the sources' own pages, except where it says otherwis
 - **Eurostat `nrg_ti_coifpm`:** crude imports by field of production (the producing country is the prefix of each crude code, such as `NO_EFK`). Latest month 2026-09. Useful for "Urals versus ESPO", not needed for shares by country.
 - **UN Comtrade: usable for shares, worth confirming in writing.** The free tier needs a free key: 500 calls a day, up to 100,000 records a call. The data-use policy says data is for internal use and not to be re-disseminated without permission, but its re-dissemination page exempts transformed data, naming "market shares" and other derived metrics. Publishing limited amounts in a few tables or graphs, and free public dashboards, are also allowed. Shares of a country's crude imports by partner fit that, cited as "UN Comtrade". The 2012 licence agreement has no such carve-out, so email comtrade@un.org to confirm this use before launch. Don't publish raw record dumps (100,000 records or more needs a licence), and don't scrape the web interface.
 - **National crude import statistics: not checked yet.** Japan (METI), South Korea (KNOC Petronet), Canada (Canada Energy Regulator or Statistics Canada), the UK (DESNZ Energy Trends), China (customs), India (PPAC). For each: origins by country, freshness, terms. Only needed where Comtrade lags too far.
-- **The 30 largest crude importers:** build the list from the data once it's in, not by hand.
+- **The 30 largest crude importers: built from the data** (Comtrade's value for 2025, 2026-11-01). With Eurostat and EIA, 41 countries are listed, none of the 30 left out. What the first fetch showed, worth knowing before reading the shares:
+  - Taiwan reports to Comtrade as "Other Asia, nes" (reporter 490) with no ISO code, so it isn't listed. It's a large importer; its own customs or energy statistics would be the source.
+  - Israel and Bulgaria give all their crude imports as "not specified" (Comtrade's "Areas, nes" for Israel, Eurostat's not-specified partner for Bulgaria), so their pages show one unnamed row.
+  - Thailand's 2025 Comtrade rows lack weights for too much of the value, so its shares are by value.
+  - Finland reported 8 of the last 12 months to Eurostat; the page says so.
+  - The UK isn't in Eurostat after leaving the EU; it comes from Comtrade (2025, annual). DESNZ Energy Trends would be monthly.
+  - Türkiye is in Eurostat but has no Comtrade value for ranking, so it sits with the unranked countries at the end of the list.
+  - China's partners include Malaysia at 11%, mostly crude shipped on from elsewhere; partners are named as each source records them.
+  - Comtrade runs on the public preview until `COMTRADE_API_KEY` is set (free at comtradedeveloper.un.org).

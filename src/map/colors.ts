@@ -22,6 +22,8 @@ const TOKENS = {
   storageMore: '--map-storage-more',
   storageNone: '--map-storage-none',
   storageLine: '--map-storage-line',
+  importer: '--map-importer',
+  importerOpen: '--map-importer-open',
   /** Origin arcs: foreign in ink, other US regions in a muted tone. Not status colors. */
   arcForeign: '--map-selection',
   arcDomestic: '--text-muted',

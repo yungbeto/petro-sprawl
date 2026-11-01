@@ -281,6 +281,50 @@ export const statcanStorageSeriesId = (province?: string) => (province ? `statca
 export const jodiStorageSeriesId = (country: string) => `jodi-storage-${country.toLowerCase()}`;
 
 /**
+ * "Where is a country's oil from?" (SPEC M10): crude imports by partner. Eurostat nrg_ti_oilm for the
+ * countries it reports (monthly, thousand tonnes, CC BY 4.0), UN Comtrade HS 2709 for the other largest
+ * importers (annual, kg or US$), and EIA for the United States (M6's data). Checked 2026-11-01.
+ */
+export const CRUDE_IMPORTS = {
+  /** Shares are over a country's latest 12 months (Eurostat, EIA) or latest year (Comtrade). */
+  windowMonths: 12,
+  /** Partners under this share fold into "other countries". */
+  minShare: 0.01,
+  /** How many of the largest importers (by Comtrade value) the list covers at least. */
+  largest: 30,
+} as const;
+
+export const EUROSTAT_OIL = {
+  apiUrl: 'https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nrg_ti_oilm',
+  pageUrl: 'https://ec.europa.eu/eurostat/databrowser/view/nrg_ti_oilm/default/table',
+  dataset: 'nrg_ti_oilm',
+  siec: 'O4100_TOT',
+  unit: 'THS_T',
+  /** Months asked for: the window plus slack for countries that lag. */
+  months: 16,
+  /** Reporters and partners that are groups, not countries. */
+  aggregates: ['EU27_2020', 'EU28', 'EA21', 'EA20', 'EA19', 'TOTAL'],
+  /** Eurostat's codes where they differ from ISO 3166 alpha-2. */
+  iso2: { EL: 'GR', UK: 'GB', CN_X_HK: 'CN', XK: 'XK' } as Record<string, string>,
+} as const;
+
+export const COMTRADE = {
+  apiUrl: 'https://comtradeapi.un.org/data/v1/get/C/A/HS',
+  /** Without a key, the public preview: the same data, at most 500 records a call, rate limited. */
+  previewUrl: 'https://comtradeapi.un.org/public/v1/preview/C/A/HS',
+  partnersUrl: 'https://comtradeapi.un.org/files/v1/app/reference/partnerAreas.json',
+  reportersUrl: 'https://comtradeapi.un.org/files/v1/app/reference/Reporters.json',
+  pageUrl: 'https://comtradeplus.un.org/',
+  cmdCode: '2709',
+  /** Annual data changes rarely; the job reuses the last fetch for this long. */
+  refreshDays: 7,
+  /** Between calls, to stay under the rate limit. */
+  gapMs: 2_500,
+  /** Shares go by net weight when partners with a weight hold at least this share of the value; by value otherwise. */
+  minWeightCoverage: 0.95,
+} as const;
+
+/**
  * Where each country's storage figure comes from, in the order they're preferred: AGSI+ where it reports
  * a country (daily, and fill as a share of capacity), then EIA for the US and Statistics Canada for
  * Canada (national, with regions), then JODI.
@@ -461,6 +505,7 @@ export const DATASET_FRESHNESS: Record<
   'oil-origins': { label: 'US crude origins', scheduled: true, staleAfterHours: 72, publisher: 'EIA' },
   'fuel-origins': { label: 'US fuel origins', scheduled: true, staleAfterHours: 72, publisher: 'EIA' },
   'oil-routes': { label: 'Oil export routes', scheduled: false },
+  'crude-imports': { label: 'Crude imports by country', scheduled: true, staleAfterHours: 36, publisher: 'Eurostat, UN Comtrade and EIA' },
   'us-lookup': { label: 'US places', scheduled: false, publisher: 'U.S. Census Bureau, EIA and Natural Earth' },
   'us-regions': { label: 'US fuel regions', scheduled: false, publisher: 'U.S. Census Bureau and EIA' },
 };
@@ -521,14 +566,15 @@ export const POINT_FOCUS_ZOOM = 6;
  * snapshot of the data in this browser's localStorage between visits; off, nothing is stored, any
  * stored snapshot is removed, and Home leaves out the count and the list (decided 2026-10-31).
  *
- * `gasStorage` and `fuelOrigins` are surfaces held back until they reach past the EU and the US
- * (decided 2026-11-01). Off, the surface leaves the rail and search, its links open Home, its map
- * layer stays off, and Home leaves out its figure. Their scheduled fetches keep running.
+ * `gasStorage` and `fuelOrigins` (the oil origins surface) were held back until they reached past the EU
+ * and the US (decided 2026-11-01); M10 took both worldwide and turned them on. Off, a surface leaves the
+ * rail and search, its links open Home, its map layer stays off, and Home leaves out its figure. Their
+ * scheduled fetches keep running.
  */
 export const FEATURES = {
   visitChanges: false,
   gasStorage: true,
-  fuelOrigins: false,
+  fuelOrigins: true,
 } as const;
 
 /**

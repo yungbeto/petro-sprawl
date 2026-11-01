@@ -112,7 +112,7 @@ describe('summary counts', () => {
       ['IT', 2.2],
       ['AT', null],
     ]);
-    expect(rows[0]?.selection).toEqual({ kind: 'storage', id: 'de' });
+    expect(rows[0]?.selection).toEqual({ kind: 'country', id: 'de' });
   });
 });
 

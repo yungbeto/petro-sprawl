@@ -142,7 +142,7 @@ export interface StorageRow extends CountryStorage {
 /** Storage by country, furthest below last year first. Countries without last year's figure go last, by name. */
 export function storageRows(data: Datasets): StorageRow[] {
   return [...storageByCountry(data.series).values()]
-    .map((s) => ({ ...s, selection: { kind: 'storage', id: s.country.toLowerCase() } as Selection }))
+    .map((s) => ({ ...s, selection: { kind: 'country', id: s.country.toLowerCase() } as Selection }))
     .sort((a, b) => (a.vsLastYearPct ?? Infinity) - (b.vsLastYearPct ?? Infinity) || a.country.localeCompare(b.country));
 }
 
@@ -230,7 +230,7 @@ export function diffSnapshots(
   }
   for (const [id, from, to] of shared(before.storage, after.storage)) {
     if (Math.abs(to - from) < CHANGES.storageMovePts) continue;
-    const selection: Selection = { kind: 'storage', id };
+    const selection: Selection = { kind: 'country', id };
     changes.push({ kind: 'storage', selection, name: names(selection), from, to });
   }
   return changes;

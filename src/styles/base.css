@@ -584,6 +584,27 @@ kbd {
   text-wrap: pretty;
 }
 
+/* A country's page (M10): gas storage and crude imports, each a section with its own source. */
+.country-section + .country-section {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+}
+
+.country-section__title {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.country-section__lede {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
 /* A second reading under a chart, such as estimated exports below port calls. */
 .sparkline + .section__lede {
   margin-top: var(--space-3);

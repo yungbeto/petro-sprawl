@@ -44,7 +44,12 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
     priority,
   });
   const storage = viewEnabled('storage') ? storageByCountry(data.series) : new Map();
-  const notCovered = new Set(STORAGE_NOT_COVERED.map((c) => c.country));
+  const notCovered = new Set(viewEnabled('storage') ? STORAGE_NOT_COVERED.map((c) => c.country) : []);
+  const imports = new Set(viewEnabled('origins') ? data.crudeImports.map((r) => r.id) : []);
+  const countryDetail = (id: string) =>
+    ['Country', storage.has(id) ? 'gas storage' : notCovered.has(id) ? 'storage not covered' : null, imports.has(id) ? 'crude imports' : null]
+      .filter(Boolean)
+      .join(' · ');
   return [
     ...data.chokepoints.map((c) => entry({ kind: 'chokepoint', id: c.id }, c.name, 'Chokepoint', [], 0)),
     ...data.pipelines.map((p) => {
@@ -61,17 +66,11 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
         commodity: p.commodity,
       };
     }),
-    // A country opens its gas storage, and a US place its fuel origins: only while those surfaces are on.
-    // Countries with a storage figure, and those named as not covered, which say why.
-    ...(viewEnabled('storage') ? data.countries.filter((c) => storage.has(c.id) || notCovered.has(c.id)) : []).map((c) =>
-      entry(
-        { kind: 'storage', id: c.id.toLowerCase() },
-        c.name,
-        storage.has(c.id) ? 'Country · gas storage' : 'Country · storage not covered',
-        [c.id, formatCountry(c.id)],
-        2,
-      ),
-    ),
+    // A country opens its gas storage and crude imports, and a US place its fuel origins: only while those
+    // surfaces are on. Countries named as not covered for storage say why.
+    ...data.countries
+      .filter((c) => storage.has(c.id) || notCovered.has(c.id) || imports.has(c.id))
+      .map((c) => entry({ kind: 'country', id: c.id.toLowerCase() }, c.name, countryDetail(c.id), [c.id, formatCountry(c.id)], 2)),
     ...data.oilTerminals.map((t) =>
       entry({ kind: 'terminal', id: t.id }, t.name, `Oil ${t.role} terminal · ${t.country}`, t.aliases, 1),
     ),
@@ -172,9 +171,9 @@ export function search(index: SearchEntry[], query: string, limit: number = SEAR
 export const SEARCH_SCOPES = ['all', 'chokepoints', 'pipelines', 'terminals', 'countries', 'us-places', 'basins'] as const;
 export type SearchScope = (typeof SEARCH_SCOPES)[number];
 
-/** The scopes the search offers: countries and US places only while gas storage and fuel origins are on. */
+/** The scopes the search offers: countries only while gas storage or oil origins is on, US places only with oil origins. */
 export const ENABLED_SEARCH_SCOPES: readonly SearchScope[] = SEARCH_SCOPES.filter(
-  (s) => (s !== 'countries' || viewEnabled('storage')) && (s !== 'us-places' || viewEnabled('origins')),
+  (s) => (s !== 'countries' || viewEnabled('storage') || viewEnabled('origins')) && (s !== 'us-places' || viewEnabled('origins')),
 );
 
 export const SEARCH_SCOPE_LABELS: Record<SearchScope, string> = {
@@ -192,7 +191,7 @@ const SCOPE_OF: Record<Selection['kind'], Exclude<SearchScope, 'all'>> = {
   pipeline: 'pipelines',
   terminal: 'terminals',
   lng: 'terminals',
-  storage: 'countries',
+  country: 'countries',
   region: 'us-places',
   basin: 'basins',
 };
@@ -203,7 +202,7 @@ export const SEARCH_GROUP_LABELS: Record<Selection['kind'], string> = {
   pipeline: 'Pipelines',
   terminal: 'Oil terminals',
   lng: 'LNG terminals',
-  storage: 'Countries',
+  country: 'Countries',
   region: 'US places',
   basin: 'Basins',
 };

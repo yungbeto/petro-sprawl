@@ -2,9 +2,10 @@
 // on the map, and has its own filter chips. Home is the summary across all of them. Pure.
 
 import type { SelectionKind } from '../app/urlState';
-import { FEATURES, PHONE_TABS, STORAGE_BOUNDS, US_BOUNDS, WORLD_BOUNDS } from './config';
+import { FEATURES, PHONE_TABS, STORAGE_BOUNDS, WORLD_BOUNDS } from './config';
 import type { FilterId, FilterMatches } from './filters';
-import { fuelSurfaceHighlight, type Datasets } from './data';
+import { importsSurfaceHighlight } from './crudeImports';
+import type { Datasets } from './data';
 
 /** The map's switchable layers. */
 export type LayerId = 'storage' | 'basins' | 'pipelines' | 'lng' | 'terminals' | 'chokepoints';
@@ -19,7 +20,7 @@ export const VIEW_LABELS: Record<ViewId, string> = {
   terminals: 'Terminals',
   basins: 'Basins',
   storage: 'Gas storage',
-  origins: 'Fuel origins',
+  origins: 'Oil origins',
 };
 
 /** Whether a surface is switched on (`FEATURES`); one that's off can't be opened, linked or searched. */
@@ -32,9 +33,9 @@ export function viewEnabled(view: ViewId): boolean {
 /** The surfaces the rail and search offer, in rail order. */
 export const ENABLED_VIEWS: readonly ViewId[] = VIEW_IDS.filter(viewEnabled);
 
-/** Whether a kind of selection belongs to a surface that's switched on: a country is storage, a region fuel origins. */
+/** Whether a kind of selection belongs to a surface that's switched on: a country is storage or oil origins, a region fuel origins. */
 export function selectionEnabled(kind: SelectionKind): boolean {
-  if (kind === 'storage') return viewEnabled('storage');
+  if (kind === 'country') return viewEnabled('storage') || viewEnabled('origins');
   if (kind === 'region') return viewEnabled('origins');
   return true;
 }
@@ -45,7 +46,8 @@ export function parseView(value: string | null): ViewId | null {
 
 /**
  * The map layers each surface shows; the rest are off while it's open (decided 2026-11-01). Chokepoints
- * keep the oil terminals, since their cargo is what passes the straits. Fuel origins draws only its region
+ * keep the oil terminals, since their cargo is what passes the straits. Oil origins draws the importing
+ * countries, and the chokepoints and terminals on cited routes (M10); a US fuel region draws only its
  * outlines, which aren't a layer here.
  */
 export const VIEW_LAYERS: Record<ViewId, LayerId[]> = {
@@ -54,14 +56,14 @@ export const VIEW_LAYERS: Record<ViewId, LayerId[]> = {
   terminals: ['lng', 'terminals'],
   basins: ['basins'],
   storage: ['storage'],
-  origins: [],
+  origins: ['storage', 'chokepoints', 'terminals'],
 };
 
 const SELECTION_LAYERS: Record<SelectionKind, LayerId | null> = {
   pipeline: 'pipelines',
   chokepoint: 'chokepoints',
   basin: 'basins',
-  storage: 'storage',
+  country: 'storage',
   lng: 'lng',
   terminal: 'terminals',
   region: null,
@@ -131,7 +133,7 @@ export function viewHighlight(view: ViewId, data: Datasets): FilterMatches {
       // No assets show; the outlines or the fill are the whole map.
       return { pipelines: none(), chokepoints: none(), lng: none(), terminals: none() };
     case 'origins':
-      return fuelSurfaceHighlight(data);
+      return importsSurfaceHighlight(data);
   }
 }
 
@@ -161,7 +163,7 @@ export function viewPoints(view: ViewId, data: Datasets): [number, number][] {
     case 'storage':
       return STORAGE_BOUNDS;
     case 'origins':
-      return US_BOUNDS;
+      return WORLD_BOUNDS;
   }
 }
 

@@ -1,6 +1,6 @@
 import { useId, useMemo, useState, type ReactNode } from 'react';
 import { ArrowUpRightIcon } from '@phosphor-icons/react';
-import type { AssetStatus, Basin, Chokepoint, Company, Country, Evidence, LngTerminal, LngUnit, OilOriginRegion, OilTerminal, Pipeline } from '../types';
+import type { AssetStatus, Basin, Chokepoint, Company, Country, CountryCrudeImports, Evidence, LngTerminal, LngUnit, OilOriginRegion, OilRoute, OilTerminal, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
 import {
   CHOKEPOINT_NOTES,
@@ -14,12 +14,17 @@ import {
   PADD_SOURCE,
   REGION_FUEL_LABELS,
   STORAGE_NOT_COVERED,
+  COMTRADE,
+  CRUDE_IMPORTS,
+  EUROSTAT_OIL,
   type StorageSourceId,
   type FuelId,
   type RegionFuel,
   tankerCargoSeriesId,
 } from '../lib/config';
 import { storageByCountry, vsLastYearPct, type CountryStorage } from '../lib/gasStorage';
+import { importPeriod, originsOfCountry } from '../lib/crudeImports';
+import { viewEnabled, type ViewId } from '../lib/views';
 import { CADENCE_LABEL, CHANGE_LABEL, StorageSources, storageChange, storageFigure } from './StorageView';
 import { ALSI_URL, ENTSOG_URL, isReport, isUnverified, latestClaim, pipelineFlow, reportParts } from '../lib/evidence';
 import {
@@ -42,7 +47,7 @@ import {
   type Resolved,
 } from '../lib/data';
 import { chokepointFlow, type ChokepointFlow, type FlowBand } from '../lib/flow';
-import { formatIndex, formatIndexShare, formatNumber, formatSignedPct, formatStorageVolume, formatThousandfold, formatTonnes } from '../lib/format';
+import { formatIndex, formatIndexShare, formatNumber, formatShare, formatSignedPct, formatStorageVolume, formatThousandfold, formatTonnes } from '../lib/format';
 import type { Disruption } from '../types';
 import { Sparkline } from './Sparkline';
 import { formatCapacity, formatCountry, formatEnergyPerDay, formatLonLat, formatMbd } from '../lib/format';
@@ -51,7 +56,7 @@ import { filterRows, type FilterRow } from '../lib/filters';
 import { chokepointRows } from '../lib/summary';
 import { AssetIcon, COMMODITY_PIPELINE } from './AssetIcon';
 import { FuelTabs } from './FuelTabs';
-import type { OriginRow } from '../lib/oilOrigins';
+import type { ChokepointExposure, OriginRow } from '../lib/oilOrigins';
 import { Info } from './Info';
 
 /** A region can open on a given fuel (M7); everything else ignores it. */
@@ -78,8 +83,8 @@ export function detailKind(resolved: Resolved): string {
       return `Basin · ${resolved.item.provinceType === 'priority' ? 'priority' : 'boutique'} province`;
     case 'pipeline':
       return `${COMMODITY_PIPELINE[resolved.item.commodity]}${resolved.item.sources.includes('curated') ? ' · corridor' : ''}`;
-    case 'storage':
-      return 'Gas storage';
+    case 'country':
+      return 'Country';
     case 'lng': {
       const t = resolved.item;
       return [LNG_FACILITY[t.facility], t.floating && 'floating', t.offshore && !t.floating && 'offshore'].filter(Boolean).join(' · ');
@@ -843,19 +848,120 @@ function ServiceStat({ history, now }: { history: Pipeline['history']; now: Date
   );
 }
 
-export function StorageDetail({ item, data }: { item: Country; data: Datasets }) {
+/**
+ * A country's page (SPEC M10): its gas storage and where its crude imports come from, each while its
+ * surface is on. On the oil origins surface the imports come first.
+ */
+export function CountryDetail({ item, data, view, onSelect }: { item: Country; data: Datasets; view: ViewId | null; onSelect: OnSelect }) {
   const storage = useMemo(() => storageByCountry(data.series).get(item.id) ?? null, [data, item.id]);
   const notCovered = STORAGE_NOT_COVERED.find((c) => c.country === item.id);
-  return (
-    <>
-      <Header name={item.name} icon={<AssetIcon kind="storage" large />} />
+  const storageId = useId();
+  const showStorage = viewEnabled('storage');
+  const showImports = viewEnabled('origins');
+  const storageSection = showStorage && (
+    <section className="country-section" aria-labelledby={storageId} key="storage">
+      <h3 className="country-section__title" id={storageId}>
+        Gas storage
+      </h3>
       {storage ? (
         <StorageFigures storage={storage} name={item.name} />
       ) : (
         <p className="muted">{notCovered ? `${notCovered.note}.` : 'No storage data for this country.'}</p>
       )}
       {storage && <StorageSources sources={[storage.source]} data={data} />}
+    </section>
+  );
+  const importsSection = showImports && <CrudeImports key="imports" country={item.id} data={data} onSelect={onSelect} />;
+  return (
+    <>
+      <Header name={item.name} icon={<AssetIcon kind="country" large />} />
+      {view === 'origins' ? [importsSection, storageSection] : [storageSection, importsSection]}
     </>
+  );
+}
+
+const IMPORT_SOURCE_NAME: Record<CountryCrudeImports['source'], string> = { eurostat: 'Eurostat', comtrade: 'UN Comtrade', eia: 'EIA' };
+
+/** Where a country's crude imports come from, by partner, with the chokepoints on the cited routes. */
+function CrudeImports({ country, data, onSelect }: { country: string; data: Datasets; onSelect: OnSelect }) {
+  const origins = useMemo(() => originsOfCountry(data, country), [data, country]);
+  const id = useId();
+  const record = origins?.record;
+  return (
+    <section className="country-section" aria-labelledby={id}>
+      <div className="title-row">
+        <h3 className="country-section__title" id={id}>
+          Where its crude comes from
+        </h3>
+        <Info label="About where the country's crude comes from">
+          Crude oil imports by partner country, as shares of the total. Each source names the partner as it records it, so crude
+          shipped through a third country can carry that country's name. Crude produced at home isn't counted here.
+        </Info>
+      </div>
+      {!origins || !record ? (
+        <p className="muted">No crude import data for this country.</p>
+      ) : (
+        <>
+          <p className="country-section__lede">
+            {IMPORT_SOURCE_NAME[record.source]}, <span className="mono">{importPeriod(record)}</span>
+            {record.monthsReported !== null && record.monthsReported < CRUDE_IMPORTS.windowMonths && (
+              <>
+                {' '}
+                ({record.monthsReported} of {CRUDE_IMPORTS.windowMonths} months reported)
+              </>
+            )}
+            , {record.basis === 'weight' ? 'by weight' : 'by value, since no weights were reported'}.
+          </p>
+          <OriginList rows={origins.rows} onRegion={() => {}} />
+          <OnTheWay origins={origins} data={data} onSelect={onSelect} />
+          {country === 'US' && data.oilOrigins.length > 0 && (
+            <section className="section" aria-labelledby={`${id}-regions`}>
+              <h3 className="section__title" id={`${id}-regions`}>
+                By fuel region
+              </h3>
+              <ul className="plain-list">
+                {data.oilOrigins.map((r) => (
+                  <li key={r.id}>
+                    <button type="button" className="link-button" onClick={() => onSelect({ kind: 'region', id: r.id }, 'crude')}>
+                      {r.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          <CrudeImportsSource record={record} />
+        </>
+      )}
+    </section>
+  );
+}
+
+/** Each import source's credit, with what was done to it. */
+export function CrudeImportsSource({ record }: { record: Pick<CountryCrudeImports, 'source' | 'basis' | 'to' | 'retrieved'> }) {
+  return (
+    <p className="source">
+      {record.source === 'eurostat' && (
+        <>
+          <SourceLink href={EUROSTAT_OIL.pageUrl}>Eurostat, imports of oil and petroleum products by partner country, monthly</SourceLink> (
+          {EUROSTAT_OIL.dataset}), <SourceLink href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</SourceLink>, accessed{' '}
+          <span className="mono">{record.retrieved}</span>. Changed: crude oil only, summed over the months shown and turned into shares.
+        </>
+      )}
+      {record.source === 'comtrade' && (
+        <>
+          <SourceLink href={COMTRADE.pageUrl}>UN Comtrade</SourceLink>, imports of crude petroleum (HS {COMTRADE.cmdCode}),{' '}
+          <span className="mono">{record.to}</span>, accessed <span className="mono">{record.retrieved}</span>. Shares computed here by{' '}
+          {record.basis === 'weight' ? 'net weight' : 'value'}.
+        </>
+      )}
+      {record.source === 'eia' && (
+        <>
+          <SourceLink href="https://www.eia.gov/opendata/">US Energy Information Administration</SourceLink>, crude imports by country of
+          origin into the five fuel regions, summed.
+        </>
+      )}
+    </p>
   );
 }
 
@@ -1328,8 +1434,74 @@ export function RegionDetail({
   );
 }
 
+/** The chokepoints the cited routes pass, with their tanker traffic now, and the routes themselves. */
+function OnTheWay({ origins, data, onSelect }: { origins: { exposure: ChokepointExposure[]; routes: OilRoute[] }; data: Datasets; onSelect: OnSelect }) {
+  const flows = useMemo(() => chokepointFlows(data), [data]);
+  return (
+    <>
+    {origins.exposure.length > 0 && (
+      <section className="section">
+        <div className="title-row">
+          <h3 className="section__title">Chokepoints on the way</h3>
+          <Info label="About chokepoints on the way">
+            "Up to" where a country can also load at a terminal that avoids the chokepoint. Only countries with a cited
+            route are counted.
+          </Info>
+        </div>
+        <ul className="origins">
+          {origins.exposure.map((e) => {
+            const chokepoint = data.chokepoints.find((c) => c.id === e.chokepoint);
+            const flow = flows.get(e.chokepoint);
+            return (
+              <li key={e.chokepoint}>
+                <button type="button" className="origins__row origins__row--link" onClick={() => onSelect({ kind: 'chokepoint', id: e.chokepoint })}>
+                  <span className="origins__head">
+                    <span className="origins__label">{chokepoint?.name ?? e.chokepoint}</span>
+                    <span className="origins__share mono">
+                      {e.certain ? '' : 'up to '}
+                      {formatShare(e.share)}
+                    </span>
+                  </span>
+                  <span className="origins__detail">
+                    {e.countries.join(' and ')}
+                    {flow?.indexFiveYear != null && (
+                      <>
+                        {' '}
+                        · tanker traffic now <span className="mono">{formatIndexShare(flow.indexFiveYear)}</span> of its five-year average
+                      </>
+                    )}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+    )}
+    {origins.routes.length > 0 && (
+      <section className="section">
+        <h3 className="section__title">Routes</h3>
+        <ul className="region__routes">
+          {origins.routes.map((r) => (
+            <li key={r.country}>
+              {r.note}{' '}
+              {r.sources.map((s, i) => (
+                <span key={s.url}>
+                  {i > 0 && ', '}
+                  <SourceLink href={s.url}>{s.publisher}</SourceLink>
+                </span>
+              ))}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+    </>
+  );
+}
+
 /** Ranked origins with share bars. Another region's row opens that region on crude. */
-function OriginList({ rows, onRegion }: { rows: OriginRow[]; onRegion: (id: string) => void }) {
+function OriginList({ rows, onRegion }: { rows: (Pick<OriginRow, 'key' | 'label' | 'share' | 'detail'> & { kind: string; padd?: string })[]; onRegion: (id: string) => void }) {
   return (
     <ol className="origins">
       {rows.map((row) => {
@@ -1438,7 +1610,6 @@ const PRODUCT_NAMES: Record<string, string> = {
 function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: Datasets; onSelect: OnSelect }) {
   const origins = originsFor(data, item);
   const padd = PADDS.find((p) => p.id === item.id);
-  const flows = chokepointFlows(data);
   return (
     <>
       {!origins ? (
@@ -1478,63 +1649,7 @@ function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: D
             </div>
             <OriginList rows={origins.rows} onRegion={(id) => onSelect({ kind: 'region', id }, 'crude')} />
           </section>
-          {origins.exposure.length > 0 && (
-            <section className="section">
-              <div className="title-row">
-                <h3 className="section__title">Chokepoints on the way</h3>
-                <Info label="About chokepoints on the way">
-                  "Up to" where a country can also load at a terminal that avoids the chokepoint. Only countries with a cited
-                  route are counted.
-                </Info>
-              </div>
-              <ul className="origins">
-                {origins.exposure.map((e) => {
-                  const chokepoint = data.chokepoints.find((c) => c.id === e.chokepoint);
-                  const flow = flows.get(e.chokepoint);
-                  return (
-                    <li key={e.chokepoint}>
-                      <button type="button" className="origins__row origins__row--link" onClick={() => onSelect({ kind: 'chokepoint', id: e.chokepoint })}>
-                        <span className="origins__head">
-                          <span className="origins__label">{chokepoint?.name ?? e.chokepoint}</span>
-                          <span className="origins__share mono">
-                            {e.certain ? '' : 'up to '}
-                            {formatShare(e.share)}
-                          </span>
-                        </span>
-                        <span className="origins__detail">
-                          {e.countries.join(' and ')}
-                          {flow?.indexFiveYear != null && (
-                            <>
-                              {' '}
-                              · tanker traffic now <span className="mono">{formatIndexShare(flow.indexFiveYear)}</span> of its five-year average
-                            </>
-                          )}
-                        </span>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-          )}
-          {origins.routes.length > 0 && (
-            <section className="section">
-              <h3 className="section__title">Routes</h3>
-              <ul className="region__routes">
-                {origins.routes.map((r) => (
-                  <li key={r.country}>
-                    {r.note}{' '}
-                    {r.sources.map((s, i) => (
-                      <span key={s.url}>
-                        {i > 0 && ', '}
-                        <SourceLink href={s.url}>{s.publisher}</SourceLink>
-                      </span>
-                    ))}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
+          <OnTheWay origins={origins} data={data} onSelect={onSelect} />
           <p className="source">
             Monthly EIA data from <span className="mono">{monthLabel(origins.from)}</span> to{' '}
             <span className="mono">{monthLabel(origins.to)}</span>:{' '}
@@ -1552,9 +1667,4 @@ function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: D
       )}
     </>
   );
-}
-
-/** Shares to the nearest percent; "<1%" for anything smaller. */
-function formatShare(share: number): string {
-  return share < 0.005 ? '<1%' : `${Math.round(share * 100)}%`;
 }

@@ -398,6 +398,7 @@ test('storage fills a country and opens its detail', async ({ page }) => {
     },
   ];
   await page.route('**/data/gas-storage.json', (route) => route.fulfill({ json: series }));
+  // An old link from before M10, when a country page was storage/<code>, still opens it.
   await page.goto('/?sel=storage/de');
   await expect(page.getByRole('heading', { name: 'Germany' })).toBeVisible();
   const panel = page.getByLabel('Panel', { exact: true });
@@ -406,13 +407,13 @@ test('storage fills a country and opens its detail', async ({ page }) => {
   await expect(panel).toContainText('GIE AGSI+');
 
   // Outside AGSI+, a country shows gas in storage from its own source, with that source's attribution.
-  await page.goto('/?sel=storage/ca');
+  await page.goto('/?sel=country/ca');
   await expect(page.getByRole('heading', { name: 'Canada' })).toBeVisible();
   await expect(panel.locator('dt', { hasText: 'Same month last year' })).toBeVisible();
   await expect(panel.getByRole('region', { name: 'By province' })).toContainText('Alberta');
   await expect(panel).toContainText('This does not constitute an endorsement by Statistics Canada of this product.');
   // A country with storage but no regular series says so.
-  await page.goto('/?sel=storage/cn');
+  await page.goto('/?sel=country/cn');
   await expect(panel).toContainText('No regular series');
 });
 
@@ -524,7 +525,7 @@ test('search finds assets by name or alias and opens them', async ({ page }) => 
   await search.fill('germ');
   if (FEATURES.gasStorage) {
     await page.getByRole('option', { name: /^Germany/ }).click();
-    await expect(page).toHaveURL(/sel=storage\/de/);
+    await expect(page).toHaveURL(/sel=country\/de/);
     await expect(page.getByLabel('Panel', { exact: true }).getByRole('heading', { name: 'Germany' })).toBeVisible();
   } else {
     await expect(page.getByRole('option', { name: /^Germany/ })).toHaveCount(0);
@@ -843,7 +844,7 @@ test('the gas storage surface lists countries past Europe against last year and 
   await expect(page.getByRole('tooltip')).toContainText(/Japan.*(vs last year|Nothing to compare)/);
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/storage.png` });
   await list.getByRole('button', { name: /^United States/ }).click();
-  await expect(page).toHaveURL(/view=storage.*sel=storage\/us/);
+  await expect(page).toHaveURL(/view=storage.*sel=country\/us/);
   await expect(panel.getByRole('region', { name: 'By storage region' })).toContainText('South Central');
 });
 
@@ -872,7 +873,7 @@ test('the basins surface lists basins by oil remaining and shows only their outl
   await expect(page.getByRole('button', { name: 'Layers' })).toBeVisible();
 });
 
-test('the fuel origins surface finds a region through search and opens it on the chosen fuel', async ({ page }) => {
+test('the oil origins surface finds a US region through search and opens it on the chosen fuel', async ({ page }) => {
   test.skip(!FEATURES.fuelOrigins, 'FEATURES.fuelOrigins is off');
   await page.goto('/?view=origins');
   const panel = page.getByLabel('Panel', { exact: true });
@@ -887,7 +888,7 @@ test('the fuel origins surface finds a region through search and opens it on the
   await expect(page).toHaveURL(/view=origins.*sel=region\/padd-5/);
   expect(page.url()).not.toContain('90012');
 
-  await panel.getByRole('button', { name: 'Close, back to Fuel origins' }).click();
+  await panel.getByRole('button', { name: 'Close, back to Oil origins' }).click();
   await panel.getByRole('tab', { name: 'Diesel and heating oil' }).click();
   await regions.getByRole('button', { name: /^Midwest/ }).click();
   await expect(page).toHaveURL(/sel=region\/padd-2.*fuel=diesel/);
@@ -900,24 +901,44 @@ test('the fuel origins surface finds a region through search and opens it on the
   await expect(page).toHaveURL(/fuel=jet/);
 });
 
-test('the fuel origins surface shows only the region outlines, and a region opens from the map', async ({ page }) => {
+test('the oil origins surface lists importers, and a country opens from the map with where its crude comes from', async ({ page }) => {
   test.skip(!FEATURES.fuelOrigins, 'FEATURES.fuelOrigins is off');
   await page.goto('/?view=origins');
+  const panel = page.getByLabel('Panel', { exact: true });
+  await expect(panel.getByRole('heading', { name: 'Oil origins' })).toBeVisible();
+  const list = panel.getByRole('list', { name: 'Crude imports by country' });
+  await expect(list.getByRole('button').first()).toContainText('China');
   await expect(page.getByRole('button', { name: 'Layers' })).toHaveCount(0);
-  // Let the camera settle on the US before finding Texas.
+  if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/origins.png` });
+  // Let the camera settle on the world before finding India.
   await page.waitForTimeout(500);
   await page.waitForFunction(() => !(window as unknown as { __etMap: { isMoving(): boolean } }).__etMap.isMoving());
-  const texas = await screenPoint(page, [-99.5, 31.5]);
-  await page.mouse.move(texas.x, texas.y);
-  await expect(page.getByRole('tooltip')).toContainText('Gulf Coast');
-  await expect(page.getByRole('tooltip')).toContainText('PADD 3 · 6 states');
-  await page.mouse.click(texas.x, texas.y);
-  await expect(page).toHaveURL(/sel=region\/padd-3/);
-  await expect(page.getByRole('heading', { name: 'Gulf Coast' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Layers' })).toHaveCount(0);
+  const india = await screenPoint(page, [78.5, 22]);
+  await page.mouse.move(india.x, india.y);
+  await expect(page.getByRole('tooltip')).toContainText('India');
+  await expect(page.getByRole('tooltip')).toContainText('Largest source');
+  await page.mouse.click(india.x, india.y);
+  await expect(page).toHaveURL(/view=origins.*sel=country\/in/);
+  await expect(panel.getByRole('heading', { name: 'India', level: 2 })).toBeVisible();
+  // On oil origins the imports come before gas storage.
+  const sections = panel.locator('.country-section__title');
+  await expect(sections.first()).toHaveText('Where its crude comes from');
+  await expect(panel.getByText(/UN Comtrade, imports of crude petroleum/)).toBeVisible();
+  if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/origins-india.png` });
+  await panel.getByRole('button', { name: 'Close, back to Oil origins' }).click();
+  await expect(list).toBeVisible();
   // Back on Home the layers return.
   await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' }).click();
   await expect(page.getByRole('button', { name: 'Layers' })).toBeVisible();
+});
+
+test('a country from the storage list shows its gas storage first, then its crude imports', async ({ page }) => {
+  test.skip(!FEATURES.gasStorage || !FEATURES.fuelOrigins, 'gas storage or oil origins is off');
+  await page.goto('/?view=storage&sel=country/de');
+  const panel = page.getByLabel('Panel', { exact: true });
+  await expect(panel.getByRole('heading', { name: 'Germany', level: 2 })).toBeVisible();
+  await expect(panel.locator('.country-section__title')).toHaveText(['Gas storage', 'Where its crude comes from']);
+  await expect(panel.getByText(/Eurostat, imports of oil and petroleum products/)).toBeVisible();
 });
 
 test('an ⓘ beside a title opens its explanation, and Escape closes it', async ({ page }) => {

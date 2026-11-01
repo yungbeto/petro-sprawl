@@ -65,6 +65,9 @@
   --map-storage-more: #1f5fc4cc;
   --map-storage-none: #6b70791f;
   --map-storage-line: #6b707966;
+  /* Oil origins: countries with crude import data, and the one open */
+  --map-importer: #4a505a2e;
+  --map-importer-open: #4a505a59;
   --map-basin-line: #6d6a5c73;
   --map-basin-fill-hover: #6d6a5c1f;
   --map-basin-line-focus: #6d6a5cb3;
@@ -111,12 +114,16 @@
     --map-storage-more: #6fa2ff99;
     --map-storage-none: #9298a01f;
     --map-storage-line: #9298a059;
+    --map-importer: #c3c8d026;
+    --map-importer-open: #c3c8d04d;
     --map-pipeline-operating: #2e8a5c;
   --map-storage-less: #f272b899;
   --map-storage-even: #2a2d3366;
   --map-storage-more: #6fa2ff99;
   --map-storage-none: #9298a01f;
   --map-storage-line: #9298a059;
+  --map-importer: #c3c8d026;
+  --map-importer-open: #c3c8d04d;
   --map-basin-line: #c4bfa866;
     --map-basin-fill-hover: #c4bfa81f;
   --map-basin-line-focus: #c4bfa8a6;
