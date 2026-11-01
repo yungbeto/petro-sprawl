@@ -12,3 +12,6 @@ playwright-report/
 data/reports/claim-drafts.json
 .vercel
 .env*
+
+# Link preview function bundles, built by npm run build
+api/_dist

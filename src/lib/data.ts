@@ -23,6 +23,7 @@ import { fuelOrigins, type FuelOrigins } from './fuelOrigins';
 import { PORT_CALLS, portCallsSeriesId, portExportsSeriesId, type FuelId, type RegionFuel } from './config';
 import type { Selection } from '../app/urlState';
 import { lineTouchesPolygon, pointInPolygon } from './geo';
+import { withMeasuredEvidence, withMeasuredLngEvidence } from './evidence';
 
 export interface Datasets {
   basins: Basin[];
@@ -66,6 +67,48 @@ export const EMPTY_DATASETS: Datasets = {
   usRegions: [],
   meta: [],
 };
+
+/** Every published dataset the app loads, as `public/data/<id>.json`. */
+export const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'countries', 'country-regions', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'gas-storage-us', 'gas-storage-ca', 'gas-storage-jodi', 'lng-sendout', 'disruptions', 'oil-origins', 'fuel-origins', 'oil-routes', 'crude-imports', 'us-lookup', 'us-regions'] as const;
+export type DatasetId = (typeof DATASET_IDS)[number];
+
+/**
+ * The loaded files as the app uses them, in the browser and in the share index build: series in one
+ * list, and measured flow and send-out folded into the assets' evidence.
+ */
+export function assembleDatasets(get: (id: DatasetId) => unknown[], meta: DatasetMeta[]): Datasets {
+  const series = [
+    ...get('chokepoint-transits'),
+    ...get('port-calls'),
+    ...get('gas-flows'),
+    ...get('gas-storage'),
+    ...get('gas-storage-us'),
+    ...get('gas-storage-ca'),
+    ...get('gas-storage-jodi'),
+    ...get('lng-sendout'),
+  ] as Datasets['series'];
+  return {
+    basins: get('basins') as Datasets['basins'],
+    chokepoints: get('chokepoints') as Datasets['chokepoints'],
+    // Measured flow goes first in each linked pipeline's evidence, so it sets the current status.
+    pipelines: withMeasuredEvidence(get('pipelines') as Datasets['pipelines'], series),
+    // Measured send-out goes first for EU import terminals ALSI reports.
+    lngTerminals: withMeasuredLngEvidence(get('lng-terminals') as Datasets['lngTerminals'], series),
+    oilTerminals: get('oil-terminals') as Datasets['oilTerminals'],
+    countries: get('countries') as Datasets['countries'],
+    countryRegions: get('country-regions') as Datasets['countryRegions'],
+    series,
+    disruptions: get('disruptions') as Datasets['disruptions'],
+    oilOrigins: get('oil-origins') as Datasets['oilOrigins'],
+    fuelOrigins: get('fuel-origins') as Datasets['fuelOrigins'],
+    oilRoutes: get('oil-routes') as Datasets['oilRoutes'],
+    crudeImports: get('crude-imports') as Datasets['crudeImports'],
+    // One record holding every table.
+    usLookup: (get('us-lookup')[0] as Datasets['usLookup']) ?? null,
+    usRegions: get('us-regions') as Datasets['usRegions'],
+    meta,
+  };
+}
 
 /** Flow for every chokepoint that has a transit series, keyed by chokepoint id. */
 export function chokepointFlows(data: Datasets): Map<string, ChokepointFlow> {

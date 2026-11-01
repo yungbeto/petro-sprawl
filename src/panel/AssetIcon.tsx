@@ -29,9 +29,4 @@ export function AssetIcon({ kind, commodity, large }: { kind: SelectionKind; com
   );
 }
 
-export const COMMODITY_PIPELINE: Record<Commodity, string> = {
-  gas: 'Gas pipeline',
-  oil: 'Oil pipeline',
-  products: 'Products pipeline',
-  ngl: 'NGL pipeline',
-};
+export { COMMODITY_PIPELINE } from '../lib/labels';

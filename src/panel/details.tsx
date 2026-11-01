@@ -17,7 +17,6 @@ import {
   COMTRADE,
   CRUDE_IMPORTS,
   EUROSTAT_OIL,
-  type StorageSourceId,
   type FuelId,
   type RegionFuel,
   tankerCargoSeriesId,
@@ -25,7 +24,8 @@ import {
 import { storageByCountry, vsLastYearPct, type CountryStorage } from '../lib/gasStorage';
 import { importPeriod, originsOfCountry } from '../lib/crudeImports';
 import { viewEnabled, type ViewId } from '../lib/views';
-import { CADENCE_LABEL, CHANGE_LABEL, StorageSources, storageChange, storageFigure } from './StorageView';
+import { CADENCE_LABEL, StorageSources } from './StorageView';
+import { CHANGE_LABEL, STORAGE_HEADLINE, storageChange, storageFigure } from '../lib/gasStorage';
 import { ALSI_URL, ENTSOG_URL, isReport, isUnverified, latestClaim, pipelineFlow, reportParts } from '../lib/evidence';
 import {
   chokepointFlows,
@@ -44,7 +44,6 @@ import {
   type PortCalls,
   systemSections,
   type Datasets,
-  type Resolved,
 } from '../lib/data';
 import { chokepointFlow, type ChokepointFlow, type FlowBand } from '../lib/flow';
 import { formatIndex, formatIndexShare, formatNumber, formatShare, formatSignedPct, formatStorageVolume, formatThousandfold, formatTonnes } from '../lib/format';
@@ -54,7 +53,10 @@ import { formatCapacity, formatCountry, formatEnergyPerDay, formatLonLat, format
 import { lngStatus, pipelineAge, pipelineStatus, shareCoverage, terminalStatus } from '../lib/encoding';
 import { filterRows, type FilterRow } from '../lib/filters';
 import { chokepointRows } from '../lib/summary';
-import { AssetIcon, COMMODITY_PIPELINE } from './AssetIcon';
+import { AssetIcon } from './AssetIcon';
+import { capitalize, COMMODITY_PIPELINE, LNG_FACILITY, OIL_ROLE, statusLabel } from '../lib/labels';
+
+export { detailKind, statusLabel } from '../lib/labels';
 import { FuelTabs } from './FuelTabs';
 import type { ChokepointExposure, OriginRow } from '../lib/oilOrigins';
 import { Info } from './Info';
@@ -75,27 +77,6 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
  * What kind of thing a detail shows, for the panel's top bar: "LNG export terminal", "Gas pipeline ·
  * corridor". The detail itself leads with the name.
  */
-export function detailKind(resolved: Resolved): string {
-  switch (resolved.kind) {
-    case 'chokepoint':
-      return 'Chokepoint';
-    case 'basin':
-      return `Basin · ${resolved.item.provinceType === 'priority' ? 'priority' : 'boutique'} province`;
-    case 'pipeline':
-      return `${COMMODITY_PIPELINE[resolved.item.commodity]}${resolved.item.sources.includes('curated') ? ' · corridor' : ''}`;
-    case 'country':
-      return 'Country';
-    case 'lng': {
-      const t = resolved.item;
-      return [LNG_FACILITY[t.facility], t.floating && 'floating', t.offshore && !t.floating && 'offshore'].filter(Boolean).join(' · ');
-    }
-    case 'terminal':
-      return OIL_ROLE[resolved.item.role];
-    case 'region':
-      return 'US fuel region';
-  }
-}
-
 /** Icon and name, with an optional line under the name for what places the asset. */
 function Header({ name, icon, lede }: { name: string; icon: ReactNode; lede?: ReactNode }) {
   return (
@@ -965,12 +946,6 @@ export function CrudeImportsSource({ record }: { record: Pick<CountryCrudeImport
   );
 }
 
-const STORAGE_HEADLINE: Record<StorageSourceId, string> = {
-  agsi: 'of working gas volume in storage on',
-  eia: 'of working gas in storage, week to',
-  statcan: 'of gas in storage at the end of',
-  jodi: 'of gas in stock at the end of',
-};
 
 function StorageFigures({ storage, name }: { storage: CountryStorage; name: string }) {
   const { summary, series } = storage;
@@ -1032,11 +1007,6 @@ function StorageFigures({ storage, name }: { storage: CountryStorage; name: stri
     </>
   );
 }
-
-const LNG_FACILITY: Record<LngTerminal['facility'], string> = {
-  export: 'LNG export terminal',
-  import: 'LNG import terminal',
-};
 
 /** Capacity of the units in some states: none when there are no such units, unknown when GEM gives none. */
 function unitCapacity(units: LngUnit[], states: AssetStatus[], total: number): { value: ReactNode; unit?: string } {
@@ -1189,11 +1159,6 @@ export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datase
     </>
   );
 }
-
-const OIL_ROLE: Record<OilTerminal['role'], string> = {
-  export: 'Oil export terminal',
-  import: 'Oil import terminal',
-};
 
 function oilTerminalRows(terminals: OilTerminal[]): FilterRow[] {
   return terminals
@@ -1372,14 +1337,6 @@ function RelatedList({
       )}
     </section>
   );
-}
-
-function capitalize(value: string): string {
-  return value.charAt(0).toUpperCase() + value.slice(1);
-}
-
-export function statusLabel(status: string): string {
-  return capitalize(status.replace(/_/g, ' '));
 }
 
 /** EIA's own tables behind a region view; the imports table is per region (R10 to R50). Checked 2026-10-29. */

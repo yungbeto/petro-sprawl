@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MapView, type FocusRequest } from '../map/MapView';
 import { LayerControl } from '../map/LayerControl';
 import type { LayerId, LayerVisibility } from '../map/layers';
-import { CaretRightIcon, DotsThreeOutlineIcon, GearIcon, HouseIcon, LightbulbIcon, ListIcon, QuestionIcon } from '@phosphor-icons/react';
+import { CaretRightIcon, DotsThreeOutlineIcon, GearIcon, HouseIcon, ListIcon, QuestionIcon } from '@phosphor-icons/react';
 import { VIEW_ICONS } from './viewIcons';
 import { pipelineGroups, type PipelineGrouping } from '../lib/pipelineGroups';
 import { lngGroups, oilGroups, type TerminalGrouping, type TerminalKind } from '../lib/terminalGroups';
@@ -13,6 +13,7 @@ import { SearchBar, SearchDialog } from '../panel/Search';
 import { FilterChips } from '../map/FilterChips';
 import { FILTER_IDS, FILTER_LABELS, filterMatches, matchCount, type FilterId, type FilterMatches } from '../lib/filters';
 import { useTheme } from './useTheme';
+import { GlobeMark } from './GlobeMark';
 import { useNow } from './useNow';
 import { AppMenu, type MenuSection } from './AppMenu';
 import { datasetFreshness, sortFreshness } from '../lib/freshness';
@@ -317,9 +318,7 @@ export function App() {
       <div className="app__content" inert={menu !== null || searchOpen}>
         <header className="app-header">
           <div className="app-header__brand">
-            <span className="brand-mark" aria-hidden="true">
-              <LightbulbIcon size={14} weight="fill" />
-            </span>
+            <GlobeMark theme={theme} />
             <h1 className="app-header__title">Petro Sprawl</h1>
           </div>
           {/* One search bar whether the panel is open or minimized, so it never moves. */}

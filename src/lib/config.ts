@@ -780,3 +780,44 @@ export const NEWS = {
     'baltic pipeline system',
   ],
 } as const;
+
+/**
+ * The header's globe mark: `dots` across a disc of `size` px, each dot `dotPx` wide, turning once every
+ * `secondsPerTurn` and stepping `fps` times a second, like an LED panel rather than a smooth spin.
+ * The land mask is sampled every `maskCell` degrees (import:globe). The favicon is one still frame with
+ * fewer, larger dots, so they hold at 16 px. The social card (render:og) is a still frame with more dots,
+ * `px` wide, centred on the Gulf.
+ */
+export const GLOBE = {
+  size: 24,
+  dots: 16,
+  dotPx: 1,
+  secondsPerTurn: 24,
+  fps: 8,
+  tilt: 18,
+  maskCell: 2,
+  favicon: { dots: 10, lon: 10, fill: 0.72, oceanOpacity: 0.3 },
+  og: { dots: 40, lon: 40, fill: 0.62, oceanOpacity: 0.16, px: 470, focusLandOpacity: 0.62, focusOceanOpacity: 0.1 },
+} as const;
+
+/**
+ * Link previews (share cards): what a shared link shows in a chat or a post. A point lights the mask cells
+ * within `pointRadiusDeg`; a line or shape too small to light `minCells` cells gets a point's ring as well,
+ * so it shows on a globe whose dots are about 4.5° apart. The
+ * card names its largest `topSources` origins. Each surface's card centres the globe on `viewCenters`.
+ */
+export const SHARE = {
+  pointRadiusDeg: 5,
+  minCells: 24,
+  topSources: 3,
+  /** Most cells a surface's card lights, so the index stays small. */
+  maxViewCells: 4000,
+  viewCenters: {
+    chokepoints: [55, 22],
+    pipelines: [40, 48],
+    terminals: [30, 30],
+    basins: [40, 30],
+    storage: [20, 50],
+    origins: [10, 30],
+  } as Record<string, [number, number]>,
+} as const;

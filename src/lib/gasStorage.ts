@@ -16,6 +16,7 @@ import {
 } from './config';
 import { mixColors, type Rgba } from './color';
 import { addDays } from './flow';
+import { formatNumber, formatStorageVolume } from './format';
 
 type Point = ObservationSeries['points'][number];
 
@@ -192,3 +193,31 @@ export function storageColor(
   const t = Math.max(-1, Math.min(1, storage.vsLastYearPct / STORAGE_MAP.vsLastYearPctRange));
   return t < 0 ? mixColors(colors.storageEven, colors.storageLess, -t) : mixColors(colors.storageEven, colors.storageMore, t);
 }
+
+const pts = (value: number) => `${value >= 0 ? '+' : '−'}${formatNumber(Math.abs(value), 1)} pts`;
+
+/** The headline figure: fill for AGSI+ countries, gas in storage for the rest. */
+export function storageFigure(s: Pick<CountryStorage, 'fill' | 'summary' | 'series'>): string {
+  return s.fill !== null ? `${formatNumber(s.fill, 1)}%` : formatStorageVolume(s.summary.latest.value, s.series.unit);
+}
+
+/** The change since the period before, in the series' own terms, with the period unless `bare`. */
+export function storageChange(s: Pick<CountryStorage, 'fill' | 'summary' | 'series' | 'cadence'>, bare = false): string | null {
+  const { latest, previous } = s.summary;
+  if (!previous) return null;
+  const delta = latest.value - previous.value;
+  const change = s.fill !== null ? pts(delta) : `${delta >= 0 ? '+' : '−'}${formatStorageVolume(Math.abs(delta), s.series.unit)}`;
+  return bare ? change : `${change} ${CHANGE_SPAN[s.cadence]}`;
+}
+
+const CHANGE_SPAN: Record<Cadence, string> = { daily: 'in 7 days', weekly: 'on the week', monthly: 'on the month' };
+/** What the change is over, as a label. */
+export const CHANGE_LABEL: Record<Cadence, string> = { daily: 'Last 7 days', weekly: 'On the week', monthly: 'On the month' };
+
+/** What the headline figure is, before its date. */
+export const STORAGE_HEADLINE: Record<StorageSourceId, string> = {
+  agsi: 'of working gas volume in storage on',
+  eia: 'of working gas in storage, week to',
+  statcan: 'of gas in storage at the end of',
+  jodi: 'of gas in stock at the end of',
+};

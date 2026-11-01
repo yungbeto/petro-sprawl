@@ -131,8 +131,8 @@ kbd {
 }
 
 .brand-mark {
-  display: grid;
-  place-items: center;
+  display: block;
+  flex: none;
   width: 24px;
   height: 24px;
   color: var(--surface);
