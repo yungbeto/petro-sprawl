@@ -6,6 +6,7 @@ import {
   ENABLED_VIEWS,
   SURFACE_FILTERS,
   parseView,
+  phoneTabs,
   scopeMatches,
   selectionEnabled,
   viewHighlight,
@@ -148,5 +149,26 @@ describe('surface filters', () => {
     expect(SURFACE_FILTERS.chokepoints).toEqual(['below-baseline']);
     expect(SURFACE_FILTERS.pipelines).not.toContain('below-baseline');
     expect(SURFACE_FILTERS.terminals).toEqual(['offline', 'unverified', 'metered']);
+  });
+});
+
+describe('phone tab bar', () => {
+  it('fits every section while Home and the sections take five slots or fewer', () => {
+    expect(phoneTabs(['chokepoints', 'pipelines', 'terminals', 'basins'])).toEqual({
+      bar: ['chokepoints', 'pipelines', 'terminals', 'basins'],
+      more: [],
+    });
+  });
+
+  it('keeps the live sections in the bar and moves the rest under More, in rail order', () => {
+    expect(phoneTabs(['chokepoints', 'pipelines', 'terminals', 'basins', 'storage', 'origins'])).toEqual({
+      bar: ['chokepoints', 'pipelines', 'terminals'],
+      more: ['basins', 'storage', 'origins'],
+    });
+    // The bar keeps rail order; a missing live section leaves its slot to the next one.
+    expect(phoneTabs(['pipelines', 'basins', 'storage', 'origins', 'terminals'])).toEqual({
+      bar: ['pipelines', 'basins', 'terminals'],
+      more: ['storage', 'origins'],
+    });
   });
 });

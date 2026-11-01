@@ -216,12 +216,14 @@ export interface Country {
 
 export interface ObservationSeries {
   id: string;
-  metric: 'tanker_transits' | 'tanker_port_calls' | 'tanker_cargo_t' | 'tanker_exports_t' | 'gas_flow_kwh_d' | 'storage_fill_pct' | 'lng_sendout_kwh_d';
+  metric: 'tanker_transits' | 'tanker_port_calls' | 'tanker_cargo_t' | 'tanker_exports_t' | 'gas_flow_kwh_d' | 'storage_fill_pct' | 'storage_gas_volume' | 'lng_sendout_kwh_d';
   unit: string;
   points: { date: string; value: number }[];
   capacity?: number;
   /** Where the series is measured, for display: an ENTSOG point and operator, or an ALSI facility. */
   label?: string;
+  /** JODI's assessment of the latest value: use with caution. */
+  caution?: true;
   /** Long-run reference computed by the job from history not kept in points. Added in M3. */
   fiveYear?: BaselineStat;
 }

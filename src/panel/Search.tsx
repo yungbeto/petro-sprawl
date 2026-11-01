@@ -22,7 +22,9 @@ import { HOME_ICON, VIEW_ICONS } from '../app/viewIcons';
 // Places and ZIP codes open fuel origins, so they're offered only while it's on.
 const PLACEHOLDER = FEATURES.fuelOrigins
   ? 'Search pipelines, chokepoints, places, ZIP codes'
-  : 'Search pipelines, chokepoints, terminals, basins';
+  : FEATURES.gasStorage
+    ? 'Search pipelines, chokepoints, terminals, countries'
+    : 'Search pipelines, chokepoints, terminals, basins';
 
 interface SearchBarProps {
   onOpen: () => void;

@@ -68,3 +68,20 @@ export function formatThousandfold(value: number): string {
   const scaled = value / 1000;
   return scaled < 0.05 ? '<0.1' : formatNumber(scaled, 1);
 }
+
+/**
+ * Gas in storage in the source's unit: billion cubic feet as published (EIA), million cubic metres as
+ * bcm from 1,000 up.
+ */
+export function formatStorageVolume(value: number, unit: string): string {
+  if (unit === 'million m³') return value >= 1000 ? `${formatNumber(value / 1000, 1)} bcm` : `${formatNumber(value, 0)} million m³`;
+  return `${formatNumber(value, 0)} ${unit}`;
+}
+
+/** "+4%" or "−12%", with a true minus sign; "0%" when it rounds to nothing. */
+export function formatSignedPct(value: number, digits = 0): string {
+  const rounded = Number(value.toFixed(digits));
+  if (rounded === 0) return '0%';
+  return `${rounded > 0 ? '+' : '−'}${formatNumber(Math.abs(rounded), digits)}%`;
+}
+

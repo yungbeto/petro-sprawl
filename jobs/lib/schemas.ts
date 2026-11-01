@@ -9,11 +9,12 @@ const position = z.array(z.number()).min(2);
 
 export const observationSeriesSchema = z.object({
   id: z.string().min(1),
-  metric: z.enum(['tanker_transits', 'tanker_port_calls', 'tanker_cargo_t', 'tanker_exports_t', 'gas_flow_kwh_d', 'storage_fill_pct', 'lng_sendout_kwh_d']),
+  metric: z.enum(['tanker_transits', 'tanker_port_calls', 'tanker_cargo_t', 'tanker_exports_t', 'gas_flow_kwh_d', 'storage_fill_pct', 'storage_gas_volume', 'lng_sendout_kwh_d']),
   unit: z.string().min(1),
   points: z.array(z.object({ date: isoDate, value: z.number().finite() })).min(1),
   capacity: z.number().positive().optional(),
   label: z.string().min(1).optional(),
+  caution: z.literal(true).optional(),
   fiveYear: z
     .object({ mean: z.number().nonnegative(), from: isoDate, to: isoDate, count: z.number().int().positive() })
     .optional(),

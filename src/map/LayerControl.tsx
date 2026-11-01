@@ -4,7 +4,7 @@ import { FEATURES } from '../lib/config';
 import type { LayerId, LayerVisibility } from './layers';
 
 const LAYERS: { id: LayerId; label: string }[] = [
-  { id: 'storage', label: 'EU gas storage' },
+  { id: 'storage', label: 'Gas storage' },
   { id: 'basins', label: 'Basins' },
   { id: 'pipelines', label: 'Pipelines' },
   { id: 'lng', label: 'LNG terminals' },

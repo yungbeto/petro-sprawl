@@ -12,6 +12,8 @@ interface SparklineProps {
   points: Point[];
   references: ReferenceLine[];
   unit: string;
+  /** The line's name in the key: how often its points come. */
+  lineLabel?: string;
   label: string;
   /** How the caption shows the maximum; whole numbers by default. */
   format?: (value: number) => string;
@@ -22,7 +24,7 @@ const HEIGHT = 72;
 const PAD_TOP = 4;
 
 /** Hand-rolled SVG line with horizontal reference lines. Y axis starts at zero. */
-export function Sparkline({ points, references, unit, label, format = (v) => String(Math.round(v)) }: SparklineProps) {
+export function Sparkline({ points, references, unit, label, lineLabel = 'Daily', format = (v) => String(Math.round(v)) }: SparklineProps) {
   if (points.length < 2) return <p className="muted">Not enough data for a chart.</p>;
   const max = Math.max(...points.map((p) => p.value), ...references.map((r) => r.value), 1) * 1.05;
   const x = (i: number) => (i / (points.length - 1)) * WIDTH;
@@ -56,7 +58,7 @@ export function Sparkline({ points, references, unit, label, format = (v) => Str
       </figcaption>
       <ul className="sparkline__legend">
         <li>
-          <span className="sparkline__key sparkline__key--line" /> Daily
+          <span className="sparkline__key sparkline__key--line" /> {lineLabel}
         </li>
         {references.map((r) => (
           <li key={r.label}>

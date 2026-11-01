@@ -1,4 +1,4 @@
-// Manual import: Natural Earth 1:50m admin-0 countries in the theater -> public/data/countries.json,
+// Manual import: Natural Earth 1:50m admin-0 countries, worldwide (gas storage reaches past Europe, SPEC M10) -> public/data/countries.json,
 // and every country's World Bank region -> public/data/country-regions.json (for grouping pipelines).
 // Unzip ne_50m_admin_0_countries.zip (with the zip) into data/raw/naturalearth/, then: npm run import:countries
 // https://naciscdn.org/naturalearth/50m/cultural/ne_50m_admin_0_countries.zip
@@ -6,7 +6,6 @@
 import { readFile } from 'node:fs/promises';
 import mapshaper from 'mapshaper';
 import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
-import { THEATER_BOUNDS } from '../src/lib/config';
 import type { Country, CountryRegion } from '../src/types';
 import { publishDataset, report, sha256File } from './lib/output';
 import { countryRegionSchema, countrySchema } from './lib/schemas';
@@ -15,14 +14,6 @@ const NE_DIR = 'data/raw/naturalearth';
 const NE_NAME = 'ne_50m_admin_0_countries';
 const SIMPLIFY = '15%';
 
-const [[west, south], [east, north]] = THEATER_BOUNDS;
-const filter = [
-  `this.bounds[2] >= ${west}`,
-  `this.bounds[0] <= ${east}`,
-  `this.bounds[3] >= ${south}`,
-  `this.bounds[1] <= ${north}`,
-].join(' && ');
-
 const result = await publishDataset({
   id: 'countries',
   schema: countrySchema,
@@ -30,7 +21,6 @@ const result = await publishDataset({
     const output = await mapshaper.applyCommands(
       [
         `-i ${NE_DIR}/${NE_NAME}.shp`,
-        `-filter '${filter}'`,
         `-simplify ${SIMPLIFY} keep-shapes`,
         '-filter-fields ISO_A2_EH,NAME',
         '-o out.json format=geojson precision=0.001',

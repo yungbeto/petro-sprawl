@@ -17,8 +17,10 @@ const TOKENS = {
   flowBelow: '--flow-below',
   flowNear: '--flow-near',
   flowAbove: '--flow-above',
-  storageLow: '--map-storage-low',
-  storageHigh: '--map-storage-high',
+  storageLess: '--map-storage-less',
+  storageEven: '--map-storage-even',
+  storageMore: '--map-storage-more',
+  storageNone: '--map-storage-none',
   storageLine: '--map-storage-line',
   /** Origin arcs: foreign in ink, other US regions in a muted tone. Not status colors. */
   arcForeign: '--map-selection',

@@ -21,7 +21,7 @@ const data: Datasets = {
     }),
   ],
   countries: [{ id: 'DE', name: 'Germany', geometry: basin.geometry }],
-  series: [{ id: 'agsi-de', metric: 'storage_fill_pct', unit: '%', points: [] }],
+  series: [{ id: 'agsi-de', metric: 'storage_fill_pct', unit: '%', points: [{ date: '2026-10-27', value: 81 }] }],
   basins: [{ ...basin, name: 'Zagros Fold Belt' }],
   lngTerminals: [lngTerminal({ id: 'gem-t1-export', name: 'QatarEnergy LNG (N)', aliases: ['Ras Laffan'] })],
 };

@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
-import { ENABLED_VIEWS } from '../../src/lib/views';
+import { PHONE_TABS } from '../../src/lib/config';
+import { ENABLED_VIEWS, VIEW_LABELS, phoneTabs } from '../../src/lib/views';
 
 const sheetOf = (page: Page) => page.locator('.app');
 
@@ -7,7 +8,7 @@ test('on a phone the map fills the screen, Home peeks from the bottom and the ra
   await page.goto('/');
   await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'peek');
   const tabs = page.getByRole('navigation', { name: 'Views' });
-  await expect(tabs.getByRole('button')).toHaveCount(1 + ENABLED_VIEWS.length);
+  await expect(tabs.getByRole('button')).toHaveCount(Math.min(1 + ENABLED_VIEWS.length, PHONE_TABS.slots));
   await expect(tabs.getByRole('button', { name: 'Home' })).toHaveAttribute('aria-current', 'page');
   await expect(page.getByRole('button', { name: 'Settings' })).toBeHidden();
   // The map reaches the screen's edges, behind the sheet.
@@ -38,6 +39,29 @@ test('a tab opens its surface at half; the handle steps up and a drag brings the
   for (let i = 1; i <= 12; i++) await page.mouse.move(x, handle.y + 10 + i * 50);
   await page.mouse.up();
   await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'peek');
+});
+
+test('with more sections than slots, More lists the rest and then shows the one that is open', async ({ page }) => {
+  const { more } = phoneTabs();
+  test.skip(more.length === 0, 'every section fits in the tab bar');
+  await page.goto('/');
+  const tabs = page.getByRole('navigation', { name: 'Views' });
+  await tabs.getByRole('button', { name: 'More' }).click();
+  await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'half');
+  const list = page.getByRole('list', { name: 'More sections' });
+  await expect(list.getByRole('button')).toHaveText(more.map((v) => VIEW_LABELS[v]));
+  const first = VIEW_LABELS[more[0]!];
+  await list.getByRole('button', { name: first }).click();
+  await expect(page).toHaveURL(new RegExp(`view=${more[0]}`));
+  // The slot now names the open section; tapping it goes back to the list.
+  const slot = tabs.getByRole('button', { name: `More, ${first} open` });
+  await expect(slot).toHaveAttribute('aria-current', 'page');
+  await expect(slot).toContainText(first);
+  await slot.click();
+  await expect(list.getByRole('button', { name: first })).toHaveAttribute('aria-current', 'page');
+  await tabs.getByRole('button', { name: 'Home' }).click();
+  await expect(list).toHaveCount(0);
+  await expect(tabs.getByRole('button', { name: 'More' })).not.toHaveAttribute('aria-current', 'page');
 });
 
 test('opening an item frames the map above the sheet', async ({ page }) => {

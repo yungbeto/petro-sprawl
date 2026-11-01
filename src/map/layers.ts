@@ -4,7 +4,8 @@ import type { Layer } from '@deck.gl/core';
 import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, OilTerminal, Pipeline, UsRegion } from '../types';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, ORIGIN_ARC, PIPELINE_WIDTH, REGION_OUTLINE, TERMINAL_MARKER } from '../lib/config';
+import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, ORIGIN_ARC, PIPELINE_WIDTH, REGION_OUTLINE, STORAGE_NOT_COVERED, TERMINAL_MARKER } from '../lib/config';
+import { storageColor, type CountryStorage } from '../lib/gasStorage';
 import type { OriginArc } from '../lib/oilOrigins';
 import type { FilterMatches } from '../lib/filters';
 import {
@@ -18,7 +19,7 @@ import {
   terminalStatus,
 } from '../lib/encoding';
 import type { ChokepointFlow, FlowBand } from '../lib/flow';
-import { mixColors, withAlpha } from '../lib/color';
+import { withAlpha } from '../lib/color';
 import type { MapColors } from './colors';
 
 import type { LayerId, LayerVisibility } from '../lib/views';
@@ -82,12 +83,17 @@ const basinCollection = memoLast(
   }),
 );
 
+/** Countries with a storage figure, and those named as not covered (drawn faint). */
 const storageCollection = memoLast(
-  (countries: Country[], fills: Map<string, number>): FeatureCollection<Polygon | MultiPolygon, Country> => ({
+  (countries: Country[], storage: Map<string, CountryStorage>): FeatureCollection<Polygon | MultiPolygon, Country> => ({
     type: 'FeatureCollection',
-    features: countries.filter((c) => fills.has(c.id)).map((country) => ({ type: 'Feature', geometry: country.geometry, properties: country })),
+    features: countries
+      .filter((c) => storage.has(c.id) || NOT_COVERED.has(c.id))
+      .map((country) => ({ type: 'Feature', geometry: country.geometry, properties: country })),
   }),
 );
+const NOT_COVERED = new Set(STORAGE_NOT_COVERED.map((c) => c.country));
+
 
 const regionCollection = memoLast(
   (regions: UsRegion[]): FeatureCollection<Polygon | MultiPolygon, UsRegion> => ({
@@ -133,8 +139,8 @@ interface BuildLayersInput {
   flows: Map<string, ChokepointFlow>;
   /** Measured flow as a share of technical capacity, by pipeline id. */
   pipelineShares: Map<string, number>;
-  /** Latest storage fill (%) by country id. */
-  storageFills: Map<string, number>;
+  /** Gas storage by country id. */
+  storage: Map<string, CountryStorage>;
   visibility: LayerVisibility;
   selection: Selection | null;
   highlight: FilterMatches | null;
@@ -158,7 +164,7 @@ export function buildLayers({
   data,
   flows,
   pipelineShares,
-  storageFills,
+  storage,
   visibility,
   selection,
   highlight,
@@ -190,10 +196,10 @@ export function buildLayers({
   const hoveredPaths = paths.filter((p) => p.pipeline.id === hoveredPipelineId);
   const flowPaths = paths.filter((p) => (pipelineShares.get(p.pipeline.id) ?? 0) > 0 && pipelineFade(p.pipeline.id) === 1);
 
-  const storageFeatures = storageCollection(data.countries, storageFills);
+  const storageFeatures = storageCollection(data.countries, storage);
 
   return [
-    // EU gas storage: country fill on a sequential scale, under everything else (SPEC 5).
+    // Gas storage: each country against last year on a diverging scale, under everything else (SPEC M10).
     new GeoJsonLayer<Country>({
       id: 'storage',
       data: storageFeatures,
@@ -201,15 +207,14 @@ export function buildLayers({
       pickable: true,
       stroked: true,
       filled: true,
-      getFillColor: (f: Feature<Geometry, Country>) =>
-        mixColors(colors.storageLow, colors.storageHigh, (storageFills.get(f.properties.id) ?? 0) / 100),
+      getFillColor: (f: Feature<Geometry, Country>) => storageColor(storage.get(f.properties.id), colors),
       getLineColor: (f: Feature<Geometry, Country>) =>
         isSelected('storage', f.properties.id.toLowerCase()) ? colors.selection : colors.storageLine,
       getLineWidth: (f: Feature<Geometry, Country>) => (isSelected('storage', f.properties.id.toLowerCase()) ? 2 : 0.5),
       lineWidthUnits: 'pixels',
       autoHighlight: true,
       highlightColor: colors.basinFillHover,
-      updateTriggers: { getFillColor: [storageFills, colors], getLineColor: [selection, colors], getLineWidth: [selection] },
+      updateTriggers: { getFillColor: [storage, colors], getLineColor: [selection, colors], getLineWidth: [selection] },
     }),
     new GeoJsonLayer<Basin>({
       id: 'basins',

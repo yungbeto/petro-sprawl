@@ -107,9 +107,9 @@ describe('summary counts', () => {
       ],
     };
     const rows = storageRows(data);
-    expect(rows.map((r) => [r.country, r.vsLastYear])).toEqual([
-      ['DE', -13],
-      ['IT', 2],
+    expect(rows.map((r) => [r.country, r.vsLastYearPct === null ? null : Math.round(r.vsLastYearPct * 10) / 10])).toEqual([
+      ['DE', -17.3],
+      ['IT', 2.2],
       ['AT', null],
     ]);
     expect(rows[0]?.selection).toEqual({ kind: 'storage', id: 'de' });

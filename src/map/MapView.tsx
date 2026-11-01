@@ -20,10 +20,10 @@ import { chokepointFlows, fuelOriginsFor, originsFor, regionHighlight, resolveSe
 import type { RegionFuel } from '../lib/config';
 import { originArcs, type OriginArc } from '../lib/oilOrigins';
 import { pipelineFlow } from '../lib/evidence';
-import { storageFills } from '../lib/gasStorage';
+import { storageByCountry, type CountryStorage } from '../lib/gasStorage';
 import type { ChokepointFlow } from '../lib/flow';
 import { boundsOf } from '../lib/geo';
-import { formatCapacity, formatIndexShare, formatMbd, formatNumber } from '../lib/format';
+import { formatCapacity, formatIndexShare, formatMbd, formatNumber, formatSignedPct } from '../lib/format';
 import type { FilterMatches } from '../lib/filters';
 import { terminalStatus } from '../lib/encoding';
 import { statusLabel } from '../panel/details';
@@ -67,7 +67,7 @@ interface Hover {
   y: number;
 }
 
-function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>, fills: Map<string, number>): string {
+function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>, storage: Map<string, CountryStorage>): string {
   switch (picked.kind) {
     case 'chokepoint': {
       const index = flows.get(picked.item.id)?.indexFiveYear;
@@ -102,8 +102,10 @@ function tooltipFigure(picked: PickedObject, flows: Map<string, ChokepointFlow>,
       return `PADD ${picked.item.id.slice(-1)}${states ? ` · ${states} states` : ''}`;
     }
     case 'storage': {
-      const fill = fills.get(picked.item.id);
-      return fill != null ? `Storage ${formatNumber(fill, 1)}% full` : 'No storage data';
+      const s = storage.get(picked.item.id);
+      if (!s) return 'No regular storage data';
+      const vs = s.vsLastYearPct !== null ? `${formatSignedPct(s.vsLastYearPct)} vs last year` : 'Nothing to compare last year';
+      return `${s.fill !== null ? `${formatNumber(s.fill, 1)}% full · ` : ''}${vs} · ${s.summary.latest.date}`;
     }
   }
 }
@@ -136,7 +138,7 @@ export function MapView(props: MapViewProps) {
     }
     return shares;
   }, [data]);
-  const fills = useMemo(() => storageFills(data.series, data.countries), [data]);
+  const storage = useMemo(() => storageByCountry(data.series), [data]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -246,7 +248,7 @@ export function MapView(props: MapViewProps) {
         data,
         flows,
         pipelineShares,
-        storageFills: fills,
+        storage,
         visibility,
         selection,
         highlight: regionView?.highlight ?? highlight,
@@ -261,7 +263,7 @@ export function MapView(props: MapViewProps) {
         fontFamily: `"${LABEL_FONT}", sans-serif`,
       }),
     });
-  }, [data, flows, pipelineShares, fills, visibility, selection, highlight, regionsOnly, basinsFocus, regionView, hoveredPipelineId, colors, zoom, fontsReady]);
+  }, [data, flows, pipelineShares, storage, visibility, selection, highlight, regionsOnly, basinsFocus, regionView, hoveredPipelineId, colors, zoom, fontsReady]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -306,7 +308,7 @@ export function MapView(props: MapViewProps) {
       {hover && (
         <div className="map-tooltip" style={{ left: hover.x, top: hover.y }} role="tooltip">
           <span className="map-tooltip__name">{hover.picked.item.name}</span>
-          <span className="map-tooltip__figure mono">{tooltipFigure(hover.picked, flows, fills)}</span>
+          <span className="map-tooltip__figure mono">{tooltipFigure(hover.picked, flows, storage)}</span>
         </div>
       )}
       {props.children}

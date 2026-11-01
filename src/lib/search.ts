@@ -2,7 +2,8 @@
 // states, cities and ZIP codes for "Where is my oil from?". Pure.
 
 import type { Selection } from '../app/urlState';
-import { PADDS, SEARCH, agsiSeriesId } from './config';
+import { PADDS, SEARCH, STORAGE_NOT_COVERED } from './config';
+import { storageByCountry } from './gasStorage';
 import type { Datasets } from './data';
 import type { Commodity } from '../types';
 import { formatCountry } from './format';
@@ -42,7 +43,8 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
     terms: [...new Set([name, ...aliases].map(normalize).filter(Boolean))],
     priority,
   });
-  const storageIds = new Set(data.series.filter((s) => s.metric === 'storage_fill_pct').map((s) => s.id));
+  const storage = viewEnabled('storage') ? storageByCountry(data.series) : new Map();
+  const notCovered = new Set(STORAGE_NOT_COVERED.map((c) => c.country));
   return [
     ...data.chokepoints.map((c) => entry({ kind: 'chokepoint', id: c.id }, c.name, 'Chokepoint', [], 0)),
     ...data.pipelines.map((p) => {
@@ -60,11 +62,12 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
       };
     }),
     // A country opens its gas storage, and a US place its fuel origins: only while those surfaces are on.
-    ...(viewEnabled('storage') ? data.countries : []).map((c) =>
+    // Countries with a storage figure, and those named as not covered, which say why.
+    ...(viewEnabled('storage') ? data.countries.filter((c) => storage.has(c.id) || notCovered.has(c.id)) : []).map((c) =>
       entry(
         { kind: 'storage', id: c.id.toLowerCase() },
         c.name,
-        storageIds.has(agsiSeriesId(c.id)) ? 'Country · gas storage' : 'Country',
+        storage.has(c.id) ? 'Country · gas storage' : 'Country · storage not covered',
         [c.id, formatCountry(c.id)],
         2,
       ),

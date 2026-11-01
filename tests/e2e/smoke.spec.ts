@@ -400,11 +400,20 @@ test('storage fills a country and opens its detail', async ({ page }) => {
   await page.route('**/data/gas-storage.json', (route) => route.fulfill({ json: series }));
   await page.goto('/?sel=storage/de');
   await expect(page.getByRole('heading', { name: 'Germany' })).toBeVisible();
-  await openLayers(page);
-  await expect(page.getByRole('checkbox', { name: /EU gas storage/ })).toBeChecked();
-  const panel = page.getByLabel('Panel');
+  const panel = page.getByLabel('Panel', { exact: true });
   await expect(panel.locator('dt', { hasText: 'Same date last year' })).toBeVisible();
   await expect(panel.getByRole('img', { name: /Gas storage fill in Germany/ })).toBeVisible();
+  await expect(panel).toContainText('GIE AGSI+');
+
+  // Outside AGSI+, a country shows gas in storage from its own source, with that source's attribution.
+  await page.goto('/?sel=storage/ca');
+  await expect(page.getByRole('heading', { name: 'Canada' })).toBeVisible();
+  await expect(panel.locator('dt', { hasText: 'Same month last year' })).toBeVisible();
+  await expect(panel.getByRole('region', { name: 'By province' })).toContainText('Alberta');
+  await expect(panel).toContainText('This does not constitute an endorsement by Statistics Canada of this product.');
+  // A country with storage but no regular series says so.
+  await page.goto('/?sel=storage/cn');
+  await expect(panel).toContainText('No regular series');
 });
 
 test('the dashboard tiles count the theater and open what they count', async ({ page }) => {
@@ -415,10 +424,10 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
   await expect(chokepoints).toContainText(/of 7 below baseline/);
   await expect(overview.getByRole('button', { name: /^Pipelines/ })).toContainText(/of [\d,]+ offline or idle/);
   if (FEATURES.gasStorage) {
-    await expect(overview.getByRole('button', { name: /^EU gas storage/ })).toContainText(/of \d+ below last year|No storage data/);
+    await expect(overview.getByRole('button', { name: /^Gas storage/ })).toContainText(/of \d+ countries below last year|No storage data/);
   } else {
     // Basins take the storage figure's place while storage is switched off.
-    await expect(overview.getByRole('button', { name: /^EU gas storage/ })).toHaveCount(0);
+    await expect(overview.getByRole('button', { name: /^Gas storage/ })).toHaveCount(0);
     await expect(overview.getByRole('button', { name: /^Basins/ })).toContainText(/\d+\s*oil and gas provinces/);
   }
   await expect(overview.getByRole('button', { name: /^Terminals/ })).toContainText(/of [\d,]+ offline or idle/);
@@ -442,7 +451,7 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
   await expect(page.getByRole('heading', { name: 'Nord Stream 1' })).toBeVisible();
   await rail.getByRole('button', { name: 'Home' }).click();
   if (FEATURES.gasStorage) {
-    await overview.getByRole('button', { name: /^EU gas storage/ }).click();
+    await overview.getByRole('button', { name: /^Gas storage/ }).click();
     await expect(page).toHaveURL(/view=storage/);
   } else {
     await overview.getByRole('button', { name: /^Basins/ }).click();
@@ -516,8 +525,7 @@ test('search finds assets by name or alias and opens them', async ({ page }) => 
   if (FEATURES.gasStorage) {
     await page.getByRole('option', { name: /^Germany/ }).click();
     await expect(page).toHaveURL(/sel=storage\/de/);
-    await openLayers(page);
-    await expect(page.getByRole('checkbox', { name: /EU gas storage/ })).toBeChecked();
+    await expect(page.getByLabel('Panel', { exact: true }).getByRole('heading', { name: 'Germany' })).toBeVisible();
   } else {
     await expect(page.getByRole('option', { name: /^Germany/ })).toHaveCount(0);
     await page.keyboard.press('Escape');
@@ -811,19 +819,32 @@ test('the terminals surface switches between LNG and oil, and keeps its group wh
   await expect(panel.getByRole('radio', { name: 'Oil' })).toHaveAttribute('aria-checked', 'true');
 });
 
-test('the gas storage surface lists countries and turns the storage layer on', async ({ page }) => {
+test('the gas storage surface lists countries past Europe against last year and shows only storage on the map', async ({ page }) => {
   test.skip(!FEATURES.gasStorage, 'FEATURES.gasStorage is off');
   await page.goto('/');
   await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Gas storage' }).click();
   await expect(page).toHaveURL(/view=storage/);
-  const list = page.getByRole('list', { name: 'Gas storage by country' });
-  await expect(list.getByRole('button').first()).toContainText('%');
+  const panel = page.getByLabel('Panel', { exact: true });
+  const list = panel.getByRole('list', { name: 'Gas storage by country' });
+  await expect(list.getByRole('button').first()).toContainText(/vs last year|Nothing to compare last year/);
+  // Each source's country, each with its cadence: AGSI+ daily, EIA weekly, the rest monthly.
+  await expect(list.getByRole('button', { name: /^Germany/ })).toContainText('Daily');
+  await expect(list.getByRole('button', { name: /^United States/ })).toContainText(/Bcf.*Weekly/);
+  await expect(list.getByRole('button', { name: /^Japan/ })).toContainText('Monthly');
+  await expect(panel.getByRole('region', { name: 'Not covered' })).toContainText('China');
+  await expect(panel).toContainText('Joint Organizations Data Initiative (JODI) Database');
   await expect(page.getByRole('toolbar', { name: 'Filters' }).getByRole('button')).toHaveCount(0);
-  await openLayers(page);
-  await expect(page.getByRole('checkbox', { name: /EU gas storage/ })).toBeChecked();
-  await page.keyboard.press('Escape');
-  await list.getByRole('button', { name: /^Germany/ }).click();
-  await expect(page).toHaveURL(/view=storage.*sel=storage\/de/);
+  // Only storage shows, so there's no layer list.
+  await expect(page.getByRole('button', { name: 'Layers' })).toHaveCount(0);
+  await page.waitForTimeout(500);
+  await page.waitForFunction(() => !(window as unknown as { __etMap: { isMoving(): boolean } }).__etMap.isMoving());
+  const japan = await screenPoint(page, [138.5, 36.5]);
+  await page.mouse.move(japan.x, japan.y);
+  await expect(page.getByRole('tooltip')).toContainText(/Japan.*(vs last year|Nothing to compare)/);
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/storage.png` });
+  await list.getByRole('button', { name: /^United States/ }).click();
+  await expect(page).toHaveURL(/view=storage.*sel=storage\/us/);
+  await expect(panel.getByRole('region', { name: 'By storage region' })).toContainText('South Central');
 });
 
 test('the basins surface lists basins by oil remaining and shows only their outlines on the map', async ({ page }) => {

@@ -13,10 +13,10 @@ export const THEATER_BOUNDS: [[number, number], [number, number]] = [
 ];
 
 /** What the basin and pipeline imports keep: the whole world. The theater above is only where the camera opens. */
-/** Where the gas storage surface frames: the European countries AGSI+ reports, Portugal to Ukraine. */
+/** Where the gas storage surface frames: every country with a storage series, Canada and Chile to Japan and New Zealand. */
 export const STORAGE_BOUNDS: [[number, number], [number, number]] = [
-  [-10, 36],
-  [41, 64],
+  [-125, -48],
+  [178, 66],
 ];
 
 /** Where the fuel origins surface frames: the lower 48 states, where the five fuel regions are. */
@@ -211,6 +211,102 @@ export const AGSI = {
 export const agsiSeriesId = (country: string) => `agsi-${country.toLowerCase()}`;
 
 /**
+ * EIA's weekly natural gas storage report, by API v2 (the EIA key): working gas in the Lower 48 and its
+ * five storage regions, in billion cubic feet, for weeks ending Friday, published the next Thursday.
+ * Route and series checked 2026-11-01.
+ */
+export const EIA_STORAGE = {
+  route: 'natural-gas/stor/wkly',
+  /** Weeks kept: two years, so the latest week always has the same week last year. */
+  keepDays: 800,
+  maxLagDays: 21,
+  total: { series: 'NW2_EPG0_SWO_R48_BCF', name: 'Lower 48 states' },
+  regions: [
+    { series: 'NW2_EPG0_SWO_R31_BCF', id: 'east', name: 'East' },
+    { series: 'NW2_EPG0_SWO_R32_BCF', id: 'midwest', name: 'Midwest' },
+    { series: 'NW2_EPG0_SWO_R33_BCF', id: 'south-central', name: 'South Central' },
+    { series: 'NW2_EPG0_SWO_R34_BCF', id: 'mountain', name: 'Mountain' },
+    { series: 'NW2_EPG0_SWO_R35_BCF', id: 'pacific', name: 'Pacific' },
+  ],
+} as const;
+
+/**
+ * Statistics Canada table 25-10-0086-01, natural gas supply and disposition, monthly: closing inventory
+ * in storage for Canada and the provinces with storage, in thousands of cubic metres. It replaced
+ * 25-10-0057-01 (inactive since 2025-12). Checked 2026-11-01. Coordinates are geography.item.unit.
+ */
+export const STATCAN_STORAGE = {
+  apiUrl: 'https://www150.statcan.gc.ca/t1/wds/rest',
+  productId: 25100086,
+  table: '25-10-0086-01',
+  tableName: 'Natural gas supply and disposition, monthly',
+  tableUrl: 'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=2510008601',
+  closingInventoryMember: 2,
+  cubicMetresMember: 1,
+  months: 26,
+  maxLagDays: 150,
+  total: { member: 1, name: 'Canada' },
+  provinces: [
+    { member: 6, id: 'qc', name: 'Quebec' },
+    { member: 7, id: 'on', name: 'Ontario' },
+    { member: 9, id: 'sk', name: 'Saskatchewan' },
+    { member: 10, id: 'ab', name: 'Alberta' },
+    { member: 11, id: 'bc', name: 'British Columbia' },
+  ],
+} as const;
+
+/**
+ * JODI-Gas world database, the free CSV (beta): closing stocks (CLOSTLV) in million cubic metres, monthly.
+ * Only values JODI assesses as comparable (1) or to use with caution (2) are kept; "not assessed" (3)
+ * values include figures far from known volumes (Russia's at 50 million m³). Countries whose stocks are
+ * all zero hold none. File listing found 2026-11-01 behind the downloads page.
+ */
+export const JODI_GAS = {
+  filesUrl: 'https://api.publisher.jodidata.org/web/files/gas',
+  downloadUrl: 'https://www.jodidata.org/jodi-publisher/gas',
+  pageUrl: 'https://www.jodidata.org/gas/database/data-downloads.aspx',
+  file: 'GAS_world_NewFormat.zip',
+  flow: 'CLOSTLV',
+  unit: 'M3',
+  assessments: ['1', '2'],
+  months: 26,
+  /** A country whose latest month is older than this is left out rather than shown stale. */
+  maxLagDays: 200,
+  citation:
+    'International Energy Forum (IEF). Joint Organizations Data Initiative (JODI) Database. JODI Oil and Gas World Databases: www.jodidata.org',
+} as const;
+
+export const eiaStorageSeriesId = (region?: string) => (region ? `eia-storage-us-${region}` : 'eia-storage-us');
+export const statcanStorageSeriesId = (province?: string) => (province ? `statcan-storage-ca-${province}` : 'statcan-storage-ca');
+export const jodiStorageSeriesId = (country: string) => `jodi-storage-${country.toLowerCase()}`;
+
+/**
+ * Where each country's storage figure comes from, in the order they're preferred: AGSI+ where it reports
+ * a country (daily, and fill as a share of capacity), then EIA for the US and Statistics Canada for
+ * Canada (national, with regions), then JODI.
+ */
+export const STORAGE_SOURCES = {
+  agsi: { name: 'GIE AGSI+', url: 'https://agsi.gie.eu/', cadence: 'daily' },
+  eia: { name: 'EIA weekly natural gas storage report', url: 'https://ir.eia.gov/ngs/ngs.html', cadence: 'weekly' },
+  statcan: { name: 'Statistics Canada', url: STATCAN_STORAGE.tableUrl, cadence: 'monthly' },
+  jodi: { name: 'JODI-Gas', url: JODI_GAS.pageUrl, cadence: 'monthly' },
+} as const;
+export type StorageSourceId = keyof typeof STORAGE_SOURCES;
+
+/** The gas storage map shades each country by its change against last year, out to this many percent either way. */
+export const STORAGE_MAP = { vsLastYearPctRange: 30 } as const;
+
+/**
+ * Countries with large storage and no regular public series, named on the gas storage surface rather
+ * than left blank (TODO-research.md, M10). China's figure is the IGU's annual one.
+ */
+export const STORAGE_NOT_COVERED: { country: string; note: string }[] = [
+  { country: 'CN', note: 'No regular series; the IGU\'s 2025 storage report put its working gas volume at 19.8 bcm' },
+  { country: 'RU', note: 'No regular public series found; JODI\'s figure is not assessed' },
+  { country: 'IR', note: 'No regular public series found' },
+];
+
+/**
  * GIE ALSI daily send-out by LNG import terminal, with the AGSI key. Each GEM terminal lists the ALSI
  * facilities that make it up (company and facility EIC codes from ALSI's listing, checked 2026-10-29,
  * matched by coordinates and GEM's aliases). Left out: facilities ALSI has closed (Lubmin, Le Havre,
@@ -350,6 +446,9 @@ export const DATASET_FRESHNESS: Record<
   'port-calls': { label: 'Port calls', scheduled: true, staleAfterHours: 18, publisher: 'IMF PortWatch' },
   'gas-flows': { label: 'Gas flows', scheduled: true, staleAfterHours: 36, publisher: 'ENTSOG Transparency Platform' },
   'gas-storage': { label: 'Gas storage', scheduled: true, staleAfterHours: 36, publisher: 'GIE AGSI+' },
+  'gas-storage-us': { label: 'US gas storage', scheduled: true, staleAfterHours: 36, publisher: 'EIA' },
+  'gas-storage-ca': { label: 'Canada gas storage', scheduled: true, staleAfterHours: 36, publisher: 'Statistics Canada' },
+  'gas-storage-jodi': { label: 'Gas storage, other countries', scheduled: true, staleAfterHours: 36, publisher: 'JODI-Gas' },
   'lng-sendout': { label: 'LNG send-out', scheduled: true, staleAfterHours: 36, publisher: 'GIE ALSI' },
   countries: { label: 'Countries', scheduled: false, publisher: 'Natural Earth' },
   'country-regions': { label: 'Country regions', scheduled: false, publisher: 'Natural Earth' },
@@ -428,9 +527,15 @@ export const POINT_FOCUS_ZOOM = 6;
  */
 export const FEATURES = {
   visitChanges: false,
-  gasStorage: false,
+  gasStorage: true,
   fuelOrigins: false,
 } as const;
+
+/**
+ * The phone tab bar (SPEC M10): at most this many slots, Home included. With more sections on, the last
+ * slot is More, and the bar keeps the sections with the most live state, in this order.
+ */
+export const PHONE_TABS = { slots: 5, bar: ['chokepoints', 'pipelines', 'terminals'] } as const;
 
 /** The basins surface draws the outlines stronger, with a faint fill, and names them sooner. */
 export const BASIN_FOCUS = { labelMinZoom: 3 } as const;

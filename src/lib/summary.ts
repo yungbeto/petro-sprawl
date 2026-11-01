@@ -2,12 +2,12 @@
 
 import type { AssetStatus, Basin, Disruption, Pipeline, SourceRef } from '../types';
 import type { Selection } from '../app/urlState';
-import { AGSI, CHANGES, HOME_HERO, agsiSeriesId, tankerCargoSeriesId } from './config';
+import { CHANGES, HOME_HERO, tankerCargoSeriesId } from './config';
 import { chokepointFlows, seriesById, type Datasets } from './data';
 import { pipelineStatus } from './encoding';
 import { isUnverified, latestClaim, pipelineFlow } from './evidence';
 import { chokepointFlow, type ChokepointFlow, type FlowBand } from './flow';
-import { storageSummary } from './gasStorage';
+import { storageByCountry, type CountryStorage } from './gasStorage';
 
 /** Display order for status counts: what runs, what doesn't, then what isn't built. */
 export const STATUS_ORDER: AssetStatus[] = [
@@ -135,36 +135,15 @@ export function chokepointViewRows(data: Datasets): ChokepointViewRow[] {
     );
 }
 
-export interface StorageRow {
+export interface StorageRow extends CountryStorage {
   selection: Selection;
-  country: string;
-  fill: number;
-  latestDate: string;
-  /** Percentage points against the same date last year; null without last year's point. */
-  vsLastYear: number | null;
-  /** Fill on the same date last year. */
-  lastYearFill: number | null;
-  /** Percentage points over the last 7 days. */
-  change7d: number | null;
 }
 
-/** Storage by country, furthest below last year first. Countries without last year's point go last. */
+/** Storage by country, furthest below last year first. Countries without last year's figure go last, by name. */
 export function storageRows(data: Datasets): StorageRow[] {
-  const rows: StorageRow[] = [];
-  for (const country of AGSI.countries) {
-    const summary = storageSummary(seriesById(data, agsiSeriesId(country)));
-    if (!summary) continue;
-    rows.push({
-      selection: { kind: 'storage', id: country.toLowerCase() },
-      country,
-      fill: summary.fill,
-      latestDate: summary.latestDate,
-      vsLastYear: summary.lastYear ? summary.fill - summary.lastYear.fill : null,
-      lastYearFill: summary.lastYear?.fill ?? null,
-      change7d: summary.change7d,
-    });
-  }
-  return rows.sort((a, b) => (a.vsLastYear ?? Infinity) - (b.vsLastYear ?? Infinity));
+  return [...storageByCountry(data.series).values()]
+    .map((s) => ({ ...s, selection: { kind: 'storage', id: s.country.toLowerCase() } as Selection }))
+    .sort((a, b) => (a.vsLastYearPct ?? Infinity) - (b.vsLastYearPct ?? Infinity) || a.country.localeCompare(b.country));
 }
 
 // What changed since last visit
@@ -191,7 +170,7 @@ export function takeSnapshot(data: Datasets, now: Date): Snapshot {
   const chokepoints: Snapshot['chokepoints'] = {};
   for (const row of chokepointRows(data)) chokepoints[row.selection.id] = row.band;
   const storage: Snapshot['storage'] = {};
-  for (const row of storageRows(data)) storage[row.selection.id] = row.fill;
+  for (const row of storageRows(data)) if (row.fill !== null) storage[row.selection.id] = row.fill;
   return {
     savedAt: now.toISOString(),
     pipelines,

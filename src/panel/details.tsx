@@ -1,4 +1,4 @@
-import { useId, useState, type ReactNode } from 'react';
+import { useId, useMemo, useState, type ReactNode } from 'react';
 import { ArrowUpRightIcon } from '@phosphor-icons/react';
 import type { AssetStatus, Basin, Chokepoint, Company, Country, Evidence, LngTerminal, LngUnit, OilOriginRegion, OilTerminal, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
@@ -13,12 +13,14 @@ import {
   PADDS,
   PADD_SOURCE,
   REGION_FUEL_LABELS,
-  agsiSeriesId,
+  STORAGE_NOT_COVERED,
+  type StorageSourceId,
   type FuelId,
   type RegionFuel,
   tankerCargoSeriesId,
 } from '../lib/config';
-import { storageSummary } from '../lib/gasStorage';
+import { storageByCountry, vsLastYearPct, type CountryStorage } from '../lib/gasStorage';
+import { CADENCE_LABEL, CHANGE_LABEL, StorageSources, storageChange, storageFigure } from './StorageView';
 import { ALSI_URL, ENTSOG_URL, isReport, isUnverified, latestClaim, pipelineFlow, reportParts } from '../lib/evidence';
 import {
   chokepointFlows,
@@ -40,7 +42,7 @@ import {
   type Resolved,
 } from '../lib/data';
 import { chokepointFlow, type ChokepointFlow, type FlowBand } from '../lib/flow';
-import { formatIndex, formatIndexShare, formatNumber, formatThousandfold, formatTonnes } from '../lib/format';
+import { formatIndex, formatIndexShare, formatNumber, formatSignedPct, formatStorageVolume, formatThousandfold, formatTonnes } from '../lib/format';
 import type { Disruption } from '../types';
 import { Sparkline } from './Sparkline';
 import { formatCapacity, formatCountry, formatEnergyPerDay, formatLonLat, formatMbd } from '../lib/format';
@@ -157,9 +159,6 @@ function perDay(value: number | undefined): ReactNode {
   return value === undefined ? notAvailable : formatNumber(value, 1);
 }
 
-function signedPts(value: number): string {
-  return `${value >= 0 ? '+' : '−'}${formatNumber(Math.abs(value), 1)}`;
-}
 
 export function ChokepointDetail({ item, data, onSelect }: { item: Chokepoint; data: Datasets; onSelect: OnSelect }) {
   const note = CHOKEPOINT_NOTES[item.id];
@@ -845,54 +844,85 @@ function ServiceStat({ history, now }: { history: Pipeline['history']; now: Date
 }
 
 export function StorageDetail({ item, data }: { item: Country; data: Datasets }) {
-  const summary = storageSummary(seriesById(data, agsiSeriesId(item.id)));
-  const pct = (value: number) => `${formatNumber(value, 1)}%`;
+  const storage = useMemo(() => storageByCountry(data.series).get(item.id) ?? null, [data, item.id]);
+  const notCovered = STORAGE_NOT_COVERED.find((c) => c.country === item.id);
   return (
     <>
       <Header name={item.name} icon={<AssetIcon kind="storage" large />} />
-      {summary ? (
-        <>
-          <section className="flow-headline">
-            <p className="flow-headline__figure">{pct(summary.fill)}</p>
-            <p className="flow-headline__text">
-              of working gas volume in storage on <span className="mono">{summary.latestDate}</span>
-            </p>
-          </section>
-          <Stats>
-            <Stat
-              label="Last 7 days"
-              value={summary.change7d !== null ? signedPts(summary.change7d) : notAvailable}
-              unit={summary.change7d !== null ? 'pts' : undefined}
-            />
-            <Stat
-              label="Same date last year"
-              value={summary.lastYear ? pct(summary.lastYear.fill) : notAvailable}
-              aside={
-                summary.lastYear && (
-                  <>
-                    now <span className="mono">{signedPts(summary.fill - summary.lastYear.fill)} pts</span>
-                  </>
-                )
-              }
-            />
-          </Stats>
-          <section className="section">
-            <h3 className="section__title">Storage fill, last 12 months</h3>
-            <Sparkline
-              points={summary.year}
-              unit="%"
-              label={`Gas storage fill in ${item.name}, ${summary.year[0]?.date} to ${summary.latestDate}`}
-              references={summary.lastYear ? [{ value: summary.lastYear.fill, label: 'Same date last year', style: 'dashed' as const }] : []}
-            />
-          </section>
-        </>
+      {storage ? (
+        <StorageFigures storage={storage} name={item.name} />
       ) : (
-        <p className="muted">No storage data for this country.</p>
+        <p className="muted">{notCovered ? `${notCovered.note}.` : 'No storage data for this country.'}</p>
       )}
-      <p className="source">
-        <SourceLink href="https://agsi.gie.eu/">GIE AGSI+</SourceLink>; fill is gas in storage as a share of working gas
-        volume.
-      </p>
+      {storage && <StorageSources sources={[storage.source]} data={data} />}
+    </>
+  );
+}
+
+const STORAGE_HEADLINE: Record<StorageSourceId, string> = {
+  agsi: 'of working gas volume in storage on',
+  eia: 'of working gas in storage, week to',
+  statcan: 'of gas in storage at the end of',
+  jodi: 'of gas in stock at the end of',
+};
+
+function StorageFigures({ storage, name }: { storage: CountryStorage; name: string }) {
+  const { summary, series } = storage;
+  const change = storageChange(storage, true);
+  const value = (v: number) => (storage.fill !== null ? `${formatNumber(v, 1)}%` : formatStorageVolume(v, series.unit));
+  const span = storage.cadence === 'monthly' ? 'Same month last year' : storage.cadence === 'weekly' ? 'Same week last year' : 'Same date last year';
+  return (
+    <>
+      <section className="flow-headline">
+        <p className="flow-headline__figure">{storageFigure(storage)}</p>
+        <p className="flow-headline__text">
+          {STORAGE_HEADLINE[storage.source]} <span className="mono">{summary.latest.date}</span>
+          {storage.caution && <>. JODI marks this value to use with caution</>}
+        </p>
+      </section>
+      <Stats>
+        <Stat label={CHANGE_LABEL[storage.cadence]} value={change ?? notAvailable} />
+        <Stat
+          label={span}
+          value={summary.lastYear ? value(summary.lastYear.value) : notAvailable}
+          aside={
+            storage.vsLastYearPct !== null && (
+              <>
+                now <span className="mono">{formatSignedPct(storage.vsLastYearPct)}</span>
+              </>
+            )
+          }
+        />
+      </Stats>
+      <section className="section">
+        <h3 className="section__title">{storage.fill !== null ? 'Storage fill' : 'Gas in storage'}, last 12 months</h3>
+        <Sparkline
+          points={summary.year}
+          unit={storage.fill !== null ? '%' : series.unit}
+          lineLabel={CADENCE_LABEL[storage.cadence]}
+          label={`${storage.fill !== null ? 'Gas storage fill' : 'Gas in storage'} in ${name}, ${summary.year[0]?.date} to ${summary.latest.date}`}
+          references={summary.lastYear ? [{ value: summary.lastYear.value, label: span, style: 'dashed' as const }] : []}
+        />
+      </section>
+      {storage.parts.length > 0 && (
+        <section className="section" aria-labelledby="storage-parts">
+          <h3 className="section__title" id="storage-parts">
+            {storage.source === 'eia' ? 'By storage region' : 'By province'}
+          </h3>
+          <ul className="plain-list">
+            {storage.parts.map((p) => {
+              const vs = vsLastYearPct(p.summary);
+              return (
+                <li key={p.id}>
+                  <span className="plain-list__name">{p.name}</span>{' '}
+                  <span className="mono">{formatStorageVolume(p.summary.latest.value, p.series.unit)}</span>
+                  {vs !== null && <span className="muted mono"> · {formatSignedPct(vs)} vs last year</span>}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
     </>
   );
 }

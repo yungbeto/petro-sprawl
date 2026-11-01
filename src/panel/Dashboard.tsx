@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { FEATURES } from '../lib/config';
-import { formatIndexShare, formatNumber, formatThousandfold } from '../lib/format';
+import { formatIndexShare, formatSignedPct, formatThousandfold } from '../lib/format';
 import type { ViewId } from '../lib/views';
 import { basinViewRows, median, statusGroups, type ChokepointRow, type StatusGroupId, type StorageRow } from '../lib/summary';
 import type { AssetStatus, Basin } from '../types';
@@ -16,7 +16,6 @@ interface DashboardProps {
   onOpenView: (view: ViewId) => void;
 }
 
-const pts = (value: number) => `${value >= 0 ? '+' : '−'}${formatNumber(Math.abs(value), 1)} pts`;
 
 /** Home's figures under the hero: four in a grid, each one number with a small picture, each opening its surface or more. */
 export function Dashboard({ counts, terminalCounts, chokepoints, storage, basins, onOpenView }: DashboardProps) {
@@ -26,7 +25,7 @@ export function Dashboard({ counts, terminalCounts, chokepoints, storage, basins
   const groups = statusGroups(counts);
   const total = groups.reduce((n, g) => n + g.count, 0);
   const stopped = groups.find((g) => g.id === 'stopped')!.count;
-  const gaps = storage.flatMap((s) => (s.vsLastYear === null ? [] : [s.vsLastYear]));
+  const gaps = storage.flatMap((s) => (s.vsLastYearPct === null ? [] : [s.vsLastYearPct]));
   const storageBelow = gaps.filter((g) => g < 0).length;
   const medianGap = median(gaps);
   const share = (id: StatusGroupId) => formatIndexShare(groups.find((g) => g.id === id)!.count / total);
@@ -91,10 +90,10 @@ export function Dashboard({ counts, terminalCounts, chokepoints, storage, basins
 
       {FEATURES.gasStorage ? (
         <Tile
-          label="EU gas storage"
+          label="Gas storage"
           value={gaps.length ? String(storageBelow) : null}
-          unit={gaps.length ? `of ${gaps.length} below last year` : 'No storage data'}
-          note={medianGap !== null ? `Median gap ${pts(medianGap)}` : ''}
+          unit={gaps.length ? `of ${gaps.length} countries below last year` : 'No storage data'}
+          note={medianGap !== null ? `Median ${formatSignedPct(medianGap)}` : ''}
           action="Open gas storage"
           onClick={() => onOpenView('storage')}
         >

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MapView, type FocusRequest } from '../map/MapView';
 import { LayerControl } from '../map/LayerControl';
 import type { LayerId, LayerVisibility } from '../map/layers';
-import { CaretRightIcon, GearIcon, HouseIcon, LightbulbIcon, ListIcon, QuestionIcon } from '@phosphor-icons/react';
+import { CaretRightIcon, DotsThreeOutlineIcon, GearIcon, HouseIcon, LightbulbIcon, ListIcon, QuestionIcon } from '@phosphor-icons/react';
 import { VIEW_ICONS } from './viewIcons';
 import { pipelineGroups, type PipelineGrouping } from '../lib/pipelineGroups';
 import { lngGroups, oilGroups, type TerminalGrouping, type TerminalKind } from '../lib/terminalGroups';
@@ -21,7 +21,7 @@ import { DEFAULT_REGION_FUEL, type RegionFuel } from '../lib/config';
 import type { SearchScope } from '../lib/search';
 import { useDatasets } from './useDatasets';
 import { resolveSelection } from '../lib/data';
-import { ENABLED_VIEWS, SURFACE_FILTERS, VIEW_LABELS, scopeMatches, viewHighlight, viewPoints, visibleLayers, type ViewId } from '../lib/views';
+import { ENABLED_VIEWS, SURFACE_FILTERS, VIEW_LABELS, phoneTabs, scopeMatches, viewHighlight, viewPoints, visibleLayers, type ViewId } from '../lib/views';
 import { useVisitChanges } from './useVisitChanges';
 import { useIsPhone, useSheet } from './useSheet';
 import type { Selection } from './urlState';
@@ -65,6 +65,9 @@ export function App() {
   const phone = useIsPhone();
   const sheet = useSheet(phone, appRef);
   const { detent: sheetDetent, setDetent: setSheetDetent } = sheet;
+  // Phones with more sections than tab slots: the bar's sections, those under More, and whether its list is open.
+  const tabs = useMemo(() => (phone ? phoneTabs() : { bar: [...ENABLED_VIEWS], more: [] }), [phone]);
+  const [moreOpen, setMoreOpen] = useState(false);
   // The open search's starting scope, or null while it's closed.
   const [searchScope, setSearchScope] = useState<SearchScope | null>(null);
   const searchOpen = searchScope !== null;
@@ -215,6 +218,7 @@ export function App() {
   const openView = useCallback(
     (next: ViewId | null) => {
       setCollapsed(false);
+      setMoreOpen(false);
       setView(next);
       if (next) setFocus((prev) => ({ points: viewPoints(next, data), nonce: (prev?.nonce ?? 0) + 1 }));
     },
@@ -295,6 +299,13 @@ export function App() {
     if (phone) setSheetDetent((d) => (d === 'peek' ? 'half' : d));
   }, [pageKey, phone]);
 
+  // The More list closes when anything else opens, and isn't a thing off phones.
+  useEffect(() => setMoreOpen(false), [selection?.kind, selection?.id, filter, phone]);
+  const openMore = useCallback(() => {
+    setMoreOpen(true);
+    setSheetDetent((d) => (d === 'peek' ? 'half' : d));
+  }, [setSheetDetent]);
+
   const setLayerVisible = useCallback((id: LayerId, visible: boolean) => {
     setVisibility((v) => ({ ...v, [id]: visible }));
   }, []);
@@ -333,33 +344,34 @@ export function App() {
           <button
             type="button"
             className="rail__item"
-            aria-current={!view ? 'page' : undefined}
+            aria-current={!view && !moreOpen ? 'page' : undefined}
             onClick={() => openView(null)}
             aria-label="Home"
           >
-            <HouseIcon size={24} weight={!view ? 'fill' : 'regular'} />
+            <HouseIcon size={24} weight={!view && !moreOpen ? 'fill' : 'regular'} />
             <span className="rail__tooltip" aria-hidden="true">
               Home
             </span>
           </button>
-          {ENABLED_VIEWS.map((id) => {
+          {tabs.bar.map((id) => {
             const Icon = VIEW_ICONS[id];
             return (
               <button
                 key={id}
                 type="button"
                 className="rail__item"
-                aria-current={view === id ? 'page' : undefined}
+                aria-current={view === id && !moreOpen ? 'page' : undefined}
                 onClick={() => openView(id)}
                 aria-label={VIEW_LABELS[id]}
               >
-                <Icon size={24} weight={view === id ? 'fill' : 'regular'} />
+                <Icon size={24} weight={view === id && !moreOpen ? 'fill' : 'regular'} />
                 <span className="rail__tooltip" aria-hidden="true">
                   {VIEW_LABELS[id]}
                 </span>
               </button>
             );
           })}
+          {tabs.more.length > 0 && <MoreTab views={tabs.more} view={view} open={moreOpen} onOpen={openMore} />}
           <button
             type="button"
             className="rail__item rail__item--end"
@@ -398,6 +410,7 @@ export function App() {
           collapsed={!phone && collapsed}
           onToggleCollapsed={toggleCollapsed}
           sheet={phone ? sheet : null}
+          more={moreOpen ? { views: tabs.more, onOpen: openView } : null}
           selection={selection}
           onSelect={selectAndFocus}
           fuel={fuel}
@@ -490,5 +503,30 @@ export function App() {
         />
       )}
     </div>
+  );
+}
+
+/**
+ * The phone bar's last slot when the sections don't all fit (SPEC M10). It opens the list of the rest;
+ * while one of those is the open section, it shows that section's icon and name instead, so where you
+ * are stays in the bar.
+ */
+function MoreTab({ views, view, open, onOpen }: { views: ViewId[]; view: ViewId | null; open: boolean; onOpen: () => void }) {
+  const inside = view !== null && views.includes(view) ? view : null;
+  const Icon = inside ? VIEW_ICONS[inside] : DotsThreeOutlineIcon;
+  const label = inside ? VIEW_LABELS[inside] : 'More';
+  return (
+    <button
+      type="button"
+      className="rail__item"
+      aria-current={open || inside ? 'page' : undefined}
+      aria-label={inside ? `More, ${label} open` : 'More'}
+      onClick={onOpen}
+    >
+      <Icon size={24} weight={open || inside ? 'fill' : 'regular'} />
+      <span className="rail__tooltip" aria-hidden="true">
+        {label}
+      </span>
+    </button>
   );
 }

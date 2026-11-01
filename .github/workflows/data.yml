@@ -67,6 +67,13 @@ jobs:
         continue-on-error: true
         run: npm run fetch:eia
 
+      # EIA weekly by region (needs the EIA key), Statistics Canada and JODI monthly (no key). Each dataset
+      # keeps its previous file on its own failure.
+      - name: Gas storage beyond AGSI+
+        id: storage
+        continue-on-error: true
+        run: npm run fetch:storage
+
       - name: Commit changed data
         run: |
           git config user.name "github-actions[bot]"
@@ -82,7 +89,7 @@ jobs:
           fi
 
       - name: Fail if any fetch failed
-        if: steps.portwatch.outcome == 'failure' || steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure' || steps.alsi.outcome == 'failure' || steps.eia.outcome == 'failure'
+        if: steps.portwatch.outcome == 'failure' || steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure' || steps.alsi.outcome == 'failure' || steps.eia.outcome == 'failure' || steps.storage.outcome == 'failure'
         run: |
           echo "::error::One or more fetch jobs failed; previous data was kept. See the step logs above."
           exit 1

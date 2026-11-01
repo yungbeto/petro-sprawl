@@ -2,7 +2,7 @@
 // on the map, and has its own filter chips. Home is the summary across all of them. Pure.
 
 import type { SelectionKind } from '../app/urlState';
-import { FEATURES, STORAGE_BOUNDS, US_BOUNDS, WORLD_BOUNDS } from './config';
+import { FEATURES, PHONE_TABS, STORAGE_BOUNDS, US_BOUNDS, WORLD_BOUNDS } from './config';
 import type { FilterId, FilterMatches } from './filters';
 import { fuelSurfaceHighlight, type Datasets } from './data';
 
@@ -163,4 +163,17 @@ export function viewPoints(view: ViewId, data: Datasets): [number, number][] {
     case 'origins':
       return US_BOUNDS;
   }
+}
+
+/**
+ * The phone tab bar's sections and those under More. All of them fit when Home and the sections take
+ * no more than PHONE_TABS.slots; otherwise the bar keeps PHONE_TABS.bar (as many as fit beside Home and
+ * More) and the rest go under More, in rail order.
+ */
+export function phoneTabs(enabled: readonly ViewId[] = ENABLED_VIEWS): { bar: ViewId[]; more: ViewId[] } {
+  if (1 + enabled.length <= PHONE_TABS.slots) return { bar: [...enabled], more: [] };
+  const room = PHONE_TABS.slots - 2;
+  const preferred = (PHONE_TABS.bar as readonly ViewId[]).filter((v) => enabled.includes(v));
+  const bar = [...preferred, ...enabled.filter((v) => !preferred.includes(v))].slice(0, room);
+  return { bar: enabled.filter((v) => bar.includes(v)), more: enabled.filter((v) => !bar.includes(v)) };
 }

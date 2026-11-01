@@ -17,6 +17,7 @@ import { ChokepointsView } from './ChokepointsView';
 import { PipelinesView, type PipelinesViewProps } from './PipelinesView';
 import { TerminalsView, type TerminalsViewProps } from './TerminalsView';
 import { StorageView } from './StorageView';
+import { MoreView } from './MoreView';
 import { OriginsView, type OriginsViewProps } from './OriginsView';
 import { BasinDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RegionDetail, StorageDetail } from './details';
 
@@ -55,6 +56,8 @@ interface PanelProps {
   onOpenView: (view: ViewId) => void;
   /** On phones the panel is a bottom sheet: a handle to drag or tap, and the top bar drags it too. */
   sheet?: Sheet | null;
+  /** Phones: the More tab's list of the sections that don't fit in the bar, while it's open. */
+  more?: { views: ViewId[]; onOpen: (view: ViewId) => void } | null;
 }
 
 const KIND_LABELS: Record<SelectionKind, string> = {
@@ -119,7 +122,7 @@ export function Panel(props: PanelProps) {
           <ChevronIcon direction="left" />
         </button>
       )}
-      {(props.selection || props.filter) && (
+      {!props.more && (props.selection || props.filter) && (
         <div className="panel__nav" onPointerDown={sheet?.onDragStart}>
           {props.backLabel && (
             <button
@@ -145,7 +148,9 @@ export function Panel(props: PanelProps) {
         </div>
       )}
       <div ref={bodyRef} className="panel__body" onPointerDown={sheet?.onContentPointerDown}>
-        {props.selection ? (
+        {props.more ? (
+          <MoreView views={props.more.views} current={props.view} onOpen={props.more.onOpen} />
+        ) : props.selection ? (
           <Detail
             selection={props.selection}
             data={props.data}
