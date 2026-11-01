@@ -103,7 +103,7 @@ const seen = new Set(Object.keys(state.seen));
 async function fetchText(url: string): Promise<string> {
   const response = await fetch(url, {
     signal: AbortSignal.timeout(NEWS.requestTimeoutMs),
-    headers: { 'user-agent': 'Mozilla/5.0 (compatible; energy-terminal news scan)' },
+    headers: { 'user-agent': 'Mozilla/5.0 (compatible; petro-sprawl news scan)' },
   });
   if (!response.ok) throw new Error(`answered ${response.status}`);
   return response.text();
@@ -232,7 +232,7 @@ async function readPage(url: string): Promise<Fetched | string> {
   try {
     const response = await fetch(url, {
       signal: AbortSignal.timeout(CLAIMS_REFRESH.pageTimeoutMs),
-      headers: { 'user-agent': 'Mozilla/5.0 (compatible; energy-terminal news scan)' },
+      headers: { 'user-agent': 'Mozilla/5.0 (compatible; petro-sprawl news scan)' },
     });
     if (!response.ok) return `page answered ${response.status}`;
     const html = await response.text();

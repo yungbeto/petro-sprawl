@@ -87,7 +87,7 @@ export function AppMenu({ onClose, section, data, freshness, now, themePreferenc
       <div className="menu-scrim" onClick={onClose} aria-hidden="true" />
       <div className="menu" role="dialog" aria-modal="true" aria-label="Menu">
         <header className="menu__header">
-          <h2 className="menu__title">Energy terminal</h2>
+          <h2 className="menu__title">Petro Sprawl</h2>
           <button ref={closeRef} type="button" className="icon-button" onClick={onClose} aria-label="Close menu" title="Close  Esc">
             <CloseIcon />
           </button>

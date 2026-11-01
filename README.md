@@ -1,4 +1,4 @@
-# Energy Terminal
+# Petro Sprawl
 
 A personal, map-first terminal for understanding world events through the movement of energy.
 

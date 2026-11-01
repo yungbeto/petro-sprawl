@@ -1,5 +1,7 @@
 # Working notes for Claude Code
 
+The app is Petro Sprawl (renamed from Energy terminal on 2026-11-01). The repository, folder, Vercel project and production URL keep the old `energy-terminal` name.
+
 Read `SPEC.md` fully before starting any work. `docs/product-brief.md` explains the why.
 
 ## How to work here

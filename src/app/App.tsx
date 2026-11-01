@@ -308,7 +308,7 @@ export function App() {
             <span className="brand-mark" aria-hidden="true">
               <LightbulbIcon size={14} weight="fill" />
             </span>
-            <h1 className="app-header__title">Energy terminal</h1>
+            <h1 className="app-header__title">Petro Sprawl</h1>
           </div>
           {/* One search bar whether the panel is open or minimized, so it never moves. */}
           <SearchBar onOpen={() => setSearchScope('all')} buttonRef={searchButtonRef} />

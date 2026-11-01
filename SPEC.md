@@ -1,4 +1,4 @@
-# Energy Terminal: Prototype Spec v0.1
+# Petro Sprawl: Prototype Spec v0.1
 
 Owner: Roby Saavedra · Date: 2026-10-28 · Status: ready to build
 Product brief: [`docs/product-brief.md`](docs/product-brief.md) (living version: https://claude.ai/artifact/ST7c3oPER2WRix9pCS2Qkn)
@@ -53,7 +53,7 @@ Basins and GEM pipelines are imported worldwide (`IMPORT_BOUNDS` in `src/lib/con
 
 ```
 +------+----------------------+--------------------------------------+
-| (o) Energy terminal         | [Search                   ] Help  ≡  |
+| (o) Petro Sprawl            | [Search                   ] Help  ≡  |
 +------+----------------------+--------------------------------------+
 | Home | Panel (360px)        | (filter chips)                       |
 |      |                      |                Map                   |

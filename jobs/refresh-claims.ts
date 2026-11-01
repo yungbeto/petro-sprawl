@@ -103,7 +103,7 @@ async function readPage(url: string): Promise<Page | string> {
   try {
     const response = await fetch(url, {
       signal: AbortSignal.timeout(CLAIMS_REFRESH.pageTimeoutMs),
-      headers: { 'user-agent': 'Mozilla/5.0 (compatible; energy-terminal claims refresh)' },
+      headers: { 'user-agent': 'Mozilla/5.0 (compatible; petro-sprawl claims refresh)' },
     });
     if (!response.ok) return `page answered ${response.status}`;
     const html = await response.text();
