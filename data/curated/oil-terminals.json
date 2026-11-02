@@ -35,14 +35,6 @@
       {
         "status": "operating",
         "sourceType": "press",
-        "statement": "Reuters reports that at least five supertankers carrying 10 million barrels of Saudi oil loaded from Ras Tanura have exited the Strait of Hormuz, and Saudi Aramco resumed loadings there after a halt of nearly four months (Reuters).",
-        "url": "https://boereport.com/2026/07/02/saudi-aramco-ramps-up-exports-from-ras-tanura-switches-to-spot-sales-sources-say/",
-        "observedAt": "2026-07-02",
-        "recordedAt": "2026-11-02"
-      },
-      {
-        "status": "operating",
-        "sourceType": "press",
         "statement": "Tankers loaded at Ras Tanura in late June, the first to use the terminal since early March, as Saudi Arabia restarted exports from its Gulf ports (gCaptain, citing Bloomberg).",
         "url": "https://gcaptain.com/saudi-arabia-is-ramping-up-oil-exports-as-gulf-ports-restart/",
         "observedAt": "2026-06-26",
