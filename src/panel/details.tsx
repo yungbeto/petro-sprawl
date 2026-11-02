@@ -191,6 +191,7 @@ export function ChokepointDetail({ item, data, onSelect }: { item: Chokepoint; d
             <Sparkline
               points={flow.sparkline}
               unit="/day"
+              band={flow.band}
               label={`Daily tanker transits at ${item.name}, ${flow.sparkline[0]?.date} to ${flow.latestDate}`}
               references={[
                 ...(flow.fiveYear ? [{ value: flow.fiveYear.mean, label: 'Five-year average', style: 'dashed' as const }] : []),
@@ -265,6 +266,7 @@ function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: bo
       <Sparkline
         points={flow.sparkline}
         unit="/day"
+        band={flow.band}
         label={`Daily tanker port calls at ${port}, ${flow.sparkline[0]?.date} to ${flow.latestDate}`}
         references={[
           ...(flow.fiveYear ? [{ value: flow.fiveYear.mean, label: 'Five-year average', style: 'dashed' as const }] : []),
@@ -306,6 +308,7 @@ function TonnesSection({ title, flow, noun, label }: { title: string; flow: Chok
       <Sparkline
         points={flow.sparkline}
         unit="/day"
+        band={flow.band}
         format={formatTonnes}
         label={`${label}, ${flow.sparkline[0]?.date} to ${flow.latestDate}`}
         references={[
@@ -931,7 +934,7 @@ export function CrudeImportsSource({ record }: { record: Pick<CountryCrudeImport
       )}
       {record.source === 'comtrade' && (
         <>
-          <SourceLink href={COMTRADE.pageUrl}>UN Comtrade</SourceLink>, imports of crude petroleum (HS {COMTRADE.cmdCode}),{' '}
+          Source: <SourceLink href={COMTRADE.pageUrl}>UN Comtrade</SourceLink>. Imports of crude petroleum (HS {COMTRADE.cmdCode}),{' '}
           <span className="mono">{record.to}</span>, accessed <span className="mono">{record.retrieved}</span>. Shares computed here by{' '}
           {record.basis === 'weight' ? 'net weight' : 'value'}.
         </>

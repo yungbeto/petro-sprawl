@@ -37,8 +37,11 @@ maplibregl.setWorkerUrl(workerUrl);
 
 const LABEL_FONT = 'Inter';
 
-/** Move the camera to a selection, or frame a set of points (a view opening). */
-export type FocusRequest = { selection: Selection; nonce: number } | { points: [number, number][]; nonce: number };
+/** Move the camera to a selection, frame a set of points (a view opening), or return to a camera (Back, Close). */
+export type FocusRequest =
+  | { selection: Selection; nonce: number }
+  | { points: [number, number][]; nonce: number }
+  | { camera: Camera; nonce: number };
 
 interface MapViewProps {
   theme: Theme;
@@ -140,6 +143,8 @@ export function MapView(props: MapViewProps) {
   const appliedThemeRef = useRef<Theme>(theme);
   const callbacksRef = useRef(props);
   callbacksRef.current = props;
+  /** What the camera last framed, until the map is moved by hand. */
+  const framed = useRef<FocusRequest | null>(null);
 
   const [colors, setColors] = useState<MapColors | null>(null);
   const [zoom, setZoom] = useState(0);
@@ -180,7 +185,11 @@ export function MapView(props: MapViewProps) {
     map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
     // A hover tooltip would point at the wrong place once the camera moves. Deck can also
     // re-pick mid-flight as features pass under a still cursor, so clear again at the end.
-    map.on('movestart', () => setHover(null));
+    map.on('movestart', (e) => {
+      setHover(null);
+      // A pan, pinch, wheel or key: the reader has the map now, so a new sheet height won't reframe.
+      if (e.originalEvent) framed.current = null;
+    });
     map.on('moveend', () => {
       setHover(null);
       const center = map.getCenter();
@@ -293,37 +302,59 @@ export function MapView(props: MapViewProps) {
     });
   }, [data, flows, pipelineShares, storage, visibility, selection, highlight, onlyPipelines, regionsOnly, basinsFocus, originView, countryMode, importers, hoveredPipelineId, colors, zoom, fontsReady]);
 
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !focus) return;
-    if ('points' in focus) {
-      if (focus.points.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: focus.points }), { padding: fitPadding(), maxZoom: 5 });
-      return;
-    }
-    const resolved = resolveSelection(focus.selection, data);
-    if (!resolved) return;
-    if (resolved.kind === 'chokepoint' || resolved.kind === 'lng' || resolved.kind === 'terminal') {
-      map.flyTo({ center: resolved.item.point, zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM) });
-    } else if (resolved.kind === 'country' && countryView?.arcs.length) {
-      // The country and every partner it draws an arc from.
-      const points: [number, number][] = [...boundsOf(resolved.item.geometry), ...countryView.arcs.map((a) => a.from)];
-      map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: points }), { padding: fitPadding(), maxZoom: 5 });
-    } else if (resolved.kind === 'region') {
-      if (regionFrame.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: regionFrame }), { padding: fitPadding(), maxZoom: 5 });
-    } else {
-      map.fitBounds(boundsOf(resolved.item.geometry), { padding: fitPadding(), maxZoom: 8 });
-    }
-    // Only a new focus request moves the camera, not data or selection changes.
-  }, [focus]);
-
-  // The sheet's height is camera padding, so centring and fitting happen in the map left visible.
+  // The camera frames the open item, or a surface, in the map left showing between the search bar and
+  // chips above and the sheet below. While the map hasn't been moved by hand since, a new sheet height
+  // frames it again, so it stays whole and centred as the sheet rises and falls; after a pan or a zoom,
+  // a new height only shifts the centre into the part showing.
   const insetTop = props.insets?.top ?? 0;
   const insetBottom = props.insets?.bottom ?? 0;
+  const lastFocus = useRef<FocusRequest | null>(null);
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    map.easeTo({ padding: { top: insetTop, bottom: insetBottom, left: 0, right: 0 }, duration: 240 });
-  }, [insetTop, insetBottom]);
+    if (focus && focus !== lastFocus.current) {
+      lastFocus.current = focus;
+      framed.current = focus;
+    }
+    // At full the sheet leaves only a sliver of map: hold still until it comes down.
+    if (map.getContainer().clientHeight - insetTop - insetBottom < MOBILE.minFramePx) return;
+    const padding = { top: insetTop, bottom: insetBottom, left: 0, right: 0 };
+    const target = framed.current;
+    if (!target) {
+      map.easeTo({ padding, duration: 240 });
+      return;
+    }
+    const fit = (points: [number, number][], maxZoom: number) => {
+      if (!points.length) return;
+      const p = fitPadding();
+      map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: points }), {
+        padding: { top: insetTop + p, bottom: insetBottom + p, left: p, right: p },
+        absolutePadding: true,
+        maxZoom,
+      });
+    };
+    if ('camera' in target) {
+      map.flyTo({ center: [target.camera.lon, target.camera.lat], zoom: target.camera.zoom, padding });
+      return;
+    }
+    if ('points' in target) {
+      fit(target.points, 5);
+      return;
+    }
+    const resolved = resolveSelection(target.selection, data);
+    if (!resolved) return;
+    if (resolved.kind === 'chokepoint' || resolved.kind === 'lng' || resolved.kind === 'terminal') {
+      map.flyTo({ center: resolved.item.point, zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM), padding });
+    } else if (resolved.kind === 'country' && countryView?.arcs.length) {
+      // The country and every partner it draws an arc from.
+      fit([...boundsOf(resolved.item.geometry), ...countryView.arcs.map((a) => a.from)], 5);
+    } else if (resolved.kind === 'region') {
+      fit(regionFrame, 5);
+    } else {
+      fit(boundsOf(resolved.item.geometry), 8);
+    }
+    // Only a new focus request or a new sheet height moves the camera, not data or selection changes.
+  }, [focus, insetTop, insetBottom]);
 
   // Switching a region's fuel changes its arcs (gasoline is mostly domestic, crude global), so reframe.
   const framedFuel = useRef(fuel);
@@ -331,7 +362,13 @@ export function MapView(props: MapViewProps) {
     const map = mapRef.current;
     if (framedFuel.current === fuel) return;
     framedFuel.current = fuel;
-    if (map && regionFrame.length) map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: regionFrame }), { padding: fitPadding(), maxZoom: 5 });
+    if (!map || !regionFrame.length) return;
+    const p = fitPadding();
+    map.fitBounds(boundsOf({ type: 'MultiPoint', coordinates: regionFrame }), {
+      padding: { top: insetTop + p, bottom: insetBottom + p, left: p, right: p },
+      absolutePadding: true,
+      maxZoom: 5,
+    });
   }, [fuel, regionFrame]);
 
   return (

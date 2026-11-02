@@ -528,6 +528,8 @@ export const FIT_PADDING = 80;
  */
 export const MOBILE = {
   maxWidthPx: 720,
+  /** Hidden: only the handle shows, so the map has the screen (added 2026-11-02). */
+  hiddenPx: 28,
   /** The handle and the top of the panel: on Home, "What's happening" down to the latest disruption's name. */
   peekPx: 192,
   /** Half: this share of the space above the tab bar. */
@@ -538,6 +540,8 @@ export const MOBILE = {
   chipsPx: 56,
   /** Padding around what the map frames; the desktop's FIT_PADDING leaves no room above a half sheet. */
   fitPaddingPx: 16,
+  /** Below this much map left showing (at full), the camera holds still rather than framing a sliver. */
+  minFramePx: 120,
   /** A drag shorter than this is a tap. */
   dragThresholdPx: 6,
   /** How far ahead a flick's speed carries the sheet before it snaps, in ms of travel. */

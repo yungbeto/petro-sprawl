@@ -29,7 +29,11 @@ jobs:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       GH_TOKEN: ${{ github.token }}
     steps:
+      # Latest main, not the commit the run was queued at: a run that waited on the data group starts from
+      # what the run before it pushed.
       - uses: actions/checkout@v7
+        with:
+          ref: main
 
       - uses: actions/setup-node@v7
         with:
@@ -56,7 +60,8 @@ jobs:
             exit 0
           fi
           git commit -m "Scan news $(date -u +%Y-%m-%dT%H:%MZ)"
-          git pull --rebase
+          # The drafts (disruption-drafts.json) stay unstaged for the review step below; set them aside while rebasing.
+          git pull --rebase --autostash
           git push
 
       - name: Open a pull request for drafts that need review

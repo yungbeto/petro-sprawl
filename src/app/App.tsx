@@ -18,14 +18,15 @@ import { MapLoading } from '../map/MapLoading';
 import { useNow } from './useNow';
 import { AppMenu, type MenuSection } from './AppMenu';
 import { datasetFreshness, sortFreshness } from '../lib/freshness';
-import { useUrlState } from './useUrlState';
+import { surfaceCamera, useUrlState } from './useUrlState';
 import { DEFAULT_REGION_FUEL, type RegionFuel } from '../lib/config';
 import type { SearchScope } from '../lib/search';
 import { useDatasets } from './useDatasets';
 import { pipelinesTouchingBasin, resolveSelection } from '../lib/data';
-import { ENABLED_VIEWS, SURFACE_FILTERS, basinPipelineFocus, VIEW_LABELS, phoneTabs, scopeMatches, viewHighlight, viewPoints, visibleLayers, type ViewId } from '../lib/views';
+import { ENABLED_VIEWS, SURFACE_FILTERS, basinPipelineFocus, closeFrame, VIEW_LABELS, phoneTabs, scopeMatches, viewHighlight, viewPoints, visibleLayers, type ViewId } from '../lib/views';
 import { useVisitChanges } from './useVisitChanges';
 import { useIsPhone, useSheet } from './useSheet';
+import { liftDetent } from '../lib/sheet';
 import type { Selection } from './urlState';
 
 /** Each line's two ends: enough to frame a group of pipelines without walking every vertex. */
@@ -42,7 +43,7 @@ function isTypingTarget(target: EventTarget | null): boolean {
 }
 
 export function App() {
-  const { from, view, setView, selection, select, fuel, setFuel, filter, setFilter, back, setCamera, initialCamera } = useUrlState();
+  const { from, view, setView, selection, select, fuel, setFuel, filter, setFilter, back, restore, setCamera, initialCamera } = useUrlState();
   const { preference, setPreference, theme } = useTheme();
   const { data, loaded, failed } = useDatasets();
   const visit = useVisitChanges(data, loaded, failed);
@@ -83,6 +84,21 @@ export function App() {
     },
     [select],
   );
+
+  // Stepping back (or forward) returns the camera to the one that step had; with none, the surface's frame.
+  useEffect(() => {
+    if (!restore) return;
+    setFocus((prev) => ({ ...closeFrame(restore.camera, view, data), nonce: (prev?.nonce ?? 0) + 1 }));
+    // Only a new step moves the camera; `view` is already the step's.
+  }, [restore]);
+
+  // Close leaves the whole chain of open items: the camera returns to before the first was opened.
+  const closeToSurface = useCallback(() => {
+    const camera = selection ? surfaceCamera() : null;
+    const closing = Boolean(selection);
+    setView(view);
+    if (closing) setFocus((prev) => ({ ...closeFrame(camera, view, data), nonce: (prev?.nonce ?? 0) + 1 }));
+  }, [selection, setView, view, data]);
 
   // A shared link with a selection but no camera: frame the selection once data arrives.
   useEffect(() => {
@@ -313,7 +329,7 @@ export function App() {
     requestAnimationFrame(() => searchButtonRef.current?.focus());
   }, []);
 
-  // On phones, opening an item, a surface or a filter lifts the sheet from peek so its page shows.
+  // On phones, opening an item, a surface or a filter lifts a hidden or peeking sheet so its page shows.
   const pageKey = `${view}|${filter}|${selection?.kind}/${selection?.id}`;
   const lastPage = useRef<string | null>(null);
   useEffect(() => {
@@ -322,14 +338,14 @@ export function App() {
     if (previous === pageKey) return;
     // A shared link to an item opens with the item showing; Home opens at peek.
     if (previous === null && !selection && !filter && !view) return;
-    if (phone) setSheetDetent((d) => (d === 'peek' ? 'half' : d));
+    if (phone) setSheetDetent(liftDetent);
   }, [pageKey, phone]);
 
   // The More list closes when anything else opens, and isn't a thing off phones.
   useEffect(() => setMoreOpen(false), [selection?.kind, selection?.id, filter, phone]);
   const openMore = useCallback(() => {
     setMoreOpen(true);
-    setSheetDetent((d) => (d === 'peek' ? 'half' : d));
+    setSheetDetent(liftDetent);
   }, [setSheetDetent]);
 
   const setLayerVisible = useCallback((id: LayerId, visible: boolean) => {
@@ -426,7 +442,7 @@ export function App() {
           surfaceLabel={surfaceLabel}
           backLabel={backLabel}
           onBack={back}
-          onClose={() => setView(view)}
+          onClose={closeToSurface}
           collapsed={!phone && collapsed}
           onToggleCollapsed={toggleCollapsed}
           sheet={phone ? sheet : null}

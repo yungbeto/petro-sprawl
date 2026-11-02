@@ -458,7 +458,9 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
   // Grouped by region: researched lines come first, so Nord Stream 1 is in the opened group's list.
   await panel.getByRole('button', { name: /^Europe and Central Asia/ }).click();
   await panel.getByRole('list', { name: 'Europe and Central Asia' }).getByRole('button', { name: /^Nord Stream 1/ }).first().click();
-  await expect(page).toHaveURL(/view=pipelines&sel=pipeline\/nord-stream-1/);
+  // The camera can write `at` between the two, so each is checked on its own.
+  await expect(page).toHaveURL(/view=pipelines(&|$)/);
+  await expect(page).toHaveURL(/sel=pipeline\/nord-stream-1/);
   await expect(page.getByRole('heading', { name: 'Nord Stream 1' })).toBeVisible();
   await rail.getByRole('button', { name: 'Home' }).click();
   if (FEATURES.gasStorage) {
@@ -763,7 +765,9 @@ test('the chokepoints view stays lit while you open a strait from it, and Back r
 
   await list.getByRole('button', { name: /Bab el-Mandeb/ }).click();
   await expect(panel.getByRole('heading', { name: 'Bab el-Mandeb' })).toBeVisible();
-  await expect(page).toHaveURL(/view=chokepoints&sel=chokepoint\/babelm/);
+  // The camera can write `at` between the two, so each is checked on its own.
+  await expect(page).toHaveURL(/view=chokepoints(&|$)/);
+  await expect(page).toHaveURL(/sel=chokepoint\/babelm/);
   await expect(rail.getByRole('button', { name: 'Chokepoints' })).toHaveAttribute('aria-current', 'page');
 
   await page.keyboard.press('Escape');
@@ -930,7 +934,7 @@ test('the oil origins surface lists importers, and a country opens from the map 
   // On oil origins the imports come before gas storage.
   const sections = panel.locator('.country-section__title');
   await expect(sections.first()).toHaveText('Where its crude comes from');
-  await expect(panel.getByText(/UN Comtrade, imports of crude petroleum/)).toBeVisible();
+  await expect(panel.getByText(/Source: UN Comtrade\. Imports of crude petroleum/)).toBeVisible();
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/origins-india.png` });
   await panel.getByRole('button', { name: 'Close, back to Oil origins' }).click();
   await expect(list).toBeVisible();
@@ -980,4 +984,56 @@ test('while the data loads, the map shows the globe and the panel a page-shaped 
   await expect(page.getByRole('heading', { name: 'Strait of Hormuz', exact: true })).toBeVisible();
   await expect(page.getByText('Loading pipelines, terminals and flows')).toHaveCount(0);
   await expect(page.getByRole('button', { name: /Offline or idle/ })).toBeVisible();
+});
+
+/** The camera once the map is at rest: centre and zoom. */
+async function restingCamera(page: import('@playwright/test').Page) {
+  await page.waitForFunction(() => {
+    const map = (window as unknown as { __etMap?: MapHandle & { isMoving(): boolean } }).__etMap;
+    return map?.loaded() && !map.isMoving();
+  });
+  return page.evaluate(() => {
+    const map = (window as unknown as { __etMap: { getCenter(): { lng: number; lat: number }; getZoom(): number } }).__etMap;
+    const c = map.getCenter();
+    return { lon: c.lng, lat: c.lat, zoom: map.getZoom() };
+  });
+}
+
+const near = (a: { lon: number; lat: number; zoom: number }, b: { lon: number; lat: number; zoom: number }) =>
+  Math.abs(a.lon - b.lon) < 0.5 && Math.abs(a.lat - b.lat) < 0.5 && Math.abs(a.zoom - b.zoom) < 0.1;
+
+test('closing an item returns the map to where it was before, through a chain of items too', async ({ page }) => {
+  // A basin, then one of its pipelines: Back returns to the basin's frame, Close to Home's.
+  await page.goto('/');
+  const panel = page.getByLabel('Panel', { exact: true });
+  await expect(page.getByRole('region', { name: 'Overview' })).toBeVisible();
+  const home = await restingCamera(page);
+  const search = await openSearch(page);
+  await search.fill('west siberian');
+  await page.getByRole('option', { name: /West Siberian Basin/ }).first().click();
+  await expect(panel.getByRole('heading', { name: 'West Siberian Basin' })).toBeVisible();
+  await expect.poll(async () => near(await restingCamera(page), home)).toBe(false);
+  const basin = await restingCamera(page);
+  const related = panel.getByRole('region', { name: /Pipelines crossing it/ });
+  await related.getByRole('listitem').first().getByRole('button').click();
+  await expect(page).toHaveURL(/sel=pipeline\//);
+  await expect.poll(async () => near(await restingCamera(page), basin)).toBe(false);
+  await panel.getByRole('button', { name: /^Back to/ }).click();
+  await expect(page).toHaveURL(/sel=basin\/usgs-1174/);
+  await expect.poll(async () => near(await restingCamera(page), basin), { timeout: 10_000 }).toBe(true);
+  await related.getByRole('listitem').first().getByRole('button').click();
+  await expect(page).toHaveURL(/sel=pipeline\//);
+  await panel.getByRole('button', { name: /^Close, back to/ }).click();
+  await expect(page.getByRole('region', { name: 'Overview' })).toBeVisible();
+  await expect.poll(async () => near(await restingCamera(page), home), { timeout: 10_000 }).toBe(true);
+});
+
+test('closing an item opened from a link frames its surface', async ({ page }) => {
+  await page.goto('/?view=chokepoints&sel=chokepoint/hormuz');
+  const panel = page.getByLabel('Panel', { exact: true });
+  await expect(panel.getByRole('heading', { name: 'Strait of Hormuz' })).toBeVisible();
+  const strait = await restingCamera(page);
+  await panel.getByRole('button', { name: 'Close, back to Chokepoints' }).click();
+  // Every strait in view: zoomed well out from the one.
+  await expect.poll(async () => (await restingCamera(page)).zoom, { timeout: 10_000 }).toBeLessThan(strait.zoom - 1);
 });

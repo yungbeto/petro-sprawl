@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { FEATURES, STORAGE_BOUNDS, WORLD_BOUNDS } from '../src/lib/config';
+import { FEATURES, STORAGE_BOUNDS, THEATER_BOUNDS, WORLD_BOUNDS } from '../src/lib/config';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
 import { basinViewRows, chokepointViewRows } from '../src/lib/summary';
 import {
   ENABLED_VIEWS,
   SURFACE_FILTERS,
   basinPipelineFocus,
+  closeFrame,
   parseView,
   phoneTabs,
   scopeMatches,
@@ -217,5 +218,17 @@ describe('basinPipelineFocus', () => {
     const filter = { pipelines: new Set(['b']), chokepoints: new Set<string>(), lng: new Set<string>(), terminals: new Set<string>() };
     expect(basinPipelineFocus(null, touching, null, filter, true, data)!.highlight).toBe(filter);
     expect(basinPipelineFocus('basins', touching, null, filter, true, data)!.highlight).toBe(filter);
+  });
+});
+
+describe('closeFrame', () => {
+  const data = { chokepoints: [{ point: [56.9, 26.3] }, { point: [43.4, 12.6] }] } as unknown as Datasets;
+  it('returns to the camera from before the item was opened', () => {
+    const camera = { lon: 10, lat: 50, zoom: 4 };
+    expect(closeFrame(camera, 'chokepoints', data)).toEqual({ camera });
+  });
+  it("without one, frames the surface: its own points, or Home the first visit's map", () => {
+    expect(closeFrame(null, 'chokepoints', data)).toEqual({ points: [[56.9, 26.3], [43.4, 12.6]] });
+    expect(closeFrame(null, null, data)).toEqual({ points: THEATER_BOUNDS });
   });
 });

@@ -1111,8 +1111,22 @@ a:hover {
   color: var(--flow-above);
 }
 
+/* Line charts: the line and a soft fill under it in the chart's color (--chart-color), no axis rule. */
 .sparkline {
+  --chart-color: var(--text);
   margin: 0;
+}
+
+.sparkline--below {
+  --chart-color: var(--flow-below);
+}
+
+.sparkline--near {
+  --chart-color: var(--flow-near);
+}
+
+.sparkline--above {
+  --chart-color: var(--flow-above);
 }
 
 .sparkline svg {
@@ -1120,18 +1134,14 @@ a:hover {
   width: 100%;
   height: 72px;
   overflow: visible;
+  color: var(--chart-color);
 }
 
 .sparkline__line {
   fill: none;
-  stroke: var(--text);
+  stroke: currentColor;
   stroke-width: 1.5;
-  vector-effect: non-scaling-stroke;
-}
-
-.sparkline__axis {
-  stroke: var(--border-strong);
-  stroke-width: 1;
+  stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
 }
 
@@ -1176,7 +1186,7 @@ a:hover {
 
 .sparkline__key {
   width: 16px;
-  border-top: 1.5px solid var(--text);
+  border-top: 1.5px solid var(--chart-color);
 }
 
 .sparkline__key--dashed {
@@ -2233,8 +2243,122 @@ a:hover {
 .mini-sparkline {
   display: block;
   width: 100%;
-  height: 32px;
+  height: 36px;
   overflow: visible;
+  color: var(--text);
+}
+
+.mini-sparkline__line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* A chokepoint in the list: name and band, the share as the figure, the trend, then the figures behind it. */
+/* Cards rather than ruled rows: 8px apart, each with a hairline outline drawn as a shadow. */
+.view-list--cards {
+  gap: var(--space-2);
+}
+
+.view-list--cards > li + li {
+  border-top: 0;
+}
+
+.chokepoint-row {
+  gap: var(--space-2);
+  margin: 0;
+  width: 100%;
+  padding: var(--space-4);
+  box-shadow: 0 0 0 1px var(--border);
+  transition-property: background-color, box-shadow;
+  transition-duration: 120ms;
+}
+
+.chokepoint-row:hover {
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+
+.chokepoint-row__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.chokepoint-row__title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.chokepoint-row__title .band {
+  font-size: var(--text-sm);
+}
+
+.chokepoint-row__title .band::before {
+  width: 8px;
+  height: 8px;
+  border-width: 1.5px;
+}
+
+.chokepoint-row__figure {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.chokepoint-row__value {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.chokepoint-row__unit {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.chokepoint-row .mini-sparkline {
+  margin-top: var(--space-1);
+}
+
+/* The trend takes its band's color, so the line, the fill and the status read as one. */
+.mini-sparkline.band--below {
+  color: var(--flow-below);
+}
+
+.mini-sparkline.band--above {
+  color: var(--flow-above);
+}
+
+.mini-sparkline.band--near {
+  color: var(--flow-near);
+}
+
+/* The figures behind the share, as one line: values in the text color, the words muted. */
+.chokepoint-row__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.chokepoint-row__facts strong {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.chokepoint-row__facts > span + span::before {
+  content: '·';
+  padding: 0 6px;
 }
 
 .status-groups {
@@ -2757,6 +2881,11 @@ a:hover {
   /* At peek there's only room for the top of the page. */
   .app[data-sheet='peek'] .panel__footer {
     display: none;
+  }
+
+  /* Hidden: the handle alone, so the map has the screen. The page under it is out of reach too. */
+  .app[data-sheet='hidden'] .panel > :not(.sheet-handle) {
+    visibility: hidden;
   }
 
   /* Below full the page doesn't scroll: a drag on it moves the sheet (useSheet), as in map apps.

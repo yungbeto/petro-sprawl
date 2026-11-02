@@ -15,3 +15,6 @@ data/reports/claim-drafts.json
 
 # Link preview function bundles, built by npm run build
 api/_dist
+
+# Demo video and its frames, from npm run record:demo
+demo/
