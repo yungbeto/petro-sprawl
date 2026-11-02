@@ -2,14 +2,24 @@
   {
     "id": "ras-tanura",
     "name": "Ras Tanura",
-    "aliases": ["Ras Tanura terminal"],
+    "aliases": [
+      "Ras Tanura terminal"
+    ],
     "role": "export",
     "country": "SA",
-    "point": [50.1229, 26.6717],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port1091" },
+    "point": [
+      50.1229,
+      26.6717
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port1091"
+    },
     "operator": "Saudi Aramco",
     "pipelineIds": [],
-    "exitVia": ["hormuz"],
+    "exitVia": [
+      "hormuz"
+    ],
     "throughput": {
       "value": 5.4,
       "unit": "mb/d",
@@ -35,27 +45,52 @@
   {
     "id": "juaymah",
     "name": "Ras al-Ju'aymah",
-    "aliases": ["Juaymah", "Ju'aymah"],
+    "aliases": [
+      "Juaymah",
+      "Ju'aymah"
+    ],
     "role": "export",
     "country": "SA",
-    "point": [49.977, 26.8032],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port526" },
+    "point": [
+      49.977,
+      26.8032
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port526"
+    },
     "operator": "Saudi Aramco",
     "pipelineIds": [],
-    "exitVia": ["hormuz"],
+    "exitVia": [
+      "hormuz"
+    ],
     "evidence": []
   },
   {
     "id": "yanbu",
     "name": "Yanbu",
-    "aliases": ["King Fahd Port", "Yanbu crude terminals"],
+    "aliases": [
+      "King Fahd Port",
+      "Yanbu crude terminals"
+    ],
     "role": "export",
     "country": "SA",
-    "point": [38.2717, 23.9509],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port570 (King Fahd Port)" },
+    "point": [
+      38.2717,
+      23.9509
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port570 (King Fahd Port)"
+    },
     "operator": "Saudi Aramco",
-    "pipelineIds": ["east-west-crude"],
-    "exitVia": ["babelm", "suez"],
+    "pipelineIds": [
+      "east-west-crude"
+    ],
+    "exitVia": [
+      "babelm",
+      "suez"
+    ],
     "evidence": [
       {
         "status": "operating",
@@ -70,14 +105,24 @@
   {
     "id": "kharg",
     "name": "Kharg Island",
-    "aliases": ["Kharg"],
+    "aliases": [
+      "Kharg"
+    ],
     "role": "export",
     "country": "IR",
-    "point": [50.3351, 29.2431],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port2164" },
+    "point": [
+      50.3351,
+      29.2431
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port2164"
+    },
     "operator": "National Iranian Oil Company",
     "pipelineIds": [],
-    "exitVia": ["hormuz"],
+    "exitVia": [
+      "hormuz"
+    ],
     "evidence": [
       {
         "status": "operating",
@@ -92,13 +137,25 @@
   {
     "id": "basrah",
     "name": "Basra oil terminals",
-    "aliases": ["Basrah Oil Terminal", "Al Basrah Oil Terminal", "Basra"],
+    "aliases": [
+      "Basrah Oil Terminal",
+      "Al Basrah Oil Terminal",
+      "Basra"
+    ],
     "role": "export",
     "country": "IQ",
-    "point": [48.8248, 29.6816],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port2479 (Basrah Oil Terminal)" },
+    "point": [
+      48.8248,
+      29.6816
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port2479 (Basrah Oil Terminal)"
+    },
     "pipelineIds": [],
-    "exitVia": ["hormuz"],
+    "exitVia": [
+      "hormuz"
+    ],
     "evidence": [
       {
         "status": "operating",
@@ -113,25 +170,45 @@
   {
     "id": "mina-al-ahmadi",
     "name": "Mina al-Ahmadi",
-    "aliases": ["Mina Al Ahmadi"],
+    "aliases": [
+      "Mina Al Ahmadi"
+    ],
     "role": "export",
     "country": "KW",
-    "point": [48.1451, 29.0455],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port743" },
+    "point": [
+      48.1451,
+      29.0455
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port743"
+    },
     "operator": "Kuwait Oil Company",
     "pipelineIds": [],
-    "exitVia": ["hormuz"],
+    "exitVia": [
+      "hormuz"
+    ],
     "evidence": []
   },
   {
     "id": "fujairah",
     "name": "Fujairah",
-    "aliases": ["Port of Fujairah"],
+    "aliases": [
+      "Port of Fujairah"
+    ],
     "role": "export",
     "country": "AE",
-    "point": [56.3594, 25.2002],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port362" },
-    "pipelineIds": ["habshan-fujairah"],
+    "point": [
+      56.3594,
+      25.2002
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port362"
+    },
+    "pipelineIds": [
+      "habshan-fujairah"
+    ],
     "exitVia": [],
     "portwatchId": "port362",
     "evidence": [
@@ -156,12 +233,25 @@
   {
     "id": "ceyhan",
     "name": "Ceyhan",
-    "aliases": ["Ceyhan Marine Terminal", "Botas Ceyhan", "Haydar Aliyev terminal"],
+    "aliases": [
+      "Ceyhan Marine Terminal",
+      "Botas Ceyhan",
+      "Haydar Aliyev terminal"
+    ],
     "role": "export",
     "country": "TR",
-    "point": [35.9186, 36.8767],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port162 (Botas)" },
-    "pipelineIds": ["btc", "kirkuk-ceyhan"],
+    "point": [
+      35.9186,
+      36.8767
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port162 (Botas)"
+    },
+    "pipelineIds": [
+      "btc",
+      "kirkuk-ceyhan"
+    ],
     "exitVia": [],
     "portwatchId": "port162",
     "evidence": [
@@ -178,14 +268,29 @@
   {
     "id": "ain-sokhna",
     "name": "Ain Sokhna",
-    "aliases": ["Ain Sukhna", "El Sokhna", "SUMED Ain Sokhna terminal"],
+    "aliases": [
+      "Ain Sukhna",
+      "El Sokhna",
+      "SUMED Ain Sokhna terminal"
+    ],
     "role": "import",
     "country": "EG",
-    "point": [32.3539, 29.6474],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port828 (El Sokhna)" },
+    "point": [
+      32.3539,
+      29.6474
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port828 (El Sokhna)"
+    },
     "operator": "Arab Petroleum Pipelines Company (SUMED)",
-    "pipelineIds": ["sumed"],
-    "exitVia": ["babelm", "suez"],
+    "pipelineIds": [
+      "sumed"
+    ],
+    "exitVia": [
+      "babelm",
+      "suez"
+    ],
     "evidence": [
       {
         "status": "operating",
@@ -200,13 +305,23 @@
   {
     "id": "sidi-kerir",
     "name": "Sidi Kerir",
-    "aliases": ["SUMED Sidi Kerir terminal"],
+    "aliases": [
+      "SUMED Sidi Kerir terminal"
+    ],
     "role": "export",
     "country": "EG",
-    "point": [29.6187, 31.0959],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port2129" },
+    "point": [
+      29.6187,
+      31.0959
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port2129"
+    },
     "operator": "Arab Petroleum Pipelines Company (SUMED)",
-    "pipelineIds": ["sumed"],
+    "pipelineIds": [
+      "sumed"
+    ],
     "exitVia": [],
     "evidence": [
       {
@@ -222,14 +337,26 @@
   {
     "id": "sheskharis",
     "name": "Sheskharis (Novorossiysk)",
-    "aliases": ["Sheskharis", "Novorossiysk", "Novo"],
+    "aliases": [
+      "Sheskharis",
+      "Novorossiysk",
+      "Novo"
+    ],
     "role": "export",
     "country": "RU",
-    "point": [37.8087, 44.7235],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port833 (Novorossiysk)" },
+    "point": [
+      37.8087,
+      44.7235
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port833 (Novorossiysk)"
+    },
     "operator": "Transneft",
     "pipelineIds": [],
-    "exitVia": ["turkish"],
+    "exitVia": [
+      "turkish"
+    ],
     "throughput": {
       "value": 0.65,
       "unit": "mb/d",
@@ -263,18 +390,29 @@
   {
     "id": "cpc-marine-terminal",
     "name": "CPC Marine Terminal",
-    "aliases": ["Novorossiysk-2 Marine Terminal", "Yuzhnaya Ozereyevka", "CPC terminal"],
+    "aliases": [
+      "Novorossiysk-2 Marine Terminal",
+      "Yuzhnaya Ozereyevka",
+      "CPC terminal"
+    ],
     "role": "export",
     "country": "RU",
-    "point": [37.954, 44.955],
+    "point": [
+      37.954,
+      44.955
+    ],
     "pointSource": {
       "publisher": "Global Energy Monitor",
       "detail": "end of the CPC route, inland of the terminal at Yuzhnaya Ozereyevka, whose moorings are about 5 km offshore (Baird Maritime)"
     },
     "pointApprox": true,
     "operator": "Caspian Pipeline Consortium",
-    "pipelineIds": ["cpc"],
-    "exitVia": ["turkish"],
+    "pipelineIds": [
+      "cpc"
+    ],
+    "exitVia": [
+      "turkish"
+    ],
     "evidence": [
       {
         "status": "operating",
@@ -297,14 +435,26 @@
   {
     "id": "primorsk",
     "name": "Primorsk",
-    "aliases": ["Primorsk oil terminal"],
+    "aliases": [
+      "Primorsk oil terminal"
+    ],
     "role": "export",
     "country": "RU",
-    "point": [28.7312, 60.3369],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port1020" },
+    "point": [
+      28.7312,
+      60.3369
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port1020"
+    },
     "operator": "Transneft",
-    "pipelineIds": ["baltic-pipeline-system-1"],
-    "exitVia": ["danish"],
+    "pipelineIds": [
+      "baltic-pipeline-system-1"
+    ],
+    "exitVia": [
+      "danish"
+    ],
     "evidence": [
       {
         "status": "operating",
@@ -319,14 +469,26 @@
   {
     "id": "ust-luga",
     "name": "Ust-Luga",
-    "aliases": ["Ust-Luga oil terminal"],
+    "aliases": [
+      "Ust-Luga oil terminal"
+    ],
     "role": "export",
     "country": "RU",
-    "point": [28.4057, 59.6827],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port1095" },
+    "point": [
+      28.4057,
+      59.6827
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port1095"
+    },
     "operator": "Transneft",
-    "pipelineIds": ["baltic-pipeline-system-2"],
-    "exitVia": ["danish"],
+    "pipelineIds": [
+      "baltic-pipeline-system-2"
+    ],
+    "exitVia": [
+      "danish"
+    ],
     "evidence": [
       {
         "status": "operating",
@@ -349,24 +511,42 @@
   {
     "id": "loop",
     "name": "Louisiana Offshore Oil Port (LOOP)",
-    "aliases": ["LOOP"],
+    "aliases": [
+      "LOOP"
+    ],
     "role": "import",
     "country": "US",
-    "point": [-90.002, 28.872],
-    "pointSource": { "publisher": "Global Energy Monitor", "detail": "offshore end of the LOOP Main Oil Line" },
+    "point": [
+      -90.002,
+      28.872
+    ],
+    "pointSource": {
+      "publisher": "Global Energy Monitor",
+      "detail": "offshore end of the LOOP Main Oil Line"
+    },
     "operator": "LOOP LLC",
-    "pipelineIds": ["gem-p3861"],
+    "pipelineIds": [
+      "gem-p3861"
+    ],
     "exitVia": [],
     "evidence": []
   },
   {
     "id": "corpus-christi",
     "name": "Corpus Christi",
-    "aliases": ["Port of Corpus Christi"],
+    "aliases": [
+      "Port of Corpus Christi"
+    ],
     "role": "export",
     "country": "US",
-    "point": [-97.3799, 27.8412],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port264" },
+    "point": [
+      -97.3799,
+      27.8412
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port264"
+    },
     "pipelineIds": [],
     "exitVia": [],
     "evidence": [
@@ -383,11 +563,21 @@
   {
     "id": "covenas",
     "name": "Coveñas",
-    "aliases": ["Covenas", "Coveñas offshore terminal", "Terminal Marítimo de Coveñas"],
+    "aliases": [
+      "Covenas",
+      "Coveñas offshore terminal",
+      "Terminal Marítimo de Coveñas"
+    ],
     "role": "export",
     "country": "CO",
-    "point": [-75.6986, 9.4042],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port266 (Covenas Offshore Term.)" },
+    "point": [
+      -75.6986,
+      9.4042
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port266 (Covenas Offshore Term.)"
+    },
     "pipelineIds": [],
     "exitVia": [],
     "evidence": []
@@ -395,10 +585,16 @@
   {
     "id": "bonny",
     "name": "Bonny",
-    "aliases": ["Bonny terminal", "Bonny Light"],
+    "aliases": [
+      "Bonny terminal",
+      "Bonny Light"
+    ],
     "role": "export",
     "country": "NG",
-    "point": [7.157, 4.4207],
+    "point": [
+      7.157,
+      4.4207
+    ],
     "pointSource": {
       "publisher": "IMF PortWatch",
       "detail": "ports database, port155 (Bonny); the port, not the terminal itself"
@@ -411,11 +607,19 @@
   {
     "id": "escravos",
     "name": "Escravos",
-    "aliases": ["Escravos terminal"],
+    "aliases": [
+      "Escravos terminal"
+    ],
     "role": "export",
     "country": "NG",
-    "point": [5.1964, 5.614],
-    "pointSource": { "publisher": "IMF PortWatch", "detail": "ports database, port2076 (Escravos (Oil Terminal))" },
+    "point": [
+      5.1964,
+      5.614
+    ],
+    "pointSource": {
+      "publisher": "IMF PortWatch",
+      "detail": "ports database, port2076 (Escravos (Oil Terminal))"
+    },
     "pipelineIds": [],
     "exitVia": [],
     "evidence": []
@@ -423,10 +627,17 @@
   {
     "id": "acu",
     "name": "Açu (T-Oil)",
-    "aliases": ["Porto do Açu", "Acu", "T-Oil"],
+    "aliases": [
+      "Porto do Açu",
+      "Acu",
+      "T-Oil"
+    ],
     "role": "export",
     "country": "BR",
-    "point": [-41.0199, -21.8507],
+    "point": [
+      -41.0199,
+      -21.8507
+    ],
     "pointSource": {
       "publisher": "IMF PortWatch",
       "detail": "ports database, port166 (Porto do Acu); the port, not the transshipment berth"
@@ -439,10 +650,17 @@
   {
     "id": "stabroek-fpsos",
     "name": "Stabroek FPSOs",
-    "aliases": ["Guyana FPSOs", "Liza", "Stabroek Block"],
+    "aliases": [
+      "Guyana FPSOs",
+      "Liza",
+      "Stabroek Block"
+    ],
     "role": "export",
     "country": "GY",
-    "point": [-56.913, 8.008],
+    "point": [
+      -56.913,
+      8.008
+    ],
     "pointSource": {
       "publisher": "IMF PortWatch",
       "detail": "ports database, Guyana offshore oil terminals 1 to 4 (fso48 to fso51); the point is terminal 1, the others lie within about 30 km"
@@ -455,10 +673,18 @@
   {
     "id": "balao",
     "name": "Balao (Esmeraldas)",
-    "aliases": ["Balao", "Esmeraldas", "Punta Gorda", "OCP terminal"],
+    "aliases": [
+      "Balao",
+      "Esmeraldas",
+      "Punta Gorda",
+      "OCP terminal"
+    ],
     "role": "export",
     "country": "EC",
-    "point": [-79.6507, 0.9905],
+    "point": [
+      -79.6507,
+      0.9905
+    ],
     "pointSource": {
       "publisher": "IMF PortWatch",
       "detail": "ports database, port330 (Esmeraldas); Balao and the OCP terminal at Punta Gorda lie off the same coast"

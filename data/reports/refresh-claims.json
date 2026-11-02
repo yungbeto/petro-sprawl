@@ -1,0 +1,295 @@
+{
+  "recordedAt": "2026-11-02",
+  "model": "claude-haiku-5-5",
+  "usage": {
+    "input": 1415663,
+    "output": 38587,
+    "searches": 87
+  },
+  "estimatedCostUsd": 1.031,
+  "results": [
+    {
+      "ref": "terminal/juaymah",
+      "name": "Ras al-Ju'aymah",
+      "outcome": "review",
+      "detail": "first claim for this asset",
+      "draft": {
+        "found": true,
+        "status": "operating",
+        "sourceType": "press",
+        "publisher": "Engine",
+        "url": "https://www.engine.online/news/ras-tanura-loadings-spike-after-east-west-pipeline-disruption-kpler-81c9",
+        "quote": "Six very large crude carriers (VLCC) loaded about 12 million bbls at Ras Tanura and Juaymah on 21 September",
+        "observedAt": "2026-09-21",
+        "statement": "Kpler reported that six VLCCs loaded about 12 million barrels of crude at Ras Tanura and Juaymah on 21 September, with loadings surging after East-West Pipeline disruptions (Engine)."
+      }
+    },
+    {
+      "ref": "terminal/mina-al-ahmadi",
+      "name": "Mina al-Ahmadi",
+      "outcome": "nothing found"
+    },
+    {
+      "ref": "terminal/loop",
+      "name": "Louisiana Offshore Oil Port (LOOP)",
+      "outcome": "nothing found"
+    },
+    {
+      "ref": "terminal/covenas",
+      "name": "Coveñas",
+      "outcome": "nothing found"
+    },
+    {
+      "ref": "terminal/bonny",
+      "name": "Bonny",
+      "outcome": "nothing found"
+    },
+    {
+      "ref": "terminal/escravos",
+      "name": "Escravos",
+      "outcome": "nothing found"
+    },
+    {
+      "ref": "terminal/acu",
+      "name": "Açu (T-Oil)",
+      "outcome": "review",
+      "detail": "first claim for this asset",
+      "draft": {
+        "found": true,
+        "status": "operating",
+        "sourceType": "press",
+        "publisher": "O Fluminense",
+        "url": "https://ofluminense.com.br/porto-acu-tres-transbordos-simultaneos-petrobras/",
+        "quote": "A operação simultânea utiliza os três berços disponíveis no terminal.",
+        "observedAt": "2026-10-18",
+        "statement": "Reports that the T-Oil terminal at Porto do Açu carried out three simultaneous crude transshipment operations for Petrobras on 18 October 2026, using all three berths (O Fluminense)."
+      }
+    },
+    {
+      "ref": "terminal/stabroek-fpsos",
+      "name": "Stabroek FPSOs",
+      "outcome": "review",
+      "detail": "first claim for this asset",
+      "draft": {
+        "found": true,
+        "status": "operating",
+        "sourceType": "press",
+        "publisher": "Rio Times",
+        "url": "https://www.riotimesonline.com/guyana-oil-passes-1-billion-barrels-exxon-uaru-2026/",
+        "quote": "Exxon said output from the Stabroek block passed 1 billion barrels in total as of 30 October 2026.",
+        "observedAt": "2026-10-30",
+        "statement": "ExxonMobil said Stabroek Block output had passed 1 billion barrels in total as of 30 October 2026, in its third-quarter results release (Rio Times)"
+      }
+    },
+    {
+      "ref": "terminal/balao",
+      "name": "Balao (Esmeraldas)",
+      "outcome": "nothing found"
+    },
+    {
+      "ref": "pipeline/arab-gas-jordan-syria",
+      "name": "Arab Gas Pipeline · Jordan–Syria (Jaber–Homs)",
+      "outcome": "rejected",
+      "detail": "quote not found on the page",
+      "draft": {
+        "found": true,
+        "status": "operating",
+        "sourceType": "press",
+        "publisher": "Pipeline Technology Journal",
+        "url": "https://megaproject.com/news/oilandgas/jordan-approves-plan-to-supply-lebanon-with-natural-gas-via-arab-pipeline",
+        "quote": "Jordan has already been delivering energy to Syria through the Arab Gas Pipeline under a similar mechanism",
+        "observedAt": "2026-09-10",
+        "statement": "Reports that Jordan is already delivering gas to Syria through the Arab Gas Pipeline under an arrangement in place since early 2026, without naming the Jaber entry point (Pipeline Technology Journal)."
+      }
+    },
+    {
+      "ref": "terminal/ras-tanura",
+      "name": "Ras Tanura",
+      "outcome": "review",
+      "detail": "boereport.com isn't on the trusted list",
+      "draft": {
+        "found": true,
+        "status": "operating",
+        "sourceType": "press",
+        "publisher": "Reuters",
+        "url": "https://boereport.com/2026/07/02/saudi-aramco-ramps-up-exports-from-ras-tanura-switches-to-spot-sales-sources-say/",
+        "quote": "Another four VLCCs are located near the Ras Tanura port",
+        "observedAt": "2026-07-02",
+        "statement": "Reuters reports that at least five supertankers carrying 10 million barrels of Saudi oil loaded from Ras Tanura have exited the Strait of Hormuz, and Saudi Aramco resumed loadings there after a halt of nearly four months (Reuters)."
+      }
+    },
+    {
+      "ref": "terminal/corpus-christi",
+      "name": "Corpus Christi",
+      "outcome": "review",
+      "detail": "dredgewire.com isn't on the trusted list",
+      "draft": {
+        "found": true,
+        "status": "operating",
+        "sourceType": "press",
+        "publisher": "DredgeWire",
+        "url": "https://dredgewire.com/port-of-corpus-christi-announces-third-quarter-volumes-none-month-tonnage-record/",
+        "quote": "Crude oil shipments totaled 30.4 million tons, a 2.8% decrease from the third quarter of 2025.",
+        "observedAt": "2026-09-30",
+        "statement": "Port of Corpus Christi crude oil shipments totaled 30.4 million tons in the third quarter of 2026, down 2.8% from a year earlier, and the port's overall third-quarter volume was 52.4 million tons (DredgeWire)."
+      }
+    },
+    {
+      "ref": "pipeline/arish-ashkelon",
+      "name": "Arish–Ashkelon (EMG)",
+      "outcome": "nothing newer"
+    },
+    {
+      "ref": "pipeline/arab-gas-egypt-jordan",
+      "name": "Arab Gas Pipeline · Egypt–Jordan (Arish–Aqaba)",
+      "outcome": "nothing newer"
+    },
+    {
+      "ref": "pipeline/blue-stream",
+      "name": "Blue Stream",
+      "outcome": "nothing newer"
+    },
+    {
+      "ref": "terminal/kharg",
+      "name": "Kharg Island",
+      "outcome": "unreadable",
+      "detail": "page answered 403",
+      "draft": {
+        "found": true,
+        "status": "idle",
+        "sourceType": "press",
+        "publisher": "Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-10-19/iran-s-main-oil-terminals-remain-empty-as-us-blockade-bites",
+        "quote": "No tankers have docked at Kharg Island’s crude-export terminals since late August",
+        "observedAt": "2026-10-19",
+        "statement": "Bloomberg reports that no tankers have docked at Kharg Island's crude-export terminals since late August, with the main loading terminals empty for weeks amid the US naval blockade (Bloomberg)."
+      }
+    },
+    {
+      "ref": "pipeline/maghreb-europe",
+      "name": "Maghreb–Europe (GME)",
+      "outcome": "nothing newer"
+    },
+    {
+      "ref": "pipeline/druzhba-north",
+      "name": "Druzhba (northern branch)",
+      "outcome": "nothing newer"
+    },
+    {
+      "ref": "terminal/sheskharis",
+      "name": "Sheskharis (Novorossiysk)",
+      "outcome": "nothing newer"
+    },
+    {
+      "ref": "lng/gem-t100000130601-export",
+      "name": "Das Island LNG Terminal",
+      "outcome": "nothing newer"
+    },
+    {
+      "ref": "pipeline/turkstream",
+      "name": "TurkStream",
+      "outcome": "unreadable",
+      "detail": "page answered 403",
+      "draft": {
+        "found": true,
+        "status": "operating",
+        "sourceType": "press",
+        "publisher": "NV",
+        "url": "https://english.nv.ua/business/russian-gas-flows-via-turkstream-decline-in-october-50655477.html",
+        "quote": "The pipeline operated at an average of 92% capacity in October, significantly higher than the 79% recorded in September.",
+        "observedAt": "2026-10-31",
+        "statement": "Reports, citing Interfax, that Russian gas deliveries to Europe via TurkStream totaled 1.615 bcm in October 2026, with the pipeline running at an average of 92% capacity (NV)."
+      }
+    },
+    {
+      "ref": "pipeline/druzhba-south",
+      "name": "Druzhba (southern branch)",
+      "outcome": "nothing newer"
+    },
+    {
+      "ref": "pipeline/cpc",
+      "name": "Caspian Pipeline Consortium (CPC)",
+      "outcome": "rejected",
+      "detail": "not newer than the current claim (2026-09-30)",
+      "draft": {
+        "found": true,
+        "status": "operating",
+        "sourceType": "press",
+        "publisher": "Baird Maritime",
+        "url": "https://www.bairdmaritime.com/shipping/tankers/caspian-pipeline-consortium-to-trim-november-crude-exports",
+        "quote": "Oil exports through the CPC system fell to 1.5 million bpd in September from 1.6 million bpd in August due to scheduled maintenance at the Karachaganak field.",
+        "observedAt": "2026-09-30",
+        "statement": "Reuters reported on 28 October 2026 that CPC exports fell to 1.5 million bpd in September and that CPC plans to cut November exports by 2% to about 1.69 million bpd (Baird Maritime)."
+      }
+    },
+    {
+      "ref": "pipeline/baltic-pipeline-system-2",
+      "name": "Baltic Pipeline System 2 (BPS-2)",
+      "outcome": "nothing newer"
+    },
+    {
+      "ref": "pipeline/tanap",
+      "name": "Trans-Anatolian Pipeline (TANAP)",
+      "outcome": "rejected",
+      "detail": "quote not found on the page; refers to 2026-10-03, after the page was published (2026-06-12)",
+      "draft": {
+        "found": true,
+        "status": "operating",
+        "sourceType": "press",
+        "publisher": "APA",
+        "url": "https://en.apa.az/energy-and-industry/99-bcm-of-gas-transported-through-tanap-pipeline-to-date-511114",
+        "quote": "A total of 39.3 billion cubic meters of gas has been transported to Türkiye",
+        "observedAt": "2026-10-03",
+        "statement": "Reports, citing the Ministry of Energy, that 39.3 bcm of gas has been transported to Türkiye and nearly 99 bcm in total through TANAP to date (APA)."
+      }
+    },
+    {
+      "ref": "terminal/ceyhan",
+      "name": "Ceyhan",
+      "outcome": "unreadable",
+      "detail": "page answered 403",
+      "draft": {
+        "found": true,
+        "status": "operating",
+        "sourceType": "press",
+        "publisher": "IraqiNews",
+        "url": "https://www.iraqinews.com/iraq/iraq-crude-oil-exports-turkey-ceyhan-surge-500000-bpd-basra-integration-2026/",
+        "quote": "Total Iraqi crude oil exports routed through Turkey’s Ceyhan terminal rose to 500,000 barrels per day (bpd)",
+        "observedAt": "2026-11-01",
+        "statement": "Iraqi crude exports routed through the Ceyhan terminal rose to 500,000 bpd on November 1, 2026, the highest volume since pipeline flows through Turkish territory were officially restored (IraqiNews)."
+      }
+    },
+    {
+      "ref": "terminal/cpc-marine-terminal",
+      "name": "CPC Marine Terminal",
+      "outcome": "review",
+      "detail": "the quote doesn't name the asset",
+      "draft": {
+        "found": true,
+        "status": "operating",
+        "sourceType": "press",
+        "publisher": "Baird Maritime",
+        "url": "https://www.bairdmaritime.com/shipping/tankers/caspian-pipeline-consortium-to-trim-november-crude-exports",
+        "quote": "Traders said output at Karachaganak was expected to rise in October following the maintenance, supporting higher loadings this month.",
+        "observedAt": "2026-10-28",
+        "statement": "Citing two industry sources, Reuters reports CPC plans November exports of about 1.69 million barrels per day from the Black Sea terminal, down 2% from October, after September exports fell to 1.5 million bpd (Baird Maritime)."
+      }
+    },
+    {
+      "ref": "terminal/ust-luga",
+      "name": "Ust-Luga",
+      "outcome": "rejected",
+      "detail": "source already cited; not newer than the current claim (2026-09-30)",
+      "draft": {
+        "found": true,
+        "status": "operating",
+        "sourceType": "press",
+        "publisher": "CREA",
+        "url": "https://energyandcleanair.org/september-2026-monthly-analysis-of-russian-fossil-fuel-exports-and-sanctions/",
+        "quote": "crude oil loadings dropped 26% month-on-month.",
+        "observedAt": "2026-09-30",
+        "statement": "Reports that crude oil loadings at Ust-Luga fell 26% month on month in September after Ukrainian drone strikes at the start of the month (CREA)."
+      }
+    }
+  ]
+}
