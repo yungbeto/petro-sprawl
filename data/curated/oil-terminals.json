@@ -64,7 +64,16 @@
     "exitVia": [
       "hormuz"
     ],
-    "evidence": []
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Kpler reported that six VLCCs loaded about 12 million barrels of crude at Ras Tanura and Juaymah on 21 September, with loadings surging after East-West Pipeline disruptions (Engine).",
+        "url": "https://www.engine.online/news/ras-tanura-loadings-spike-after-east-west-pipeline-disruption-kpler-81c9",
+        "observedAt": "2026-09-21",
+        "recordedAt": "2026-11-02"
+      }
+    ]
   },
   {
     "id": "yanbu",
@@ -417,6 +426,14 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "Citing two industry sources, Reuters reports CPC plans November exports of about 1.69 million barrels per day from the Black Sea terminal, down 2% from October, after September exports fell to 1.5 million bpd (Baird Maritime).",
+        "url": "https://www.bairdmaritime.com/shipping/tankers/caspian-pipeline-consortium-to-trim-november-crude-exports",
+        "observedAt": "2026-10-28",
+        "recordedAt": "2026-11-02"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "CPC throughput fell to 1.59 million b/d in September during Karachaganak maintenance; loadings at the terminal were suspended repeatedly after drone attacks on tankers (Baird Maritime, citing Reuters).",
         "url": "https://www.bairdmaritime.com/offshore/transport/caspian-pipelines-throughput-falls-on-oilfield-maintenance-in-september",
         "observedAt": "2026-09-30",
@@ -553,6 +570,14 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "Port of Corpus Christi crude oil shipments totaled 30.4 million tons in the third quarter of 2026, down 2.8% from a year earlier, and the port's overall third-quarter volume was 52.4 million tons (DredgeWire).",
+        "url": "https://dredgewire.com/port-of-corpus-christi-announces-third-quarter-volumes-none-month-tonnage-record/",
+        "observedAt": "2026-09-30",
+        "recordedAt": "2026-11-02"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "Crude oil remained the Port of Corpus Christi's largest cargo, 66 million tons in the first half of 2026, 1.28% more than a year earlier (The Waterways Journal).",
         "url": "https://www.waterwaysjournal.net/2026/07/17/port-of-corpus-christi-sets-quarterly-first-half-cargo-records/",
         "observedAt": "2026-06-30",
@@ -645,7 +670,16 @@
     "pointApprox": true,
     "pipelineIds": [],
     "exitVia": [],
-    "evidence": []
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Reports that the T-Oil terminal at Porto do Açu carried out three simultaneous crude transshipment operations for Petrobras on 18 October 2026, using all three berths (O Fluminense).",
+        "url": "https://ofluminense.com.br/porto-acu-tres-transbordos-simultaneos-petrobras/",
+        "observedAt": "2026-10-18",
+        "recordedAt": "2026-11-02"
+      }
+    ]
   },
   {
     "id": "stabroek-fpsos",
@@ -668,7 +702,16 @@
     "pointApprox": true,
     "pipelineIds": [],
     "exitVia": [],
-    "evidence": []
+    "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "ExxonMobil said Stabroek Block output had passed 1 billion barrels in total as of 30 October 2026, in its third-quarter results release (Rio Times)",
+        "url": "https://www.riotimesonline.com/guyana-oil-passes-1-billion-barrels-exxon-uaru-2026/",
+        "observedAt": "2026-10-30",
+        "recordedAt": "2026-11-02"
+      }
+    ]
   },
   {
     "id": "balao",
