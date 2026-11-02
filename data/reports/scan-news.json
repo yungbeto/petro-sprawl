@@ -1,10 +1,10 @@
 {
-  "recordedAt": "2026-11-02T22:51:17.552Z",
+  "recordedAt": "2026-11-02T23:47:48.551Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 12,
-      "failed": 9,
+      "requests": 21,
+      "failed": 4,
       "articles": 0,
       "errors": [
         "answered 429",
@@ -16,7 +16,7 @@
     "google-news": {
       "requests": 13,
       "failed": 0,
-      "articles": 293,
+      "articles": 322,
       "errors": []
     }
   },
@@ -24,173 +24,44 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-02"
   },
-  "stories": 20,
-  "candidates": 10,
+  "stories": 18,
+  "candidates": 2,
   "usage": {
-    "input": 133217,
-    "output": 7151,
-    "searches": 7
+    "input": 23926,
+    "output": 810,
+    "searches": 1
   },
-  "estimatedCostUsd": 0.087,
+  "estimatedCostUsd": 0.013,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "rejected",
-      "detail": "the quote doesn't name the asset",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://gcaptain.com/new-wave-of-attacks-hits-tankers-and-lng-carrier-in-strait-of-hormuz-and-persian-gulf/",
-        "publisher": "gCaptain",
-        "quote": "The center recorded 18 confirmed attacks in the Strait since October 6 as of its November 1 assessment",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": ""
-      },
-      "headlines": [
-        "- 2026-11-02 · The Hill: Iran offers to open Strait of Hormuz on several conditions",
-        "- 2026-11-02 · The New York Times: Iran Says It Would Reopen Strait of Hormuz in 2 Days as Part of U.S. Deal",
-        "- 2026-11-02 · Euronews.com: Iran says it can reopen Hormuz in two days if US meets conditions",
-        "- 2026-11-02 · Bloomberg.com: Oil Declines Ahead of Midterm Elections Despite Hormuz Attacks",
-        "- 2026-11-02 · Al-Monitor: Iran gives 2-day window for Hormuz deal as US mulls strikes: What to know",
-        "- 2026-11-02 · アラブニュース: Iran says Strait of Hormuz could reopen within two days if US meets its demands",
-        "- 2026-11-02 · The Times of Israel: Iran says considering two-day plan to reopen Hormuz if US meets its ‘demands’",
-        "- 2026-11-02 · The New Arab: Iran in intensive talks as Hormuz reopening plan cut to two days",
-        "- 2026-11-02 · The Jerusalem Post: Two oil tankers explode after hitting mine in Hormuz Strait, IRGC spokesperson says",
-        "- 2026-11-02 · The New York Times: Video: Iran Says Strait of Hormuz Could Reopen in 2 Days if Demands Met",
-        "- 2026-11-02 · Reuters: Global oil supply down nearly 1 bln barrels since Hormuz disruption, warns ADNOC CEO",
-        "- 2026-11-02 · France 24: Iran offers deal on Hormuz Strait, Netanyahu wants to 'finish the job'",
-        "- 2026-11-02 · ASHARQ AL-AWSAT English: Iran Says Considering Two-day Plan to Reopen Hormuz",
-        "- 2026-11-02 · TradeWinds News: Hormuz attack leaves hole in merchant vessel off Oman",
-        "- 2026-11-02 · gCaptain: New Wave of Attacks Hits Tankers and LNG Carrier in Strait of Hormuz and Persian Gulf"
-      ]
-    },
-    {
-      "ref": "lng/gem-t100000130594-export",
-      "kind": "story",
       "outcome": "nothing",
       "headlines": [
-        "- 2026-11-02 · PSU Watch: Petronet seeks early delivery of Qatar LNG cargoes amid Hormuz disruption: MD Akshay Kumar Singh",
-        "- 2026-11-02 · Energy Update: Pakistan-Bound Qatar LNG Tanker Struck Near Hormuz Despite Prior Security Clearance",
-        "- 2026-11-02 · The Siasat Daily: Gulf countries condemn attack on Qatar LNG tanker",
-        "- 2026-11-01 · Al Jazeera: Qatar LNG carrier struck by ‘unidentified objects’ in Gulf",
-        "- 2026-11-01 · NewsCord: Qatar LNG carrier struck by ‘unidentified objects’ in Gulf",
-        "- 2026-11-01 · https://houseofsaud.com/: Qatar LNG Carrier Al Mayeda Struck Near Hormuz, Iran Reportedly Cleared Transit",
-        "- 2026-11-01 · Gulf News: Qatar LNG tanker hit in Gulf; crew safe, no oil spill reported",
-        "- 2026-11-01 · Jagonews24: Qatar LNG carrier hit by unidentified objects in Gulf",
-        "- 2026-11-01 · Gulf Times: Qatar LNG armada grows by nine in major boost | Gulf Times",
-        "- 2026-11-01 · Times Kuwait: Qatar LNG carrier Al Mayeda attacked in Arabian Gulf; crew safe",
-        "- 2026-11-01 · The Siasat Daily: Qatar LNG tanker carrying 6 Indians hit near Hormuz",
-        "- 2026-11-01 · UrduPoint: Attack On Qatar LNG Ship Bound For Pakistan Near Strait Of Hormuz, Iran’s Prior Approval Revealed",
-        "- 2026-11-01 · The Peninsula Qatar: QatarEnergy LNG celebrates recognition at Annual Energy Sector Qatarization Review",
-        "- 2026-10-31 · Simply Wall St: Is Woodside Energy Group (ASX:WDS) Undervalued Following Its 20 Year QatarEnergy LNG Deal?",
-        "- 2026-10-30 · Radar.am: Shell assesses attack on Qatar LNG facility"
+        "- 2026-11-02 · The Hill: Iran offers to open Strait of Hormuz on several conditions",
+        "- 2026-11-02 · NewsCord: IRNA Reports Five Explosions On Iran’s Qeshm Island Near Strait Of Hormuz: how 15 outlets framed it",
+        "- 2026-11-02 · The Economic Times: Araghchi says Iran, Qatar propose reopening Strait of Hormuz within two days if US meets Tehran's conditio",
+        "- 2026-11-02 · Iran Focus: Insecurity in the Strait of Hormuz Drives Up Costs",
+        "- 2026-11-02 · Anadolu Ajansı: Iran’s Revolutionary Guard says it downed 2 US drones in Strait of Hormuz",
+        "- 2026-11-02 · Oil & Gas 360: ADNOC warns global oil reserves are shrinking as Hormuz disruptions strain energy supplies",
+        "- 2026-11-02 · Centre for European Reform: The EU must make the Hormuz crisis a turning point",
+        "- 2026-11-02 · المنصة | ما رواه الناس: Iran offers conditional Hormuz reopening as Trump warns of ‘crushing blow’",
+        "- 2026-11-02 · www.taghribnews.com: Strait of Hormuz will not reopen unless Iran’s demands are met",
+        "- 2026-11-02 · SteelRadar: Iran sets two conditions for the US on the Strait of Hormuz and uranium",
+        "- 2026-11-02 · Breakbulk.News: RISK BAROMETER | Hormuz Attacks Nearly Double as Risk Index Hits 8.3: Four of Five Global Chokepoints Now Disrupted",
+        "- 2026-11-02 · Table.Briefings: Strait of Hormuz: Beijing condemns ‘great power rivalries’",
+        "- 2026-11-02 · UA.NEWS: IRGC says it downed two US drones in Strait of Hormuz — Anadolu Agency",
+        "- 2026-11-02 · NewsCord: Iranian Foreign Ministry Spokesperson Isaïl Baghaei Says Hormuz Strait Won’t Open Before U.S. Blockade Ends",
+        "- 2026-11-02 · TradeWinds News: Higher Strait of Hormuz flows help close the gap in product tanker rates"
       ]
     },
     {
       "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-02 · ASHARQ AL-AWSAT English: Fighting Against Houthis Resumes on Bab Al-Mandab Front",
-        "- 2026-11-02 · موقع مسبار: Misbar Detects New Military Activity North of Jabal Al-Omari Near Bab El-Mandeb",
-        "- 2026-11-02 · Latest news from Azerbaijan: Yemen forces, Houthis clash near Bab al-Mandab Strait; casualties reported",
-        "- 2026-11-02 · شبكة تواصل الإخبارية: Fighting Against Houthis Resumes on Bab Al-Mandab Front",
-        "- 2026-11-01 · سانا: Quad ministers call for freedom of navigation in Strait of Hormuz and Bab al-Mandab",
-        "- 2026-11-01 · TVC News: Rubio Calls For Secure Hormuz, Bab El-Mandeb Straits To Protect Global Trade -",
-        "- 2026-11-01 · Telegraph India: Quad ministers stress safe passage through Hormuz, Red Sea and Bab el-Mandeb Strait",
-        "- 2026-10-31 · Devdiscourse: Quad ministers call for navigational freedom in Hormuz, Red Sea, Bab el-Mandeb Strait amid West Asia conflict",
-        "- 2026-10-31 · صحيفة سبق الإلكترونية: Prince Faisal bin Farhan Discusses Houthi Attacks and Threats to Hormuz and Bab al-Mandab with Foreign Ministers of Germany, France, Japan, and Brazil"
-      ]
-    },
-    {
-      "ref": "terminal/fujairah",
-      "kind": "story",
-      "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-02 · Cyprus Shipping News: Gulf Congestion rises as Fujairah takes 28% of Waiting Bulkers",
-        "- 2026-11-02 · www.wam.ae: Fujairah's Department of Industry, JETRO discuss trade cooperation, upcoming Japanese business delegation visit",
-        "- 2026-11-02 · Zawya: Minister of Climate Change and Environment visits Al Dahra’s Fujairah Strategic Grain Terminal",
-        "- 2026-11-02 · Gulf News: Fujairah Police warn against riding e-scooters on public roads",
-        "- 2026-11-02 · Emirates 24|7: UAE weather today: Dust alert as winds reach 40km/h, with scattered rain in Ras Al Khaimah and Fujairah",
-        "- 2026-11-02 · Menafn: Minister Of Climate Change And Environment Visits Al Dahra's Fujairah Strategic Grain Terminal",
-        "- 2026-11-01 · Chess News | ChessBase: Fujairah to host WFCC Grand Prix Final, with world's best solvers and composers",
-        "- 2026-11-01 · Sharjah24: Fujairah Ruler receives Chairman of Russia’s Novatek",
-        "- 2026-11-01 · ChessBase India: WFCC Grand Prix Final: World's Top Chess Solvers to Battle for €30,000 Prize Fund in Fujairah",
-        "- 2026-11-01 · Sofascore: Dibba Al-Fujairah U16 vs Al-Nasr Dubai U16 live score, H2H and lineups"
-      ]
-    },
-    {
-      "ref": "terminal/ceyhan",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-02 · IraqiNews: Iraqi oil exports via Turkey’s Ceyhan port surge to 500,000 BPD",
-        "- 2026-11-02 · Kurdistan24: Iraq’s Ceyhan Oil Exports Hit 500,000 Barrels"
-      ]
-    },
-    {
-      "ref": "pipeline/blue-stream",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-02 · The National Law Review: KBRA Assigns Preliminary Ratings to Blue Stream Issuer, LLC Series 2026-1",
-        "- 2026-11-02 · Traders Union: Blue Stream securitization draws preliminary KBRA ratings"
-      ]
-    },
-    {
-      "ref": "terminal/bonny",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-02 · LEADERSHIP Newspapers: Naira Holds Steady As Bonny Light Hits $115 And Reserves Reach $55bn",
-        "- 2026-11-01 · Nairametrics: Naira Outlook Stable amid Bonny light at $115 a barrel & CBN’s $55 billion"
-      ]
-    },
-    {
-      "ref": "lng/gem-t100000130598-export",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-01 · The Peninsula Qatar: QatarEnergy LNG celebrates recognition at Annual Energy Sector Qatarization Review",
-        "- 2026-10-31 · Simply Wall St: Is Woodside Energy Group (ASX:WDS) Undervalued Following Its 20 Year QatarEnergy LNG Deal?"
-      ]
-    },
-    {
-      "ref": "pipeline/urengoy-pomary-uzhhorod",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-01 · Macedonian Football |: Bratstvo (Lj) vs Napredok 65",
-        "- 2026-10-31 · СПЖ: “They are not Nazis” – Chief Rabbi defends Bratstvo before Israel"
-      ]
-    },
-    {
-      "ref": "pipeline/nord-stream-1",
-      "kind": "story",
-      "outcome": "unreadable",
-      "detail": "page answered 403",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "nord-stream-2022-blasts",
-        "url": "https://energynow.com/2026/08/second-nord-stream-sabotage-suspect-arrested-in-croatia/",
-        "publisher": "EnergyNow",
-        "quote": "German prosecutors secured the arrest of a second person in its Nord Stream gas pipelines sabotage investigation.",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": ""
-      },
-      "headlines": [
-        "- 2026-10-30 · EnergyNow.com: NABBED: Second Nord Stream Sabotage Suspect Arrested in Croatia"
+        "- 2026-10-31 · Devdiscourse: Quad ministers call for navigational freedom in Hormuz, Red Sea, Bab el-Mandeb Strait amid West Asia conflict"
       ]
     }
   ]
