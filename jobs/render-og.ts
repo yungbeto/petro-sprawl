@@ -1,9 +1,9 @@
-// Manual: the social sharing card, a still frame of the header globe beside the app's name, rendered in
+// Manual: the social sharing card, a still frame of the header globe beside the app's name and tagline, rendered in
 // Chromium (Playwright, from the smoke tests) -> public/og.png, 1200 x 630.
 // Run: npm run render:og (after import:globe when the land mask changes)
 
 import { chromium } from '@playwright/test';
-import { GLOBE } from '../src/lib/config';
+import { GLOBE, SITE } from '../src/lib/config';
 import { globeFrame, globeSvg } from '../src/lib/globe';
 import { GLOBE_LAND } from '../src/lib/globeLand';
 
@@ -26,8 +26,8 @@ const html = `<!doctype html>
 </style></head>
 <body>
   <div class="text">
-    <h1>Petro Sprawl</h1>
-    <p>The world's oil and gas pipelines, LNG terminals, chokepoints and basins, with the flows measured through them.</p>
+    <h1>${SITE.name}</h1>
+    <p>${SITE.tagline}</p>
   </div>
   <div class="url">petrosprawl.fyi</div>
   <div class="globe">${svg}</div>

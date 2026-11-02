@@ -67,7 +67,7 @@ for (const [scheme, background] of [
 test('selection and camera live in the URL', async ({ page }) => {
   await page.goto('/');
   await page.goto('/?sel=pipeline/nord-stream-1');
-  await expect(page.getByRole('heading', { name: 'nord-stream-1' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Nord Stream 1', exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page).not.toHaveURL(/sel=/);
   await expect(page.getByRole('region', { name: 'Overview' })).toBeVisible();
@@ -242,9 +242,10 @@ test('data age shows in the footer, and the menu flags stale or failed datasets'
   const panel = page.getByLabel('Panel', { exact: true });
   const footer = panel.getByRole('button', { name: /^Updated .* UTC/ });
   await expect(footer).toBeVisible();
-  // The footer line opens the menu at the freshness table.
+  // The footer line opens the menu on its Data tab.
   await footer.click();
   const menu = page.getByRole('dialog', { name: 'Menu' });
+  await expect(menu.getByRole('tab', { name: 'Data' })).toHaveAttribute('aria-selected', 'true');
   const transits = menu.getByRole('row', { name: /Chokepoint transits/ });
   await expect(transits).toBeVisible();
   await expect(transits).toContainText(/ago|just now/);
@@ -271,7 +272,16 @@ test('the menu holds app settings, closes on Esc, and returns focus', async ({ p
   const menuButton = page.getByRole('button', { name: 'Menu' });
   await menuButton.click();
   const menu = page.getByRole('dialog', { name: 'Menu' });
+  // It opens on About, under the hero; the arrow keys move along the tabs.
+  await expect(menu.getByRole('heading', { name: 'The sprawling empire of the petro-state' })).toBeVisible();
+  await expect(menu.getByRole('tab', { name: 'About' })).toHaveAttribute('aria-selected', 'true');
+  await menu.getByRole('tab', { name: 'About' }).focus();
+  await page.keyboard.press('ArrowLeft');
+  await expect(menu.getByRole('tab', { name: 'Settings' })).toBeFocused();
   await expect(menu.getByRole('heading', { name: 'Keyboard shortcuts' })).toBeVisible();
+  // The footer names who to write to and who made it.
+  await expect(menu.getByRole('link', { name: 'hello@petrosprawl.fyi' })).toHaveAttribute('href', 'mailto:hello@petrosprawl.fyi');
+  await expect(menu.getByRole('link', { name: 'Roby Saavedra' })).toHaveAttribute('href', 'https://robysaavedra.com');
   await menu.getByRole('radio', { name: 'Dark' }).click();
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(17, 19, 21)');
   // Shortcuts wait while the menu is open: Esc closes it rather than going back.
@@ -612,23 +622,20 @@ test('a dataset that fails to load is named, and the rest still shows', async ({
   await expect(page.getByRole('region', { name: 'Overview' }).getByRole('button', { name: /^Chokepoints/ })).toContainText(/below baseline/);
 });
 
-test('the map credits the basemap, and the About page credits every source', async ({ page }) => {
+test('the map credits the basemap, and the menu\'s Data tab credits every source', async ({ page }) => {
   await page.goto('/');
   const attribution = page.locator('.maplibregl-ctrl-attrib');
   await expect(attribution).toContainText('OpenStreetMap', { timeout: 15_000 });
   await expect(attribution).not.toContainText('Global Energy Monitor');
   await page.getByRole('button', { name: 'Menu' }).click();
-  await page.getByRole('dialog', { name: 'Menu' }).getByRole('button', { name: /^About/ }).click();
-  const about = page.getByRole('dialog', { name: 'About' });
-  await expect(about.getByRole('button', { name: 'Back to menu' })).toBeFocused();
-  const sources = about.locator('.sources');
+  const menu = page.getByRole('dialog', { name: 'Menu' });
+  await menu.getByRole('tab', { name: 'Data' }).click();
+  const sources = menu.locator('.sources');
   for (const name of ['USGS', 'IMF PortWatch', 'Natural Earth', 'ENTSOG Transparency Platform', 'GIE AGSI+', 'GIE ALSI', 'Global Energy Monitor', 'OpenStreetMap contributors']) {
     await expect(sources.getByRole('link', { name, exact: true }).first()).toBeVisible();
   }
   // One row per dataset: GEM is credited for both pipelines and LNG terminals.
   await expect(sources.getByRole('listitem').filter({ hasText: /^LNG terminals:/ })).toContainText('Global Energy Monitor');
-  await about.getByRole('button', { name: 'Back to menu' }).click();
-  await expect(page.getByRole('dialog', { name: 'Menu' }).getByRole('button', { name: /^About/ })).toBeFocused();
 });
 
 test('the summary is ready within two seconds on a warm cache', async ({ page }) => {
@@ -956,4 +963,21 @@ test('an ⓘ beside a title opens its explanation, and Escape closes it', async 
   expect(box.x).toBeGreaterThanOrEqual(0);
   await page.keyboard.press('Escape');
   await expect(note).toBeHidden();
+});
+
+test('while the data loads, the map shows the globe and the panel a page-shaped placeholder; both go when it arrives', async ({ page }) => {
+  let release: () => void = () => {};
+  const held = new Promise<void>((resolve) => (release = resolve));
+  await page.route('**/data/**', async (route) => {
+    await held;
+    await route.continue();
+  });
+  await page.goto('/?sel=chokepoint/hormuz');
+  await expect(page.getByRole('status').filter({ hasText: 'Loading pipelines, terminals and flows' })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: 'Loading this chokepoint' })).toBeAttached();
+  await expect(page.getByRole('button', { name: /Offline or idle/ })).toHaveCount(0);
+  release();
+  await expect(page.getByRole('heading', { name: 'Strait of Hormuz', exact: true })).toBeVisible();
+  await expect(page.getByText('Loading pipelines, terminals and flows')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /Offline or idle/ })).toBeVisible();
 });

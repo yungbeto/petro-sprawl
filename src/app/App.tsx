@@ -14,6 +14,7 @@ import { FilterChips } from '../map/FilterChips';
 import { FILTER_IDS, FILTER_LABELS, filterMatches, matchCount, type FilterId, type FilterMatches } from '../lib/filters';
 import { useTheme } from './useTheme';
 import { GlobeMark } from './GlobeMark';
+import { MapLoading } from '../map/MapLoading';
 import { useNow } from './useNow';
 import { AppMenu, type MenuSection } from './AppMenu';
 import { datasetFreshness, sortFreshness } from '../lib/freshness';
@@ -375,7 +376,7 @@ export function App() {
           <button
             type="button"
             className="rail__item rail__item--end"
-            onClick={() => openMenu(null)}
+            onClick={() => openMenu('settings')}
             aria-label="Settings"
             aria-haspopup="dialog"
           >
@@ -442,12 +443,16 @@ export function App() {
           focus={focus}
           insets={sheet.insets}
         >
-          <FilterChips
-            active={filter}
-            ids={surfaceFilters}
-            counts={Object.fromEntries(FILTER_IDS.map((id) => [id, matchCount(surfaceMatches[id])])) as Record<FilterId, number>}
-            onChange={changeFilter}
-          />
+          <MapLoading loading={!loaded} theme={theme} />
+          {/* Their counts mean nothing until the data is in. */}
+          {loaded && (
+            <FilterChips
+              active={filter}
+              ids={surfaceFilters}
+              counts={Object.fromEntries(FILTER_IDS.map((id) => [id, matchCount(surfaceMatches[id])])) as Record<FilterId, number>}
+              onChange={changeFilter}
+            />
+          )}
           {!phone && collapsed && (
             <button
               type="button"
@@ -499,6 +504,7 @@ export function App() {
           data={data}
           freshness={freshness}
           now={now}
+          theme={theme}
           themePreference={preference}
           onThemePreferenceChange={setPreference}
         />

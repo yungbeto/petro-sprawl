@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { HomeSkeleton } from './Skeleton';
 import type { Selection } from '../app/urlState';
 import type { VisitChanges } from '../app/useVisitChanges';
 import { DATASET_FRESHNESS, FEATURES } from '../lib/config';
@@ -36,9 +37,7 @@ export function Summary({ data, loaded, failed, visit, now, onSelect, onOpenView
   const chokepoints = useMemo(() => chokepointRows(data), [data]);
   const storage = useMemo(() => storageRows(data), [data]);
 
-  if (!loaded) {
-    return <p className="muted">Loading data</p>;
-  }
+  if (!loaded) return <HomeSkeleton />;
 
   return (
     <>

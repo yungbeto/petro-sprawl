@@ -5,7 +5,7 @@
 // with the place lit. A link to Home, or to nothing the index knows, gets Home's card (public/og.png).
 
 import { ImageResponse } from '@vercel/og';
-import { GLOBE } from '../src/lib/config';
+import { GLOBE, SITE } from '../src/lib/config';
 import { globeFrame, globeSvg } from '../src/lib/globe';
 import { withRing } from '../src/lib/share';
 import { GLOBE_LAND } from '../src/lib/globeLand';
@@ -78,7 +78,10 @@ export async function GET(request: Request): Promise<Response> {
         </div>
         <div style={{ position: 'absolute', left: 80, bottom: 52, display: 'flex', alignItems: 'center' }}>
           <img src={MARK} width={28} height={28} />
-          <div style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.03em', color: COLORS.muted, marginLeft: 14 }}>Petro Sprawl</div>
+          <div style={{ fontSize: 24, fontWeight: 500, letterSpacing: '-0.03em', color: COLORS.muted, marginLeft: 14 }}>
+            {SITE.name}
+          </div>
+          <div style={{ fontSize: 24, letterSpacing: '-0.01em', color: COLORS.muted, marginLeft: 8 }}>{`· ${SITE.tagline}`}</div>
         </div>
         <img src={globe} width={px} height={px} style={{ position: 'absolute', right: 72, top: (630 - px) / 2 }} />
       </div>

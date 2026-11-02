@@ -18,6 +18,7 @@ import { PipelinesView, type PipelinesViewProps } from './PipelinesView';
 import { TerminalsView, type TerminalsViewProps } from './TerminalsView';
 import { StorageView } from './StorageView';
 import { MoreView } from './MoreView';
+import { DetailSkeleton, HomeSkeleton, ListSkeleton } from './Skeleton';
 import { OriginsView, type OriginsViewProps } from './OriginsView';
 import { BasinDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RegionDetail, CountryDetail } from './details';
 
@@ -150,12 +151,19 @@ export function Panel(props: PanelProps) {
       <div ref={bodyRef} className="panel__body" onPointerDown={sheet?.onContentPointerDown}>
         {props.more ? (
           <MoreView views={props.more.views} current={props.view} onOpen={props.more.onOpen} />
+        ) : !props.loaded ? (
+          props.selection ? (
+            <DetailSkeleton kind={KIND_LABELS[props.selection.kind]} />
+          ) : props.view ? (
+            <ListSkeleton label={VIEW_LABELS[props.view]} />
+          ) : (
+            <HomeSkeleton />
+          )
         ) : props.selection ? (
           <Detail
             view={props.view}
             selection={props.selection}
             data={props.data}
-            loaded={props.loaded}
             onSelect={props.onSelect}
             fuel={props.fuel}
             onFuel={props.onFuel}
@@ -195,7 +203,11 @@ export function Panel(props: PanelProps) {
       </div>
 
       <footer className="panel__footer">
-        <FooterFreshness freshness={freshness} now={now} onOpen={() => props.onOpenMenu('freshness')} />
+        {props.loaded ? (
+          <FooterFreshness freshness={freshness} now={now} onOpen={() => props.onOpenMenu('data')} />
+        ) : (
+          <p className="muted">Loading data</p>
+        )}
       </footer>
     </aside>
   );
@@ -225,7 +237,6 @@ function FooterFreshness({ freshness, now, onOpen }: { freshness: Freshness[]; n
 function Detail({
   selection,
   data,
-  loaded,
   onSelect,
   fuel,
   onFuel,
@@ -235,7 +246,6 @@ function Detail({
   view: ViewId | null;
   selection: Selection;
   data: Datasets;
-  loaded: boolean;
   now: Date;
   onSelect: (selection: Selection, fuel?: RegionFuel) => void;
   fuel: RegionFuel;
@@ -255,7 +265,7 @@ function Detail({
         <section className="section">
           <p className="muted">{KIND_LABELS[selection.kind]}</p>
           <h2 className="detail__title mono">{selection.id}</h2>
-          <p className="muted">{loaded ? 'Not in the loaded data.' : 'Loading'}</p>
+          <p className="muted">Not in the loaded data.</p>
         </section>
       )}
     </>

@@ -797,7 +797,19 @@ export const GLOBE = {
   tilt: 18,
   maskCell: 2,
   favicon: { dots: 10, lon: 10, fill: 0.72, oceanOpacity: 0.3 },
+  /** Over the map while the data loads (MapLoading). */
+  loader: { size: 88, dots: 22, fill: 0.62, secondsPerTurn: 10, fadeMs: 400 },
+  /** The menu's hero; `phoneSize` below MOBILE.maxWidthPx. */
+  hero: { size: 280, phoneSize: 168, dots: 52, fill: 0.62, secondsPerTurn: 36 },
   og: { dots: 40, lon: 40, fill: 0.62, oceanOpacity: 0.16, px: 470, focusLandOpacity: 0.62, focusOceanOpacity: 0.1 },
+} as const;
+
+/** Who runs the site, for the menu's footer. Corrections and takedown requests come to `contactEmail`. */
+export const SITE = {
+  name: 'Petro Sprawl',
+  tagline: 'The sprawling empire of the petro-state',
+  contactEmail: 'hello@petrosprawl.fyi',
+  maker: { name: 'Roby Saavedra', url: 'https://robysaavedra.com' },
 } as const;
 
 /**

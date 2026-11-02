@@ -1,20 +1,29 @@
-import { CaretLeftIcon, CaretRightIcon } from '@phosphor-icons/react';
-import { useEffect, useRef, useState } from 'react';
-import { BASEMAP_CREDITS, DATASET_FRESHNESS } from '../lib/config';
+import { ArrowRightIcon } from '@phosphor-icons/react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { BASEMAP_CREDITS, DATASET_FRESHNESS, GLOBE, SITE } from '../lib/config';
 import type { Datasets } from '../lib/data';
 import { formatDate } from '../lib/format';
-import { formatAge, type Freshness } from '../lib/freshness';
+import { formatAge, formatUtcClock, overallFreshness, type Freshness } from '../lib/freshness';
 import { THEME_PREFERENCES, type ThemePreference } from '../lib/theme';
+import { Globe } from './Globe';
+import { useIsPhone } from './useSheet';
 
-export type MenuSection = 'freshness' | 'about';
+export type MenuSection = 'about' | 'data' | 'settings';
+
+const TABS: { id: MenuSection; label: string }[] = [
+  { id: 'about', label: 'About' },
+  { id: 'data', label: 'Data' },
+  { id: 'settings', label: 'Settings' },
+];
 
 interface AppMenuProps {
   onClose: () => void;
-  /** Scroll to this section on open, for example from the footer's "Updated" line. */
+  /** The tab to open on, for example Data from the footer's "Updated" line. */
   section: MenuSection | null;
   data: Datasets;
   freshness: Freshness[];
   now: Date;
+  theme: string;
   themePreference: ThemePreference;
   onThemePreferenceChange: (preference: ThemePreference) => void;
 }
@@ -32,113 +41,258 @@ const SHORTCUTS: [string, string][] = [
   ['L', 'Show or hide the layer list'],
 ];
 
-/** App-level settings and information, in a drawer over everything, like a map app's main menu. */
-export function AppMenu({ onClose, section, data, freshness, now, themePreference, onThemePreferenceChange }: AppMenuProps) {
+/**
+ * The app menu: a full screen page over everything, like a product page. A hero with the globe and what the
+ * app is, tabs for About, Data and Settings, and a footer with the contact address and the credits.
+ */
+export function AppMenu({ onClose, section, data, freshness, now, theme, themePreference, onThemePreferenceChange }: AppMenuProps) {
+  const phone = useIsPhone();
   const closeRef = useRef<HTMLButtonElement>(null);
-  const backRef = useRef<HTMLButtonElement>(null);
-  const aboutRef = useRef<HTMLButtonElement>(null);
-  const [page, setPage] = useState<'main' | 'about'>(section === 'about' ? 'about' : 'main');
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<Partial<Record<MenuSection, HTMLButtonElement | null>>>({});
+  const [tab, setTab] = useState<MenuSection>(section ?? 'about');
 
   useEffect(() => {
-    if (section && section !== 'about') document.getElementById(`menu-${section}`)?.scrollIntoView({ block: 'start' });
-    closeRef.current?.focus({ preventScroll: Boolean(section) });
+    closeRef.current?.focus({ preventScroll: true });
+    // Opened at a tab (Help, the footer's "Updated", the rail's settings): bring the tabs to the top.
+    if (section) tabsRef.current?.scrollIntoView({ block: 'start' });
   }, [section]);
 
-  const openAbout = () => {
-    setPage('about');
-    requestAnimationFrame(() => backRef.current?.focus());
+  const showTab = (next: MenuSection, focus = false) => {
+    setTab(next);
+    if (focus) tabRefs.current[next]?.focus();
   };
-  const backToMenu = () => {
-    setPage('main');
-    requestAnimationFrame(() => aboutRef.current?.focus());
+  const jumpToTab = (next: MenuSection) => {
+    setTab(next);
+    tabsRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    tabRefs.current[next]?.focus({ preventScroll: true });
   };
 
-  if (page === 'about') {
-    return (
-      <>
-        <div className="menu-scrim" onClick={onClose} aria-hidden="true" />
-        <div className="menu" role="dialog" aria-modal="true" aria-label="About">
-          <header className="menu__header menu__header--page">
-            <button ref={backRef} type="button" className="icon-button" onClick={backToMenu} aria-label="Back to menu" title="Back to menu">
-              <CaretLeftIcon size={16} />
-            </button>
-            <h2 className="menu__title">About</h2>
-            <button ref={closeRef} type="button" className="icon-button" onClick={onClose} aria-label="Close menu" title="Close  Esc">
-              <CloseIcon />
-            </button>
-          </header>
-          <div className="menu__body">
-            <section className="section">
-              <p>
-                A personal, map-first terminal for reading world events through energy flows. It keeps capacity, status
-                and flow apart, and backs every status with a dated, sourced claim. Anything that can't be sourced shows
-                as unknown.
-              </p>
-            </section>
-            <SourcesSection data={data} />
-          </div>
-        </div>
-      </>
-    );
-  }
+  // Arrow keys move along the tabs, as a tab list does.
+  const onTabKey = (event: KeyboardEvent) => {
+    const i = TABS.findIndex((t) => t.id === tab);
+    const to =
+      event.key === 'ArrowRight' ? (i + 1) % TABS.length
+      : event.key === 'ArrowLeft' ? (i - 1 + TABS.length) % TABS.length
+      : event.key === 'Home' ? 0
+      : event.key === 'End' ? TABS.length - 1
+      : null;
+    if (to === null) return;
+    event.preventDefault();
+    showTab(TABS[to]!.id, true);
+  };
+
+  const counts: [number, string][] = [
+    [data.pipelines.length, 'pipelines'],
+    [data.lngTerminals.length, 'LNG terminals'],
+    [data.oilTerminals.length, 'oil terminals'],
+    [data.chokepoints.length, 'chokepoints'],
+    [data.basins.length, 'basins'],
+  ];
+  const loaded = counts.some(([n]) => n > 0);
 
   return (
-    <>
-      <div className="menu-scrim" onClick={onClose} aria-hidden="true" />
-      <div className="menu" role="dialog" aria-modal="true" aria-label="Menu">
-        <header className="menu__header">
-          <h2 className="menu__title">Petro Sprawl</h2>
+    <div className="menu" role="dialog" aria-modal="true" aria-label="Menu">
+      <header className="menu__bar">
+        <div className="menu__inner menu__bar-inner">
+          <span className="menu__brand">
+            <Globe size={GLOBE.size} dots={GLOBE.dots} className="brand-mark" theme={theme} />
+            {SITE.name}
+          </span>
           <button ref={closeRef} type="button" className="icon-button" onClick={onClose} aria-label="Close menu" title="Close  Esc">
             <CloseIcon />
           </button>
-        </header>
-        <div className="menu__body">
-          <section className="section">
-            <h2 className="section__title">Appearance</h2>
-            <div className="segmented" role="radiogroup" aria-label="Theme">
-              {THEME_PREFERENCES.map((preference) => (
+        </div>
+      </header>
+
+      <div className="menu__scroll">
+        <section className="menu__hero" aria-labelledby="menu-tagline">
+          <div className="menu__inner menu__hero-inner">
+            <div className="menu__hero-text">
+              <h2 id="menu-tagline" className="menu__tagline">
+                {SITE.tagline}
+              </h2>
+              <p className="menu__lede">
+                Pipelines, terminals, chokepoints and basins on one map, with what is moving through them now. Every
+                status carries a dated source, and anything that can't be sourced says unknown.
+              </p>
+              {loaded && (
+                <ul className="menu__counts" aria-label="On the map">
+                  {counts.map(([n, label]) => (
+                    <li key={label}>
+                      <span className="menu__count mono">{n.toLocaleString('en-US')}</span>
+                      <span className="menu__count-label">{label}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <button type="button" className="menu__cta" onClick={onClose}>
+                Open the map
+                <ArrowRightIcon size={16} aria-hidden="true" />
+              </button>
+            </div>
+            <Globe
+              size={phone ? GLOBE.hero.phoneSize : GLOBE.hero.size}
+              dots={GLOBE.hero.dots}
+              fill={GLOBE.hero.fill}
+              secondsPerTurn={GLOBE.hero.secondsPerTurn}
+              className="menu__globe"
+              theme={theme}
+            />
+          </div>
+        </section>
+
+        <div ref={tabsRef} className="menu__tabs">
+          <div className="menu__inner">
+            <div className="menu__tablist" role="tablist" aria-label="Menu sections" onKeyDown={onTabKey}>
+              {TABS.map((t) => (
                 <button
-                  key={preference}
+                  key={t.id}
+                  ref={(el) => {
+                    tabRefs.current[t.id] = el;
+                  }}
                   type="button"
-                  role="radio"
-                  aria-checked={themePreference === preference}
-                  className="segmented__option"
-                  onClick={() => onThemePreferenceChange(preference)}
+                  role="tab"
+                  id={`menu-tab-${t.id}`}
+                  aria-selected={tab === t.id}
+                  aria-controls={`menu-panel-${t.id}`}
+                  tabIndex={tab === t.id ? 0 : -1}
+                  className="menu__tab"
+                  onClick={() => showTab(t.id)}
                 >
-                  {THEME_LABELS[preference]}
+                  {t.label}
                 </button>
               ))}
             </div>
-          </section>
+          </div>
+        </div>
 
-          <FreshnessSection freshness={freshness} now={now} />
-
-          <section className="section">
-            <h2 className="section__title">Keyboard shortcuts</h2>
-            <dl className="shortcuts">
-              {SHORTCUTS.map(([key, action]) => (
-                <div key={key} className="shortcuts__row">
-                  <dt>
-                    <kbd>{key}</kbd>
-                  </dt>
-                  <dd>{action}</dd>
+        <div className="menu__inner menu__body" role="tabpanel" id={`menu-panel-${tab}`} aria-labelledby={`menu-tab-${tab}`}>
+          {tab === 'about' && <AboutTab />}
+          {tab === 'data' && (
+            <div className="menu__columns">
+              <FreshnessSection freshness={freshness} now={now} />
+              <SourcesSection data={data} />
+            </div>
+          )}
+          {tab === 'settings' && (
+            <div className="menu__columns">
+              <section className="section">
+                <h2 className="section__title">Appearance</h2>
+                <div className="segmented" role="radiogroup" aria-label="Theme">
+                  {THEME_PREFERENCES.map((preference) => (
+                    <button
+                      key={preference}
+                      type="button"
+                      role="radio"
+                      aria-checked={themePreference === preference}
+                      className="segmented__option"
+                      onClick={() => onThemePreferenceChange(preference)}
+                    >
+                      {THEME_LABELS[preference]}
+                    </button>
+                  ))}
                 </div>
-              ))}
-            </dl>
-          </section>
+              </section>
+              <section className="section">
+                <h2 className="section__title">Keyboard shortcuts</h2>
+                <dl className="shortcuts">
+                  {SHORTCUTS.map(([key, action]) => (
+                    <div key={key} className="shortcuts__row">
+                      <dt>
+                        <kbd>{key}</kbd>
+                      </dt>
+                      <dd>{action}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            </div>
+          )}
+        </div>
 
-          <section className="section">
-            <button ref={aboutRef} type="button" className="menu__link" onClick={openAbout}>
-              <span>
-                About
-                <span className="menu__link-hint">What this is, and where the data comes from</span>
-              </span>
-              <CaretRightIcon size={16} aria-hidden="true" />
+        <MenuFooter theme={theme} freshness={freshness} now={now} onData={() => jumpToTab('data')} />
+      </div>
+    </div>
+  );
+}
+
+const PRINCIPLES: [string, string][] = [
+  [
+    'Capacity, status and flow, kept apart',
+    'What a line could carry, whether it is running and what is measured going through it are three facts, each with its own source.',
+  ],
+  [
+    'Every status has a source',
+    'A status links to a dated report or to a measured flow. With neither, it shows as unknown rather than a guess.',
+  ],
+  [
+    'Updated through the day',
+    'Flows, tanker transits and storage are fetched every 6 hours. A news scan every 12 hours adds sources and disruptions, marked unreviewed until someone checks them.',
+  ],
+];
+
+function AboutTab() {
+  return (
+    <>
+      <section className="section menu__why">
+        <h2 className="section__title">Why</h2>
+        <p>
+          The movement of energy explains a lot about why international decisions get made, alliances form and ruptures
+          happen. {SITE.name} puts that structure on a map, so a headline lands on the pipeline, the strait or the basin
+          it touches, and stays a real happening in a real place.
+        </p>
+      </section>
+      <ul className="menu__principles">
+        {PRINCIPLES.map(([title, body]) => (
+          <li key={title}>
+            <h3 className="menu__principle-title">{title}</h3>
+            <p className="muted">{body}</p>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
+
+function MenuFooter({ theme, freshness, now, onData }: { theme: string; freshness: Freshness[]; now: Date; onData: () => void }) {
+  const overall = overallFreshness(freshness);
+  return (
+    <footer className="menu__footer">
+      <div className="menu__inner menu__footer-inner">
+        <div className="menu__footer-brand">
+          <span className="menu__brand">
+            <Globe size={GLOBE.size} dots={GLOBE.dots} className="brand-mark" theme={theme} />
+            {SITE.name}
+          </span>
+          <p className="muted">{SITE.tagline}</p>
+        </div>
+        <div className="menu__footer-col">
+          <h2 className="menu__footer-title">Contact</h2>
+          <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
+          <p className="muted">Corrections, takedown requests and feedback</p>
+        </div>
+        <div className="menu__footer-col">
+          <h2 className="menu__footer-title">Data</h2>
+          {overall ? (
+            <button type="button" className="menu__footer-link" onClick={onData}>
+              {overall.scheduled
+                ? `Updated ${formatAge(overall.fetchedAt, now)} · ${formatUtcClock(overall.fetchedAt)}`
+                : `Imported ${formatDate(overall.fetchedAt)}`}
             </button>
-          </section>
+          ) : (
+            <p className="muted">Loading data</p>
+          )}
+          <p className="muted">From public sources, each credited under Data</p>
+        </div>
+        <div className="menu__footer-col">
+          <h2 className="menu__footer-title">Made by</h2>
+          <a href={SITE.maker.url} target="_blank" rel="noreferrer">
+            {SITE.maker.name}
+          </a>
         </div>
       </div>
-    </>
+    </footer>
   );
 }
 
