@@ -25,7 +25,11 @@ jobs:
       AGSI_API_KEY: ${{ secrets.AGSI_API_KEY }}
       EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
     steps:
+      # Latest main, not the commit the run was queued at: a run that waited on the data group starts from
+      # what the run before it pushed.
       - uses: actions/checkout@v7
+        with:
+          ref: main
 
       - uses: actions/setup-node@v7
         with:

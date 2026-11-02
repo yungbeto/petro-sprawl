@@ -12,6 +12,8 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  # To see whether this week's refresh already ran.
+  actions: read
 
 # Shares the data workflow's group so the two never push to main at the same time.
 concurrency:
@@ -27,19 +29,40 @@ jobs:
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       GH_TOKEN: ${{ github.token }}
     steps:
+      # Latest main, not the commit the run was queued at: a run that waited on the data group starts from
+      # what the run before it pushed.
       - uses: actions/checkout@v7
+        with:
+          ref: main
+
+      # GitHub can run a schedule late and more than once (2026-11-02: twice, ten hours late). One refresh a
+      # week is enough; a run by hand always goes ahead.
+      - name: Skip a repeated schedule
+        id: recent
+        if: github.event_name == 'schedule'
+        run: |
+          since=$(date -u -d '6 days ago' +%Y-%m-%dT%H:%M:%SZ)
+          done=$(gh run list --workflow claims.yml --status success --limit 10 --json createdAt --jq "[.[] | select(.createdAt > \"$since\")] | length")
+          if [ "$done" -gt 0 ]; then
+            echo "Claims were refreshed in the last 6 days; skipping this run"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: actions/setup-node@v7
+        if: steps.recent.outputs.skip != 'true'
         with:
           node-version: 22
           cache: npm
 
       - run: npm ci
+        if: steps.recent.outputs.skip != 'true'
 
       - name: Refresh stale claims
+        if: steps.recent.outputs.skip != 'true'
         run: npm run refresh:claims
 
       - name: Commit confirmations
+        if: steps.recent.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -50,10 +73,12 @@ jobs:
           npm run build:curated
           git add data/curated public/data data/reports/dedup.json data/reports/refresh-claims.json
           git commit -m "Refresh claims $(date -u +%Y-%m-%d)"
-          git pull --rebase
+          # The drafts (claim-drafts.json) stay unstaged for the review step below; set them aside while rebasing.
+          git pull --rebase --autostash
           git push
 
       - name: Open a pull request for drafts that need review
+        if: steps.recent.outputs.skip != 'true'
         run: |
           if [ "$(jq length data/reports/claim-drafts.json)" -eq 0 ]; then
             echo "No drafts need review"
