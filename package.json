@@ -36,7 +36,10 @@
     "apply:disruption-drafts": "tsx jobs/apply-disruption-drafts.ts",
     "import:globe": "tsx jobs/import-globe.ts",
     "render:og": "tsx jobs/render-og.ts",
-    "build:share": "tsx jobs/build-share-index.ts"
+    "build:share": "tsx jobs/build-share-index.ts",
+    "record:demo": "tsx jobs/record-demo.ts",
+    "video": "npm --prefix video run dev",
+    "video:render": "cd video && npx remotion render Wide ../demo/petro-sprawl-wide.mp4 --crf=16 && npx remotion render Square ../demo/petro-sprawl-square.mp4 --crf=16"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.3.0",
