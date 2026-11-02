@@ -10,7 +10,7 @@ test('on a phone the map fills the screen, Home peeks from the bottom and the ra
   const tabs = page.getByRole('navigation', { name: 'Views' });
   await expect(tabs.getByRole('button')).toHaveCount(Math.min(1 + ENABLED_VIEWS.length, PHONE_TABS.slots));
   await expect(tabs.getByRole('button', { name: 'Home' })).toHaveAttribute('aria-current', 'page');
-  await expect(page.getByRole('button', { name: 'Settings' })).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Help' })).toBeHidden();
   // The map reaches the screen's edges, behind the sheet.
   const map = await page.locator('.map').boundingBox();
   const viewport = page.viewportSize()!;

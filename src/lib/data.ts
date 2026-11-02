@@ -238,8 +238,15 @@ export function systemSections(pipeline: Pipeline, pipelines: Pipeline[]): Pipel
   return pipelines.filter((p) => p.system === pipeline.system && p.id !== pipeline.id);
 }
 
+const basinPipelines = new WeakMap<Basin, WeakMap<Pipeline[], Pipeline[]>>();
+
+/** The pipelines inside or crossing a basin. Kept per basin and pipeline list, so the page and the map share one pass. */
 export function pipelinesTouchingBasin(basin: Basin, pipelines: Pipeline[]): Pipeline[] {
-  return pipelines.filter((p) => lineTouchesPolygon(p.geometry, basin.geometry));
+  let byList = basinPipelines.get(basin);
+  if (!byList) basinPipelines.set(basin, (byList = new WeakMap()));
+  let touching = byList.get(pipelines);
+  if (!touching) byList.set(pipelines, (touching = pipelines.filter((p) => lineTouchesPolygon(p.geometry, basin.geometry))));
+  return touching;
 }
 
 /** A region's crude origins, with the routes and terminals the data names. */

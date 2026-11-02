@@ -5,6 +5,7 @@ import { basinViewRows, chokepointViewRows } from '../src/lib/summary';
 import {
   ENABLED_VIEWS,
   SURFACE_FILTERS,
+  basinPipelineFocus,
   parseView,
   phoneTabs,
   scopeMatches,
@@ -72,6 +73,11 @@ describe('visibleLayers', () => {
   it('adds the layer of the open item, so a chokepoint opened from a pipeline still shows', () => {
     expect(shown(visibleLayers('pipelines', { kind: 'chokepoint' }, all))).toEqual(['pipelines', 'chokepoints']);
     expect(shown(visibleLayers(null, { kind: 'basin' }, { ...all, basins: false }))).toContain('basins');
+  });
+
+  it('a basin brings its pipelines, even on the basins surface', () => {
+    expect(shown(visibleLayers('basins', { kind: 'basin' }, all))).toEqual(['basins', 'pipelines']);
+    expect(shown(visibleLayers(null, { kind: 'basin' }, { ...all, pipelines: false }))).toContain('pipelines');
   });
 
   it('follows the layer list on Home, with storage only while it is switched on', () => {
@@ -172,5 +178,44 @@ describe('phone tab bar', () => {
       bar: ['pipelines', 'basins', 'terminals'],
       more: ['storage', 'origins'],
     });
+  });
+});
+
+describe('basinPipelineFocus', () => {
+  const data: Datasets = { ...EMPTY_DATASETS, chokepoints: [chokepoint('hormuz', [56, 26])], pipelines: [pipeline()] };
+  const touching = new Set(['a', 'b']);
+  const surface = viewHighlight('basins', data);
+
+  it('on the basins surface, draws no pipelines until a basin is open', () => {
+    expect(basinPipelineFocus('basins', null, null, surface, false, data)!.only).toEqual(new Set());
+  });
+
+  it("then only the focused basin's, bright, and still while one of them is open", () => {
+    const focus = basinPipelineFocus('basins', touching, null, surface, false, data)!;
+    expect(focus.only).toEqual(touching);
+    expect(focus.highlight).toEqual({ ...surface, pipelines: touching });
+    expect(basinPipelineFocus('basins', touching, 'a', surface, false, data)!.only).toEqual(touching);
+  });
+
+  it('a pipeline opened there without a basin shows alone', () => {
+    expect(basinPipelineFocus('basins', null, 'x', surface, false, data)!.only).toEqual(new Set(['x']));
+  });
+
+  it('elsewhere, does nothing without an open basin', () => {
+    expect(basinPipelineFocus(null, null, null, null, false, data)).toBeNull();
+    expect(basinPipelineFocus('pipelines', null, 'x', null, false, data)).toBeNull();
+  });
+
+  it('on Home, draws every pipeline, fades the rest and leaves the other kinds bright', () => {
+    const focus = basinPipelineFocus(null, touching, null, null, false, data)!;
+    expect(focus.only).toBeNull();
+    expect(focus.highlight!.pipelines).toBe(touching);
+    expect([...focus.highlight!.chokepoints]).toEqual(['hormuz']);
+  });
+
+  it('a quick filter keeps deciding what stays bright', () => {
+    const filter = { pipelines: new Set(['b']), chokepoints: new Set<string>(), lng: new Set<string>(), terminals: new Set<string>() };
+    expect(basinPipelineFocus(null, touching, null, filter, true, data)!.highlight).toBe(filter);
+    expect(basinPipelineFocus('basins', touching, null, filter, true, data)!.highlight).toBe(filter);
   });
 });

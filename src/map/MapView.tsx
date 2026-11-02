@@ -51,6 +51,8 @@ interface MapViewProps {
   fuel: RegionFuel;
   /** Assets matching the active quick filter; everything else fades. Null shows all. */
   highlight: FilterMatches | null;
+  /** Draw only these pipelines; null draws them all. */
+  onlyPipelines: Set<string> | null;
   /** The fuel origins surface or a region view: only the region outlines (and a region's arcs) show. */
   regionsOnly: boolean;
   /** The basins surface: the outlines drawn stronger and named sooner. */
@@ -131,7 +133,7 @@ const fitPadding = () => (window.matchMedia(`(max-width: ${MOBILE.maxWidthPx}px)
 const NO_ARCS: OriginArc[] = [];
 
 export function MapView(props: MapViewProps) {
-  const { theme, initialCamera, data, visibility, selection, fuel, highlight, regionsOnly, basinsFocus, countryMode, focus } = props;
+  const { theme, initialCamera, data, visibility, selection, fuel, highlight, onlyPipelines, regionsOnly, basinsFocus, countryMode, focus } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const overlayRef = useRef<MapboxOverlay | null>(null);
@@ -276,6 +278,7 @@ export function MapView(props: MapViewProps) {
         selection,
         highlight: originView?.highlight ?? highlight,
         hoveredPipelineId,
+        onlyPipelines,
         originArcs: originView?.arcs ?? NO_ARCS,
         countryMode,
         importers,
@@ -288,7 +291,7 @@ export function MapView(props: MapViewProps) {
         fontFamily: `"${LABEL_FONT}", sans-serif`,
       }),
     });
-  }, [data, flows, pipelineShares, storage, visibility, selection, highlight, regionsOnly, basinsFocus, originView, countryMode, importers, hoveredPipelineId, colors, zoom, fontsReady]);
+  }, [data, flows, pipelineShares, storage, visibility, selection, highlight, onlyPipelines, regionsOnly, basinsFocus, originView, countryMode, importers, hoveredPipelineId, colors, zoom, fontsReady]);
 
   useEffect(() => {
     const map = mapRef.current;

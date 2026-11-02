@@ -160,6 +160,8 @@ interface BuildLayersInput {
   highlight: FilterMatches | null;
   /** The pipeline under the pointer, drawn highlighted. */
   hoveredPipelineId: string | null;
+  /** Draw only these pipelines (an open basin's, in a surface); null draws them all. */
+  onlyPipelines: Set<string> | null;
   /** A region view's origin arcs ("Where is my oil from?"); empty otherwise. */
   originArcs: OriginArc[];
   /** The fuel origins surface or a region view: the region outlines and arcs only, every other layer off. */
@@ -185,6 +187,7 @@ export function buildLayers({
   selection,
   highlight,
   hoveredPipelineId,
+  onlyPipelines,
   originArcs,
   regionsOnly,
   basinsFocus,
@@ -207,7 +210,7 @@ export function buildLayers({
   const importTerminals = data.lngTerminals.filter((t) => t.facility === 'import');
 
   const basinFeatures = basinCollection(data.basins);
-  const paths = pipelinePaths(data.pipelines);
+  const paths = pipelinePaths(onlyPipelines ? data.pipelines.filter((p) => onlyPipelines.has(p.id)) : data.pipelines);
   const selectedPaths = paths.filter((p) => isSelected('pipeline', p.pipeline.id));
   const hoveredPaths = paths.filter((p) => p.pipeline.id === hoveredPipelineId);
   const flowPaths = paths.filter((p) => (pipelineShares.get(p.pipeline.id) ?? 0) > 0 && pipelineFade(p.pipeline.id) === 1);

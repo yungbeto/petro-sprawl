@@ -65,6 +65,11 @@ describe('lineTouchesPolygon', () => {
     expect(lineTouchesPolygon(line, square)).toBe(true);
   });
 
+  it('a line in another part of the world is rejected', () => {
+    const line: LineString = { type: 'LineString', coordinates: [[100, 50], [120, 60]] };
+    expect(lineTouchesPolygon(line, square)).toBe(false);
+  });
+
   it('rejects a line that stays outside', () => {
     const line: LineString = { type: 'LineString', coordinates: [[-5, -5], [-5, 15]] };
     expect(lineTouchesPolygon(line, square)).toBe(false);

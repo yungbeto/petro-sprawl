@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MapView, type FocusRequest } from '../map/MapView';
 import { LayerControl } from '../map/LayerControl';
 import type { LayerId, LayerVisibility } from '../map/layers';
-import { CaretRightIcon, DotsThreeOutlineIcon, GearIcon, HouseIcon, ListIcon, QuestionIcon } from '@phosphor-icons/react';
+import { CaretRightIcon, DotsThreeOutlineIcon, HouseIcon, ListIcon, QuestionIcon } from '@phosphor-icons/react';
 import { VIEW_ICONS } from './viewIcons';
 import { pipelineGroups, type PipelineGrouping } from '../lib/pipelineGroups';
 import { lngGroups, oilGroups, type TerminalGrouping, type TerminalKind } from '../lib/terminalGroups';
@@ -22,8 +22,8 @@ import { useUrlState } from './useUrlState';
 import { DEFAULT_REGION_FUEL, type RegionFuel } from '../lib/config';
 import type { SearchScope } from '../lib/search';
 import { useDatasets } from './useDatasets';
-import { resolveSelection } from '../lib/data';
-import { ENABLED_VIEWS, SURFACE_FILTERS, VIEW_LABELS, phoneTabs, scopeMatches, viewHighlight, viewPoints, visibleLayers, type ViewId } from '../lib/views';
+import { pipelinesTouchingBasin, resolveSelection } from '../lib/data';
+import { ENABLED_VIEWS, SURFACE_FILTERS, basinPipelineFocus, VIEW_LABELS, phoneTabs, scopeMatches, viewHighlight, viewPoints, visibleLayers, type ViewId } from '../lib/views';
 import { useVisitChanges } from './useVisitChanges';
 import { useIsPhone, useSheet } from './useSheet';
 import type { Selection } from './urlState';
@@ -157,7 +157,30 @@ export function App() {
 
   // A filter narrows the map; otherwise an open group, otherwise the open view, sets what stays bright.
   const viewMatches = useMemo(() => (view ? viewHighlight(view, data) : null), [view, data]);
-  const highlight = matches ?? groupMatches ?? viewMatches;
+  // An open basin brings the pipelines that touch it (decided 2026-11-01). On the basins surface the
+  // basin stays in focus while you open its pipelines, until you go back to the list or leave.
+  const [basinTrail, setBasinTrail] = useState<string | null>(null);
+  const nextBasinTrail = view === 'basins' && selection ? (selection.kind === 'basin' ? selection.id : basinTrail) : null;
+  if (nextBasinTrail !== basinTrail) setBasinTrail(nextBasinTrail);
+  const focusedBasinId = selection?.kind === 'basin' ? selection.id : nextBasinTrail;
+  const basin = focusedBasinId ? data.basins.find((b) => b.id === focusedBasinId) : undefined;
+  const basinPipelines = useMemo(
+    () => (basin ? new Set(pipelinesTouchingBasin(basin, data.pipelines).map((p) => p.id)) : null),
+    [basin, data.pipelines],
+  );
+  const basinFocus = useMemo(
+    () =>
+      basinPipelineFocus(
+        view,
+        basinPipelines,
+        selection?.kind === 'pipeline' ? selection.id : null,
+        matches ?? groupMatches ?? viewMatches,
+        Boolean(matches),
+        data,
+      ),
+    [view, basinPipelines, selection, matches, groupMatches, viewMatches, data],
+  );
+  const highlight = basinFocus ? basinFocus.highlight : (matches ?? groupMatches ?? viewMatches);
 
   // The panel's top bar: Back names the item or list this one was opened from, within the same
   // surface; Close returns to the surface's own page (the summary, or the view's list).
@@ -325,10 +348,6 @@ export function App() {
           {/* One search bar whether the panel is open or minimized, so it never moves. */}
           <SearchBar onOpen={() => setSearchScope('all')} buttonRef={searchButtonRef} />
           <div className="app-header__actions">
-            <button type="button" className="button" onClick={() => openMenu('about')}>
-              <QuestionIcon size={24} aria-hidden="true" />
-              Help
-            </button>
             <button
               type="button"
               className="icon-button icon-button--lg"
@@ -376,13 +395,13 @@ export function App() {
           <button
             type="button"
             className="rail__item rail__item--end"
-            onClick={() => openMenu('settings')}
-            aria-label="Settings"
+            onClick={() => openMenu('about')}
+            aria-label="Help"
             aria-haspopup="dialog"
           >
-            <GearIcon size={24} />
+            <QuestionIcon size={24} />
             <span className="rail__tooltip" aria-hidden="true">
-              Settings
+              Help
             </span>
           </button>
         </nav>
@@ -436,6 +455,7 @@ export function App() {
           selection={selection}
           fuel={fuel}
           highlight={highlight}
+          onlyPipelines={basinFocus?.only ?? null}
           regionsOnly={regionsOnly}
           basinsFocus={view === 'basins'}
           countryMode={view === 'origins' ? 'imports' : 'storage'}

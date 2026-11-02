@@ -59,14 +59,15 @@ export const VIEW_LAYERS: Record<ViewId, LayerId[]> = {
   origins: ['storage', 'chokepoints', 'terminals'],
 };
 
-const SELECTION_LAYERS: Record<SelectionKind, LayerId | null> = {
-  pipeline: 'pipelines',
-  chokepoint: 'chokepoints',
-  basin: 'basins',
-  country: 'storage',
-  lng: 'lng',
-  terminal: 'terminals',
-  region: null,
+/** The layers an open item brings with it. A basin brings the pipelines that touch it (decided 2026-11-01). */
+const SELECTION_LAYERS: Record<SelectionKind, LayerId[]> = {
+  pipeline: ['pipelines'],
+  chokepoint: ['chokepoints'],
+  basin: ['basins', 'pipelines'],
+  country: ['storage'],
+  lng: ['lng'],
+  terminal: ['terminals'],
+  region: [],
 };
 
 /**
@@ -74,10 +75,10 @@ const SELECTION_LAYERS: Record<SelectionKind, LayerId | null> = {
  * On Home, the layer list, with the open item's layer always on, and storage only while it's switched on.
  */
 export function visibleLayers(view: ViewId | null, selection: { kind: SelectionKind } | null, chosen: LayerVisibility): LayerVisibility {
-  const selected = selection ? SELECTION_LAYERS[selection.kind] : null;
+  const selected = selection ? SELECTION_LAYERS[selection.kind] : [];
   const shown = (id: LayerId) => {
     if (id === 'storage' && !FEATURES.gasStorage) return false;
-    if (id === selected) return true;
+    if (selected.includes(id)) return true;
     return view ? VIEW_LAYERS[view].includes(id) : chosen[id];
   };
   return {
@@ -88,6 +89,37 @@ export function visibleLayers(view: ViewId | null, selection: { kind: SelectionK
     terminals: shown('terminals'),
     chokepoints: shown('chokepoints'),
   };
+}
+
+/**
+ * Which pipelines the map draws and keeps bright around a basin (decided 2026-11-01). On the basins
+ * surface pipelines belong to a basin: none until one is open, then only the focused basin's, which stay
+ * while you open its pipelines (`basinPipelines` is that basin's, null with none focused); a pipeline
+ * opened there without a basin shows alone. Elsewhere an open basin's pipelines stay bright and the rest
+ * fade. A quick filter, while on, decides what stays bright. Null when nothing changes.
+ */
+export function basinPipelineFocus(
+  view: ViewId | null,
+  basinPipelines: Set<string> | null,
+  selectedPipeline: string | null,
+  highlight: FilterMatches | null,
+  filtering: boolean,
+  data: Datasets,
+): { only: Set<string> | null; highlight: FilterMatches | null } | null {
+  if (view === 'basins') {
+    const only = new Set(basinPipelines);
+    if (selectedPipeline) only.add(selectedPipeline);
+    const bright = basinPipelines && !filtering && highlight ? { ...highlight, pipelines: basinPipelines } : highlight;
+    return { only, highlight: bright };
+  }
+  if (!basinPipelines) return null;
+  const base = highlight ?? {
+    pipelines: none(),
+    chokepoints: new Set(data.chokepoints.map((c) => c.id)),
+    lng: new Set(data.lngTerminals.map((t) => t.id)),
+    terminals: new Set(data.oilTerminals.map((t) => t.id)),
+  };
+  return { only: view ? basinPipelines : null, highlight: filtering ? highlight : { ...base, pipelines: basinPipelines } };
 }
 
 /**
