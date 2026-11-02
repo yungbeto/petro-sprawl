@@ -322,6 +322,7 @@ Identify the right point IDs in ENTSOG and link each to its pipeline. Starting c
 - **Data jobs:** Node 22 + TypeScript (`tsx`), zod for validation, mapshaper for one-off geometry simplification
 - **Hosting:** static site on Vercel (free tier); jobs on GitHub Actions
 - **Link previews:** Vercel Routing Middleware and two Vercel Functions (code in `server/`, bundled into `api/` at build) give a link to a page its own title, description and card image; the card is drawn with `@vercel/og` and the routing helpers come from `@vercel/functions` (both added 2026-11-01 at the owner's request). They read a share index built with each deploy, never the live sources. The app itself stays static
+- **Analytics:** Vercel Web Analytics (`@vercel/analytics`, added 2026-11-02 at the owner's request): cookieless page views, with the camera (`at`) left out of the URL and repeats of the same view dropped (`src/lib/analytics.ts`). A ZIP code never reaches it, since it never goes in the URL
 - **Testing:** Vitest for transforms, flow index math, status aging and dedup; one Playwright smoke test that loads the app and selects a pipeline
 - **No database, no server** in v0.1, beyond the link preview functions
 
