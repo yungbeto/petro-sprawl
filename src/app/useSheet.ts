@@ -89,7 +89,7 @@ export function useSheet(enabled: boolean, appRef: RefObject<HTMLElement | null>
             dragging.current = true;
             app.dataset.sheetDragging = 'true';
           }
-          height = Math.min(heights.full, Math.max(heights.peek * 0.5, startHeight + dy));
+          height = Math.min(heights.full, Math.max(heights.hidden, startHeight + dy));
           app.style.setProperty('--sheet-h', `${height}px`);
           if (t > last.t) velocity = (last.y - y) / (t - last.t);
           last = { y, t };

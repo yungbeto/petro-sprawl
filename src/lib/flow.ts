@@ -62,6 +62,26 @@ export interface ChokepointFlow {
   /** Band used for the map: the five-year index, falling back to the trailing one. */
   band: FlowBand | null;
   sparkline: Point[];
+  /** The same days as the sparkline, each the mean of the `recentDays` ending on it: the line the index reads. */
+  trend: Point[];
+}
+
+/**
+ * For each point on or after `from`, the mean of the points in the `days` ending on its date (fewer
+ * where the series has gaps). Points must be in date order.
+ */
+export function trailingMeans(points: Point[], days: number, from: string): Point[] {
+  const out: Point[] = [];
+  let start = 0;
+  let sum = 0;
+  for (let end = 0; end < points.length; end++) {
+    const point = points[end]!;
+    sum += point.value;
+    const windowFrom = addDays(point.date, -(days - 1));
+    while (points[start]!.date < windowFrom) sum -= points[start++]!.value;
+    if (point.date >= from) out.push({ ...point, value: sum / (end - start + 1) });
+  }
+  return out;
 }
 
 /** Everything the map and panel show for one chokepoint. Windows end on the latest data point, not today. */
@@ -84,5 +104,6 @@ export function chokepointFlow(series: ObservationSeries | undefined): Chokepoin
     indexFiveYear,
     band: flowBand(indexFiveYear ?? indexTrailing),
     sparkline: series.points.filter((p) => p.date >= sparkFrom),
+    trend: trailingMeans(series.points, recentDays, sparkFrom),
   };
 }

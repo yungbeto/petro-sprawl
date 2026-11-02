@@ -458,7 +458,9 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
   // Grouped by region: researched lines come first, so Nord Stream 1 is in the opened group's list.
   await panel.getByRole('button', { name: /^Europe and Central Asia/ }).click();
   await panel.getByRole('list', { name: 'Europe and Central Asia' }).getByRole('button', { name: /^Nord Stream 1/ }).first().click();
-  await expect(page).toHaveURL(/view=pipelines&sel=pipeline\/nord-stream-1/);
+  // The camera can write `at` between the two, so each is checked on its own.
+  await expect(page).toHaveURL(/view=pipelines(&|$)/);
+  await expect(page).toHaveURL(/sel=pipeline\/nord-stream-1/);
   await expect(page.getByRole('heading', { name: 'Nord Stream 1' })).toBeVisible();
   await rail.getByRole('button', { name: 'Home' }).click();
   if (FEATURES.gasStorage) {
@@ -763,7 +765,9 @@ test('the chokepoints view stays lit while you open a strait from it, and Back r
 
   await list.getByRole('button', { name: /Bab el-Mandeb/ }).click();
   await expect(panel.getByRole('heading', { name: 'Bab el-Mandeb' })).toBeVisible();
-  await expect(page).toHaveURL(/view=chokepoints&sel=chokepoint\/babelm/);
+  // The camera can write `at` between the two, so each is checked on its own.
+  await expect(page).toHaveURL(/view=chokepoints(&|$)/);
+  await expect(page).toHaveURL(/sel=chokepoint\/babelm/);
   await expect(rail.getByRole('button', { name: 'Chokepoints' })).toHaveAttribute('aria-current', 'page');
 
   await page.keyboard.press('Escape');
@@ -930,7 +934,7 @@ test('the oil origins surface lists importers, and a country opens from the map 
   // On oil origins the imports come before gas storage.
   const sections = panel.locator('.country-section__title');
   await expect(sections.first()).toHaveText('Where its crude comes from');
-  await expect(panel.getByText(/UN Comtrade, imports of crude petroleum/)).toBeVisible();
+  await expect(panel.getByText(/Source: UN Comtrade\. Imports of crude petroleum/)).toBeVisible();
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/origins-india.png` });
   await panel.getByRole('button', { name: 'Close, back to Oil origins' }).click();
   await expect(list).toBeVisible();

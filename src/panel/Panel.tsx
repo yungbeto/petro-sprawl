@@ -73,6 +73,7 @@ const KIND_LABELS: Record<SelectionKind, string> = {
 
 
 const SHEET_HANDLE_LABELS: Record<Sheet['detent'], string> = {
+  hidden: 'Show panel',
   peek: 'Expand panel',
   half: 'Expand panel to full height',
   full: 'Collapse panel',

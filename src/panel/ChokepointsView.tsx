@@ -17,12 +17,13 @@ export function ChokepointsView({ data, onSelect }: { data: Datasets; onSelect: 
         <div className="title-row">
           <h2 className="detail__title">Chokepoints</h2>
           <Info label="About this list">
-            Daily tanker transits over the 7 days to <span className="mono">{latest ?? 'n/a'}</span>, against each strait's
-            five-year average (dashed). Furthest from it first.
+            Tanker transits a day, averaged over 7 days, for the 90 days to <span className="mono">{latest ?? 'n/a'}</span>,
+            against each strait's five-year average (dashed). The figure is the last 7 days as a share of that average;
+            cargo is the same for PortWatch's estimate of the tonnage carried. Furthest from normal first.
           </Info>
         </div>
       </section>
-      <ul className="view-list" aria-label="Chokepoints">
+      <ul className="view-list view-list--cards" aria-label="Chokepoints">
         {rows.map((row) => (
           <li key={row.selection.id}>
             <ChokepointRow row={row} onSelect={onSelect} />
@@ -37,39 +38,53 @@ export function ChokepointsView({ data, onSelect }: { data: Datasets; onSelect: 
   );
 }
 
+/**
+ * One strait: its name and band, the share of its five-year average as the row's figure, the 7-day
+ * average over the last 90 days against that average (dashed), and the figures behind the share.
+ */
 function ChokepointRow({ row, onSelect }: { row: ChokepointViewRow; onSelect: (selection: Selection) => void }) {
   const { transits, cargo } = row;
   return (
-    <button type="button" className="view-row" onClick={() => onSelect(row.selection)}>
-      <span className="view-row__head">
-        <span className="view-row__name">{row.name}</span>
-        <span className="view-row__figure">
-          {transits?.indexFiveYear != null ? formatIndexShare(transits.indexFiveYear) : <span className="muted">n/a</span>}
+    <button type="button" className="view-row chokepoint-row" onClick={() => onSelect(row.selection)}>
+      <span className="chokepoint-row__head">
+        <span className="chokepoint-row__title">
+          <span className="view-row__name">{row.name}</span>
+          {transits && <Band band={transits.band} />}
         </span>
+        {transits?.indexFiveYear != null && (
+          <span className="chokepoint-row__figure">
+            <span className="chokepoint-row__value">{formatIndexShare(transits.indexFiveYear)}</span>
+            <span className="chokepoint-row__unit">of five-year</span>
+          </span>
+        )}
       </span>
       {transits ? (
         <>
           <MiniSparkline
-            points={transits.sparkline}
+            points={transits.trend}
             reference={transits.fiveYear?.mean ?? null}
-            label={`Daily tanker transits at ${row.name}, last 90 days`}
+            label={`Tanker transits at ${row.name}, 7-day average over the last 90 days, against the five-year average`}
+            className={transits.band ? `band--${transits.band}` : undefined}
           />
-          <span className="view-row__meta">
-            <Band band={transits.band} />
+          <span className="chokepoint-row__facts">
             <span>
-              <span className="mono">{transits.recent ? formatNumber(transits.recent.mean, 1) : 'n/a'}</span> a day,
-              five-year <span className="mono">{transits.fiveYear ? formatNumber(transits.fiveYear.mean, 1) : 'n/a'}</span>
+              <strong>{transits.recent ? formatNumber(transits.recent.mean, 1) : 'n/a'}</strong> tankers a day
             </span>
+            <span>
+              five-year <strong>{transits.fiveYear ? formatNumber(transits.fiveYear.mean, 1) : 'n/a'}</strong>
+            </span>
+            {cargo?.indexFiveYear != null && (
+              <span>
+                cargo <strong>{formatIndexShare(cargo.indexFiveYear)}</strong>
+              </span>
+            )}
           </span>
-          {cargo?.indexFiveYear != null && (
-            <span className="view-row__meta">
-              Tanker cargo at <span className="mono">{formatIndexShare(cargo.indexFiveYear)}</span> of its five-year average
-            </span>
-          )}
         </>
       ) : (
-        <span className="view-row__meta">
-          No transit data. EIA reference volume <span className="mono">{formatMbd(row.eiaReferenceMbd)}</span>
+        <span className="chokepoint-row__facts">
+          <span>
+            No transit data. EIA reference volume <strong>{formatMbd(row.eiaReferenceMbd)}</strong>
+          </span>
         </span>
       )}
     </button>

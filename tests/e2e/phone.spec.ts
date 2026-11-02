@@ -22,7 +22,7 @@ test('on a phone the map fills the screen, Home peeks from the bottom and the ra
   expect(headlineBox.y + headlineBox.height).toBeLessThanOrEqual(tabBar.y);
 });
 
-test('a tab opens its surface at half; the handle steps up and a drag brings the sheet down', async ({ page }) => {
+test('a tab opens its surface at half; the handle steps up, a long drag hides the sheet and a tap brings it back', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Chokepoints' }).click();
   await expect(page).toHaveURL(/view=chokepoints/);
@@ -38,7 +38,51 @@ test('a tab opens its surface at half; the handle steps up and a drag brings the
   await page.mouse.down();
   for (let i = 1; i <= 12; i++) await page.mouse.move(x, handle.y + 10 + i * 50);
   await page.mouse.up();
+  // Let go below peek, the sheet hides down to its handle; the page under it is out of reach.
+  await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'hidden');
+  await expect(page.getByLabel('Panel', { exact: true }).getByRole('heading', { name: 'Chokepoints' })).toBeHidden();
+  await page.getByRole('button', { name: 'Show panel' }).click();
   await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'peek');
+});
+
+test('the open item stays framed in the map showing as the sheet rises and falls, until the map is moved by hand', async ({ page }) => {
+  await page.goto('/?view=chokepoints');
+  await page.getByLabel('Panel', { exact: true }).getByRole('button', { name: /^Strait of Hormuz/ }).click();
+  await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'half');
+  const point = await page.evaluate(async () => {
+    const all = (await (await fetch('/data/chokepoints.json')).json()) as { id: string; point: [number, number] }[];
+    return all.find((c) => c.id === 'hormuz')!.point;
+  });
+  // How far the strait sits from the middle of the map left showing, in px.
+  const offCentre = () =>
+    page.evaluate((pt) => {
+      const map = (window as unknown as { __etMap: { project(p: [number, number]): { y: number }; getPadding(): { top: number; bottom: number }; isMoving(): boolean } }).__etMap;
+      if (map.isMoving()) return Infinity;
+      const { top, bottom } = map.getPadding();
+      const middle = top + (window.innerHeight - top - bottom) / 2;
+      return Math.abs(map.project(pt).y - middle);
+    }, point);
+  await expect.poll(offCentre, { timeout: 10_000 }).toBeLessThan(6);
+
+  // Hide the sheet: the strait moves down to the middle of the larger map.
+  const handle = (await page.locator('.sheet-handle').boundingBox())!;
+  const x = handle.x + handle.width / 2;
+  await page.mouse.move(x, handle.y + 10);
+  await page.mouse.down();
+  for (let i = 1; i <= 12; i++) await page.mouse.move(x, handle.y + 10 + i * 40);
+  await page.mouse.up();
+  await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'hidden');
+  await expect.poll(offCentre, { timeout: 10_000 }).toBeLessThan(6);
+
+  // Pan by hand, then bring the sheet back: the camera leaves the map where the reader put it.
+  await page.mouse.move(200, 300);
+  await page.mouse.down();
+  for (let i = 1; i <= 8; i++) await page.mouse.move(200, 300 - i * 15);
+  await page.mouse.up();
+  await page.getByRole('button', { name: 'Show panel' }).click();
+  await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'peek');
+  await page.waitForTimeout(800);
+  expect(await offCentre()).toBeGreaterThan(40);
 });
 
 test('with more sections than slots, More lists the rest and then shows the one that is open', async ({ page }) => {
@@ -123,8 +167,15 @@ test('below full a drag on the page moves the sheet; at full the page scrolls an
   await swipe(full.y + 100, full.y + 160);
   await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'full');
 
-  // From the top, the same pull hands off to the sheet.
+  // From the top, the same pull hands off to the sheet. The last swipe can leave the list coasting, so
+  // wait until it rests at the top.
+  await page.waitForTimeout(300);
   await body.evaluate((el) => el.scrollTo({ top: 0 }));
+  await expect.poll(async () => {
+    const top = await body.evaluate((el) => el.scrollTop);
+    await page.waitForTimeout(100);
+    return top + (await body.evaluate((el) => el.scrollTop));
+  }).toBe(0);
   await swipe(full.y + 100, full.y + 500);
   await expect(sheetOf(page)).not.toHaveAttribute('data-sheet', 'full');
   expect(await body.evaluate((el) => el.scrollTop)).toBe(0);

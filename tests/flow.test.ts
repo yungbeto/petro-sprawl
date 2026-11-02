@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, chokepointFlow, flowBand, flowIndex, windowEndingOn, windowMean } from '../src/lib/flow';
+import { addDays, chokepointFlow, flowBand, flowIndex, trailingMeans, windowEndingOn, windowMean } from '../src/lib/flow';
 import type { ObservationSeries } from '../src/types';
 
 const days = (end: string, n: number, value: (i: number) => number) =>
@@ -66,6 +66,20 @@ describe('chokepointFlow', () => {
     expect(flow.band).toBe('below');
     expect(flow.sparkline).toHaveLength(90);
     expect(flow.sparkline.at(-1)?.date).toBe('2026-10-25');
+    // The trend is the 7-day mean: it ends on the index's own figure and steps down over a week.
+    expect(flow.trend.map((p) => p.date)).toEqual(flow.sparkline.map((p) => p.date));
+    expect(flow.trend.at(-1)?.value).toBe(2);
+    expect(flow.trend.find((p) => p.date === addDays('2026-10-25', -29))?.value).toBeCloseTo((6 * 40 + 2) / 7);
+  });
+
+  it('a trailing mean uses the days the series has, and starts where asked', () => {
+    const gappy = [
+      { date: '2026-01-01', value: 10 },
+      { date: '2026-01-02', value: 20 },
+      { date: '2026-01-05', value: 30 },
+      { date: '2026-01-10', value: 40 },
+    ];
+    expect(trailingMeans(gappy, 7, '2026-01-02').map((p) => p.value)).toEqual([15, 20, 35]);
   });
 
   it('bands by the trailing year when there is no five-year baseline', () => {

@@ -110,7 +110,7 @@ const result = await publishDataset({
       meta: {
         sourceUrl: EUROSTAT_OIL.pageUrl,
         sourceVersion: `Eurostat ${EUROSTAT_OIL.dataset} (${EUROSTAT_OIL.siec}, thousand tonnes) from ${since}; UN Comtrade HS ${COMTRADE.cmdCode} imports, annual, ${key ? 'API' : 'public preview'}${fresh ? ', reused from the last fetch' : ''}; EIA crude imports by PADD for the US. Shares computed here.${missing.length ? ` Not covered among the ${CRUDE_IMPORTS.largest} largest: ${missing.join(', ')}` : ''}`,
-        license: 'Eurostat: CC BY 4.0, shares computed from the source; UN Comtrade: derived shares, cited as UN Comtrade (permission asked 2026-11-01); EIA: public domain',
+        license: 'Eurostat: CC BY 4.0, shares computed from the source; UN Comtrade: shares derived here, cited as "Source: UN Comtrade" under its re-dissemination terms (free, non-commercial, under 100,000 records); EIA: public domain',
         dataThrough: records.map((r) => r.to).sort().at(-1),
       },
     };
