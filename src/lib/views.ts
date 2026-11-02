@@ -2,7 +2,7 @@
 // on the map, and has its own filter chips. Home is the summary across all of them. Pure.
 
 import type { SelectionKind } from '../app/urlState';
-import { FEATURES, PHONE_TABS, STORAGE_BOUNDS, WORLD_BOUNDS } from './config';
+import { FEATURES, PHONE_TABS, STORAGE_BOUNDS, THEATER_BOUNDS, WORLD_BOUNDS } from './config';
 import type { FilterId, FilterMatches } from './filters';
 import { importsSurfaceHighlight } from './crudeImports';
 import type { Datasets } from './data';
@@ -210,4 +210,17 @@ export function phoneTabs(enabled: readonly ViewId[] = ENABLED_VIEWS): { bar: Vi
   const preferred = (PHONE_TABS.bar as readonly ViewId[]).filter((v) => enabled.includes(v));
   const bar = [...preferred, ...enabled.filter((v) => !preferred.includes(v))].slice(0, room);
   return { bar: enabled.filter((v) => bar.includes(v)), more: enabled.filter((v) => !bar.includes(v)) };
+}
+
+/**
+ * Where the camera goes when an item closes (decided 2026-11-02): back to the camera it had before, or,
+ * opened from a link with none, the surface's own frame (Home's is the map a first visit opens on).
+ */
+export function closeFrame(
+  camera: { lon: number; lat: number; zoom: number } | null,
+  view: ViewId | null,
+  data: Datasets,
+): { camera: { lon: number; lat: number; zoom: number } } | { points: [number, number][] } {
+  if (camera) return { camera };
+  return { points: view ? viewPoints(view, data) : THEATER_BOUNDS };
 }

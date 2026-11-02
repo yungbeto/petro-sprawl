@@ -37,8 +37,11 @@ maplibregl.setWorkerUrl(workerUrl);
 
 const LABEL_FONT = 'Inter';
 
-/** Move the camera to a selection, or frame a set of points (a view opening). */
-export type FocusRequest = { selection: Selection; nonce: number } | { points: [number, number][]; nonce: number };
+/** Move the camera to a selection, frame a set of points (a view opening), or return to a camera (Back, Close). */
+export type FocusRequest =
+  | { selection: Selection; nonce: number }
+  | { points: [number, number][]; nonce: number }
+  | { camera: Camera; nonce: number };
 
 interface MapViewProps {
   theme: Theme;
@@ -330,6 +333,10 @@ export function MapView(props: MapViewProps) {
         maxZoom,
       });
     };
+    if ('camera' in target) {
+      map.flyTo({ center: [target.camera.lon, target.camera.lat], zoom: target.camera.zoom, padding });
+      return;
+    }
     if ('points' in target) {
       fit(target.points, 5);
       return;

@@ -14,6 +14,8 @@ import { DEFAULT_REGION_FUEL, type RegionFuel } from '../lib/config';
 const PUSHED = 'etPushed';
 // Each pushed entry also records the panel state it was pushed from, so the panel can name where Back goes.
 const FROM = 'etFrom';
+// A selection's entry records the camera of the surface its chain of selections was opened from, for Close.
+const SURFACE = 'etSurface';
 
 /** The panel state an entry was opened from: what Back returns to. */
 export interface PanelStep {
@@ -27,8 +29,14 @@ function stepOf(state: ReturnType<typeof currentState>): PanelStep {
 }
 
 /** Pushes a new entry, remembering the current panel state as where it came from. */
-function push(search: string) {
-  window.history.pushState({ [PUSHED]: true, [FROM]: stepOf(currentState()) }, '', urlFor(search));
+function push(search: string, surface: Camera | null = null) {
+  window.history.pushState({ [PUSHED]: true, [FROM]: stepOf(currentState()), [SURFACE]: surface }, '', urlFor(search));
+}
+
+/** The camera before the open selection (and those it was opened from) were opened; null from a link. */
+export function surfaceCamera(): Camera | null {
+  const state = window.history.state as Record<string, unknown> | null;
+  return (state?.[SURFACE] as Camera | null | undefined) ?? null;
 }
 
 function readFrom(): PanelStep | null {
@@ -50,6 +58,8 @@ export function useUrlState() {
   const [filter, setFilterState] = useState<FilterId | null>(() => currentState().filter ?? null);
   const [fuel, setFuelState] = useState<RegionFuel>(() => currentState().fuel ?? DEFAULT_REGION_FUEL);
   const [from, setFrom] = useState<PanelStep | null>(readFrom);
+  // Set on each step back (or forward): the camera the entry stepped to had, null when it had none.
+  const [restore, setRestore] = useState<{ camera: Camera | null; nonce: number } | null>(null);
 
   useEffect(() => {
     const onPopState = () => {
@@ -59,6 +69,7 @@ export function useUrlState() {
       setFilterState(state.filter ?? null);
       setFuelState(state.fuel ?? DEFAULT_REGION_FUEL);
       setFrom(readFrom());
+      setRestore((prev) => ({ camera: state.camera ?? null, nonce: (prev?.nonce ?? 0) + 1 }));
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
@@ -69,7 +80,8 @@ export function useUrlState() {
     const state = currentState();
     if (sameSelection(state.selection, next) && (state.fuel ?? DEFAULT_REGION_FUEL) === nextFuel) return;
     const search = serializeUrlState({ ...state, selection: next, fuel: nextFuel }, window.location.search);
-    push(search);
+    // Opened from another selection, the chain keeps the surface camera it started from.
+    push(search, state.selection ? surfaceCamera() : (state.camera ?? null));
     setFrom(readFrom());
     setSelection(next);
     setFuelState(nextFuel);
@@ -128,6 +140,7 @@ export function useUrlState() {
         : { ...state, view: null };
     window.history.replaceState(null, '', urlFor(serializeUrlState(next, window.location.search)));
     setFrom(null);
+    setRestore((prev) => ({ camera: null, nonce: (prev?.nonce ?? 0) + 1 }));
     setSelection(next.selection);
     setFilterState(next.filter ?? null);
     setViewState(next.view ?? null);
@@ -140,5 +153,5 @@ export function useUrlState() {
     window.history.replaceState(window.history.state, '', urlFor(search));
   }, []);
 
-  return { from, view, setView, selection, select, fuel, setFuel, filter, setFilter, back, setCamera, initialCamera: currentState().camera };
+  return { from, view, setView, selection, select, fuel, setFuel, filter, setFilter, back, restore, setCamera, initialCamera: currentState().camera };
 }
