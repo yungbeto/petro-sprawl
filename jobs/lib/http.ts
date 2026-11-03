@@ -12,6 +12,8 @@ export async function fetchJson(
     attempts = 3,
     maxBackoffMs = 30_000,
     bodyError,
+    init,
+    deadline,
   }: {
     source: string;
     timeoutMs?: number;
@@ -19,12 +21,18 @@ export async function fetchJson(
     maxBackoffMs?: number;
     /** Some APIs answer 200 with an error body; return a message to retry it like any other failure. */
     bodyError?: (body: unknown) => string | null;
+    /** Method, headers and body, for a POST. */
+    init?: Omit<RequestInit, 'signal'>;
+    /** Epoch ms after which no attempt starts and no wait runs past, so a job ends inside its step's cap. */
+    deadline?: number;
   },
 ): Promise<unknown> {
   let lastError: unknown;
   for (let attempt = 1; attempt <= attempts; attempt++) {
+    const left = deadline === undefined ? Infinity : deadline - Date.now();
+    if (left <= 0) throw lastError ?? new Error(`${source}: out of time before the first attempt`);
     try {
-      const response = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
+      const response = await fetch(url, { ...init, signal: AbortSignal.timeout(Math.min(timeoutMs, left)) });
       if (!response.ok) throw new Error(`${source} responded ${response.status}`);
       const body: unknown = await response.json();
       const error = bodyError?.(body);
@@ -32,7 +40,9 @@ export async function fetchJson(
       return body;
     } catch (err) {
       lastError = withCause(err, source);
-      if (attempt < attempts) await new Promise((r) => setTimeout(r, backoffMs(attempt, maxBackoffMs)));
+      const wait = backoffMs(attempt, maxBackoffMs);
+      if (deadline !== undefined && Date.now() + wait >= deadline) break;
+      if (attempt < attempts) await new Promise((r) => setTimeout(r, wait));
     }
   }
   throw lastError;

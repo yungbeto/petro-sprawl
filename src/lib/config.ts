@@ -137,6 +137,13 @@ export const PORTWATCH = {
   maxLagDays: 21,
   /** Attempts per request. The service fails queries at random; see jobs/fetch-portwatch.ts. */
   attempts: 6,
+  /**
+   * Minutes from the job's start after which no new PortWatch request starts, for transits and then port
+   * calls. A series not fetched by then keeps its previous one. The workflow step's cap is 20 minutes,
+   * and six attempts can take about 4.5 minutes per request, so without these the step was killed
+   * (2026-11-03) and nothing was published.
+   */
+  budgetMinutes: { transits: 11, portCalls: 16 },
 } as const;
 
 /**

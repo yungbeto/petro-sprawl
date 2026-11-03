@@ -77,19 +77,12 @@ const ca = await publishDataset({
   produce: async () => {
     const members = [STATCAN_STORAGE.total.member, ...STATCAN_STORAGE.provinces.map((p) => p.member)];
     const request = members.map((m) => ({ productId: STATCAN_STORAGE.productId, coordinate: statcanCoordinate(m), latestN: STATCAN_STORAGE.months }));
-    let body: unknown;
-    try {
-      const response = await fetch(`${STATCAN_STORAGE.apiUrl}/getDataFromCubePidCoordAndLatestNPeriods`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(request),
-        signal: AbortSignal.timeout(60_000),
-      });
-      if (!response.ok) throw new Error(`Statistics Canada responded ${response.status}`);
-      body = await response.json();
-    } catch (err) {
-      throw withCause(err, 'Statistics Canada');
-    }
+    // It drops the connection now and then (ECONNRESET, 2026-11-03), so retry like the other sources.
+    const body = await fetchJson(`${STATCAN_STORAGE.apiUrl}/getDataFromCubePidCoordAndLatestNPeriods`, {
+      source: 'Statistics Canada',
+      timeoutMs: 60_000,
+      init: { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request) },
+    });
     const records = statcanStorageSeries(statcanResponseSchema.parse(body), today);
     return {
       records,

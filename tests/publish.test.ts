@@ -197,6 +197,32 @@ describe('fetchJson', () => {
     await vi.runAllTimersAsync();
     await expect(pending).resolves.toEqual({ features: [] });
   });
+
+  it('stops retrying at the deadline instead of waiting past it', async () => {
+    vi.useFakeTimers();
+    const fetch = vi.fn(async () => ({ ok: false, status: 503 }));
+    vi.stubGlobal('fetch', fetch);
+    // Six attempts would wait 4 + 8 + 16 + 30 + 30 s; a 10 s deadline leaves room for the first wait only.
+    const pending = fetchJson('https://example.org', { source: 'X', attempts: 6, deadline: Date.now() + 10_000 });
+    const settled = expect(pending).rejects.toThrow('X responded 503');
+    await vi.runAllTimersAsync();
+    await settled;
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('starts no request once the deadline has passed', async () => {
+    const fetch = vi.fn();
+    vi.stubGlobal('fetch', fetch);
+    await expect(fetchJson('https://example.org', { source: 'X', deadline: Date.now() - 1 })).rejects.toThrow('X: out of time');
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('sends the method, headers and body it is given', async () => {
+    const fetch = vi.fn(async () => ({ ok: true, json: async () => [] }));
+    vi.stubGlobal('fetch', fetch);
+    await fetchJson('https://example.org', { source: 'X', init: { method: 'POST', body: '[]' } });
+    expect(fetch).toHaveBeenCalledWith('https://example.org', expect.objectContaining({ method: 'POST', body: '[]' }));
+  });
 });
 
 describe('eachWithFallback', () => {

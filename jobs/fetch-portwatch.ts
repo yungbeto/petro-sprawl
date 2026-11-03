@@ -30,7 +30,7 @@ interface Layer {
 const CHOKEPOINT_LAYER: Layer = { url: PORTWATCH.dailyUrl, fields: ['n_tanker', 'capacity_tanker'] };
 const PORT_LAYER: Layer = { url: PORT_CALLS.dailyUrl, fields: ['portcalls_tanker', 'export_tanker'] };
 
-async function fetchRows(layer: Layer, portwatchId: string, since: string, until: string): Promise<DailyRow[]> {
+async function fetchRows(layer: Layer, portwatchId: string, since: string, until: string, deadline: number): Promise<DailyRow[]> {
   const rows: DailyRow[] = [];
   const schema = dailyResponseSchema(layer.fields);
   for (const [from, to] of dateWindows(since, until, WINDOW_DAYS)) {
@@ -46,6 +46,7 @@ async function fetchRows(layer: Layer, portwatchId: string, since: string, until
     const body = await fetchJson(`${layer.url}?${params}`, {
       source: 'PortWatch',
       attempts: PORTWATCH.attempts,
+      deadline,
       bodyError: (b) => (b && typeof b === 'object' && 'error' in b ? JSON.stringify(b.error) : null),
     });
     const page = schema.parse(body);
@@ -56,6 +57,8 @@ async function fetchRows(layer: Layer, portwatchId: string, since: string, until
 }
 
 const today = new Date().toISOString().slice(0, 10);
+const startedAt = Date.now();
+const deadlineFor = (minutes: number) => startedAt + minutes * 60_000;
 // Enough history for the five-year baseline that sits before the trailing year, plus slack.
 const since = addDays(today, -(FLOW_WINDOWS.trailingDays + FLOW_WINDOWS.fiveYearDays + 30));
 // PortWatch asks to be cited as "Sources: UN Global Platform; IMF PortWatch".
@@ -72,7 +75,7 @@ const transits = await publishDataset({
       // Transits use the same `portwatch-<id>` form as port calls.
       previous: (c) => previous.filter((s) => [portCallsSeriesId(c.portwatchId), tankerCargoSeriesId(c.portwatchId)].includes(s.id)),
       fetch: async (chokepoint) => {
-        const rows = await fetchRows(CHOKEPOINT_LAYER, chokepoint.portwatchId, since, today);
+        const rows = await fetchRows(CHOKEPOINT_LAYER, chokepoint.portwatchId, since, today, deadlineFor(PORTWATCH.budgetMinutes.transits));
         console.log(`${chokepoint.portwatchId}: ${rows.length} rows`);
         return [
           toTransitSeries(chokepoint.portwatchId, rows, { today, ...PORTWATCH }),
@@ -110,7 +113,7 @@ const portCalls = await publishDataset({
       name: (p) => p.portwatchId,
       previous: (p) => previous.filter((s) => [portCallsSeriesId(p.portwatchId), portExportsSeriesId(p.portwatchId)].includes(s.id)),
       fetch: async (port) => {
-        const rows = await fetchRows(PORT_LAYER, port.portwatchId, since, today);
+        const rows = await fetchRows(PORT_LAYER, port.portwatchId, since, today, deadlineFor(PORTWATCH.budgetMinutes.portCalls));
         console.log(`${port.portwatchId}: ${rows.length} rows`);
         const common = { today, ...PORTWATCH, label: port.name };
         return [
