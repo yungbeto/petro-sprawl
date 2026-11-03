@@ -737,10 +737,11 @@ export const NEWS = {
   requestTimeoutMs: 40_000,
   /** Names news uses for chokepoints, which their display names don't give. */
   extraTerms: {
-    'chokepoint/hormuz': ['Hormuz'],
+    // Places in or on the strait (added 2026-11-03: a strike on Qeshm named none of the mapped assets).
+    'chokepoint/hormuz': ['Hormuz', 'Qeshm', 'Bandar Abbas', 'Larak', 'Musandam'],
     'chokepoint/malacca': ['Malacca Strait'],
     'chokepoint/suez': ['Suez Canal'],
-    'chokepoint/babelm': ['Bab al-Mandab'],
+    'chokepoint/babelm': ['Bab al-Mandab', 'Red Sea', 'Houthi', 'Houthis'],
     'chokepoint/danish': ['Great Belt', 'Oresund'],
     'chokepoint/turkish': ['Bosphorus', 'Bosporus', 'Dardanelles'],
     'pipeline/sumed': ['SUMED pipeline'],
@@ -761,6 +762,10 @@ export const NEWS = {
    * energy word. Short acronyms (four letters or fewer) always do.
    */
   weakTerms: [
+    'bandar abbas',
+    'red sea',
+    'houthi',
+    'houthis',
     'druzhba',
     'progress',
     'brotherhood',

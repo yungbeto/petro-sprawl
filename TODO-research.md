@@ -163,3 +163,12 @@ Checked 2026-11-01 against the sources' own pages, except where it says otherwis
   - Türkiye is in Eurostat but has no Comtrade value for ranking, so it sits with the unranked countries at the end of the list.
   - China's partners include Malaysia at 11%, mostly crude shipped on from elsewhere; partners are named as each source records them.
   - Comtrade runs on the public preview until `COMTRADE_API_KEY` is set (free at comtradedeveloper.un.org).
+
+## News freshness (raised 2026-11-03)
+
+Home's cards only change when a disruption gets a new source, and the scan only drafts from headlines that name a mapped asset. On 2026-11-03 the scan moved to every 3 hours and Hormuz and Bab el-Mandeb gained nearby place names (`NEWS.extraTerms`). Still to do, in order:
+
+- **"In the news" on Home.** The latest headlines the scan matched to the map, each with its publisher, age and link, labelled "Headlines, not reviewed". No Claude call, so nearly free, and it changes every run. Check the feed's terms first: Google News RSS is for personal, non-commercial use; GDELT is the clearly open one for showing headlines.
+- **Optional: publish new disruptions without review** when two trusted publishers report them, marked `unreviewed` like the scan's sources. Today new disruptions and end dates wait in a pull request, so an event like the Qeshm strike (Reuters, 2026-11-03) never reaches Home on its own.
+- **More nearby places** for other assets as misses show up (Kharg Island, Basra, the Red Sea ports). Keep the list short; ambiguous names go in `NEWS.weakTerms`.
+- **GDELT answers 429 from GitHub's runners** on most queries (2026-11-02: 13 of 13, then 9 of 13), so stories are found by search instead, at a little more cost. Worth a slower pace or a cache.

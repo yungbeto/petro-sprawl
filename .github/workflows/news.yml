@@ -1,6 +1,6 @@
 name: News
 
-# News scan every 12 hours (jobs/scan-news.ts, SPEC M9). Headlines from GDELT and Google News are matched
+# News scan every 3 hours (every 12 until 2026-11-03) (jobs/scan-news.ts, SPEC M9). Headlines from GDELT and Google News are matched
 # to mapped assets; Claude drafts from the articles and code checks every draft against the page. New
 # sources from trusted domains on disruptions in effect are committed to main, marked unreviewed. New
 # disruptions, end dates and anything else open a pull request. The run is red when neither feed answers
@@ -8,7 +8,7 @@ name: News
 
 on:
   schedule:
-    - cron: '23 4,16 * * *'
+    - cron: '23 */3 * * *'
   workflow_dispatch:
 
 permissions:
