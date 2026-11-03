@@ -3273,6 +3273,8 @@ a:hover {
 .menu__scroll {
   flex: 1;
   overflow-y: auto;
+  /* Room for the scrollbar on both sides, so a tab that scrolls doesn't shift the centred content. */
+  scrollbar-gutter: stable both-edges;
   overscroll-behavior: contain;
 }
 

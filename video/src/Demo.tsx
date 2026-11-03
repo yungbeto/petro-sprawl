@@ -62,6 +62,21 @@ export const Demo = () => {
   );
 };
 
+/** Output frames for the footage alone. */
+export const footageDurationInFrames = (fps: number) => Math.ceil(outputAt(beats.duration) * fps);
+
+/** The footage alone, full frame: the same speed and zooms, no cards, captions or backdrop. */
+export const UiOnly = () => {
+  const { fps, width, height } = useVideoConfig();
+  return (
+    <AbsoluteFill style={{ backgroundColor: COLORS.bg, overflow: 'hidden' }}>
+      <Zoom width={width} height={height}>
+        <Video name="Footage" src={staticFile('footage.mp4')} trimBefore={Math.round(FOOTAGE_START * fps)} playbackRate={RATE} muted style={{ width, height }} />
+      </Zoom>
+    </AbsoluteFill>
+  );
+};
+
 /** Where the footage sits: wide frames put the caption above it, square ones get the address below too. */
 function useLayout() {
   const { width, height } = useVideoConfig();
