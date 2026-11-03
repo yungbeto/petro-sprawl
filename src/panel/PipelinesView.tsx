@@ -6,6 +6,7 @@ import { pipelineStatus } from '../lib/encoding';
 import {
   PIPELINE_GROUPINGS,
   PIPELINE_GROUPING_LABELS,
+  PIPELINE_GROUPING_NOTES,
   isResearched,
   type PipelineGroup,
   type PipelineGrouping,
@@ -34,6 +35,7 @@ export interface PipelinesViewProps {
 export function PipelinesView({ data, groups, grouping, onGrouping, openGroup, onToggleGroup, onSelect }: PipelinesViewProps) {
   const overall = useMemo(() => statusGroups(statusCounts(data.pipelines)), [data]);
   const total = data.pipelines.length;
+  const researched = useMemo(() => data.pipelines.filter(isResearched).length, [data]);
 
   return (
     <>
@@ -45,6 +47,10 @@ export function PipelinesView({ data, groups, grouping, onGrouping, openGroup, o
             cited claims or metered flow, are marked and come first in each group.
           </Info>
         </div>
+        <p className="view-headline">
+          {total.toLocaleString('en-US')} pipelines from Global Energy Monitor; {researched} researched, with cited claims or metered
+          flow. Open a group to bring its lines out on the map.
+        </p>
         <StatusSummary groups={overall} total={total} />
       </section>
 
@@ -57,8 +63,7 @@ export function PipelinesView({ data, groups, grouping, onGrouping, openGroup, o
           value={grouping}
           onChange={onGrouping}
         />
-        {grouping === 'region' && <p className="note">By the country each line starts in.</p>}
-        {grouping === 'owner' && <p className="note">By the company with the largest share, as Global Energy Monitor traces it.</p>}
+        <p className="note group-by__note">{PIPELINE_GROUPING_NOTES[grouping]}</p>
 
         <ul className="group-list" aria-label={`Pipelines by ${PIPELINE_GROUPING_LABELS[grouping].toLowerCase()}`}>
           {groups.map((group) => (

@@ -105,6 +105,39 @@ export function crudeImportList(data: Pick<Datasets, 'crudeImports'>): CountryCr
   );
 }
 
+/**
+ * Oil origins' headline: the partners that are the largest named supplier (each card's first row) to the
+ * most importers. The first `top` partners, and any tied with the last.
+ */
+export function topSuppliers(records: CountryCrudeImports[], top = 3): { importers: number; leaders: { label: string; count: number }[] } {
+  const counts = new Map<string, number>();
+  let importers = 0;
+  for (const record of records) {
+    const first = countryOrigins(record).rows[0];
+    if (first?.kind !== 'country') continue;
+    importers++;
+    counts.set(first.label, (counts.get(first.label) ?? 0) + 1);
+  }
+  const ranked = [...counts].map(([label, count]) => ({ label, count })).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+  const cut = ranked[Math.min(top, ranked.length) - 1]?.count ?? 0;
+  return { importers, leaders: ranked.filter((l) => l.count >= cut) };
+}
+
+/** The headline as a line: "United States (7 of 41), Russia (6), Norway and Saudi Arabia (5 each)". */
+export function topSuppliersLine({ importers, leaders }: ReturnType<typeof topSuppliers>): string | null {
+  const groups: { count: number; labels: string[] }[] = [];
+  for (const l of leaders) {
+    const last = groups.at(-1);
+    if (last?.count === l.count) last.labels.push(l.label);
+    else groups.push({ count: l.count, labels: [l.label] });
+  }
+  if (!groups.length) return null;
+  const and = (names: string[]) => (names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : names[0]!);
+  return groups
+    .map((g, i) => `${and(g.labels)} (${g.count}${i === 0 ? ` of ${importers}` : ''}${g.labels.length > 1 ? ' each' : ''})`)
+    .join(', ');
+}
+
 /** A country's origins with the routes and terminals the data names, or null without import data. */
 export function originsOfCountry(data: Pick<Datasets, 'crudeImports' | 'oilRoutes' | 'oilTerminals'>, country: string): CountryOrigins | null {
   const record = data.crudeImports.find((r) => r.id === country);

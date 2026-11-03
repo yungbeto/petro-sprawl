@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
-import { homeHeadlines } from '../src/lib/headlines';
+import { homeHeadlines, publisherLabel } from '../src/lib/headlines';
 import type { NewsHeadline } from '../src/types';
 
 const headline = (title: string, refs: string[]): NewsHeadline => ({
@@ -38,5 +38,18 @@ describe('homeHeadlines', () => {
 
   it('shows at most the limit', () => {
     expect(homeHeadlines(data, 1)).toHaveLength(1);
+  });
+});
+
+describe('publisherLabel', () => {
+  it('names a publisher given as a web address by its site', () => {
+    expect(publisherLabel('www.shipmanagementinternational.com')).toBe('shipmanagementinternational.com');
+    expect(publisherLabel('https://houseofsaud.com/')).toBe('houseofsaud.com');
+    expect(publisherLabel('notus.org')).toBe('notus.org');
+  });
+  it('leaves names alone', () => {
+    expect(publisherLabel('The Jerusalem Post')).toBe('The Jerusalem Post');
+    expect(publisherLabel('Laodong.vn ')).toBe('laodong.vn');
+    expect(publisherLabel('WSJ')).toBe('WSJ');
   });
 });

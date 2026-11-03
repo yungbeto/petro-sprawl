@@ -26,3 +26,14 @@ export function homeHeadlines(data: Datasets, limit: number = NEWS.headlinesShow
   }
   return rows;
 }
+
+/** A publisher as a reader would name it: feeds sometimes give a web address ("www.example.com", "https://example.com/"). */
+export function publisherLabel(publisher: string): string {
+  const name = publisher.trim();
+  if (/\s/.test(name) || !/\./.test(name)) return name;
+  try {
+    return new URL(/^https?:\/\//.test(name) ? name : `https://${name}`).hostname.replace(/^www\./, '');
+  } catch {
+    return name;
+  }
+}

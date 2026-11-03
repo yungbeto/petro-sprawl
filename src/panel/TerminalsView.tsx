@@ -7,6 +7,7 @@ import { countStatuses, statusGroups } from '../lib/summary';
 import {
   TERMINAL_GROUPINGS,
   TERMINAL_GROUPING_LABELS,
+  TERMINAL_GROUPING_NOTES,
   TERMINAL_KINDS,
   TERMINAL_KIND_LABELS,
   isResearchedLng,
@@ -46,6 +47,8 @@ export function TerminalsView({ data, listing, onKind, grouping, onGrouping, ope
     [data, kind],
   );
   const total = kind === 'lng' ? data.lngTerminals.length : data.oilTerminals.length;
+  const researched = useMemo(() => data.lngTerminals.filter(isResearchedLng).length, [data]);
+  const note = TERMINAL_GROUPING_NOTES[kind][grouping];
   const groupList = `${TERMINAL_KIND_LABELS[kind]} terminals by ${TERMINAL_GROUPING_LABELS[grouping].toLowerCase()}`;
 
   return (
@@ -66,8 +69,14 @@ export function TerminalsView({ data, listing, onKind, grouping, onGrouping, ope
               </>
             )}
           </Info>
+          <Segmented id="terminals-kind" label="Kind" options={TERMINAL_KINDS} labels={TERMINAL_KIND_LABELS} value={kind} onChange={onKind} hideLabel />
         </div>
-        <Segmented id="terminals-kind" label="Kind" options={TERMINAL_KINDS} labels={TERMINAL_KIND_LABELS} value={kind} onChange={onKind} />
+        <p className="view-headline">
+          {kind === 'lng'
+            ? `${total.toLocaleString('en-US')} LNG terminals from Global Energy Monitor, built or not; ${researched} researched, with measured send-out or cited claims.`
+            : `${total.toLocaleString('en-US')} crude oil terminals, researched one by one; without a cited claim the status stays unknown.`}{' '}
+          Open a group to bring its terminals out on the map.
+        </p>
         <StatusSummary groups={overall} total={total} />
       </section>
 
@@ -80,8 +89,7 @@ export function TerminalsView({ data, listing, onKind, grouping, onGrouping, ope
           value={grouping}
           onChange={onGrouping}
         />
-        {grouping === 'route' && <p className="note">By the chokepoints a tanker leaving the terminal has to pass.</p>}
-        {grouping === 'region' && <p className="note">By the country the terminal is in.</p>}
+        {note && <p className="note group-by__note">{note}</p>}
 
         <ul className="group-list" aria-label={groupList}>
           {listing.kind === 'lng'
@@ -144,9 +152,9 @@ function LngRow({ terminal: t, onSelect }: { terminal: LngTerminal; onSelect: (s
         <span className={`status status--${status}`}>{statusLabel(status)}</span>
         {t.country && <span className="mono">{t.country}</span>}
         {operating > 0 ? (
-          <span className="mono">{formatMtpa(operating)} Mtpa</span>
+          <span className="num-inline">{formatMtpa(operating)} Mtpa</span>
         ) : (
-          planned > 0 && <span className="mono">{formatMtpa(planned)} Mtpa planned</span>
+          planned > 0 && <span className="num-inline">{formatMtpa(planned)} Mtpa planned</span>
         )}
         {t.sendOutSeriesId && <span className="tag">Send-out measured</span>}
         {!t.sendOutSeriesId && isResearchedLng(t) && <span className="tag">Researched</span>}
@@ -165,7 +173,7 @@ function OilRow({ terminal: t, onSelect }: { terminal: OilTerminal; onSelect: (s
         <span className={`status status--${status}`}>{statusLabel(status)}</span>
         <span className="mono">{t.country}</span>
         {t.throughput && (
-          <span className="mono">
+          <span className="num-inline">
             {t.throughput.value} {t.throughput.unit} loaded
           </span>
         )}

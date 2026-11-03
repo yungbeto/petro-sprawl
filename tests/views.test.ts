@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { FEATURES, STORAGE_BOUNDS, THEATER_BOUNDS, WORLD_BOUNDS } from '../src/lib/config';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
-import { basinViewRows, chokepointViewRows } from '../src/lib/summary';
+import { basinViewRows, chokepointsSummary, chokepointViewRows, type ChokepointViewRow } from '../src/lib/summary';
 import {
   ENABLED_VIEWS,
   SURFACE_FILTERS,
@@ -230,5 +230,17 @@ describe('closeFrame', () => {
   it("without one, frames the surface: its own points, or Home the first visit's map", () => {
     expect(closeFrame(null, 'chokepoints', data)).toEqual({ points: [[56.9, 26.3], [43.4, 12.6]] });
     expect(closeFrame(null, null, data)).toEqual({ points: THEATER_BOUNDS });
+  });
+});
+
+describe('chokepointsSummary', () => {
+  const row = (name: string, band: 'below' | 'near' | 'above' | null, indexFiveYear: number | null) =>
+    ({ selection: { kind: 'chokepoint', id: name }, name, eiaReferenceMbd: 1, transits: band || indexFiveYear !== null ? { band, indexFiveYear } : null, cargo: null }) as unknown as ChokepointViewRow;
+  it('counts the straits below their five-year average and names the first, furthest from it', () => {
+    const rows = [row('Hormuz', 'below', 0.02), row('Suez', 'below', 0.5), row('Malacca', 'near', 1), row('Panama', null, null)];
+    expect(chokepointsSummary(rows)).toEqual({ below: 2, measured: 3, furthest: { name: 'Hormuz', index: 0.02 } });
+  });
+  it('has no furthest without transit data', () => {
+    expect(chokepointsSummary([row('Panama', null, null)])).toEqual({ below: 0, measured: 0, furthest: null });
   });
 });

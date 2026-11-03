@@ -880,7 +880,7 @@ test('the basins surface lists basins by oil remaining and shows only their outl
   const panel = page.getByLabel('Panel', { exact: true });
   const list = panel.getByRole('list', { name: 'Basins' });
   await expect(list.getByRole('button').first()).toContainText('Mesopotamian Foredeep Basin');
-  await expect(list.getByRole('button').first()).toContainText('Billion barrels of oil remaining');
+  await expect(list.getByRole('button').first()).toContainText(/billion barrels of oil.*USGS, as of 2000/);
   // Only the outlines show, so the layer list has nothing to switch.
   await expect(page.getByRole('button', { name: 'Layers' })).toHaveCount(0);
   await page.waitForTimeout(500);

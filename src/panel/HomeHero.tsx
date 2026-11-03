@@ -4,7 +4,7 @@ import type { Selection } from '../app/urlState';
 import type { VisitChanges } from '../app/useVisitChanges';
 import { FEATURES, HOME_HERO, MEASURED_CHANGES } from '../lib/config';
 import type { Datasets } from '../lib/data';
-import { homeHeadlines } from '../lib/headlines';
+import { homeHeadlines, publisherLabel } from '../lib/headlines';
 import { describeChange, measuredChanges } from '../lib/measuredChanges';
 import { dateAgo, firstSentence, lastReported, newestSource, quietSince, situation, type Situation } from '../lib/summary';
 import { AssetIcon } from './AssetIcon';
@@ -102,26 +102,39 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
               They aren't reviewed: read the article before relying on it.
             </Info>
           </div>
-          <ul className="changes news">
-            {headlines.map(({ headline, assets }) => (
-              <li key={headline.url} className="news__item">
-                <a className="news__title" href={headline.url} target="_blank" rel="noopener noreferrer">
-                  {headline.title}
-                </a>
-                <span className="change__what">
-                  {headline.publisher} · {dateAgo(headline.publishedAt, now)}
-                  {assets.map((a) => (
-                    <span key={`${a.selection.kind}/${a.selection.id}`}>
-                      {' · '}
-                      <button type="button" className="link-button" onClick={() => onSelect(a.selection)}>
+          {/* Laid out like a news site's latest list: the outlet and age over the headline, the newest one larger,
+              then the places on the map it names, each opening that place. */}
+          <ol className="news" aria-label="Headlines, newest first">
+            {headlines.map(({ headline, assets }, i) => (
+              <li key={headline.url} className={i === 0 ? 'news__item news__item--lead' : 'news__item'}>
+                <article aria-labelledby={`hero-news-${i}`}>
+                  <p className="news__kicker">
+                    <span className="news__publisher">{publisherLabel(headline.publisher)}</span>
+                    {' · '}
+                    <time dateTime={headline.publishedAt}>{dateAgo(headline.publishedAt, now)}</time>
+                  </p>
+                  <h4 className="news__title" id={`hero-news-${i}`}>
+                    <a href={headline.url} target="_blank" rel="noopener noreferrer">
+                      {headline.title}
+                    </a>
+                  </h4>
+                  <p className="news__assets">
+                    {assets.map((a) => (
+                      <button
+                        key={`${a.selection.kind}/${a.selection.id}`}
+                        type="button"
+                        className="news__asset"
+                        onClick={() => onSelect(a.selection)}
+                      >
+                        <AssetIcon kind={a.selection.kind} commodity={commodityOf(a.selection.id)} />
                         {a.name}
                       </button>
-                    </span>
-                  ))}
-                </span>
+                    ))}
+                  </p>
+                </article>
               </li>
             ))}
-          </ul>
+          </ol>
         </section>
       )}
 

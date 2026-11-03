@@ -11,7 +11,7 @@ import {
   type ComtradeRow,
   type JsonStat,
 } from '../jobs/lib/crudeImports';
-import { countryArcs, countryHighlight, countryOrigins, crudeImportList, importPeriod, importsSurfaceHighlight } from '../src/lib/crudeImports';
+import { countryArcs, countryHighlight, countryOrigins, crudeImportList, importPeriod, importsSurfaceHighlight, topSuppliers, topSuppliersLine } from '../src/lib/crudeImports';
 import type { CountryCrudeImports, OilOriginRegion, OilRoute } from '../src/types';
 import { oilTerminal } from './fixtures';
 
@@ -280,5 +280,29 @@ describe('the oil origins list', () => {
   it('gives the period as a year or a span of months', () => {
     expect(importPeriod({ from: '2025', to: '2025' })).toBe('2025');
     expect(importPeriod({ from: '2025-09', to: '2026-08' })).toBe('2025-09 to 2026-08');
+  });
+});
+
+describe('topSuppliersLine', () => {
+  it('groups ties and gives the count of importers once', () => {
+    const leaders = [{ label: 'United States', count: 7 }, { label: 'Russia', count: 6 }, { label: 'Norway', count: 5 }, { label: 'Saudi Arabia', count: 5 }];
+    expect(topSuppliersLine({ importers: 41, leaders })).toBe('United States (7 of 41), Russia (6), Norway and Saudi Arabia (5 each)');
+    expect(topSuppliersLine({ importers: 2, leaders: [{ label: 'Norway', count: 1 }, { label: 'Russia', count: 1 }] })).toBe('Norway and Russia (1 of 2 each)');
+    expect(topSuppliersLine({ importers: 0, leaders: [] })).toBeNull();
+  });
+});
+
+describe('topSuppliers', () => {
+  const from = (id: string, label: string, iso2: string | null) =>
+    record({ id, partners: [{ iso2, iso3: null, label, value: 600 }, { iso2: 'NO', iso3: 'NOR', label: 'Norway', value: 400 }] });
+  it('counts each importer\'s largest named supplier, keeping ties with the last place', () => {
+    const records = [from('IN', 'Russian Federation', 'RU'), from('CN', 'Russian Federation', 'RU'), from('KR', 'Saudi Arabia', 'SA'), from('JP', 'United Arab Emirates', 'AE'), from('DE', 'Norway', 'NO'), from('XX', 'Areas, nes', null)];
+    const { importers, leaders } = topSuppliers(records, 2);
+    // XX's unnamed partner is larger, but Norway is its largest named one.
+    expect(importers).toBe(6);
+    expect(leaders).toEqual([
+      { label: 'Norway', count: 2 },
+      { label: countryOrigins(records[0]!).rows[0]!.label, count: 2 },
+    ]);
   });
 });

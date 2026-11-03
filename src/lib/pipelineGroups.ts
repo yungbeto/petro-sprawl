@@ -15,6 +15,14 @@ export const PIPELINE_GROUPING_LABELS: Record<PipelineGrouping, string> = {
   owner: 'Owner',
 };
 
+/** What each grouping groups by, shown under the switch. */
+export const PIPELINE_GROUPING_NOTES: Record<PipelineGrouping, string> = {
+  region: 'By the country each line starts in.',
+  status: "By the status on the map: measured flow or a cited claim where there is one, otherwise Global Energy Monitor's.",
+  commodity: 'By what the line carries, as Global Energy Monitor lists it.',
+  owner: 'By the company with the largest share, as Global Energy Monitor traces it.',
+};
+
 const COMMODITY_ORDER: Commodity[] = ['gas', 'oil', 'products', 'ngl'];
 const COMMODITY_GROUP_LABELS: Record<Commodity, string> = {
   gas: 'Gas',

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import type { Selection } from '../app/urlState';
 import { STATCAN_STORAGE, STORAGE_NOT_COVERED, STORAGE_SOURCES, JODI_GAS, type StorageSourceId } from '../lib/config';
 import type { Datasets } from '../lib/data';
-import { storageChange, storageFigure, type Cadence } from '../lib/gasStorage';
+import { CHANGE_SPAN, storageChange, storageFigure, type Cadence } from '../lib/gasStorage';
 import { formatCountry, formatNumber, formatSignedPct } from '../lib/format';
 import { median, storageRows, type StorageRow } from '../lib/summary';
 import { SourceLink } from './details';
@@ -34,11 +34,11 @@ export function StorageView({ data, onSelect }: { data: Datasets; onSelect: (sel
           </Info>
         </div>
         {gaps.length > 0 && (
-          <p className="storage-headline">
-            <span className="mono">{below}</span> of <span className="mono">{gaps.length}</span> countries hold less gas than a year ago
+          <p className="view-headline">
+            {below} of {gaps.length} countries hold less gas than a year ago
             {medianGap !== null && (
               <>
-                , median <span className="mono">{formatSignedPct(medianGap)}</span>
+                , median {formatSignedPct(medianGap)}
               </>
             )}
             .
@@ -50,7 +50,7 @@ export function StorageView({ data, onSelect }: { data: Datasets; onSelect: (sel
         {rows.length === 0 ? (
           <p className="muted">No storage data.</p>
         ) : (
-          <ul className="view-list" aria-label="Gas storage by country">
+          <ul className="view-list view-list--cards" aria-label="Gas storage by country">
             {rows.map((row) => (
               <li key={row.country}>
                 <StorageItem row={row} onSelect={onSelect} />
@@ -80,19 +80,34 @@ export function StorageView({ data, onSelect }: { data: Datasets; onSelect: (sel
 
 function StorageItem({ row, onSelect }: { row: StorageRow; onSelect: (selection: Selection) => void }) {
   const label = formatCountry(row.country);
-  const change = storageChange(row);
+  const change = storageChange(row, true);
   return (
     <button type="button" className="view-row" onClick={() => onSelect(row.selection)}>
       <span className="view-row__head">
         <span className="view-row__name">{label}</span>
-        <span className="view-row__figure mono">{storageFigure(row)}</span>
+        <span className="view-row__figure">
+          <span className="view-row__value">{storageFigure(row)}</span>
+          <span className="view-row__unit">{row.fill !== null ? 'full' : 'in storage'}</span>
+        </span>
       </span>
       {row.fill !== null && (
         <FillBar fill={row.fill} lastYear={row.summary.lastYear?.value ?? null} label={label} />
       )}
+      <span className="view-row__facts">
+        {row.vsLastYearPct !== null ? (
+          <span>
+            <strong>{formatSignedPct(row.vsLastYearPct)}</strong> vs last year
+          </span>
+        ) : (
+          <span>Nothing to compare last year</span>
+        )}
+        {change && (
+          <span>
+            <strong>{change}</strong> {CHANGE_SPAN[row.cadence]}
+          </span>
+        )}
+      </span>
       <span className="view-row__meta">
-        <span className="mono">{row.vsLastYearPct !== null ? `${formatSignedPct(row.vsLastYearPct)} vs last year` : 'Nothing to compare last year'}</span>
-        {change && <span className="mono">{change}</span>}
         <span>
           {CADENCE_LABEL[row.cadence]}, to <span className="mono">{row.summary.latest.date}</span>
           {row.caution && ' · use with caution'}

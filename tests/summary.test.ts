@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
 import {
+  basinsSummary,
   corridorRows,
   diffSnapshots,
   median,
@@ -19,7 +20,7 @@ import {
   type Snapshot,
 } from '../src/lib/summary';
 import type { Disruption, Evidence, ObservationSeries } from '../src/types';
-import { lngTerminal, oilTerminal, pipeline } from './fixtures';
+import { basin, lngTerminal, oilTerminal, pipeline } from './fixtures';
 
 const claim = (status: Evidence['status'], observedAt: string, sourceType: Evidence['sourceType'] = 'press'): Evidence => ({
   status,
@@ -296,5 +297,20 @@ describe('dateAgo', () => {
   it('gives the date once it is older, and keeps a month as it is', () => {
     expect(dateAgo('2026-07-20', now)).toBe('2026-07-20');
     expect(dateAgo('2026-05', now)).toBe('2026-05');
+  });
+});
+
+describe('basinsSummary', () => {
+  const withOil = (id: string, remaining: number | null) => ({
+    ...basin,
+    id,
+    volumes: { oil: { produced: null, remaining, undiscovered: null }, gas: { produced: null, remaining: null, undiscovered: null } },
+  });
+  it('totals the provinces with an oil figure and gives the largest few their share', () => {
+    const basins = [withOil('a', 600), withOil('b', 300), withOil('c', 100), withOil('d', null), { ...basin, id: 'e' }];
+    expect(basinsSummary(basins, 2)).toEqual({ provinces: 3, oil: 1000, topShare: 0.9, top: 2 });
+  });
+  it('is null with no oil figures', () => {
+    expect(basinsSummary([{ ...basin, id: 'e' }])).toBeNull();
   });
 });

@@ -25,6 +25,20 @@ export const TERMINAL_GROUPING_LABELS: Record<TerminalGrouping, string> = {
   status: 'Status',
 };
 
+/** What each grouping groups by, shown under the switch; status rests on different evidence for each kind. */
+export const TERMINAL_GROUPING_NOTES: Record<TerminalKind, Partial<Record<TerminalGrouping, string>>> = {
+  lng: {
+    facility: 'Export terminals liquefy gas for tankers; import terminals turn it back into gas.',
+    region: 'By the country the terminal is in.',
+    status: "By the status on the map: measured send-out or a cited claim where there is one, otherwise Global Energy Monitor's.",
+  },
+  oil: {
+    route: 'By the chokepoints a tanker leaving the terminal has to pass.',
+    region: 'By the country the terminal is in.',
+    status: 'By the newest cited claim; without one the status stays unknown.',
+  },
+};
+
 export interface TerminalGroup<T> {
   id: string;
   label: string;

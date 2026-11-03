@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
 import { formatIndexShare, formatMbd, formatNumber } from '../lib/format';
-import { chokepointViewRows, type ChokepointViewRow } from '../lib/summary';
+import { chokepointsSummary, chokepointViewRows, type ChokepointViewRow } from '../lib/summary';
 import { Band, SourceLink } from './details';
 import { MiniSparkline } from './Sparkline';
 import { Info } from './Info';
@@ -11,6 +11,7 @@ import { Info } from './Info';
 export function ChokepointsView({ data, onSelect }: { data: Datasets; onSelect: (selection: Selection) => void }) {
   const rows = useMemo(() => chokepointViewRows(data), [data]);
   const latest = rows.find((r) => r.transits)?.transits?.latestDate;
+  const summary = useMemo(() => chokepointsSummary(rows), [rows]);
   return (
     <>
       <section className="section">
@@ -22,6 +23,12 @@ export function ChokepointsView({ data, onSelect }: { data: Datasets; onSelect: 
             cargo is the same for PortWatch's estimate of the tonnage carried. Furthest from normal first.
           </Info>
         </div>
+        {summary.measured > 0 && (
+          <p className="view-headline">
+            {summary.below} of {summary.measured} straits are below their five-year baseline.
+            {summary.furthest && ` Furthest from normal: ${summary.furthest.name}, at ${formatIndexShare(summary.furthest.index)}.`}
+          </p>
+        )}
       </section>
       <ul className="view-list view-list--cards" aria-label="Chokepoints">
         {rows.map((row) => (
@@ -46,15 +53,15 @@ function ChokepointRow({ row, onSelect }: { row: ChokepointViewRow; onSelect: (s
   const { transits, cargo } = row;
   return (
     <button type="button" className="view-row chokepoint-row" onClick={() => onSelect(row.selection)}>
-      <span className="chokepoint-row__head">
+      <span className="view-row__head">
         <span className="chokepoint-row__title">
           <span className="view-row__name">{row.name}</span>
           {transits && <Band band={transits.band} />}
         </span>
         {transits?.indexFiveYear != null && (
-          <span className="chokepoint-row__figure">
-            <span className="chokepoint-row__value">{formatIndexShare(transits.indexFiveYear)}</span>
-            <span className="chokepoint-row__unit">of five-year</span>
+          <span className="view-row__figure">
+            <span className="view-row__value">{formatIndexShare(transits.indexFiveYear)}</span>
+            <span className="view-row__unit">of five-year</span>
           </span>
         )}
       </span>
@@ -66,22 +73,22 @@ function ChokepointRow({ row, onSelect }: { row: ChokepointViewRow; onSelect: (s
             label={`Tanker transits at ${row.name}, 7-day average over the last 90 days, against the five-year average`}
             className={transits.band ? `band--${transits.band}` : undefined}
           />
-          <span className="chokepoint-row__facts">
+          <span className="view-row__facts">
             <span>
               <strong>{transits.recent ? formatNumber(transits.recent.mean, 1) : 'n/a'}</strong> tankers a day
             </span>
             <span>
-              five-year <strong>{transits.fiveYear ? formatNumber(transits.fiveYear.mean, 1) : 'n/a'}</strong>
+              <strong>{transits.fiveYear ? formatNumber(transits.fiveYear.mean, 1) : 'n/a'}</strong> five-year average
             </span>
             {cargo?.indexFiveYear != null && (
               <span>
-                cargo <strong>{formatIndexShare(cargo.indexFiveYear)}</strong>
+                cargo <strong>{formatIndexShare(cargo.indexFiveYear)}</strong> of five-year
               </span>
             )}
           </span>
         </>
       ) : (
-        <span className="chokepoint-row__facts">
+        <span className="view-row__facts">
           <span>
             No transit data. EIA reference volume <strong>{formatMbd(row.eiaReferenceMbd)}</strong>
           </span>

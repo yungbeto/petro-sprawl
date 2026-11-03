@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { formatCountry, formatThousandfold } from '../lib/format';
-import { basinViewRows } from '../lib/summary';
+import { formatCountry, formatShare, formatThousandfold } from '../lib/format';
+import { basinsSummary, basinViewRows } from '../lib/summary';
 import type { Basin } from '../types';
 import { SourceLink } from './details';
 import { Info } from './Info';
@@ -10,6 +10,7 @@ import { Info } from './Info';
 /** The basins view: every mapped oil and gas province, the most oil remaining (as of 2000) first. */
 export function BasinsView({ data, onSelect }: { data: Datasets; onSelect: (selection: Selection) => void }) {
   const rows = useMemo(() => basinViewRows(data.basins), [data]);
+  const total = useMemo(() => basinsSummary(data.basins), [data]);
   return (
     <>
       <section className="section">
@@ -21,8 +22,14 @@ export function BasinsView({ data, onSelect }: { data: Datasets; onSelect: (sele
             figure, the United States among them, come last.
           </Info>
         </div>
+        {total && (
+          <p className="view-headline">
+            {total.provinces} provinces hold {formatThousandfold(total.oil)} billion barrels of oil in fields found by 1996 (USGS,
+            2000). The {total.top} largest hold {formatShare(total.topShare)}.
+          </p>
+        )}
       </section>
-      <ul className="view-list" aria-label="Basins">
+      <ul className="view-list view-list--cards" aria-label="Basins">
         {rows.map((basin) => (
           <li key={basin.id}>
             <BasinRow basin={basin} onSelect={onSelect} />
@@ -48,17 +55,18 @@ function BasinRow({ basin, onSelect }: { basin: Basin; onSelect: (selection: Sel
     <button type="button" className="view-row" onClick={() => onSelect({ kind: 'basin', id: basin.id })}>
       <span className="view-row__head">
         <span className="view-row__name">{basin.name}</span>
-        <span className="view-row__figure">{oil !== null ? formatThousandfold(oil) : <span className="muted">n/a</span>}</span>
-      </span>
-      <span className="view-row__meta">
-        <span>
-          {oil !== null ? 'Billion barrels of oil remaining' : 'No oil figure'}
-          {gas !== null && (
-            <>
-              , <span className="mono">{formatThousandfold(gas)}</span> trillion ft³ of gas
-            </>
-          )}
+        <span className="view-row__figure">
+          <span className="view-row__value">{oil !== null ? formatThousandfold(oil) : <span className="muted">n/a</span>}</span>
+          <span className="view-row__unit">{oil !== null ? 'billion barrels of oil' : 'no oil figure'}</span>
         </span>
+      </span>
+      <span className="view-row__facts">
+        {gas !== null && (
+          <span>
+            <strong>{formatThousandfold(gas)}</strong> trillion ft³ of gas
+          </span>
+        )}
+        <span>USGS, as of 2000</span>
       </span>
       <span className="view-row__meta">{countries}</span>
     </button>

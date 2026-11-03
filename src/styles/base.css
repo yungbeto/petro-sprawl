@@ -563,7 +563,9 @@ kbd {
   flex-shrink: 0;
 }
 
-.section + .section {
+.section + .section,
+.section + .view-list,
+.view-headline + .view-list {
   margin-top: var(--space-5);
 }
 
@@ -1686,12 +1688,17 @@ a:hover {
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-3);
+  /* The other surfaces' title row spacing (.title-row with a .detail__title), so the intro sits as their subheaders do. */
+  margin-bottom: var(--space-3);
 }
 
+/* The same title as every other surface (.detail__title). */
 .hero__title {
-  font-size: var(--text-lg);
+  margin-top: var(--space-1);
+  font-size: 20px;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.25;
+  text-wrap: balance;
 }
 
 .hero__date {
@@ -1719,10 +1726,9 @@ a:hover {
 
 /* Latest updates: one card per disruption, newest report first, in a row that scrolls sideways. Each card
    is narrower than the row so the next peeks in. */
+/* No rule under the intro: like the other surfaces, the title and its line lead straight into the content. */
 .hero__cards {
-  margin-top: var(--space-4);
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--border);
+  margin-top: var(--space-5);
 }
 
 .hero__cards-top {
@@ -1788,6 +1794,7 @@ a:hover {
 }
 
 .hero-card__name {
+  margin: 0;
   font-size: var(--text-lg);
   font-weight: 600;
   line-height: 1.3;
@@ -1864,28 +1871,101 @@ a:hover {
   margin-bottom: 0;
 }
 
+.news {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
 .news__item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: var(--space-2) 0;
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+
+.news__item:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+/* The outlet and age, like a news site's section line: the outlet in the text color, the age muted. */
+.news__kicker {
+  margin-bottom: 2px;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.news__publisher {
+  font-weight: 500;
+  color: var(--text);
 }
 
 .news__title {
-  color: var(--text);
-  text-decoration: none;
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
   text-wrap: pretty;
 }
 
-.news__title:hover {
-  text-decoration: underline;
-  text-decoration-color: var(--border-strong);
-  text-underline-offset: 2px;
+.news__item--lead .news__title {
+  font-size: var(--text-lg);
+  line-height: 1.25;
+  text-wrap: balance;
 }
 
-.news__item .link-button {
-  font-size: inherit;
+.news__title a {
   color: inherit;
+  text-decoration: none;
+}
+
+.news__title a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 3px;
+}
+
+/* The places it names, as small chips, so they read as tags on the story rather than more links. */
+.news__assets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.news__asset {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 26px;
+  padding: 0 var(--space-2) 0 3px;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  background: var(--surface-sunken);
+  border: 0;
+  border-radius: 13px;
+  cursor: pointer;
+  transition-property: color, background-color, scale;
+  transition-duration: 120ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.news__asset:hover {
+  color: var(--text);
+}
+
+.news__asset:active {
+  scale: 0.96;
+}
+
+.news__asset .asset-icon {
+  width: 20px;
+  height: 20px;
+  background: var(--surface);
+}
+
+.news__asset .asset-icon svg {
+  width: 12px;
+  height: 12px;
 }
 
 .hero__tally {
@@ -2241,7 +2321,7 @@ a:hover {
 
 .view-row__head {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-3);
 }
@@ -2250,10 +2330,26 @@ a:hover {
   font-weight: 500;
 }
 
+/* A card's figure: the value, with what it is in small type under it. */
 .view-row__figure {
-  font-size: var(--text-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.view-row__value {
+  font-size: 22px;
   font-weight: 500;
-  font-variant-numeric: proportional-nums;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.view-row__unit {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
 }
 
 .view-row__meta {
@@ -2262,6 +2358,7 @@ a:hover {
   gap: var(--space-1) var(--space-2);
   font-size: var(--text-sm);
   color: var(--text-muted);
+  text-wrap: pretty;
 }
 
 .mini-sparkline {
@@ -2280,8 +2377,8 @@ a:hover {
   vector-effect: non-scaling-stroke;
 }
 
-/* A chokepoint in the list: name and band, the share as the figure, the trend, then the figures behind it. */
-/* Cards rather than ruled rows: 8px apart, each with a hairline outline drawn as a shadow. */
+/* The surfaces' lists (chokepoints, gas storage, basins, oil origins) as cards rather than ruled rows:
+   8px apart, each with a hairline outline drawn as a shadow, so the hover fill stays inside it. */
 .view-list--cards {
   gap: var(--space-2);
 }
@@ -2290,27 +2387,44 @@ a:hover {
   border-top: 0;
 }
 
-.chokepoint-row {
+.view-list--cards .view-row {
   gap: var(--space-2);
   margin: 0;
   width: 100%;
   padding: var(--space-4);
   box-shadow: 0 0 0 1px var(--border);
-  transition-property: background-color, box-shadow;
-  transition-duration: 120ms;
 }
 
-.chokepoint-row:hover {
+.view-list--cards .view-row:hover {
   box-shadow: 0 0 0 1px var(--border-strong);
 }
 
-.chokepoint-row__head {
+/* The figures behind the headline, as one line: values in the text color, the words muted. */
+.view-row__facts {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-3);
+  flex-wrap: wrap;
+  gap: 2px 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
+.view-row__facts strong {
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* Each fact stays whole, and its separator trails it, so a wrapped line never starts with a dot. */
+.view-row__facts > span {
+  white-space: nowrap;
+}
+
+.view-row__facts > span:not(:last-child)::after {
+  content: '·';
+  padding: 0 6px;
+}
+
+/* A chokepoint: name and band, the share as the figure, the trend, then the figures behind it. */
 .chokepoint-row__title {
   display: flex;
   flex-direction: column;
@@ -2326,26 +2440,6 @@ a:hover {
   width: 8px;
   height: 8px;
   border-width: 1.5px;
-}
-
-.chokepoint-row__figure {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  flex-shrink: 0;
-}
-
-.chokepoint-row__value {
-  font-size: 22px;
-  font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-}
-
-.chokepoint-row__unit {
-  font-size: var(--text-xs);
-  color: var(--text-muted);
 }
 
 .chokepoint-row .mini-sparkline {
@@ -2365,28 +2459,26 @@ a:hover {
   color: var(--flow-near);
 }
 
-/* The figures behind the share, as one line: values in the text color, the words muted. */
-.chokepoint-row__facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px 0;
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.chokepoint-row__facts strong {
-  font-weight: 500;
-  color: var(--text);
-}
-
-.chokepoint-row__facts > span + span::before {
-  content: '·';
-  padding: 0 6px;
+.status-summary {
+  margin-top: var(--space-4);
 }
 
 .status-groups {
   margin-top: var(--space-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Terminals' kind switch, at the end of the title row, above the summary line it changes. */
+.title-row > .group-by {
+  margin-left: auto;
+}
+
+.group-by + .group-by__note {
+  margin-top: var(--space-2);
+}
+
+.num-inline {
+  font-variant-numeric: tabular-nums;
 }
 
 .status-groups td {
@@ -2414,8 +2506,10 @@ a:hover {
   margin-top: var(--space-2);
 }
 
+/* Rows reach 8px past the text on each side, and so do the rules between them, so a row's hover fill
+   lines up with the rules rather than overhanging them. */
 .group-list {
-  margin: var(--space-3) 0 0;
+  margin: var(--space-4) calc(-1 * var(--space-2)) 0;
   padding: 0;
   list-style: none;
 }
@@ -2433,8 +2527,7 @@ a:hover {
   align-items: center;
   column-gap: var(--space-2);
   row-gap: 6px;
-  width: calc(100% + 2 * var(--space-2));
-  margin: 0 calc(-1 * var(--space-2));
+  width: 100%;
   padding: var(--space-3) var(--space-2);
   text-align: left;
   background: none;
@@ -2462,6 +2555,19 @@ a:hover {
   grid-area: count;
   font-size: var(--text-sm);
   color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* An open group's items sit under its label: indented past the caret, rules and hover fill alike. */
+.group-list .view-list {
+  margin-left: 22px;
+}
+
+.group-list .view-row {
+  gap: 2px;
+  margin: 0;
+  width: 100%;
+  padding: var(--space-2);
 }
 
 .group-row__bar {
@@ -2477,7 +2583,7 @@ a:hover {
 }
 
 .group-list__more {
-  margin: var(--space-1) 0 var(--space-3) 22px;
+  margin: var(--space-1) 0 var(--space-3) 30px;
   font-size: var(--text-sm);
 }
 
@@ -2492,9 +2598,13 @@ a:hover {
 }
 
 /* Gas storage surface: fill from empty to full, a tick at last year's level. */
-.storage-headline {
-  margin-top: var(--space-3);
+/* A surface's one-line summary under its title, muted like Home's intro. */
+.view-headline {
+  margin-top: var(--space-1);
   font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  text-wrap: pretty;
 }
 
 .fill-bar {
@@ -2584,7 +2694,7 @@ a:hover {
 
 .origin-tops__row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 56px 36px;
+  grid-template-columns: minmax(0, 1fr) 72px 36px;
   align-items: center;
   gap: var(--space-2);
 }
@@ -2595,16 +2705,22 @@ a:hover {
 
 .origin-tops__bar {
   display: block;
-  height: 4px;
+  height: 6px;
   background: var(--surface-sunken);
   border-radius: 2px;
 }
 
+/* Scaled to the card's largest share, so the bars compare the rows rather than all read as slivers. */
 .origin-tops__bar > span {
   display: block;
   height: 100%;
-  background: var(--border-strong);
+  background: var(--text-muted);
   border-radius: 2px;
+}
+
+.origin-tops__share {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Interaction details: quick, interruptible state changes; press feedback on compact controls;

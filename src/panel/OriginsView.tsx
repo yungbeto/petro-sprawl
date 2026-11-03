@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { MagnifyingGlassIcon } from '@phosphor-icons/react';
 import type { Selection } from '../app/urlState';
 import { CRUDE_IMPORTS, REGION_FUEL_LABELS, type RegionFuel } from '../lib/config';
-import { countryOrigins, crudeImportList, importPeriod } from '../lib/crudeImports';
+import { countryOrigins, crudeImportList, importPeriod, topSuppliers, topSuppliersLine } from '../lib/crudeImports';
 import { originsByRegion, type Datasets } from '../lib/data';
 import { formatCountry, formatShare } from '../lib/format';
 import { CrudeImportsSource, SourceLink } from './details';
@@ -19,6 +19,9 @@ export interface OriginsViewProps {
 }
 
 const TOP = 3;
+
+/** A share's bar, against the card's largest, so the top rows compare at a glance. */
+const barWidth = (share: number, top: number) => `${top > 0 ? Math.min(100, (share / top) * 100) : 0}%`;
 const SOURCE_NAME = { eurostat: 'Eurostat', comtrade: 'UN Comtrade', eia: 'EIA' } as const;
 
 /**
@@ -29,6 +32,7 @@ const SOURCE_NAME = { eurostat: 'Eurostat', comtrade: 'UN Comtrade', eia: 'EIA' 
 export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsViewProps) {
   const regions = useMemo(() => originsByRegion(data, fuel), [data, fuel]);
   const countries = useMemo(() => crudeImportList(data).map((record) => countryOrigins(record)), [data]);
+  const leaders = useMemo(() => topSuppliersLine(topSuppliers(data.crudeImports)), [data]);
   const noun = fuel === 'crude' ? 'crude oil' : REGION_FUEL_LABELS[fuel].toLowerCase();
 
   return (
@@ -41,10 +45,11 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
             every country Eurostat reports. Largest importer by value first. Crude produced at home isn't counted.
           </Info>
         </div>
+        {leaders && <p className="view-headline">Largest supplier to the most importers: {leaders}.</p>}
         {countries.length === 0 ? (
           <p className="muted">No crude import data.</p>
         ) : (
-          <ul className="view-list" aria-label="Crude imports by country">
+          <ul className="view-list view-list--cards" aria-label="Crude imports by country">
             {countries.map(({ record, rows }) => (
               <li key={record.id}>
                 <button type="button" className="view-row" onClick={() => onSelect({ kind: 'country', id: record.id.toLowerCase() })}>
@@ -54,9 +59,9 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
                       <span key={row.key} className="origin-tops__row">
                         <span className="origin-tops__label">{row.label}</span>
                         <span className="origin-tops__bar" aria-hidden="true">
-                          <span style={{ width: `${Math.min(100, row.share * 100)}%` }} />
+                          <span style={{ width: barWidth(row.share, rows[0]!.share) }} />
                         </span>
-                        <span className="mono num">{formatShare(row.share)}</span>
+                        <span className="origin-tops__share">{formatShare(row.share)}</span>
                       </span>
                     ))}
                   </span>
@@ -86,7 +91,7 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
           {regions.length === 0 ? (
             <p className="muted">No data for {noun}.</p>
           ) : (
-            <ul className="view-list" aria-label="US fuel regions">
+            <ul className="view-list view-list--cards" aria-label="US fuel regions">
               {regions.map(({ region, rows }) => {
                 return (
                   <li key={region.id}>
@@ -98,9 +103,9 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
                           <span key={row.key} className="origin-tops__row">
                             <span className="origin-tops__label">{row.label}</span>
                             <span className="origin-tops__bar" aria-hidden="true">
-                              <span style={{ width: `${Math.min(100, row.share * 100)}%` }} />
+                              <span style={{ width: barWidth(row.share, rows[0]!.share) }} />
                             </span>
-                            <span className="mono num">{formatShare(row.share)}</span>
+                            <span className="origin-tops__share">{formatShare(row.share)}</span>
                           </span>
                         ))}
                       </span>

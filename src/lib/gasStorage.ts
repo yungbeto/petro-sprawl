@@ -210,7 +210,7 @@ export function storageChange(s: Pick<CountryStorage, 'fill' | 'summary' | 'seri
   return bare ? change : `${change} ${CHANGE_SPAN[s.cadence]}`;
 }
 
-const CHANGE_SPAN: Record<Cadence, string> = { daily: 'in 7 days', weekly: 'on the week', monthly: 'on the month' };
+export const CHANGE_SPAN: Record<Cadence, string> = { daily: 'in 7 days', weekly: 'on the week', monthly: 'on the month' };
 /** What the change is over, as a label. */
 export const CHANGE_LABEL: Record<Cadence, string> = { daily: 'Last 7 days', weekly: 'On the week', monthly: 'On the month' };
 

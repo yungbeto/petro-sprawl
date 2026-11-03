@@ -106,6 +106,15 @@ export function basinViewRows(basins: Basin[]): Basin[] {
   });
 }
 
+/** The basins view's headline: how much oil the provinces with a figure hold, and the largest few's share. */
+export function basinsSummary(basins: Basin[], top = 5): { provinces: number; oil: number; topShare: number; top: number } | null {
+  const oil = basins.flatMap((b) => (b.volumes?.oil.remaining == null ? [] : [b.volumes.oil.remaining])).sort((a, b) => b - a);
+  const total = oil.reduce((sum, v) => sum + v, 0);
+  if (!oil.length || total <= 0) return null;
+  const n = Math.min(top, oil.length);
+  return { provinces: oil.length, oil: total, topShare: oil.slice(0, n).reduce((sum, v) => sum + v, 0) / total, top: n };
+}
+
 export interface ChokepointViewRow {
   selection: Selection;
   name: string;
@@ -113,6 +122,17 @@ export interface ChokepointViewRow {
   eiaReferenceMbd: number;
   transits: ChokepointFlow | null;
   cargo: ChokepointFlow | null;
+}
+
+/** The chokepoints view's headline: how many straits run below their five-year average, and the one furthest from it. */
+export function chokepointsSummary(rows: ChokepointViewRow[]): { below: number; measured: number; furthest: { name: string; index: number } | null } {
+  const measured = rows.filter((r) => r.transits?.band);
+  const first = rows.find((r) => r.transits?.indexFiveYear != null);
+  return {
+    below: measured.filter((r) => r.transits!.band === 'below').length,
+    measured: measured.length,
+    furthest: first ? { name: first.name, index: first.transits!.indexFiveYear! } : null,
+  };
 }
 
 /**

@@ -10,20 +10,20 @@ type StatusGroups = { id: StatusGroupId; label: string; count: number }[];
 export function StatusSummary({ groups, total }: { groups: StatusGroups; total: number }) {
   if (total === 0) return null;
   return (
-    <>
+    <div className="status-summary">
       <StatusBar groups={groups} />
       <table className="table status-groups">
         <tbody>
           {groups.map((g) => (
             <tr key={g.id}>
               <td>{g.label}</td>
-              <td className="mono num">{g.count.toLocaleString('en-US')}</td>
-              <td className="mono num muted">{formatIndexShare(g.count / total)}</td>
+              <td className="num">{g.count.toLocaleString('en-US')}</td>
+              <td className="num muted">{formatIndexShare(g.count / total)}</td>
             </tr>
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }
 
@@ -35,9 +35,12 @@ export function Segmented<T extends string>({
   labels,
   value,
   onChange,
+  hideLabel = false,
 }: {
   id: string;
   label: string;
+  /** Name the switch for screen readers only, where its place says what it is (beside a title). */
+  hideLabel?: boolean;
   options: readonly T[];
   labels: Record<T, string>;
   value: T;
@@ -45,7 +48,7 @@ export function Segmented<T extends string>({
 }) {
   return (
     <div className="group-by">
-      <span className="group-by__label" id={id}>
+      <span className={hideLabel ? 'visually-hidden' : 'group-by__label'} id={id}>
         {label}
       </span>
       <div className="segmented" role="radiogroup" aria-labelledby={id}>
@@ -92,7 +95,7 @@ export function GroupItem<T>({
       <button type="button" className="group-row" aria-expanded={open} aria-controls={listId} onClick={onToggle}>
         {open ? <CaretDownIcon size={14} aria-hidden="true" /> : <CaretRightIcon size={14} aria-hidden="true" />}
         <span className="group-row__label">{label}</span>
-        <span className="group-row__count mono">{items.length.toLocaleString('en-US')}</span>
+        <span className="group-row__count">{items.length.toLocaleString('en-US')}</span>
         <span className="group-row__bar">
           <StatusBar groups={status} />
         </span>
