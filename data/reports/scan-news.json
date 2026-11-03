@@ -1,22 +1,21 @@
 {
-  "recordedAt": "2026-11-03T03:22:57.700Z",
+  "recordedAt": "2026-11-03T11:03:31.933Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 9,
-      "failed": 12,
+      "requests": 6,
+      "failed": 13,
       "articles": 0,
       "errors": [
-        "answered 429",
-        "answered 429",
         "fetch failed",
-        "answered 429"
+        "fetch failed",
+        "fetch failed"
       ]
     },
     "google-news": {
       "requests": 13,
       "failed": 0,
-      "articles": 258,
+      "articles": 299,
       "errors": []
     }
   },
@@ -24,56 +23,79 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-03"
   },
-  "stories": 17,
-  "candidates": 4,
+  "stories": 15,
+  "candidates": 8,
   "usage": {
-    "input": 31145,
-    "output": 1745,
-    "searches": 1
+    "input": 66000,
+    "output": 1933,
+    "searches": 2
   },
-  "estimatedCostUsd": 0.014,
+  "estimatedCostUsd": 0.028,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "review",
-      "detail": "pbs.org isn't on the trusted list",
+      "outcome": "unreadable",
+      "detail": "page answered 403",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.pbs.org/newshour/world/u-s-strikes-iranian-targets-in-strait-of-hormuz-u-s-official-tells-ap",
-        "publisher": "PBS",
-        "quote": "The United States has conducted defensive strikes on some Iranian targets in the Strait of Hormuz",
+        "url": "https://www.timesofisrael.com/liveblog-november-03-2026/amp/",
+        "publisher": "Times of Israel",
+        "quote": "The United States has conducted defensive strikes on some Iranian targets in the Strait of Hormuz, a US official says, on the eve of crucial midterm elections.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": ""
       },
       "headlines": [
-        "- 2026-11-03 · WSJ: Exclusive | U.S. Strikes Iran’s Qeshm Island as Trump Talks Down War Risks",
-        "- 2026-11-03 · CNBC: U.S. reportedly strikes Iran's Qeshm Island as Vance hopes for ‘negotiated settlement’ with Tehran",
-        "- 2026-11-03 · Al Jazeera: Explosions hit Iran’s Qeshm Island as US media report US strikes in Hormuz",
-        "- 2026-11-03 · Reuters: Oil rises after report of US strike on Iran's Qeshm Island",
-        "- 2026-11-03 · PBS: U.S. strikes Iranian targets in Strait of Hormuz, U.S. official tells AP",
-        "- 2026-11-03 · The Jerusalem Post: US carries out 'defensive' strikes on Iran's Qeshm Island, officials say - report",
-        "- 2026-11-03 · CNN: US carried out limited ‘defensive’ strikes on Iran’s Qeshm Island, official says",
-        "- 2026-11-03 · Scripps News: US has conducted defensive strikes on some Iranian targets in the Strait of Hormuz, US official says",
-        "- 2026-11-03 · The Hill: US military strikes Iran’s Qeshm Island day before midterms",
-        "- 2026-11-03 · The Times of Israel: US said to strike Iranian island in Strait of Hormuz",
-        "- 2026-11-03 · New York Post: US forces hit Iran’s Qeshm Island as part of a series of secret strikes: report",
-        "- 2026-11-03 · Interesting Engineering: US strikes target Iran's Qeshm Island and underground missile base",
-        "- 2026-11-03 · France 24: US strikes Iran's Qeshm Island as Trump signals progress in talks",
-        "- 2026-11-03 · Haaretz: Report: U.S. Strikes Iran's Qeshm Island, Officials Say",
-        "- 2026-11-03 · WXLV: Limited U.S. defensive strikes reported in Strait of Hormuz amid midterm eve"
+        "- 2026-11-03 · Financial Times: US strikes Iran’s Qeshm Island on eve of election",
+        "- 2026-11-03 · NBC News: U.S. military carries out limited strikes on Iran’s Qeshm Island, U.S. officials say",
+        "- 2026-11-03 · CNBC: Oil prices climb after U.S. strikes Iran's Qeshm Island",
+        "- 2026-11-03 · Reuters: US carries out 'defensive' strikes on Iran's Qeshm Island, officials say",
+        "- 2026-11-03 · KOCO: US strikes Iranian targets in the Strait of Hormuz, official says, leaving unclear what comes next",
+        "- 2026-11-03 · The Times of Israel: US carries out ‘defensive’ strikes on Iran’s Qeshm island in Strait of Hormuz",
+        "- 2026-11-03 · South China Morning Post: US hits Iran’s Qeshm Island ahead of midterms as Trump says deal ‘could happen’",
+        "- 2026-11-03 · ABC News - Breaking News, Latest News and Videos: US carries out defensive airstrikes on Iran's Qeshm Island: Officials",
+        "- 2026-11-03 · IranWire: U.S. Media Confirms American Air Strikes on Iran’s Qeshm Island",
+        "- 2026-11-03 · Al Jazeera: US hits Qeshm Island, Pezeshkian signals more diplomacy: Iran war latest",
+        "- 2026-11-03 · CNBC: Oil rises after report of US strike on Iran's Qeshm Island",
+        "- 2026-11-03 · Bloomberg.com: Watch US Hits Iran’s Qeshm Island as Hormuz Talks Keep Oil Markets on Edge",
+        "- 2026-11-03 · The New York Times: U.S. Military Strikes Iran’s Qeshm Island in What U.S. Officials Call a Defensive Measure",
+        "- 2026-11-03 · USA Today: US military strikes Iran's Qeshm Island ahead of midterm elections",
+        "- 2026-11-03 · Seeking Alpha: Oil futures edge up after U.S. said to strike Iran's Qeshm Island"
       ]
     },
     {
-      "ref": "chokepoint/babelm",
+      "ref": "lng/gem-t100000130594-export",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-02 · وكالة سبأ: Military Source to Saba: Armed forces repel advance attempts by Saudi-enemy forces toward Bab al-Mandab"
+        "- 2026-11-03 · Maritime Gateway: Only Six of 75-80 Qatar LNG Cargoes Landed: Petronet Pushes for Early Delivery"
+      ]
+    },
+    {
+      "ref": "terminal/fujairah",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-03 · Emirates 24|7: UAE weather forecast: Showers in Fujairah, humidity up and fog likely tonight"
+      ]
+    },
+    {
+      "ref": "pipeline/east-west-crude",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-03 · TradingView: Saudi Aramco studying expansion of East-West pipeline capacity",
+        "- 2026-11-03 · Devdiscourse: Aramco exploring expansion of East-West Pipeline that avoids Hormuz",
+        "- 2026-11-03 · marketscreener.com: Aramco exploring expansion of East-West Pipeline that avoids Hormuz",
+        "- 2026-11-03 · The Edge Malaysia: Aramco exploring expansion of East-West Pipeline that avoids Hormuz",
+        "- 2026-11-03 · صحيفة سبق الإلكترونية: Aramco CEO: We Recovered East-West Pipeline Costs in Just 15 Days",
+        "- 2026-11-03 · Traders Union: Aramco explores East-West Pipeline expansion as Hormuz disruption reshapes oil exports"
       ]
     },
     {
@@ -82,7 +104,25 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-03 · Laodong.vn: Mysterious dent on pipeline reveals little-known link in Nord Stream case"
+        "- 2026-11-03 · Post Register: German court rejects bid to end Ukrainian ex-officer's trial over Nord Stream pipeline blasts"
+      ]
+    },
+    {
+      "ref": "pipeline/turkstream",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-03 · EUalive: No escape route for Russian gas via TurkStream"
+      ]
+    },
+    {
+      "ref": "terminal/ain-sokhna",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-03 · INSITE OOH Media Platform: Castle Sands Makes Its OOH Debut in Egypt with Ain Sokhna Campaign"
       ]
     },
     {
@@ -91,7 +131,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-02 · FinancialContent: KBRA Assigns Preliminary Ratings to Blue Stream Issuer, LLC Series 2026-1"
+        "- 2026-11-02 · Business Wire: KBRA Assigns Preliminary Ratings to Blue Stream Issuer, LLC Series 2026-1"
       ]
     }
   ]
