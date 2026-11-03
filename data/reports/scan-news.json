@@ -1,58 +1,70 @@
 {
-  "recordedAt": "2026-11-02T23:47:48.551Z",
+  "recordedAt": "2026-11-03T03:22:57.700Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 21,
-      "failed": 4,
+      "requests": 9,
+      "failed": 12,
       "articles": 0,
       "errors": [
         "answered 429",
         "answered 429",
-        "answered 429",
+        "fetch failed",
         "answered 429"
       ]
     },
     "google-news": {
       "requests": 13,
       "failed": 0,
-      "articles": 322,
+      "articles": 258,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-02"
+    "lastOk": "2026-11-03"
   },
-  "stories": 18,
-  "candidates": 2,
+  "stories": 17,
+  "candidates": 4,
   "usage": {
-    "input": 23926,
-    "output": 810,
+    "input": 31145,
+    "output": 1745,
     "searches": 1
   },
-  "estimatedCostUsd": 0.013,
+  "estimatedCostUsd": 0.014,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "nothing",
+      "outcome": "review",
+      "detail": "pbs.org isn't on the trusted list",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://www.pbs.org/newshour/world/u-s-strikes-iranian-targets-in-strait-of-hormuz-u-s-official-tells-ap",
+        "publisher": "PBS",
+        "quote": "The United States has conducted defensive strikes on some Iranian targets in the Strait of Hormuz",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": ""
+      },
       "headlines": [
-        "- 2026-11-02 · The Hill: Iran offers to open Strait of Hormuz on several conditions",
-        "- 2026-11-02 · NewsCord: IRNA Reports Five Explosions On Iran’s Qeshm Island Near Strait Of Hormuz: how 15 outlets framed it",
-        "- 2026-11-02 · The Economic Times: Araghchi says Iran, Qatar propose reopening Strait of Hormuz within two days if US meets Tehran's conditio",
-        "- 2026-11-02 · Iran Focus: Insecurity in the Strait of Hormuz Drives Up Costs",
-        "- 2026-11-02 · Anadolu Ajansı: Iran’s Revolutionary Guard says it downed 2 US drones in Strait of Hormuz",
-        "- 2026-11-02 · Oil & Gas 360: ADNOC warns global oil reserves are shrinking as Hormuz disruptions strain energy supplies",
-        "- 2026-11-02 · Centre for European Reform: The EU must make the Hormuz crisis a turning point",
-        "- 2026-11-02 · المنصة | ما رواه الناس: Iran offers conditional Hormuz reopening as Trump warns of ‘crushing blow’",
-        "- 2026-11-02 · www.taghribnews.com: Strait of Hormuz will not reopen unless Iran’s demands are met",
-        "- 2026-11-02 · SteelRadar: Iran sets two conditions for the US on the Strait of Hormuz and uranium",
-        "- 2026-11-02 · Breakbulk.News: RISK BAROMETER | Hormuz Attacks Nearly Double as Risk Index Hits 8.3: Four of Five Global Chokepoints Now Disrupted",
-        "- 2026-11-02 · Table.Briefings: Strait of Hormuz: Beijing condemns ‘great power rivalries’",
-        "- 2026-11-02 · UA.NEWS: IRGC says it downed two US drones in Strait of Hormuz — Anadolu Agency",
-        "- 2026-11-02 · NewsCord: Iranian Foreign Ministry Spokesperson Isaïl Baghaei Says Hormuz Strait Won’t Open Before U.S. Blockade Ends",
-        "- 2026-11-02 · TradeWinds News: Higher Strait of Hormuz flows help close the gap in product tanker rates"
+        "- 2026-11-03 · WSJ: Exclusive | U.S. Strikes Iran’s Qeshm Island as Trump Talks Down War Risks",
+        "- 2026-11-03 · CNBC: U.S. reportedly strikes Iran's Qeshm Island as Vance hopes for ‘negotiated settlement’ with Tehran",
+        "- 2026-11-03 · Al Jazeera: Explosions hit Iran’s Qeshm Island as US media report US strikes in Hormuz",
+        "- 2026-11-03 · Reuters: Oil rises after report of US strike on Iran's Qeshm Island",
+        "- 2026-11-03 · PBS: U.S. strikes Iranian targets in Strait of Hormuz, U.S. official tells AP",
+        "- 2026-11-03 · The Jerusalem Post: US carries out 'defensive' strikes on Iran's Qeshm Island, officials say - report",
+        "- 2026-11-03 · CNN: US carried out limited ‘defensive’ strikes on Iran’s Qeshm Island, official says",
+        "- 2026-11-03 · Scripps News: US has conducted defensive strikes on some Iranian targets in the Strait of Hormuz, US official says",
+        "- 2026-11-03 · The Hill: US military strikes Iran’s Qeshm Island day before midterms",
+        "- 2026-11-03 · The Times of Israel: US said to strike Iranian island in Strait of Hormuz",
+        "- 2026-11-03 · New York Post: US forces hit Iran’s Qeshm Island as part of a series of secret strikes: report",
+        "- 2026-11-03 · Interesting Engineering: US strikes target Iran's Qeshm Island and underground missile base",
+        "- 2026-11-03 · France 24: US strikes Iran's Qeshm Island as Trump signals progress in talks",
+        "- 2026-11-03 · Haaretz: Report: U.S. Strikes Iran's Qeshm Island, Officials Say",
+        "- 2026-11-03 · WXLV: Limited U.S. defensive strikes reported in Strait of Hormuz amid midterm eve"
       ]
     },
     {
@@ -61,7 +73,25 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-10-31 · Devdiscourse: Quad ministers call for navigational freedom in Hormuz, Red Sea, Bab el-Mandeb Strait amid West Asia conflict"
+        "- 2026-11-02 · وكالة سبأ: Military Source to Saba: Armed forces repel advance attempts by Saudi-enemy forces toward Bab al-Mandab"
+      ]
+    },
+    {
+      "ref": "pipeline/nord-stream-1",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-03 · Laodong.vn: Mysterious dent on pipeline reveals little-known link in Nord Stream case"
+      ]
+    },
+    {
+      "ref": "pipeline/blue-stream",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-02 · FinancialContent: KBRA Assigns Preliminary Ratings to Blue Stream Issuer, LLC Series 2026-1"
       ]
     }
   ]
