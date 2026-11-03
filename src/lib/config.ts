@@ -502,6 +502,7 @@ export const DATASET_FRESHNESS: Record<
   chokepoints: { label: 'Chokepoints', scheduled: false, publisher: 'IMF PortWatch and EIA' },
   basins: { label: 'Basins', scheduled: false, publisher: 'USGS' },
   disruptions: { label: 'Disruptions', scheduled: false },
+  'news-headlines': { label: 'News headlines', scheduled: true, staleAfterHours: 12, publisher: 'GDELT and Google News' },
   'oil-origins': { label: 'US crude origins', scheduled: true, staleAfterHours: 72, publisher: 'EIA' },
   'fuel-origins': { label: 'US fuel origins', scheduled: true, staleAfterHours: 72, publisher: 'EIA' },
   'oil-routes': { label: 'Oil export routes', scheduled: false },
@@ -701,6 +702,17 @@ export const CLAIMS_REFRESH = {
  */
 export const NEWS = {
   lookbackDays: 3,
+  /**
+   * A new disruption is published without review (marked unreviewed, decided 2026-11-03) when this many
+   * outlets carry the story, the drafted page is a trusted one, it started within `newDisruptionMaxAgeDays`,
+   * and the asset shows no disruption in effect. Anything else, and every end date, waits for review.
+   */
+  newDisruptionPublishers: 2,
+  /** Home's "In the news": headlines from the last `headlineDays`, at most `headlinesKept` in the file and `headlinesShown` on Home. */
+  headlineDays: 3,
+  headlinesKept: 40,
+  headlinesShown: 6,
+  newDisruptionMaxAgeDays: 7,
   /** Articles published longer ago than this can't be drafted from, however recently a feed listed them. */
   maxArticleAgeDays: 14,
   minPublishers: 2,

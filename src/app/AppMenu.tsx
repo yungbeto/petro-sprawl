@@ -228,7 +228,7 @@ const PRINCIPLES: [string, string][] = [
   ],
   [
     'Updated through the day',
-    'Flows, tanker transits and storage are fetched every 6 hours. A news scan every 12 hours adds sources and disruptions, marked unreviewed until someone checks them.',
+    'Flows, tanker transits and storage are fetched every 6 hours. A news scan every 3 hours adds sources and new disruptions, marked unreviewed until someone checks them, and lists the latest headlines on Home.',
   ],
 ];
 

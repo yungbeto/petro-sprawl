@@ -4,6 +4,7 @@ import type { Selection } from '../app/urlState';
 import type { VisitChanges } from '../app/useVisitChanges';
 import { FEATURES, HOME_HERO, MEASURED_CHANGES } from '../lib/config';
 import type { Datasets } from '../lib/data';
+import { homeHeadlines } from '../lib/headlines';
 import { describeChange, measuredChanges } from '../lib/measuredChanges';
 import { dateAgo, firstSentence, lastReported, newestSource, quietSince, situation, type Situation } from '../lib/summary';
 import { AssetIcon } from './AssetIcon';
@@ -30,6 +31,7 @@ type Ongoing = Situation['ongoing'][number];
 export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHeroProps) {
   const s = useMemo(() => situation(data), [data]);
   const changes = useMemo(() => measuredChanges(data, now), [data, now]);
+  const headlines = useMemo(() => homeHeadlines(data), [data]);
   const [showAll, setShowAll] = useState(false);
   const [showAllChanges, setShowAllChanges] = useState(false);
   const shownChanges = showAllChanges ? changes : changes.slice(0, HOME_HERO.changesShown);
@@ -87,6 +89,40 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
         />
       ) : (
         <p className="hero__headline">No disruptions in effect.</p>
+      )}
+
+      {headlines.length > 0 && (
+        <section className="hero__rest" aria-labelledby="hero-news">
+          <div className="title-row">
+            <h3 className="section__title" id="hero-news">
+              In the news
+            </h3>
+            <Info label="About the headlines">
+              The newest headlines from GDELT and Google News that name a place on the map, as the feeds list them.
+              They aren't reviewed: read the article before relying on it.
+            </Info>
+          </div>
+          <ul className="changes news">
+            {headlines.map(({ headline, assets }) => (
+              <li key={headline.url} className="news__item">
+                <a className="news__title" href={headline.url} target="_blank" rel="noopener noreferrer">
+                  {headline.title}
+                </a>
+                <span className="change__what">
+                  {headline.publisher} · {dateAgo(headline.publishedAt, now)}
+                  {assets.map((a) => (
+                    <span key={`${a.selection.kind}/${a.selection.id}`}>
+                      {' · '}
+                      <button type="button" className="link-button" onClick={() => onSelect(a.selection)}>
+                        {a.name}
+                      </button>
+                    </span>
+                  ))}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       {rest.length > 0 && (

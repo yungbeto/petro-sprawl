@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { FEATURES, HOME_HERO } from '../../src/lib/config';
+import { FEATURES, HOME_HERO, NEWS } from '../../src/lib/config';
 
 const SHOTS = process.env.SCREENSHOT_DIR;
 
@@ -517,6 +517,22 @@ test('the home hero lists disruptions in effect, newest report first, and measur
   }
   await expect(page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Home' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Where is my fuel from?' })).toHaveCount(0);
+});
+
+test('home lists the latest headlines on the map, each linking out and opening its asset', async ({ page }) => {
+  await page.goto('/');
+  const news = page.getByRole('region', { name: 'In the news' });
+  const rows = news.getByRole('listitem');
+  // The list follows the news scan; with nothing matched in the last few days the section is left out.
+  if (!(await news.count())) return;
+  await expect(rows.first()).toBeVisible();
+  expect(await rows.count()).toBeLessThanOrEqual(NEWS.headlinesShown);
+  const link = rows.first().getByRole('link');
+  await expect(link).toHaveAttribute('href', /^https:/);
+  await expect(link).toHaveAttribute('target', '_blank');
+  await expect(rows.first()).toContainText(/today|yesterday|\d+ days ago/);
+  await rows.first().getByRole('button').first().click();
+  await expect(page).toHaveURL(/sel=(chokepoint|pipeline|lng|terminal)\//);
 });
 
 test('search finds assets by name or alias and opens them', async ({ page }) => {

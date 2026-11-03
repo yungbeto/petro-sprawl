@@ -2,7 +2,7 @@
 // stories, and the checks every draft must pass before it touches data/curated/disruptions.json. Pure.
 
 import { z } from 'zod';
-import type { Disruption, SourceRef } from '../../src/types';
+import type { Disruption, NewsHeadline, SourceRef } from '../../src/types';
 import { NEWS } from '../../src/lib/config';
 import { daysBetween, htmlToText, isTrusted, matchKey, quoteOnPage, urlKey, type Page } from './claims';
 
@@ -380,8 +380,22 @@ export function verifyNewsDraft(
  * effect without changing its cause (decided 2026-10-31: published with a "not yet reviewed" note).
  * New disruptions and end dates always go to the pull request.
  */
-export function disruptionReview(draft: NewsDraft, disruption: Disruption | undefined, trustedDomains: readonly string[]): string | null {
-  if (draft.action === 'new_disruption') return 'new disruption';
+export function disruptionReview(
+  draft: NewsDraft,
+  disruption: Disruption | undefined,
+  trustedDomains: readonly string[],
+  story: { publishers: number; inEffect: number; today: string } = { publishers: 0, inEffect: 0, today: '' },
+): string | null {
+  if (draft.action === 'new_disruption') {
+    // Published without review (decided 2026-11-03) when two outlets carry it, the page is a trusted one, it
+    // started recently, and the asset shows nothing in effect it could be a development of.
+    if (!isTrusted(draft.url, trustedDomains)) return `new disruption; ${hostOf(draft.url)} isn't on the trusted list`;
+    if (story.publishers < NEWS.newDisruptionPublishers) return `new disruption reported by ${story.publishers} publisher${story.publishers === 1 ? '' : 's'}`;
+    if (story.inEffect > 0) return 'new disruption on an asset with one in effect';
+    if (!story.today || daysBetween(draft.startedAt, story.today) > NEWS.newDisruptionMaxAgeDays) return 'new disruption that started a while ago';
+    return null;
+  }
+  // An end takes a card off Home: a misread ("talks to end the blockade") costs more than a new card.
   if (draft.action === 'end_disruption') return 'ends a disruption';
   if (draft.cause && disruption && draft.cause !== disruption.cause) return `cause changes from ${disruption.cause} to ${draft.cause}`;
   if (!isTrusted(draft.url, trustedDomains)) return `${hostOf(draft.url)} isn't on the trusted list`;
@@ -437,4 +451,29 @@ export function endCheckCandidates(
     .filter((d) => !checked[d.id] || daysBetween(checked[d.id]!, today) >= NEWS.endCheckDays)
     .sort((a, b) => (checked[a.id] ?? '').localeCompare(checked[b.id] ?? '') || a.id.localeCompare(b.id))
     .slice(0, NEWS.maxEndChecksPerRun);
+}
+
+/**
+ * Home's "In the news": the run's matched headlines from the last NEWS.headlineDays, one per headline
+ * (the same title from several feeds or assets is one, naming them all, with a GDELT link over a Google
+ * News one), newest first, at most NEWS.headlinesKept.
+ */
+export function headlineFeed(stories: readonly Story[], today: string): NewsHeadline[] {
+  const byTitle = new Map<string, NewsHeadline>();
+  for (const story of stories) {
+    for (const a of story.articles) {
+      if (daysBetween(a.publishedAt, today) > NEWS.headlineDays) continue;
+      const key = a.title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+      const known = byTitle.get(key);
+      if (!known) {
+        byTitle.set(key, { title: a.title, publisher: a.publisher, url: a.url, publishedAt: a.publishedAt, feed: a.feed, refs: [story.ref] });
+        continue;
+      }
+      if (!known.refs.includes(story.ref)) known.refs.push(story.ref);
+      if (known.feed === 'google-news' && a.feed === 'gdelt') Object.assign(known, { url: a.url, feed: a.feed });
+    }
+  }
+  return [...byTitle.values()]
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || b.refs.length - a.refs.length || a.title.localeCompare(b.title))
+    .slice(0, NEWS.headlinesKept);
 }

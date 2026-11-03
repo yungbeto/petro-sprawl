@@ -1864,6 +1864,30 @@ a:hover {
   margin-bottom: 0;
 }
 
+.news__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) 0;
+}
+
+.news__title {
+  color: var(--text);
+  text-decoration: none;
+  text-wrap: pretty;
+}
+
+.news__title:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 2px;
+}
+
+.news__item .link-button {
+  font-size: inherit;
+  color: inherit;
+}
+
 .hero__tally {
   margin: var(--space-1) 0 var(--space-2);
   font-size: var(--text-sm);

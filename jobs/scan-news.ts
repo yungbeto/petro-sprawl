@@ -1,8 +1,8 @@
-// News scan (SPEC M9), every 12 hours: headlines from GDELT and Google News RSS matched to mapped assets,
+// News scan (SPEC M9), every 3 hours: headlines from GDELT and Google News RSS matched to mapped assets,
 // grouped into stories and ranked; Claude drafts a source, a new disruption or an end date from the
 // article pages, and code checks each draft against the page. A new source from a trusted domain on a
-// disruption in effect goes straight into data/curated/disruptions.json, marked unreviewed; everything
-// else goes to data/reports/disruption-drafts.json for a pull request. Quiet or recovered disruptions get
+// disruption in effect, and a recent new disruption two outlets carry on an asset with none in effect, go
+// straight into data/curated/disruptions.json, marked unreviewed; end dates and everything else go to data/reports/disruption-drafts.json for a pull request. Quiet or recovered disruptions get
 // a weekly search for an end report. Outcomes and cost go to data/reports/scan-news.json; seen headlines,
 // end checks and Google News health to data/reports/news-state.json. Run build:curated afterwards.
 // Needs ANTHROPIC_API_KEY. Run: npm run scan:news
@@ -11,12 +11,14 @@ import Anthropic from '@anthropic-ai/sdk';
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
 import { readFile, writeFile } from 'node:fs/promises';
 import { CLAIMS_REFRESH, NEWS } from '../src/lib/config';
-import type { Chokepoint, Disruption, LngTerminal, ObservationSeries, OilTerminal, Pipeline } from '../src/types';
+import type { Chokepoint, Disruption, LngTerminal, ObservationSeries, OilTerminal, Pipeline, SourceRef } from '../src/types';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
 import { chokepointFlow } from '../src/lib/flow';
 import { ALSI_METER, measuredEvidence } from '../src/lib/evidence';
 import { measuredChanges } from '../src/lib/measuredChanges';
 import { lastReported, quietSince } from '../src/lib/summary';
+import { publishDataset } from './lib/output';
+import { newsHeadlineSchema } from './lib/schemas';
 import { CLAIMED, citedUrls, htmlToText, pagePublishedAt, tidyStatement, urlKey, type Page } from './lib/claims';
 import {
   addSource,
@@ -25,6 +27,7 @@ import {
   disruptionReview,
   endCheckCandidates,
   groupStories,
+  headlineFeed,
   inEffect,
   newsDraftSchema,
   nextGoogleNewsHealth,
@@ -200,6 +203,27 @@ const stories = groupStories(recent, terms, seen);
 const candidates = rankStories(stories, { trustedDomains: CLAIMS_REFRESH.trustedDomains, measured });
 console.log(`${stories.length} assets in the news, ${candidates.length} candidate stories`);
 
+// Home's "In the news": the matched headlines as the feeds gave them. With no feed answering, the last
+// run's stay up rather than an empty list.
+const headlines = await publishDataset({
+  id: 'news-headlines',
+  schema: newsHeadlineSchema,
+  produce: async () => {
+    if (!recent.length) throw new Error('no feed returned headlines');
+    const records = headlineFeed(stories, today);
+    return {
+      records,
+      meta: {
+        sourceUrl: 'https://www.gdeltproject.org/',
+        sourceVersion: `GDELT DOC 2.0 and Google News RSS headlines naming mapped assets, last ${NEWS.headlineDays} days`,
+        license: 'Headlines and links only, as each feed lists them; the articles belong to their publishers',
+        dataThrough: records[0]?.publishedAt ?? today,
+      },
+    };
+  },
+});
+console.log(headlines.ok ? `headlines: ${headlines.meta.recordCount} for Home` : `headlines: kept the last run's (${headlines.error})`);
+
 // Draft
 
 const client = new Anthropic();
@@ -308,7 +332,7 @@ const log: { ref: string; kind: 'story' | 'end check'; outcome: string; detail?:
 const pending = new Set<string>();
 
 /** Checks a draft against its page and either commits it or queues it for review. */
-async function settle(ref: string, kind: 'story' | 'end check', d: NewsDraft, pages: Map<string, Fetched>, headlines?: string[]) {
+async function settle(ref: string, kind: 'story' | 'end check', d: NewsDraft, pages: Map<string, Fetched>, headlines?: string[], publishers = 0) {
   if (d.action === 'none') {
     log.push({ ref, kind, outcome: 'nothing', headlines });
     console.log(`nothing\t${ref}`);
@@ -328,19 +352,11 @@ async function settle(ref: string, kind: 'story' | 'end check', d: NewsDraft, pa
   }
   cited.add(urlKey(d.url));
   const target = disruptions.find((x) => x.id === d.disruptionId);
-  const reason = disruptionReview(d, target, CLAIMS_REFRESH.trustedDomains);
-  if (!reason) {
-    disruptions = addSource(disruptions, d.disruptionId, toSource(d, page, true));
-    log.push({ ref, kind, outcome: 'committed', draft: d, headlines });
-    console.log(`committed\t${ref}: source for ${d.disruptionId} (${d.publisher})`);
-    return;
-  }
+  const reason = disruptionReview(d, target, CLAIMS_REFRESH.trustedDomains, { publishers, inEffect: inEffect(disruptions, ref).length, today });
   const [assetKind, assetId] = ref.split('/') as [Disruption['assetKind'], string];
-  const source = toSource(d, page, false);
-  const record: DisruptionDraftRecord = { ref, reason, action: d.action, source };
-  if (d.action === 'new_disruption') {
+  const newDisruption = (source: SourceRef): Disruption => {
     const taken = new Set([...disruptions.map((x) => x.id), ...reviewDrafts.flatMap((r) => (r.disruption ? [r.disruption.id] : []))]);
-    record.disruption = {
+    return {
       id: disruptionId(assetId, d.startedAt, taken),
       assetKind,
       assetId,
@@ -350,6 +366,24 @@ async function settle(ref: string, kind: 'story' | 'end check', d: NewsDraft, pa
       sources: [source],
       recordedAt: today,
     };
+  };
+  if (!reason && d.action === 'new_disruption') {
+    const added = newDisruption(toSource(d, page, true));
+    disruptions = [...disruptions, added];
+    log.push({ ref, kind, outcome: 'committed', detail: `new disruption ${added.id}`, draft: d, headlines });
+    console.log(`committed\t${ref}: new disruption ${added.id} (${d.publisher}, ${publishers} publishers)`);
+    return;
+  }
+  if (!reason) {
+    disruptions = addSource(disruptions, d.disruptionId, toSource(d, page, true));
+    log.push({ ref, kind, outcome: 'committed', draft: d, headlines });
+    console.log(`committed\t${ref}: source for ${d.disruptionId} (${d.publisher})`);
+    return;
+  }
+  const source = toSource(d, page, false);
+  const record: DisruptionDraftRecord = { ref, reason, action: d.action, source };
+  if (d.action === 'new_disruption') {
+    record.disruption = newDisruption(source);
   } else {
     record.disruptionId = d.disruptionId;
     if (d.action === 'end_disruption') record.endedAt = d.endedAt;
@@ -428,7 +462,7 @@ async function draftStory(story: Story) {
     lines.push(`That article can't be read directly. Search ${chosen.domain || "the publishers' sites"} for it by its headline and use its link; use another outlet's report of the same event only if it can't be found.`);
   }
   const d = await draft([{ role: 'user', content: lines.join('\n\n') }], tools);
-  await settle(story.ref, 'story', d, pages, headlines);
+  await settle(story.ref, 'story', d, pages, headlines, story.publishers.length);
 }
 
 for (const story of candidates) {

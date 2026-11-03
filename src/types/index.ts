@@ -235,6 +235,22 @@ export interface BaselineStat {
   count: number;
 }
 
+/**
+ * A headline the news scan matched to mapped assets, for Home's "In the news" (added 2026-11-03). Shown as
+ * the feed gave it, with a link, and labelled unreviewed: nothing here has been checked against the page.
+ */
+export interface NewsHeadline {
+  title: string;
+  publisher: string;
+  /** The article for GDELT; a Google News link that redirects to it for Google News. */
+  url: string;
+  /** YYYY-MM-DD, as the feed reports it. */
+  publishedAt: string;
+  feed: 'gdelt' | 'google-news';
+  /** The assets it names, as `<kind>/<id>`. */
+  refs: string[];
+}
+
 export interface SourceRef {
   publisher: string;
   title: string;

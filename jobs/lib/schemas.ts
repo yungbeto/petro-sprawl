@@ -54,6 +54,15 @@ export const basinSchema = z.object({
   geometry: z.object({ type: z.enum(['Polygon', 'MultiPolygon']), coordinates: z.array(z.any()).min(1) }),
 });
 
+export const newsHeadlineSchema = z.object({
+  title: z.string().min(1),
+  publisher: z.string().min(1),
+  url: z.string().url(),
+  publishedAt: isoDate,
+  feed: z.enum(['gdelt', 'google-news']),
+  refs: z.array(z.string().regex(/^(pipeline|chokepoint|lng|terminal)\/.+/)).min(1),
+});
+
 export const sourceRefSchema = z.object({
   publisher: z.string().min(1),
   title: z.string().min(1),

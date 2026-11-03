@@ -7,6 +7,7 @@ import type {
   CountryRegion,
   DatasetMeta,
   Disruption,
+  NewsHeadline,
   FuelOriginRegion,
   LngTerminal,
   ObservationSeries,
@@ -36,6 +37,8 @@ export interface Datasets {
   countryRegions: CountryRegion[];
   series: ObservationSeries[];
   disruptions: Disruption[];
+  /** Headlines the news scan matched to the map, for Home's "In the news". */
+  newsHeadlines: NewsHeadline[];
   /** "Where is my oil from?": EIA crude supply by PADD, curated export routes and the US lookup tables. */
   oilOrigins: OilOriginRegion[];
   /** "Where is my fuel from?" (M7): gasoline, diesel and jet fuel by PADD. */
@@ -59,6 +62,7 @@ export const EMPTY_DATASETS: Datasets = {
   countryRegions: [],
   series: [],
   disruptions: [],
+  newsHeadlines: [],
   oilOrigins: [],
   fuelOrigins: [],
   oilRoutes: [],
@@ -69,7 +73,7 @@ export const EMPTY_DATASETS: Datasets = {
 };
 
 /** Every published dataset the app loads, as `public/data/<id>.json`. */
-export const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'countries', 'country-regions', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'gas-storage-us', 'gas-storage-ca', 'gas-storage-jodi', 'lng-sendout', 'disruptions', 'oil-origins', 'fuel-origins', 'oil-routes', 'crude-imports', 'us-lookup', 'us-regions'] as const;
+export const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'countries', 'country-regions', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'gas-storage-us', 'gas-storage-ca', 'gas-storage-jodi', 'lng-sendout', 'disruptions', 'news-headlines', 'oil-origins', 'fuel-origins', 'oil-routes', 'crude-imports', 'us-lookup', 'us-regions'] as const;
 export type DatasetId = (typeof DATASET_IDS)[number];
 
 /**
@@ -99,6 +103,7 @@ export function assembleDatasets(get: (id: DatasetId) => unknown[], meta: Datase
     countryRegions: get('country-regions') as Datasets['countryRegions'],
     series,
     disruptions: get('disruptions') as Datasets['disruptions'],
+    newsHeadlines: get('news-headlines') as Datasets['newsHeadlines'],
     oilOrigins: get('oil-origins') as Datasets['oilOrigins'],
     fuelOrigins: get('fuel-origins') as Datasets['fuelOrigins'],
     oilRoutes: get('oil-routes') as Datasets['oilRoutes'],

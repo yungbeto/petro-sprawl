@@ -4,6 +4,7 @@ import {
   assetTermsFor,
   disruptionId,
   disruptionReview,
+  headlineFeed,
   endCheckCandidates,
   groupStories,
   matchAssets,
@@ -230,11 +231,23 @@ describe('checking drafts', () => {
     expect(verifyNewsDraft(draft({ action: 'end_disruption', endedAt: '2026-10-28' }), page, options)).toEqual([]);
   });
 
+  it('publishes a new disruption when two outlets carry it, from a trusted page, recent, on an asset with none in effect', () => {
+    const fresh = draft({ action: 'new_disruption', disruptionId: '', startedAt: '2026-10-27', cause: 'conflict' });
+    const story = { publishers: 2, inEffect: 0, today: '2026-10-29' };
+    expect(disruptionReview(fresh, undefined, ['reuters.com'], story)).toBeNull();
+    expect(disruptionReview(fresh, undefined, ['reuters.com'], { ...story, publishers: 1 })).toBe('new disruption reported by 1 publisher');
+    expect(disruptionReview({ ...fresh, url: 'https://smallsite.com/x' }, undefined, ['reuters.com'], story)).toBe("new disruption; smallsite.com isn't on the trusted list");
+    expect(disruptionReview(fresh, undefined, ['reuters.com'], { ...story, inEffect: 1 })).toBe('new disruption on an asset with one in effect');
+    expect(disruptionReview({ ...fresh, startedAt: '2026-10-01' }, undefined, ['reuters.com'], story)).toBe('new disruption that started a while ago');
+    // An end always waits, however well sourced.
+    expect(disruptionReview(draft({ action: 'end_disruption', endedAt: '2026-10-28' }), fire, ['reuters.com'], story)).toBe('ends a disruption');
+  });
+
   it('commits only a trusted source on a disruption in effect with the same cause', () => {
     expect(disruptionReview(draft({}), fire, ['reuters.com'])).toBeNull();
     expect(disruptionReview(draft({ url: 'https://smallsite.com/x' }), fire, ['reuters.com'])).toBe("smallsite.com isn't on the trusted list");
     expect(disruptionReview(draft({ cause: 'conflict' }), fire, ['reuters.com'])).toBe('cause changes from other to conflict');
-    expect(disruptionReview(draft({ action: 'new_disruption' }), undefined, ['reuters.com'])).toBe('new disruption');
+    expect(disruptionReview(draft({ action: 'new_disruption', startedAt: '2026-10-27' }), undefined, ['reuters.com'])).toBe('new disruption reported by 0 publishers');
     expect(disruptionReview(draft({ action: 'end_disruption' }), fire, ['reuters.com'])).toBe('ends a disruption');
   });
 
@@ -272,5 +285,26 @@ describe('checking drafts', () => {
     expect(picks({})).toEqual(['quiet', 'recovered']);
     expect(picks({ quiet: '2026-10-28' })).toEqual(['recovered']);
     expect(picks({ quiet: '2026-10-24' })).toEqual(['recovered', 'quiet']);
+  });
+});
+
+describe('headlineFeed', () => {
+  const article = (title: string, feed: 'gdelt' | 'google-news', publishedAt = '2026-11-03') => ({
+    url: feed === 'gdelt' ? `https://site.com/${title.length}` : 'https://news.google.com/rss/articles/x',
+    title,
+    publisher: 'Site',
+    domain: 'site.com',
+    publishedAt,
+    feed,
+    key: `${feed}:${title}`,
+  });
+  it('keeps one per headline, naming every asset, with the readable link, newest first, within the window', () => {
+    const stories = [
+      { ref: 'chokepoint/hormuz', articles: [article('Strike on Qeshm', 'google-news'), article('Old news', 'gdelt', '2026-10-20')], publishers: ['site.com'], newest: '2026-11-03', fresh: true },
+      { ref: 'terminal/kharg', articles: [article('Strike on Qeshm!', 'gdelt'), article('Kharg loads resume', 'gdelt', '2026-11-02')], publishers: ['site.com'], newest: '2026-11-03', fresh: true },
+    ];
+    const feed = headlineFeed(stories, '2026-11-03');
+    expect(feed.map((h) => h.title)).toEqual(['Strike on Qeshm', 'Kharg loads resume']);
+    expect(feed[0]).toMatchObject({ refs: ['chokepoint/hormuz', 'terminal/kharg'], feed: 'gdelt', url: 'https://site.com/16' });
   });
 });
