@@ -677,6 +677,13 @@ export const CLAIMS_REFRESH = {
     'interfax.com',
     'tass.com',
     'aljazeera.com',
+    // Added 2026-11-03 so the news scan's drafts from outlets that break these stories reach Home.
+    'pbs.org',
+    'bbc.com',
+    'bbc.co.uk',
+    'ft.com',
+    'wsj.com',
+    'cnbc.com',
     'thenationalnews.com',
     'enterpriseam.com',
     'energyandcleanair.org',
@@ -692,7 +699,7 @@ export const CLAIMS_REFRESH = {
 } as const;
 
 /**
- * News scan (jobs/scan-news.ts, SPEC M9), every 12 hours. Headlines from GDELT and Google News RSS over
+ * News scan (jobs/scan-news.ts, SPEC M9), every 3 hours. Headlines from GDELT and Google News RSS over
  * the last `lookbackDays` are matched to mapped assets by name. An asset's new articles form a story;
  * a story is a candidate when `minPublishers` outlets carry it, a trusted domain does, or the asset shows
  * a measured change. Claude drafts from the article pages, and code checks each draft as for claims.
