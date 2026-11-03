@@ -463,6 +463,7 @@ export function headlineFeed(stories: readonly Story[], today: string): NewsHead
   for (const story of stories) {
     for (const a of story.articles) {
       if (daysBetween(a.publishedAt, today) > NEWS.headlineDays) continue;
+      if (a.domain && isTrusted(`https://${a.domain}/`, NEWS.headlineSkipDomains)) continue;
       const key = a.title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
       const known = byTitle.get(key);
       if (!known) {

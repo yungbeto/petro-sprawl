@@ -307,4 +307,17 @@ describe('headlineFeed', () => {
     expect(feed.map((h) => h.title)).toEqual(['Strike on Qeshm', 'Kharg loads resume']);
     expect(feed[0]).toMatchObject({ refs: ['chokepoint/hormuz', 'terminal/kharg'], feed: 'gdelt', url: 'https://site.com/16' });
   });
+  it('leaves out social posts, reference pages and press release wires', () => {
+    const from = (domain: string, title: string) => ({ ...article(title, 'google-news'), domain, key: domain });
+    const stories = [
+      {
+        ref: 'chokepoint/hormuz',
+        articles: [from('facebook.com', 'Post on Hormuz'), from('m.facebook.com', 'Another post'), from('britannica.com', 'Strait of Hormuz explained'), from('apnews.com', 'Tankers wait at Hormuz')],
+        publishers: ['apnews.com'],
+        newest: '2026-11-03',
+        fresh: true,
+      },
+    ];
+    expect(headlineFeed(stories, '2026-11-03').map((h) => h.title)).toEqual(['Tankers wait at Hormuz']);
+  });
 });
