@@ -47,6 +47,10 @@ describe('publisherLabel', () => {
     expect(publisherLabel('https://houseofsaud.com/')).toBe('houseofsaud.com');
     expect(publisherLabel('notus.org')).toBe('notus.org');
   });
+  it("cuts a site's tagline off its name, keeping the address where the name comes last", () => {
+    expect(publisherLabel('ABC News - Breaking News, Latest News and Videos')).toBe('ABC News');
+    expect(publisherLabel('Crude Oil Prices Today | OilPrice.com')).toBe('oilprice.com');
+  });
   it('leaves names alone', () => {
     expect(publisherLabel('The Jerusalem Post')).toBe('The Jerusalem Post');
     expect(publisherLabel('Laodong.vn ')).toBe('laodong.vn');

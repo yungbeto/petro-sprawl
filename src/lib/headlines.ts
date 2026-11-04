@@ -27,9 +27,15 @@ export function homeHeadlines(data: Datasets, limit: number = NEWS.headlinesShow
   return rows;
 }
 
-/** A publisher as a reader would name it: feeds sometimes give a web address ("www.example.com", "https://example.com/"). */
+/**
+ * A publisher as a reader would name it. Feeds sometimes give a web address ("www.example.com",
+ * "https://example.com/"), or a site's whole page title: "ABC News - Breaking News, Latest News and Videos"
+ * puts the name first, "Crude Oil Prices Today | OilPrice.com" puts it last as an address. A title split by
+ * " - " or " | " keeps its address part if it has one, otherwise its first part.
+ */
 export function publisherLabel(publisher: string): string {
-  const name = publisher.trim();
+  const parts = publisher.trim().split(/\s+[-|–—]\s+/);
+  const name = (parts.length > 1 ? (parts.find((p) => !/\s/.test(p) && /\.[a-z]{2,}\/?$/i.test(p)) ?? parts[0]!) : parts[0]!).trim();
   if (/\s/.test(name) || !/\./.test(name)) return name;
   try {
     return new URL(/^https?:\/\//.test(name) ? name : `https://${name}`).hostname.replace(/^www\./, '');

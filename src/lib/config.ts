@@ -743,6 +743,10 @@ export const NEWS = {
     'businesswire.com',
     'accessnewswire.com',
     'financialcontent.com',
+    // Live scores: a club named Bratstvo or Druzhba is not the pipeline (2026-11-04).
+    'sofascore.com',
+    'flashscore.com',
+    'livescore.com',
   ],
   newDisruptionMaxAgeDays: 7,
   /** Articles published longer ago than this can't be drafted from, however recently a feed listed them. */
@@ -813,10 +817,14 @@ export const NEWS = {
     'druzhba',
     'progress',
     'brotherhood',
+    // Brotherhood in Serbian and Macedonian, and a football club's name (FK Bratstvo, 2026-11-04).
+    'bratstvo',
     'soyuz',
     'friendship pipeline',
     'basra',
     'yanbu',
+    // Also a river and a town (a car in the Ceyhan River, 2026-11-04).
+    'ceyhan',
     'esmeraldas',
     'punta gorda',
     'corpus christi',
@@ -831,6 +839,8 @@ export const NEWS = {
     'bosporus',
     'dardanelles',
     'baltic pipeline system',
+    // Also a US fiber and cable company (2026-11-04).
+    'blue stream',
   ],
 } as const;
 

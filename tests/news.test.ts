@@ -108,6 +108,19 @@ describe('matching headlines to assets', () => {
     expect(matchAssets('Druzhba oil flows to Hungary resume', terms)).toEqual(['pipeline/druzhba-north']);
   });
 
+  it('needs an energy word for Bratstvo, Blue Stream and Ceyhan: a football club, a fiber company and a river too', () => {
+    const more = [
+      { ref: 'pipeline/brotherhood', name: 'Urengoy–Pomary–Uzhhorod (Brotherhood)', aliases: ['Bratstvo'] },
+      { ref: 'pipeline/blue-stream', name: 'Blue Stream', aliases: [] },
+    ].flatMap(assetTermsFor);
+    expect(matchAssets('FK SSK Nova Skopje vs FK Bratstvo Ljubin live score, H2H and lineups', more)).toEqual([]);
+    expect(matchAssets('Blue Stream securitizes revenue from HOA fiber optic contracts', more)).toEqual([]);
+    expect(matchAssets('Turkey takes more gas through Blue Stream', more)).toEqual(['pipeline/blue-stream']);
+    const ceyhan = assetTermsFor({ ref: 'terminal/ceyhan', name: 'Ceyhan', aliases: [] });
+    expect(matchAssets('A vehicle rolled into the Ceyhan River at the bridge entrance in Kahramanmaraş', ceyhan)).toEqual([]);
+    expect(matchAssets('Iraq resumes oil exports through Ceyhan', ceyhan)).toEqual(['terminal/ceyhan']);
+  });
+
   it('builds feed queries from the shortest strong names, leaving out names a shorter one covers', () => {
     const batches = queryBatches(terms, 4);
     const all = batches.flat();
