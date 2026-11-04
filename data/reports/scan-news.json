@@ -1,15 +1,13 @@
 {
-  "recordedAt": "2026-11-04T11:23:12.838Z",
+  "recordedAt": "2026-11-04T20:08:50.429Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 24,
-      "failed": 7,
-      "articles": 1,
+      "requests": 6,
+      "failed": 13,
+      "articles": 0,
       "errors": [
-        "answered 429",
-        "answered 429",
-        "answered 429",
+        "fetch failed",
         "answered 429",
         "answered 429"
       ]
@@ -17,7 +15,7 @@
     "google-news": {
       "requests": 13,
       "failed": 0,
-      "articles": 350,
+      "articles": 275,
       "errors": []
     }
   },
@@ -25,47 +23,47 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-04"
   },
-  "stories": 16,
-  "candidates": 6,
+  "stories": 17,
+  "candidates": 5,
   "usage": {
-    "input": 88129,
-    "output": 6092,
-    "searches": 4
+    "input": 16384,
+    "output": 1237,
+    "searches": 1
   },
-  "estimatedCostUsd": 0.052,
+  "estimatedCostUsd": 0.012,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "review",
-      "detail": "france24.com isn't on the trusted list",
+      "outcome": "rejected",
+      "detail": "quote not found on the page",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.france24.com/en/middle-east/20261104-four-oil-tankers-destroyed-in-hormuz-after-hitting-mines-tehran-says",
-        "publisher": "France 24",
-        "quote": "Four oil tankers caught fire after hitting mines while attempting to pass through the Strait of Hormuz",
+        "url": "https://www.latintimes.com/us-strikes-iran-qeshm-island-retaliation-600888",
+        "publisher": "Latin Times",
+        "quote": "Limited U.S. strikes on Iran's Qeshm Island have intensified an eight-month conflict, as Tehran threatens broader retaliation, the Strait of Hormuz remains closed, and diplomacy continues.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": ""
       },
       "headlines": [
-        "- 2026-11-04 · Al Jazeera: Iran says US reply to Hormuz plan ‘unconvincing’; Trump confirms strikes",
-        "- 2026-11-04 · ABC News - Breaking News, Latest News and Videos: 'Big concern': How the Iran war and Strait of Hormuz closure could drive up prices for helium, fertilizer and other goods",
-        "- 2026-11-04 · Reuters: Iran's IRGC says four tankers ablaze after hitting mines near Strait of Hormuz",
-        "- 2026-11-04 · PBS: U.S. strikes Strait of Hormuz hours before Tuesday midterms",
-        "- 2026-11-04 · France 24: Four oil tankers destroyed in Hormuz after hitting mines, Tehran says",
-        "- 2026-11-04 · IranWire: IRGC Claims Four Tankers Destroyed by Mines in Strait of Hormuz",
-        "- 2026-11-04 · The Jerusalem Post: Four oil tankers destroyed by naval mines in Strait of Hormuz, IRGC announces",
-        "- 2026-11-04 · Inter Press Service: U.S. Strikes Iranian Targets Along Strait of Hormuz Ahead of Midterm Elections as Diplomatic Talks Stall",
-        "- 2026-11-04 · Global Trade Magazine: Hormuz Tensions Keep Global Shipping and Oil Markets Under Pressure",
-        "- 2026-11-04 · アラブニュース: Qatar says remains ‘hopeful’ of a US-Iran deal; Trump confirms strikes on Qeshm",
-        "- 2026-11-04 · Investing.com: European gas rises as U.S. midterms and stalled Hormuz talks cloud outlook",
-        "- 2026-11-04 · Middle East Eye: Iran's IRGC says four tankers ablaze after hitting mines in Hormuz Strait",
-        "- 2026-11-04 · Kurdistan24: Iran Says Four Oil Tankers Hit Naval Mines in Strait of Hormuz as Tensions With US Escalate",
-        "- 2026-11-04 · Lloyd's List: Is the Strait of Hormuz a narrative war?",
-        "- 2026-11-04 · The SOFX Report: U.S. Jets Blast IRGC Missile Site on Qeshm Island After Iranian Forces Fire on Aircraft"
+        "- 2026-11-04 · The Media Line: Iran Rejects US Response to Hormuz Demands as Qatar Pushes for Deal",
+        "- 2026-11-04 · IranWire: Iran Exempts India, China, Iraq, and Qatar from Strait of Hormuz Restrictions",
+        "- 2026-11-04 · Anadolu Ajansı: FACTBOX – Why is Iran’s Qeshm Island a US target?",
+        "- 2026-11-04 · Bloomberg: UAE Mulls Third Crude Oil Pipeline to Avoid Strait of Hormuz",
+        "- 2026-11-04 · Energy Connects: Energy infrastructure resilience moves beyond efficiency as Hormuz crisis exposes vulnerabilities",
+        "- 2026-11-04 · Global Issues.org: U.S. Strikes Iranian Targets Along Strait of Hormuz Ahead of Midterm Elections as Diplomatic Talks Stall",
+        "- 2026-11-04 · Natural Gas Intelligence: Could Democrats Unlock Hormuz After Midterm Rout? LNG Markets Watching Washington",
+        "- 2026-11-04 · StoneX: How Gulf Port Capacity Limits Hormuz Fertilizer Supply Recovery",
+        "- 2026-11-04 · Anadolu Ajansı: UAE mulls 3rd oil pipeline to bypass Strait of Hormuz: Report",
+        "- 2026-11-04 · The Times of India: Iran exempts Indian vessels from Hormuz curbs, citing medicine imports",
+        "- 2026-11-04 · WANA News Agency: Iran’s Message to USA: Hormuz Will Stay Closed",
+        "- 2026-11-04 · Latin Times: U.S. strikes Qeshm Island after missile fire as Iran warns its response could have \"no geographical limits\"",
+        "- 2026-11-04 · Lloyd's List: Another day of attacks hits ships from Hormuz to Black Sea",
+        "- 2026-11-04 · Natural Gas Intelligence: Europe Faces Lowest Storage Levels Since 2013 as Hormuz Crisis Cuts Global LNG Supply",
+        "- 2026-11-04 · The Indian Express: Indian ships exempt from Hormuz curbs: What Iran wants in return"
       ]
     },
     {
@@ -74,17 +72,10 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-04 · Oil & Gas Middle East: Aramco explores East-West Pipeline expansion, new export routes and overseas storage",
-        "- 2026-11-04 · ASHARQ AL-AWSAT English: Aramco's Resilience Pays Off as Profit Rises to $31.2 Bn, East-West Pipeline Expansion Advances",
-        "- 2026-11-03 · ارقام : اخبار ومعلومات سوق الأسهم السعودي - تاسي: Aramco begins East-West Pipeline expansion"
-      ]
-    },
-    {
-      "ref": "lng/gem-t100000130594-export",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-01 · The Siasat Daily: Qatar LNG tanker carrying 6 Indians hit near Hormuz"
+        "- 2026-11-04 · Construction Review: Aramco Starts East-West Pipeline Expansion to 10 Million bpd to Bypass Strait of Hormuz",
+        "- 2026-11-04 · Sunsirs: Saudi Aramco Initiates Preliminary Design for East-West Pipeline, Bypassing the Strait of Hormuz",
+        "- 2026-11-03 · Offshore Engineer Magazine: Aramco Targets Hormuz Bypass with East-West Pipeline Expansion",
+        "- 2026-11-03 · BOE Report: Aramco exploring expansion of East-West Pipeline that avoids Hormuz"
       ]
     },
     {
@@ -93,29 +84,34 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-04 · TradingView: UAE's Fujairah oil inventory data for week ended November 2",
-        "- 2026-11-04 · Cyprus Shipping News: Fujairah Fuel Oil Stocks fall 9% in October as Exports Outpace Imports",
-        "- 2026-11-04 · Dubai Eye 103.8: H.H. Sheikh Mohammed praises Fujairah entity for topping government rankings",
-        "- 2026-11-04 · Gulf News: Mohammed bin Rashid announces new government service ratings, Fujairah centre tops rankings with 7 stars",
-        "- 2026-11-04 · Emirates 24|7: UAE weather: Rain forecast in Sharjah, Fujairah, while humidity brings fog to Dubai"
+        "- 2026-11-04 · The National: Earthquake recorded off Fujairah coast as UAE monitors seismic activity",
+        "- 2026-11-04 · https://www.engine.online/: Fujairah’s LSMGO premium over Singapore widens by around $180/mt since September",
+        "- 2026-11-04 · Gulf Today: 2.3-magnitude tremor recorded off Fujairah coast, no impact on the country",
+        "- 2026-11-04 · Emirates 24|7: NCM records 2.3-magnitude earthquake on the Fujairah coast",
+        "- 2026-11-04 · Gulf News: UAE records 2.3-magnitude earthquake off Fujairah coast",
+        "- 2026-11-04 · ARN News Centre: H.H. Sheikh Mohammed praises Fujairah entity for topping government ranking",
+        "- 2026-11-04 · Khaleej Times: Watch: Hail, heavy rain lash several parts of Fujairah as UAE weather shifts",
+        "- 2026-11-04 · curlytales.com: UAE Government Service Ratings Announced; Fujairah Centre Makes History With 7 Stars",
+        "- 2026-11-04 · Khaleej Times: UAE records 2.3-magnitude quake off Fujairah coast",
+        "- 2026-11-04 · Gulf News: Rain sweeps across Fujairah as NCM forecasts more showers in UAE"
       ]
     },
     {
-      "ref": "chokepoint/babelm",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-02 · Palestine Chronicle: Ansarallah Says Drones Hit Saudi Targets as Fighting Intensifies Near Bab Al-Mandab"
-      ]
-    },
-    {
-      "ref": "pipeline/nord-stream-1",
+      "ref": "lng/gem-t100000130594-export",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-04 · LIGA.net: The \"Nord Stream\" explosions. The Ombudsman's Office provided details on Zhuravlev's conditions of detention",
-        "- 2026-11-03 · EnergyNow.com: Russia’s Lavrov Says US Wants to Take Over Nord Stream Gas Pipelines"
+        "- 2026-11-04 · Rediff MoneyWiz: Petronet LNG Faces Rs 625 Cr Claims Amid Qatar LNG Disruption"
+      ]
+    },
+    {
+      "ref": "terminal/corpus-christi",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-10-22 · KRIS 6 News Corpus Christi: EPA chief tours Port of Corpus Christi, calls it vital to the national economy"
       ]
     }
   ]
