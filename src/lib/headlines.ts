@@ -1,6 +1,6 @@
-// Home's "In the news" (added 2026-11-03): the newest headlines the news scan matched to the map, each
-// with the mapped assets it names, so a click opens one. Headlines naming nothing that loaded are left
-// out. Pure.
+// "In the news" on Home (added 2026-11-03) and on each asset's detail (2026-11-04): the headlines the news
+// scan matched to the map, each with the mapped assets it names, so a click opens one. Headlines naming
+// nothing that loaded are left out of Home. Pure.
 
 import type { Selection } from '../app/urlState';
 import { NEWS } from './config';
@@ -15,16 +15,33 @@ export interface HomeHeadline {
 export function homeHeadlines(data: Datasets, limit: number = NEWS.headlinesShown): HomeHeadline[] {
   const rows: HomeHeadline[] = [];
   for (const headline of data.newsHeadlines) {
-    const assets = headline.refs.flatMap((ref) => {
-      const [kind, id] = ref.split('/') as [Selection['kind'], string];
-      const selection = { kind, id } as Selection;
-      const resolved = resolveSelection(selection, data);
-      return resolved ? [{ selection, name: resolved.item.name }] : [];
-    });
+    const assets = namedAssets(headline, data);
     if (assets.length) rows.push({ headline, assets });
     if (rows.length === limit) break;
   }
   return rows;
+}
+
+/**
+ * An asset's own "In the news" (added 2026-11-04): the headlines naming it, newest first, up to `limit`,
+ * each with the other mapped assets it names (the open one is left out: it's the page you're on).
+ */
+export function assetHeadlines(data: Datasets, selection: Selection, limit: number = NEWS.headlinesPerAsset): HomeHeadline[] {
+  const ref = `${selection.kind}/${selection.id}`;
+  return data.newsHeadlines
+    .filter((h) => h.refs.includes(ref))
+    .slice(0, limit)
+    .map((headline) => ({ headline, assets: namedAssets(headline, data).filter((a) => `${a.selection.kind}/${a.selection.id}` !== ref) }));
+}
+
+/** The mapped assets a headline names that are loaded, so each can open. */
+function namedAssets(headline: NewsHeadline, data: Datasets): HomeHeadline['assets'] {
+  return headline.refs.flatMap((ref) => {
+    const [kind, id] = ref.split('/') as [Selection['kind'], string];
+    const selection = { kind, id } as Selection;
+    const resolved = resolveSelection(selection, data);
+    return resolved ? [{ selection, name: resolved.item.name }] : [];
+  });
 }
 
 /**

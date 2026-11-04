@@ -109,8 +109,10 @@ export interface AssetTerm {
   weak: boolean;
 }
 
+// Shipping words and ship fuels count too (added 2026-11-04): news of a terminal town often says "port",
+// "ships" or "LSMGO", not "oil".
 const ENERGY_WORDS =
-  /\b(oil|gas|crude|lng|pipelines?|terminals?|tankers?|exports?|imports?|fuel|energy|refiner(?:y|ies)|barrels?|loadings?|shipments?|flows?|supply|supplies)\b/;
+  /\b(oil|gas|crude|lng|pipelines?|terminals?|tankers?|exports?|imports?|fuel|energy|refiner(?:y|ies)|barrels?|loadings?|shipments?|flows?|supply|supplies|ports?|ships?|shipping|vessels?|storage|bunker(?:s|ing)?|lsmgo|vlsfo|hsfo|mgo|diesel)\b/;
 
 /**
  * Every name an asset goes by in news: parts of its display name, its aliases and NEWS.extraTerms. GEM's
@@ -454,17 +456,27 @@ export function endCheckCandidates(
 }
 
 /**
- * Home's "In the news": the run's matched headlines from the last NEWS.headlineDays, one per headline
- * (the same title from several feeds or assets is one, naming them all, with a GDELT link over a Google
- * News one), newest first, at most NEWS.headlinesKept.
+ * The published headlines, for Home's "In the news" and each asset's detail (SPEC M9): this run's matched
+ * headlines plus the last file's (`previous`) from the last NEWS.headlineDays, one per headline (the same
+ * title from several feeds or assets is one, naming them all, with a GDELT link over a Google News one),
+ * newest first. A kept headline is matched again with `refsFor` (today's names and rules), so one a later
+ * rule rejects drops out instead of lasting its days. The file holds the newest NEWS.headlinesKept for
+ * Home, and with them every asset's newest NEWS.headlinesPerAsset, so a quiet pipeline keeps its news
+ * when a busy strait fills Home's list.
  */
-export function headlineFeed(stories: readonly Story[], today: string): NewsHeadline[] {
+export function headlineFeed(
+  stories: readonly Story[],
+  today: string,
+  { previous = [], refsFor }: { previous?: readonly NewsHeadline[]; refsFor?: (title: string) => string[] } = {},
+): NewsHeadline[] {
   const byTitle = new Map<string, NewsHeadline>();
+  const keyOf = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  const fresh = (date: string) => daysBetween(date, today) <= NEWS.headlineDays;
   for (const story of stories) {
     for (const a of story.articles) {
-      if (daysBetween(a.publishedAt, today) > NEWS.headlineDays) continue;
+      if (!fresh(a.publishedAt)) continue;
       if (a.domain && isTrusted(`https://${a.domain}/`, NEWS.headlineSkipDomains)) continue;
-      const key = a.title.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+      const key = keyOf(a.title);
       const known = byTitle.get(key);
       if (!known) {
         byTitle.set(key, { title: a.title, publisher: a.publisher, url: a.url, publishedAt: a.publishedAt, feed: a.feed, refs: [story.ref] });
@@ -474,7 +486,25 @@ export function headlineFeed(stories: readonly Story[], today: string): NewsHead
       if (known.feed === 'google-news' && a.feed === 'gdelt') Object.assign(known, { url: a.url, feed: a.feed });
     }
   }
-  return [...byTitle.values()]
-    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt) || b.refs.length - a.refs.length || a.title.localeCompare(b.title))
-    .slice(0, NEWS.headlinesKept);
+  for (const h of previous) {
+    const key = keyOf(h.title);
+    if (byTitle.has(key) || !fresh(h.publishedAt)) continue;
+    if (h.feed === 'gdelt' && isTrusted(h.url, NEWS.headlineSkipDomains)) continue;
+    const refs = refsFor ? refsFor(h.title) : h.refs;
+    if (refs.length) byTitle.set(key, { ...h, refs });
+  }
+  const all = [...byTitle.values()].sort(
+    (a, b) => b.publishedAt.localeCompare(a.publishedAt) || b.refs.length - a.refs.length || a.title.localeCompare(b.title),
+  );
+  const kept = new Set(all.slice(0, NEWS.headlinesKept));
+  const perAsset = new Map<string, number>();
+  for (const h of all) {
+    for (const ref of h.refs) {
+      const n = perAsset.get(ref) ?? 0;
+      if (n >= NEWS.headlinesPerAsset) continue;
+      perAsset.set(ref, n + 1);
+      kept.add(h);
+    }
+  }
+  return all.filter((h) => kept.has(h));
 }

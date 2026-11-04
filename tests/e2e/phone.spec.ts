@@ -40,7 +40,7 @@ test('a tab opens its surface at half; the handle steps up, a long drag hides th
   await page.mouse.up();
   // Let go below peek, the sheet hides down to its handle; the page under it is out of reach.
   await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'hidden');
-  await expect(page.getByLabel('Panel', { exact: true }).getByRole('heading', { name: 'Chokepoints' })).toBeHidden();
+  await expect(page.getByLabel('Panel', { exact: true }).getByRole('heading', { name: 'Chokepoints', exact: true })).toBeHidden();
   await page.getByRole('button', { name: 'Show panel' }).click();
   await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'peek');
 });
@@ -112,7 +112,7 @@ test('opening an item frames the map above the sheet', async ({ page }) => {
   await page.goto('/?view=chokepoints');
   await page.getByLabel('Panel', { exact: true }).getByRole('button', { name: /^Strait of Hormuz/ }).click();
   await expect(page).toHaveURL(/sel=chokepoint\/hormuz/);
-  await expect(page.getByRole('heading', { name: 'Strait of Hormuz' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Strait of Hormuz', exact: true })).toBeVisible();
   // The camera's bottom padding is the sheet and the tab bar, so the strait sits in the map left showing.
   // Measured once the sheet and the camera have both settled.
   const gap = async () => {

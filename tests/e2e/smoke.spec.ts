@@ -28,7 +28,7 @@ test('the panel minimizes, leaving the header search, and reopens on a selection
   await expect(search).toBeFocused();
   await search.fill('turkstream');
   await page.keyboard.press('Enter');
-  await expect(page.getByRole('heading', { name: 'TurkStream' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'TurkStream', exact: true })).toBeVisible();
 
   await page.keyboard.press('[');
   await expect(page.getByLabel('Panel', { exact: true })).toBeHidden();
@@ -99,7 +99,7 @@ test('hovering and clicking a chokepoint opens its detail', async ({ page }) => 
   await expect(page.getByRole('tooltip')).toContainText('Strait of Hormuz');
   await page.mouse.click(hormuz.x, hormuz.y);
   await expect(page).toHaveURL(/sel=chokepoint\/hormuz/);
-  await expect(page.getByRole('heading', { name: 'Strait of Hormuz' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Strait of Hormuz', exact: true })).toBeVisible();
   await expect(page.getByLabel('Panel').getByText('20.7 mb/d')).toBeVisible();
   await expect(page.getByRole('tooltip')).toContainText('of five-year average');
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/hormuz.png` });
@@ -107,7 +107,7 @@ test('hovering and clicking a chokepoint opens its detail', async ({ page }) => 
 
 test('a basin link selects and shows its detail', async ({ page }) => {
   await page.goto('/?sel=basin/usgs-1174');
-  await expect(page.getByRole('heading', { name: 'West Siberian Basin' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'West Siberian Basin', exact: true })).toBeVisible();
   await expect(page.getByText('Priority province')).toBeVisible();
   const panel = page.getByLabel('Panel');
   await expect(panel.locator('dt', { hasText: 'Countries' }).locator('xpath=following-sibling::dd[1]')).toHaveText('Russia');
@@ -129,7 +129,7 @@ test('a basin link selects and shows its detail', async ({ page }) => {
 test('an LNG terminal link shows its units, and search and the layer list know the layer', async ({ page }) => {
   await page.goto('/?sel=lng/gem-t100000130594-export');
   const panel = page.getByLabel('Panel', { exact: true });
-  await expect(panel.getByRole('heading', { name: 'QatarEnergy LNG (N)' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'QatarEnergy LNG (N)', exact: true })).toBeVisible();
   await expect(panel.getByText('LNG export terminal')).toBeVisible();
   await expect(panel.locator('dt', { hasText: 'Operating' }).locator('xpath=following-sibling::dd[1]')).toContainText('40.8 mtpa');
   // Cited reports set the status over GEM's; GEM's own claim stays in the history.
@@ -141,11 +141,11 @@ test('an LNG terminal link shows its units, and search and the layer list know t
   const semafor = reports.getByRole('listitem').filter({ hasText: 'restored LNG exports in September' });
   await expect(semafor.getByRole('link', { name: 'Read on semafor.com' })).toHaveAttribute('href', /semafor\.com/);
   await expect(reports).toContainText('Global Energy Monitor');
-  await expect(panel.getByRole('heading', { name: 'Disruptions' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Disruptions', exact: true })).toBeVisible();
   await panel.getByRole('button', { name: 'About the units' }).click();
   await expect(page.getByRole('note', { name: 'About the units' })).toContainText("Global Energy Monitor's, as of");
   await page.keyboard.press('Escape');
-  await expect(panel.getByRole('heading', { name: 'Units' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Units', exact: true })).toBeVisible();
   await expect(panel.getByRole('table').getByRole('row')).toHaveCount(5);
 
   await page.goto('/');
@@ -162,13 +162,13 @@ test('an LNG terminal link shows its units, and search and the layer list know t
 test('an EU import terminal takes its status from measured send-out, with a chart and the GEM claim beside it', async ({ page }) => {
   await page.goto('/?sel=lng/gem-t100000130492-import');
   const panel = page.getByLabel('Panel', { exact: true });
-  await expect(panel.getByRole('heading', { name: 'Gate LNG Terminal' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Gate LNG Terminal', exact: true })).toBeVisible();
   const status = panel.locator('dt', { hasText: 'Status' }).locator('xpath=following-sibling::dd[1]');
   await expect(status).toContainText('Operating');
   await expect(status.getByRole('link', { name: /of declared send-out capacity \(GIE ALSI\)/ })).toHaveAttribute('href', /alsi\.gie\.eu/);
   await expect(status).toContainText('Latest claim, operating');
   await expect(panel.locator('dt', { hasText: 'Send-out' }).locator('xpath=following-sibling::dd[1]')).toContainText('GWh/d');
-  await expect(panel.getByRole('heading', { name: 'Daily send-out, last 90 days' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Daily send-out, last 90 days', exact: true })).toBeVisible();
   await panel.getByRole('button', { name: 'About the units' }).click();
   await expect(page.getByRole('note', { name: 'About the units' })).toContainText('The status above comes from measured send-out.');
   await page.keyboard.press('Escape');
@@ -229,7 +229,7 @@ test('clicking a pipeline selects it and shows its detail', async ({ page, reque
   await page.mouse.click(point.x, point.y + 5);
   // GEM's two strings are merged into the curated TurkStream record.
   await expect(page).toHaveURL(/sel=pipeline\/turkstream/);
-  await expect(page.getByRole('heading', { name: 'TurkStream' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'TurkStream', exact: true })).toBeVisible();
   const panel = page.getByLabel('Panel');
   await expect(panel.getByText('RU → TR')).toBeVisible();
   await expect(panel.locator('dt', { hasText: 'Measured flow' }).locator('xpath=following-sibling::dd[1]')).toContainText('GWh/d');
@@ -273,12 +273,12 @@ test('the menu holds app settings, closes on Esc, and returns focus', async ({ p
   await menuButton.click();
   const menu = page.getByRole('dialog', { name: 'Menu' });
   // It opens on About, under the hero; the arrow keys move along the tabs.
-  await expect(menu.getByRole('heading', { name: 'The sprawling empire of the petro-state' })).toBeVisible();
+  await expect(menu.getByRole('heading', { name: 'The sprawling empire of the petro-state', exact: true })).toBeVisible();
   await expect(menu.getByRole('tab', { name: 'About' })).toHaveAttribute('aria-selected', 'true');
   await menu.getByRole('tab', { name: 'About' }).focus();
   await page.keyboard.press('ArrowLeft');
   await expect(menu.getByRole('tab', { name: 'Settings' })).toBeFocused();
-  await expect(menu.getByRole('heading', { name: 'Keyboard shortcuts' })).toBeVisible();
+  await expect(menu.getByRole('heading', { name: 'Keyboard shortcuts', exact: true })).toBeVisible();
   // The footer names who to write to and who made it.
   await expect(menu.getByRole('link', { name: 'hello@petrosprawl.fyi' })).toHaveAttribute('href', 'mailto:hello@petrosprawl.fyi');
   await expect(menu.getByRole('link', { name: 'Roby Saavedra' })).toHaveAttribute('href', 'https://robysaavedra.com');
@@ -308,7 +308,7 @@ for (const id of ['hormuz', 'malacca', 'suez', 'babelm', 'danish', 'turkish', 'p
 test('Hormuz lists its sourced disruption', async ({ page }) => {
   await page.goto('/?sel=chokepoint/hormuz');
   const panel = page.getByLabel('Panel');
-  await expect(panel.getByRole('heading', { name: 'Disruptions' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Disruptions', exact: true })).toBeVisible();
   await expect(panel.getByRole('link', { name: 'News On AIR (All India Radio)' })).toBeVisible();
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/hormuz-flow.png` });
 });
@@ -373,7 +373,7 @@ test('a dated claim older than 30 days is marked unverified', async ({ page }) =
 test('a pipeline ending at a reported port shows its tanker calls', async ({ page }) => {
   await page.goto('/?sel=pipeline/habshan-fujairah');
   const panel = page.getByLabel('Panel');
-  await expect(panel.getByRole('heading', { name: 'Tanker calls at Fujairah, last 90 days' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Tanker calls at Fujairah, last 90 days', exact: true })).toBeVisible();
   await panel.getByRole('button', { name: 'About tanker calls at Fujairah' }).click();
   await expect(page.getByRole('note', { name: 'About tanker calls at Fujairah' })).toContainText('not flow on this pipeline');
   await page.keyboard.press('Escape');
@@ -383,10 +383,10 @@ test('a pipeline ending at a reported port shows its tanker calls', async ({ pag
 test('an oil terminal opens with its claim, disruptions and route to sea', async ({ page }) => {
   await page.goto('/?sel=terminal/kharg');
   const panel = page.getByLabel('Panel');
-  await expect(panel.getByRole('heading', { name: 'Kharg Island' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Kharg Island', exact: true })).toBeVisible();
   await expect(panel.getByText('Oil export terminal')).toBeVisible();
   await expect(panel.getByText(/resumed crude loading at Kharg Island/).first()).toBeVisible();
-  await expect(panel.getByRole('heading', { name: 'Disruptions' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Disruptions', exact: true })).toBeVisible();
   await panel.getByRole('button', { name: /Strait of Hormuz/ }).click();
   await expect(page).toHaveURL(/sel=chokepoint\/hormuz/);
   await expect(panel.getByRole('heading', { name: /Oil terminals that ship through it/ })).toBeVisible();
@@ -410,7 +410,7 @@ test('storage fills a country and opens its detail', async ({ page }) => {
   await page.route('**/data/gas-storage.json', (route) => route.fulfill({ json: series }));
   // An old link from before M10, when a country page was storage/<code>, still opens it.
   await page.goto('/?sel=storage/de');
-  await expect(page.getByRole('heading', { name: 'Germany' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Germany', exact: true })).toBeVisible();
   const panel = page.getByLabel('Panel', { exact: true });
   await expect(panel.locator('dt', { hasText: 'Same date last year' })).toBeVisible();
   await expect(panel.getByRole('img', { name: /Gas storage fill in Germany/ })).toBeVisible();
@@ -418,7 +418,7 @@ test('storage fills a country and opens its detail', async ({ page }) => {
 
   // Outside AGSI+, a country shows gas in storage from its own source, with that source's attribution.
   await page.goto('/?sel=country/ca');
-  await expect(page.getByRole('heading', { name: 'Canada' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Canada', exact: true })).toBeVisible();
   await expect(panel.locator('dt', { hasText: 'Same month last year' })).toBeVisible();
   await expect(panel.getByRole('region', { name: 'By province' })).toContainText('Alberta');
   await expect(panel).toContainText('This does not constitute an endorsement by Statistics Canada of this product.');
@@ -461,7 +461,7 @@ test('the dashboard tiles count the theater and open what they count', async ({ 
   // The camera can write `at` between the two, so each is checked on its own.
   await expect(page).toHaveURL(/view=pipelines(&|$)/);
   await expect(page).toHaveURL(/sel=pipeline\/nord-stream-1/);
-  await expect(page.getByRole('heading', { name: 'Nord Stream 1' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Nord Stream 1', exact: true })).toBeVisible();
   await rail.getByRole('button', { name: 'Home' }).click();
   if (FEATURES.gasStorage) {
     await overview.getByRole('button', { name: /^Gas storage/ }).click();
@@ -535,6 +535,25 @@ test('home lists the latest headlines on the map, each linking out and opening i
   await expect(page).toHaveURL(/sel=(chokepoint|pipeline|lng|terminal)\//);
 });
 
+test("an asset's detail lists the headlines naming it, without a chip for itself", async ({ page }) => {
+  await page.goto('/');
+  const home = page.getByRole('region', { name: 'In the news' });
+  if (!(await home.count())) return;
+  const first = home.getByRole('listitem').first();
+  const title = (await first.getByRole('heading').textContent())!.trim();
+  const chip = first.getByRole('button').first();
+  const name = (await chip.textContent())!.trim();
+  await chip.click();
+  const panel = page.getByLabel('Panel', { exact: true });
+  await expect(panel.getByRole('heading', { name, exact: true }).first()).toBeVisible();
+  const news = panel.getByRole('region', { name: 'In the news' });
+  await expect(news.getByRole('heading', { name: title })).toBeVisible();
+  expect(await news.getByRole('listitem').count()).toBeLessThanOrEqual(NEWS.headlinesPerAsset);
+  await expect(news.getByRole('button', { name, exact: true })).toHaveCount(0);
+  await news.getByRole('button', { name: 'About the headlines' }).click();
+  await expect(page.getByRole('note', { name: 'About the headlines' })).toContainText("They aren't reviewed");
+});
+
 test('search finds assets by name or alias and opens them', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('region', { name: 'Overview' }).getByRole('button', { name: /^Chokepoints/ })).toContainText(/below baseline/);
@@ -546,7 +565,7 @@ test('search finds assets by name or alias and opens them', async ({ page }) => 
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/sel=pipeline\/urengoy-pomary-uzhhorod/);
   await expect(page.getByRole('dialog', { name: 'Search' })).toHaveCount(0);
-  await expect(page.getByLabel('Panel', { exact: true }).getByRole('heading', { name: 'Urengoy–Pomary–Uzhhorod (Brotherhood)' })).toBeVisible();
+  await expect(page.getByLabel('Panel', { exact: true }).getByRole('heading', { name: 'Urengoy–Pomary–Uzhhorod (Brotherhood)', exact: true })).toBeVisible();
 
   // A country opens its storage and turns the storage layer on; while storage is off, countries aren't found.
   search = await openSearch(page);
@@ -554,7 +573,7 @@ test('search finds assets by name or alias and opens them', async ({ page }) => 
   if (FEATURES.gasStorage) {
     await page.getByRole('option', { name: /^Germany/ }).click();
     await expect(page).toHaveURL(/sel=country\/de/);
-    await expect(page.getByLabel('Panel', { exact: true }).getByRole('heading', { name: 'Germany' })).toBeVisible();
+    await expect(page.getByLabel('Panel', { exact: true }).getByRole('heading', { name: 'Germany', exact: true })).toBeVisible();
   } else {
     await expect(page.getByRole('option', { name: /^Germany/ })).toHaveCount(0);
     await page.keyboard.press('Escape');
@@ -673,21 +692,21 @@ test('a filter chip lists its matches, lives in the URL, and Esc clears it', asy
   await expect(chip).toHaveAttribute('aria-pressed', 'true');
   await expect(page).toHaveURL(/f=offline/);
   const panel = page.getByLabel('Panel', { exact: true });
-  await expect(panel.getByRole('heading', { name: 'Offline or idle' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Offline or idle', exact: true })).toBeVisible();
 
   // A match opens its detail; back returns to the list, then to the summary.
   await panel.getByRole('button', { name: /Nord Stream 1/ }).click();
   await expect(page).toHaveURL(/sel=pipeline\/nord-stream-1/);
   await expect(page).toHaveURL(/f=offline/);
   await page.keyboard.press('Escape');
-  await expect(panel.getByRole('heading', { name: 'Offline or idle' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Offline or idle', exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page).not.toHaveURL(/f=/);
   await expect(page.getByRole('region', { name: 'Overview' })).toBeVisible();
 
   // A shared link opens straight onto the list.
   await page.goto('/?f=below-baseline');
-  await expect(panel.getByRole('heading', { name: 'Below baseline' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Below baseline', exact: true })).toBeVisible();
   await expect(panel.getByRole('button', { name: /Strait of Hormuz/ })).toBeVisible();
   await panel.getByRole('button', { name: 'Close, back to Home' }).click();
   await expect(page).not.toHaveURL(/f=/);
@@ -705,7 +724,7 @@ test('the panel bar goes back to what an item was opened from, and closes to the
   await expect(panel.getByRole('button', { name: 'Back to Offline or idle' })).toBeVisible();
   await panel.getByRole('button', { name: 'Back to Offline or idle' }).click();
   await expect(page).not.toHaveURL(/sel=/);
-  await expect(panel.getByRole('heading', { name: 'Offline or idle' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Offline or idle', exact: true })).toBeVisible();
 
   // Close skips the steps and returns to the surface's own page, here the summary.
   await panel.getByRole('button', { name: /Nord Stream 1/ }).click();
@@ -748,7 +767,7 @@ test('where is my oil from: a ZIP code opens its region on gasoline, with crude 
   expect(page.url()).not.toContain('90012');
   expect(page.url()).not.toContain('fuel=');
   const panel = page.getByLabel('Panel', { exact: true });
-  await expect(panel.getByRole('heading', { name: 'West Coast' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'West Coast', exact: true })).toBeVisible();
   await expect(panel.getByRole('tab', { name: 'Gasoline' })).toHaveAttribute('aria-selected', 'true');
   await expect(panel.getByText('Made in the region or drawn from stocks')).toBeVisible();
 
@@ -777,10 +796,10 @@ test('the chokepoints view stays lit while you open a strait from it, and Back r
   const panel = page.getByRole('complementary', { name: 'Panel' });
   const list = panel.getByRole('list', { name: 'Chokepoints' });
   await expect(list.getByRole('button').first()).toContainText('Strait of Hormuz');
-  await expect(panel.getByRole('heading', { name: 'Chokepoints' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Chokepoints', exact: true })).toBeVisible();
 
   await list.getByRole('button', { name: /Bab el-Mandeb/ }).click();
-  await expect(panel.getByRole('heading', { name: 'Bab el-Mandeb' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Bab el-Mandeb', exact: true })).toBeVisible();
   // The camera can write `at` between the two, so each is checked on its own.
   await expect(page).toHaveURL(/view=chokepoints(&|$)/);
   await expect(page).toHaveURL(/sel=chokepoint\/babelm/);
@@ -794,7 +813,7 @@ test('the chokepoints view stays lit while you open a strait from it, and Back r
 
   // A shared link opens on the view; with nothing in history, Esc steps up to home.
   await page.goto('/?view=chokepoints&sel=chokepoint/hormuz');
-  await expect(panel.getByRole('heading', { name: 'Strait of Hormuz' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Strait of Hormuz', exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(list).toBeVisible();
   await page.keyboard.press('Escape');
@@ -840,7 +859,7 @@ test('the terminals surface switches between LNG and oil, and keeps its group wh
   await panel.getByRole('button', { name: /^Through Strait of Hormuz/ }).click();
   await panel.getByRole('list', { name: /^Through Strait of Hormuz/ }).getByRole('button', { name: /^Ras Tanura/ }).click();
   await expect(page).toHaveURL(/view=terminals.*sel=terminal\/ras-tanura/);
-  await expect(panel.getByRole('heading', { name: 'Ras Tanura' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Ras Tanura', exact: true })).toBeVisible();
 
   await panel.getByRole('button', { name: 'Close, back to Terminals' }).click();
   await expect(panel.getByRole('list', { name: /^Through Strait of Hormuz/ })).toBeVisible();
@@ -932,7 +951,7 @@ test('the oil origins surface lists importers, and a country opens from the map 
   test.skip(!FEATURES.fuelOrigins, 'FEATURES.fuelOrigins is off');
   await page.goto('/?view=origins');
   const panel = page.getByLabel('Panel', { exact: true });
-  await expect(panel.getByRole('heading', { name: 'Oil origins' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Oil origins', exact: true })).toBeVisible();
   const list = panel.getByRole('list', { name: 'Crude imports by country' });
   await expect(list.getByRole('button').first()).toContainText('China');
   await expect(page.getByRole('button', { name: 'Layers' })).toHaveCount(0);
@@ -970,7 +989,7 @@ test('a country from the storage list shows its gas storage first, then its crud
 
 test('an ⓘ beside a title opens its explanation, and Escape closes it', async ({ page }) => {
   await page.goto('/?sel=basin/usgs-1174');
-  await expect(page.getByRole('heading', { name: 'West Siberian Basin' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'West Siberian Basin', exact: true })).toBeVisible();
   const note = page.getByRole('note', { name: 'About these volumes' });
   await expect(note).toBeHidden();
   await page.getByRole('button', { name: 'About these volumes' }).click();
@@ -1027,7 +1046,7 @@ test('closing an item returns the map to where it was before, through a chain of
   const search = await openSearch(page);
   await search.fill('west siberian');
   await page.getByRole('option', { name: /West Siberian Basin/ }).first().click();
-  await expect(panel.getByRole('heading', { name: 'West Siberian Basin' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'West Siberian Basin', exact: true })).toBeVisible();
   await expect.poll(async () => near(await restingCamera(page), home)).toBe(false);
   const basin = await restingCamera(page);
   const related = panel.getByRole('region', { name: /Pipelines crossing it/ });
@@ -1047,7 +1066,7 @@ test('closing an item returns the map to where it was before, through a chain of
 test('closing an item opened from a link frames its surface', async ({ page }) => {
   await page.goto('/?view=chokepoints&sel=chokepoint/hormuz');
   const panel = page.getByLabel('Panel', { exact: true });
-  await expect(panel.getByRole('heading', { name: 'Strait of Hormuz' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Strait of Hormuz', exact: true })).toBeVisible();
   const strait = await restingCamera(page);
   await panel.getByRole('button', { name: 'Close, back to Chokepoints' }).click();
   // Every strait in view: zoomed well out from the one.

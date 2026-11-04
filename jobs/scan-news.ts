@@ -11,13 +11,13 @@ import Anthropic from '@anthropic-ai/sdk';
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
 import { readFile, writeFile } from 'node:fs/promises';
 import { CLAIMS_REFRESH, NEWS } from '../src/lib/config';
-import type { Chokepoint, Disruption, LngTerminal, ObservationSeries, OilTerminal, Pipeline, SourceRef } from '../src/types';
+import type { Chokepoint, Disruption, LngTerminal, NewsHeadline, ObservationSeries, OilTerminal, Pipeline, SourceRef } from '../src/types';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
 import { chokepointFlow } from '../src/lib/flow';
 import { ALSI_METER, measuredEvidence } from '../src/lib/evidence';
 import { measuredChanges } from '../src/lib/measuredChanges';
 import { lastReported, quietSince } from '../src/lib/summary';
-import { publishDataset } from './lib/output';
+import { publishDataset, readPublished } from './lib/output';
 import { newsHeadlineSchema } from './lib/schemas';
 import { CLAIMED, citedUrls, htmlToText, pagePublishedAt, tidyStatement, urlKey, type Page } from './lib/claims';
 import {
@@ -29,6 +29,7 @@ import {
   groupStories,
   headlineFeed,
   inEffect,
+  matchAssets,
   newsDraftSchema,
   nextGoogleNewsHealth,
   pageTitle,
@@ -210,12 +211,13 @@ const headlines = await publishDataset({
   schema: newsHeadlineSchema,
   produce: async () => {
     if (!recent.length) throw new Error('no feed returned headlines');
-    const records = headlineFeed(stories, today);
+    const previous = await readPublished<NewsHeadline>('news-headlines');
+    const records = headlineFeed(stories, today, { previous, refsFor: (title) => matchAssets(title, terms) });
     return {
       records,
       meta: {
         sourceUrl: 'https://www.gdeltproject.org/',
-        sourceVersion: `GDELT DOC 2.0 and Google News RSS headlines naming mapped assets, last ${NEWS.headlineDays} days`,
+        sourceVersion: `GDELT DOC 2.0 and Google News RSS headlines naming mapped assets, last ${NEWS.headlineDays} days: the newest ${NEWS.headlinesKept}, and each asset's newest ${NEWS.headlinesPerAsset}`,
         license: 'Headlines and links only, as each feed lists them; the articles belong to their publishers',
         dataThrough: records[0]?.publishedAt ?? today,
       },

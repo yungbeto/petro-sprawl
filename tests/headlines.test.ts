@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
-import { homeHeadlines, publisherLabel } from '../src/lib/headlines';
+import { assetHeadlines, homeHeadlines, publisherLabel } from '../src/lib/headlines';
 import type { NewsHeadline } from '../src/types';
 
 const headline = (title: string, refs: string[]): NewsHeadline => ({
@@ -38,6 +38,23 @@ describe('homeHeadlines', () => {
 
   it('shows at most the limit', () => {
     expect(homeHeadlines(data, 1)).toHaveLength(1);
+  });
+});
+
+describe('assetHeadlines', () => {
+  it("gives the headlines naming an asset, newest first, with the other assets each names", () => {
+    const rows = assetHeadlines(data, { kind: 'chokepoint', id: 'hormuz' });
+    expect(rows.map((r) => r.headline.title)).toEqual([
+      'Oil rises after report of US strike on Qeshm',
+      'Tankers wait off Kharg as Hormuz traffic slows',
+    ]);
+    expect(rows[0]!.assets).toEqual([]);
+    expect(rows[1]!.assets).toEqual([{ selection: { kind: 'terminal', id: 'kharg' }, name: 'Kharg Island' }]);
+  });
+
+  it('shows at most the limit, and nothing for an asset no headline names', () => {
+    expect(assetHeadlines(data, { kind: 'chokepoint', id: 'hormuz' }, 1)).toHaveLength(1);
+    expect(assetHeadlines(data, { kind: 'pipeline', id: 'medgaz' })).toEqual([]);
   });
 });
 

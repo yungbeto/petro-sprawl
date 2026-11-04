@@ -9,6 +9,7 @@ import {
   EIA_REFERENCE_YEAR,
   FILTERS,
   MEASURED_FLOW,
+  NEWS,
   FUELS,
   PADDS,
   PADD_SOURCE,
@@ -60,6 +61,8 @@ export { detailKind, statusLabel } from '../lib/labels';
 import { FuelTabs } from './FuelTabs';
 import type { ChokepointExposure, OriginRow } from '../lib/oilOrigins';
 import { Info } from './Info';
+import { NewsList } from './NewsList';
+import { assetHeadlines } from '../lib/headlines';
 
 /** A region can open on a given fuel (M7); everything else ignores it. */
 type OnSelect = (selection: Selection, fuel?: RegionFuel) => void;
@@ -146,7 +149,7 @@ function perDay(value: number | undefined): ReactNode {
 }
 
 
-export function ChokepointDetail({ item, data, onSelect }: { item: Chokepoint; data: Datasets; onSelect: OnSelect }) {
+export function ChokepointDetail({ item, data, now, onSelect }: { item: Chokepoint; data: Datasets; now: Date; onSelect: OnSelect }) {
   const note = CHOKEPOINT_NOTES[item.id];
   const terminals = oilTerminalRows(terminalsViaChokepoint(data, item.id));
   const flow = chokepointFlow(seriesById(data, item.transitSeriesId));
@@ -212,6 +215,7 @@ export function ChokepointDetail({ item, data, onSelect }: { item: Chokepoint; d
         <p className="muted">Tanker transits not loaded yet.</p>
       )}
       <DisruptionList disruptions={disruptions} />
+      <AssetNews selection={{ kind: 'chokepoint', id: item.id }} data={data} now={now} onSelect={onSelect} />
       {terminals.length > 0 && (
         <RelatedList title="Oil terminals that ship through it" empty="" rows={terminals} data={data} onSelect={onSelect} />
       )}
@@ -331,6 +335,30 @@ export function Unreviewed({ title }: { title: string }) {
       {title}
       <span className="unreviewed__note"> · Not yet reviewed: added automatically from the news. Read the source to check it.</span>
     </span>
+  );
+}
+
+/**
+ * The headlines naming this asset (added 2026-11-04), after its disruptions and reports: as the feeds list
+ * them, unreviewed, each with the other places it names. Nothing shows when no headline names it.
+ */
+function AssetNews({ selection, data, now, onSelect }: { selection: Selection; data: Datasets; now: Date; onSelect: OnSelect }) {
+  const rows = assetHeadlines(data, selection);
+  const titleId = useId();
+  if (!rows.length) return null;
+  return (
+    <section className="section" aria-labelledby={titleId}>
+      <div className="title-row">
+        <h3 className="section__title" id={titleId}>
+          In the news
+        </h3>
+        <Info label="About the headlines">
+          Recent headlines from GDELT and Google News that name this place, from the last {NEWS.headlineDays} days, as the feeds list them.
+          They aren't reviewed: read the article before relying on it. Disruptions and reports above are the cited record.
+        </Info>
+      </div>
+      <NewsList rows={rows} data={data} now={now} onSelect={onSelect} />
+    </section>
   );
 }
 
@@ -676,6 +704,7 @@ export function PipelineDetail({
       )}
       <DisruptionList disruptions={disruptions} />
       <Reports evidence={item.evidence} />
+      <AssetNews selection={{ kind: 'pipeline', id: item.id }} data={data} now={now} onSelect={onSelect} />
       {hasPipelineFacts(item, route) && (
         <Facts>
           {!route ? (
@@ -1019,7 +1048,7 @@ function unitCapacity(units: LngUnit[], states: AssetStatus[], total: number): {
   return { value: formatNumber(total, 1), unit: 'mtpa' };
 }
 
-export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datasets; now: Date }) {
+export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; data: Datasets; now: Date; onSelect: OnSelect }) {
   const status = lngStatus(item);
   const disruptions = disruptionsFor(data, 'lng', item.id);
   const current = item.evidence[0];
@@ -1099,6 +1128,7 @@ export function LngDetail({ item, data, now }: { item: LngTerminal; data: Datase
       )}
       <DisruptionList disruptions={disruptions} />
       <Reports evidence={item.evidence} />
+      <AssetNews selection={{ kind: 'lng', id: item.id }} data={data} now={now} onSelect={onSelect} />
       <section className="section">
         <div className="title-row">
           <h3 className="section__title">Units</h3>
@@ -1226,6 +1256,7 @@ export function OilTerminalDetail({ item, data, now, onSelect }: { item: OilTerm
       {calls && <PortCallsSection calls={calls} terminal />}
       <DisruptionList disruptions={disruptions} />
       <Reports evidence={item.evidence} />
+      <AssetNews selection={{ kind: 'terminal', id: item.id }} data={data} now={now} onSelect={onSelect} />
       {pipelineRows.length > 0 && (
         <RelatedList title="Pipelines ending here" empty="" rows={pipelineRows} data={data} onSelect={onSelect} />
       )}

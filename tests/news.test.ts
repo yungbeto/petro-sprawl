@@ -119,6 +119,16 @@ describe('matching headlines to assets', () => {
     const ceyhan = assetTermsFor({ ref: 'terminal/ceyhan', name: 'Ceyhan', aliases: [] });
     expect(matchAssets('A vehicle rolled into the Ceyhan River at the bridge entrance in Kahramanmaraş', ceyhan)).toEqual([]);
     expect(matchAssets('Iraq resumes oil exports through Ceyhan', ceyhan)).toEqual(['terminal/ceyhan']);
+    const towns = [
+      { ref: 'terminal/sheskharis', name: 'Sheskharis (Novorossiysk)', aliases: [] },
+      { ref: 'terminal/fujairah', name: 'Fujairah', aliases: ['Port of Fujairah'] },
+    ].flatMap(assetTermsFor);
+    expect(matchAssets('Novorossiysk hosts regional chess final', towns)).toEqual([]);
+    expect(matchAssets('Drone attack hits Novorossiysk port', towns)).toEqual(['terminal/sheskharis']);
+    expect(matchAssets('Fujairah football club signs coach', towns)).toEqual([]);
+    expect(matchAssets('Port of Fujairah reopens berths', towns)).toEqual(['terminal/fujairah']);
+    expect(matchAssets('Earthquake recorded off Fujairah coast', towns)).toEqual([]);
+    expect(matchAssets('Fujairah’s LSMGO premium over Singapore widens', towns)).toEqual(['terminal/fujairah']);
   });
 
   it('builds feed queries from the shortest strong names, leaving out names a shorter one covers', () => {
@@ -313,7 +323,7 @@ describe('headlineFeed', () => {
   });
   it('keeps one per headline, naming every asset, with the readable link, newest first, within the window', () => {
     const stories = [
-      { ref: 'chokepoint/hormuz', articles: [article('Strike on Qeshm', 'google-news'), article('Old news', 'gdelt', '2026-10-20')], publishers: ['site.com'], newest: '2026-11-03', fresh: true },
+      { ref: 'chokepoint/hormuz', articles: [article('Strike on Qeshm', 'google-news'), article('Old news', 'gdelt', '2026-10-10')], publishers: ['site.com'], newest: '2026-11-03', fresh: true },
       { ref: 'terminal/kharg', articles: [article('Strike on Qeshm!', 'gdelt'), article('Kharg loads resume', 'gdelt', '2026-11-02')], publishers: ['site.com'], newest: '2026-11-03', fresh: true },
     ];
     const feed = headlineFeed(stories, '2026-11-03');
@@ -332,5 +342,38 @@ describe('headlineFeed', () => {
       },
     ];
     expect(headlineFeed(stories, '2026-11-03').map((h) => h.title)).toEqual(['Tankers wait at Hormuz']);
+  });
+
+  const kept = (title: string, refs: string[], publishedAt: string, feed: 'gdelt' | 'google-news' = 'gdelt') => ({
+    title,
+    publisher: 'Site',
+    url: `https://site.com/${encodeURIComponent(title)}`,
+    publishedAt,
+    feed,
+    refs,
+  });
+
+  it("carries the last file's headlines within the window, matched again with today's rules", () => {
+    const stories = [{ ref: 'terminal/kharg', articles: [article('Kharg loads resume', 'gdelt')], publishers: ['site.com'], newest: '2026-11-03', fresh: true }];
+    const previous = [
+      kept('Kharg loads resume', ['terminal/kharg'], '2026-11-03'),
+      kept('Langeled flows dip', ['pipeline/langeled'], '2026-10-27'),
+      kept('Blue Stream fiber deal', ['pipeline/blue-stream'], '2026-11-01'),
+      kept('Medgaz back at full rate', ['pipeline/medgaz'], '2026-10-10'),
+    ];
+    const refsFor = (title: string) => (title.includes('fiber') ? [] : title.startsWith('Langeled') ? ['pipeline/langeled'] : ['pipeline/medgaz']);
+    const feed = headlineFeed(stories, '2026-11-03', { previous, refsFor });
+    // Kharg once (this run's), Langeled carried over, the fiber story no longer matches, Medgaz is past the window.
+    expect(feed.map((h) => h.title)).toEqual(['Kharg loads resume', 'Langeled flows dip']);
+  });
+
+  it("keeps every asset's newest few alongside Home's newest, so a busy strait doesn't crowd out a quiet pipeline", () => {
+    const hormuz = Array.from({ length: 60 }, (_, i) => kept(`Hormuz story ${i}`, ['chokepoint/hormuz'], '2026-11-03'));
+    const langeled = Array.from({ length: 7 }, (_, i) => kept(`Langeled story ${i}`, ['pipeline/langeled'], '2026-10-30'));
+    const feed = headlineFeed([], '2026-11-03', { previous: [...hormuz, ...langeled] });
+    expect(feed).toHaveLength(40 + 5);
+    expect(feed.filter((h) => h.refs.includes('pipeline/langeled'))).toHaveLength(5);
+    // Newest first, so Home's list is still the file's top.
+    expect(feed.slice(0, 40).every((h) => h.refs.includes('chokepoint/hormuz'))).toBe(true);
   });
 });

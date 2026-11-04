@@ -255,11 +255,11 @@ function Detail({
   const resolved = resolveSelection(selection, data);
   return (
     <>
-      {resolved?.kind === 'chokepoint' && <ChokepointDetail item={resolved.item} data={data} onSelect={onSelect} />}
+      {resolved?.kind === 'chokepoint' && <ChokepointDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'basin' && <BasinDetail item={resolved.item} data={data} onSelect={onSelect} />}
       {resolved?.kind === 'pipeline' && <PipelineDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'country' && <CountryDetail item={resolved.item} data={data} view={view} onSelect={onSelect} />}
-      {resolved?.kind === 'lng' && <LngDetail item={resolved.item} data={data} now={now} />}
+      {resolved?.kind === 'lng' && <LngDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'terminal' && <OilTerminalDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'region' && <RegionDetail item={resolved.item} data={data} onSelect={onSelect} fuel={fuel} onFuel={onFuel} />}
       {!resolved && (

@@ -722,9 +722,14 @@ export const NEWS = {
    * and the asset shows no disruption in effect. Anything else, and every end date, waits for review.
    */
   newDisruptionPublishers: 2,
-  /** Home's "In the news": headlines from the last `headlineDays`, at most `headlinesKept` in the file and `headlinesShown` on Home. */
-  headlineDays: 3,
+  /**
+   * "In the news", on Home and each asset's detail (per asset added 2026-11-04): headlines are kept for
+   * `headlineDays`, run to run. The file holds the newest `headlinesKept`, and every asset's newest
+   * `headlinesPerAsset` with them; Home shows `headlinesShown`, a detail up to `headlinesPerAsset`.
+   */
+  headlineDays: 14,
   headlinesKept: 40,
+  headlinesPerAsset: 5,
   headlinesShown: 6,
   /** Left out of the headlines: social posts, reference pages and press release wires (subdomains count). */
   headlineSkipDomains: [
@@ -825,6 +830,17 @@ export const NEWS = {
     'yanbu',
     // Also a river and a town (a car in the Ceyhan River, 2026-11-04).
     'ceyhan',
+    // Towns, an emirate and a resort as well as terminals (2026-11-04, before headlines showed on each
+    // asset). Their longer names ("Port of Fujairah", "Primorsk oil terminal") still match alone.
+    'fujairah',
+    'novorossiysk',
+    'primorsk',
+    'covenas',
+    'coveñas',
+    'balao',
+    'ain sokhna',
+    'ain sukhna',
+    'el sokhna',
     'esmeraldas',
     'punta gorda',
     'corpus christi',
