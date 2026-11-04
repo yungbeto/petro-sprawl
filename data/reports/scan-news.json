@@ -1,70 +1,69 @@
 {
-  "recordedAt": "2026-11-03T20:00:31.055Z",
+  "recordedAt": "2026-11-04T01:32:08.276Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 10,
-      "failed": 12,
+      "requests": 6,
+      "failed": 13,
       "articles": 0,
       "errors": [
         "answered 429",
-        "answered 429",
-        "answered 429",
-        "answered 429"
+        "fetch failed",
+        "fetch failed"
       ]
     },
     "google-news": {
       "requests": 13,
       "failed": 0,
-      "articles": 347,
+      "articles": 320,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-03"
+    "lastOk": "2026-11-04"
   },
   "stories": 16,
-  "candidates": 8,
+  "candidates": 5,
   "usage": {
-    "input": 34865,
-    "output": 2413,
-    "searches": 1
+    "input": 59118,
+    "output": 2053,
+    "searches": 2
   },
-  "estimatedCostUsd": 0.015,
+  "estimatedCostUsd": 0.027,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
       "outcome": "review",
-      "detail": "stripes.com isn't on the trusted list",
+      "detail": "gcaptain.com isn't on the trusted list",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.stripes.com/theaters/middle_east/2026-11-03/us-strikes-iran-qeshm-island-hormuz-23348317.html",
-        "publisher": "Stars and Stripes",
-        "quote": "The U.S. struck an Iranian island in the Strait of Hormuz on the eve of Election Day",
+        "url": "https://gcaptain.com/tanker-hit-by-limpet-mines-in-strait-of-hormuz-as-new-threat-to-shipping-emerges/",
+        "publisher": "gCaptain",
+        "quote": "The limpet-mine attack was one of several maritime security incidents reported in the Strait of Hormuz on Thursday.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": ""
       },
       "headlines": [
-        "- 2026-11-03 · NBC News: U.S. carries out strikes on Iran’s Qeshm Island",
-        "- 2026-11-03 · i24NEWS: US strike on Qeshm island described as a ‘defensive act,' in response to Iranian attack on US aircraft | LIVE BLOG",
-        "- 2026-11-03 · NBC News: U.S. launches new strikes on Iran's Qeshm Island",
-        "- 2026-11-03 · The New York Times: Video: U.S. Military Strikes Iran’s Qeshm Island",
-        "- 2026-11-03 · The Jerusalem Post: What is the importance of Qeshm Island to Iran, why does the US keep targeting it? - explainer",
-        "- 2026-11-03 · Stars and Stripes: US quietly strikes Iranian island in Strait of Hormuz as Trump weighs next steps",
-        "- 2026-11-03 · AP News: US strikes in the Strait of Hormuz create more questions about what’s ahead",
-        "- 2026-11-03 · Middle East Eye: Iran says US ceasefire proposal 'insufficient' as strikes are reported on Qeshm Island",
-        "- 2026-11-03 · CNN: US military conducts strikes on Iran’s Qeshm Island in defensive operation, officials say",
-        "- 2026-11-03 · Al-Monitor: Aramco begins expansion of oil export route bypassing Hormuz",
-        "- 2026-11-03 · Al-Monitor: US strikes Iran's Qeshm Island",
-        "- 2026-11-03 · FOX 13 Seattle: US strikes Iran in Strait of Hormuz hours before Election Day",
-        "- 2026-11-03 · Taipei Times: Washington strikes Iranian targets in the Strait of Hormuz: US official",
-        "- 2026-11-03 · Military.com: US Strikes Iranian Targets in the Strait of Hormuz, Official Says, Leaving Unclear What Comes Next",
-        "- 2026-11-03 · Democracy Now!: WSJ : U.S. Carries Out Strikes Around Strait of Hormuz on Eve of Midterm Elections"
+        "- 2026-11-04 · WSJ: Iran Turns to Guerrilla Tactics in Bid to Reassert Grip on Strait of Hormuz",
+        "- 2026-11-04 · China Daily: Qeshm Island in Iran comes under attack",
+        "- 2026-11-03 · Gephardt Daily: Reports: U.S. attacks Iran’s Qeshm Island",
+        "- 2026-11-03 · Crude Oil Prices Today | OilPrice.com: Hormuz Oil Flows Unlikely to Return to Pre-War Levels, Rystad Says",
+        "- 2026-11-03 · CBS News: U.S. launches air strikes in Straight of Hormuz",
+        "- 2026-11-03 · National Council of Resistance of Iran - NCRI: Iran’s Leadership Appeals for Unity as Security Attacks, Student Protests and Hormuz Confrontation Intensify",
+        "- 2026-11-03 · gCaptain: Hormuz Standoff Leaves Both Sides With Economic Pain",
+        "- 2026-11-03 · cbs19.tv: US strikes Iranian targets as tensions rise near Strait of Hormuz",
+        "- 2026-11-03 · WANA News Agency: Sources Report Shots Fired at Vessels in Strait of Hormuz -",
+        "- 2026-11-03 · Anadolu Ajansı: Iran exempts ships from India, China, Iraq, Qatar from Hormuz transit restrictions: Lawmaker",
+        "- 2026-11-03 · Middle East Online: Iran exempts ships from four countries from Strait of Hormuz transit restrictions",
+        "- 2026-11-03 · Modern Diplomacy: Why Aramco Is Expanding Its Hormuz-Bypass Pipeline",
+        "- 2026-11-03 · تسنیم: Three Tankers Explode at Strait of Hormuz: IRGC Navy",
+        "- 2026-11-03 · StreetInsider: Bitcoin Price Prediction: Is $70K Next After US Strikes on Qeshm Island? AlphaPepe Passes $3.28M in Presale Funding",
+        "- 2026-11-03 · شفق نيوز: Shafaq News..Iran exempts Iraq, three countries from Hormuz restrictions"
       ]
     },
     {
@@ -73,19 +72,8 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-03 · Baird Maritime: China Merchants Energy Shipping names first of six QatarEnergy LNG carriers"
-      ]
-    },
-    {
-      "ref": "chokepoint/babelm",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-03 · ABNA English: Yemen announces defeat of Saudi forces' advance toward Bab al-Mandab Strait",
-        "- 2026-11-02 · تلویزیون سفیر: The failure of the forces under Saudi command to advance towards Bab al-Mandab",
-        "- 2026-11-01 · Global Arab Network: Yemeni Government Launches Operation to Secure Bab al-Mandab",
-        "- 2026-11-01 · India's News.Net: Quad ministers call for navigational freedom in Hormuz, Red Sea, Bab el-Mandeb Strait amid West Asia conflict"
+        "- 2026-11-03 · Baird Maritime: China Merchants Energy Shipping names first of six QatarEnergy LNG carriers",
+        "- 2026-11-02 · TradingView: Weekly Recap: QatarEnergy LNG deal and nine-month revenue growth"
       ]
     },
     {
@@ -94,24 +82,8 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-03 · EnergyNow.com: Aramco Exploring Expansion of East-West Pipeline That Avoids Hormuz",
-        "- 2026-11-03 · BigGo Finance: Saudi Aramco Begins Expanding East-West Pipeline to Bypass Strait of Hormuz, Lifting Capacity to 10 Million Barrels",
-        "- 2026-11-03 · ASHARQ AL-AWSAT English: Aramco Begins East-West Pipeline Expansion to Boost Oil Export Flexibility",
-        "- 2026-11-03 · صحيفة مال: Aramco CEO: Expansion of East-West Pipeline to 10 Million Barrels Per Day Underway; 51% of Company’s Production Directed to Its Downstream System",
-        "- 2026-11-03 · 파이낸셜뉴스: Saudi Aramco posts 49 trillion won in third-quarter net profit; considers expanding East-West pipeline",
-        "- 2026-11-03 · Emirates 24|7: Aramco expanding East-West Pipeline that avoids Hormuz",
-        "- 2026-11-03 · ارقام : اخبار ومعلومات سوق الأسهم السعودي - تاسي: Aramco eyes 10M bpd East-West pipeline capacity, $15B cash flow boost on gas investment by 2030",
-        "- 2026-11-03 · ارقام : اخبار ومعلومات سوق الأسهم السعودي - تاسي: Aramco begins East-West Pipeline expansion",
-        "- 2026-11-03 · Gulf News: Aramco profit rises 9% after East-West pipeline attacks"
-      ]
-    },
-    {
-      "ref": "terminal/ceyhan",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-03 · Haberler.com: A vehicle rolled into the Ceyhan River at the bridge entrance in Kahramanmaraş! 3 people from the same family were injured."
+        "- 2026-11-03 · Marine News Magazine: Aramco Targets Hormuz Bypass with East-West Pipeline Expansion",
+        "- 2026-11-03 · شبكة تواصل الإخبارية: Aramco Begins East-West Pipeline Expansion to Boost Oil Export Flexibility"
       ]
     },
     {
@@ -120,16 +92,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-03 · International Financing Review: Blue Stream readies its third fiber ABS deal"
-      ]
-    },
-    {
-      "ref": "pipeline/nord-stream-1",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-03 · Kyiv Post: ANALYSIS: Nord Stream Trial: A Ukrainian Defendant and the Limits of Wartime Justification"
+        "- 2026-11-04 · Asset Securitization Report: Blue Stream securitizes revenue from HOA fiber optic contracts"
       ]
     },
     {
@@ -138,7 +101,8 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-03 · Baird Maritime: China Merchants Energy Shipping names first of six QatarEnergy LNG carriers"
+        "- 2026-11-03 · Baird Maritime: China Merchants Energy Shipping names first of six QatarEnergy LNG carriers",
+        "- 2026-11-02 · TradingView: Weekly Recap: QatarEnergy LNG deal and nine-month revenue growth"
       ]
     }
   ]
