@@ -3,7 +3,7 @@ import type { Selection } from '../app/urlState';
 import { STATCAN_STORAGE, STORAGE_NOT_COVERED, STORAGE_SOURCES, JODI_GAS, type StorageSourceId } from '../lib/config';
 import type { Datasets } from '../lib/data';
 import { CHANGE_SPAN, storageChange, storageFigure, type Cadence } from '../lib/gasStorage';
-import { formatCountry, formatNumber, formatSignedPct } from '../lib/format';
+import { flagEmoji, formatCountry, formatNumber, formatSignedPct } from '../lib/format';
 import { median, storageRows, type StorageRow } from '../lib/summary';
 import { SourceLink } from './details';
 import { Info } from './Info';
@@ -81,53 +81,80 @@ export function StorageView({ data, onSelect }: { data: Datasets; onSelect: (sel
 function StorageItem({ row, onSelect }: { row: StorageRow; onSelect: (selection: Selection) => void }) {
   const label = formatCountry(row.country);
   const change = storageChange(row, true);
+  const figure = storageFigure(row);
+  const flag = flagEmoji(row.country);
   return (
-    <button type="button" className="view-row" onClick={() => onSelect(row.selection)}>
-      <span className="view-row__head">
-        <span className="view-row__name">{label}</span>
-        <span className="view-row__figure">
-          <span className="view-row__value">{storageFigure(row)}</span>
-          <span className="view-row__unit">{row.fill !== null ? 'full' : 'in storage'}</span>
+    <button type="button" className="view-row stat-card" onClick={() => onSelect(row.selection)}>
+      <span className="stat-card__head">
+        <span className="stat-card__name">
+          {flag && <span aria-hidden="true">{flag} </span>}
+          {label}
+        </span>
+        <span className="stat-card__figure">
+          <span className="stat-card__value">
+            {/* A fill's percent sign is set smaller than its number. */}
+            {figure.endsWith('%') ? (
+              <>
+                {figure.slice(0, -1)}
+                <span className="stat-card__percent">%</span>
+              </>
+            ) : (
+              figure
+            )}
+          </span>
+          <span className="stat-card__unit">{row.fill !== null ? 'full' : 'in storage'}</span>
         </span>
       </span>
-      {row.fill !== null && (
-        <FillBar fill={row.fill} lastYear={row.summary.lastYear?.value ?? null} label={label} />
+      {row.fill !== null ? (
+        <FillBar fill={row.fill} lastYear={row.summary.lastYear} label={label} />
+      ) : (
+        <span className="stat-card__rule" aria-hidden="true" />
       )}
-      <span className="view-row__facts">
-        {row.vsLastYearPct !== null ? (
+      <span className="stat-card__details">
+        <span className="view-row__facts">
+          {row.vsLastYearPct !== null ? (
+            <span>
+              <strong>{formatSignedPct(row.vsLastYearPct)}</strong> vs last year
+            </span>
+          ) : (
+            <span>Nothing to compare last year</span>
+          )}
+          {change && (
+            <span>
+              <strong>{change}</strong> {CHANGE_SPAN[row.cadence]}
+            </span>
+          )}
+        </span>
+        <span className="view-row__facts stat-card__notes">
           <span>
-            <strong>{formatSignedPct(row.vsLastYearPct)}</strong> vs last year
+            {CADENCE_LABEL[row.cadence]}, to <span className="mono">{row.summary.latest.date}</span>
           </span>
-        ) : (
-          <span>Nothing to compare last year</span>
-        )}
-        {change && (
-          <span>
-            <strong>{change}</strong> {CHANGE_SPAN[row.cadence]}
-          </span>
-        )}
-      </span>
-      <span className="view-row__meta">
-        <span>
-          {CADENCE_LABEL[row.cadence]}, to <span className="mono">{row.summary.latest.date}</span>
-          {row.caution && ' · use with caution'}
+          {row.caution && <span>use with caution</span>}
         </span>
       </span>
     </button>
   );
 }
 
-/** Fill as a bar from empty to full, with a tick where it stood on the same date last year. */
-function FillBar({ fill, lastYear, label }: { fill: number; lastYear: number | null; label: string }) {
+/** Fill as a bar from empty to full, with a tick where it stood on the same date last year, named on hover. */
+function FillBar({ fill, lastYear, label }: { fill: number; lastYear: { date: string; value: number } | null; label: string }) {
   const clamp = (v: number) => Math.max(0, Math.min(100, v));
+  const year = lastYear && clamp(lastYear.value);
   return (
     <span
       className="fill-bar"
       role="img"
-      aria-label={`${label}: ${formatNumber(fill, 1)}% full${lastYear !== null ? `, ${formatNumber(lastYear, 1)}% a year ago` : ''}`}
+      aria-label={`${label}: ${formatNumber(fill, 1)}% full${lastYear ? `, ${formatNumber(lastYear.value, 1)}% a year ago` : ''}`}
     >
       <span className="fill-bar__fill" style={{ width: `${clamp(fill)}%` }} />
-      {lastYear !== null && <span className="fill-bar__tick" style={{ left: `${clamp(lastYear)}%` }} />}
+      {lastYear && year !== null && (
+        <span className="fill-bar__tick" style={{ left: `${year}%` }}>
+          {/* Slid along by the tick's own position, so it never runs past either end of the bar. */}
+          <span className="fill-bar__tip" style={{ translate: `-${year}% 0` }} aria-hidden="true">
+            {formatNumber(lastYear.value, 1)}% a year ago <span className="fill-bar__tip-date mono">{lastYear.date}</span>
+          </span>
+        </span>
+      )}
     </span>
   );
 }

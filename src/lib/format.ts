@@ -24,6 +24,12 @@ export function formatLonLat([lon, lat]: [number, number]): string {
 const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
 /** ISO 3166-1 alpha-2 to an English name: SA -> Saudi Arabia. Unknown codes come back as given. */
+/** A country's flag emoji from its ISO 3166-1 alpha-2 code, or '' for anything else. Windows draws the two letters instead. */
+export function flagEmoji(code: string): string {
+  if (!/^[A-Za-z]{2}$/.test(code)) return '';
+  return String.fromCodePoint(...[...code.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65));
+}
+
 export function formatCountry(code: string): string {
   try {
     return regionNames.of(code) ?? code;

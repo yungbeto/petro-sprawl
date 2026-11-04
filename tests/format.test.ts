@@ -57,3 +57,17 @@ describe('formatTonnes', () => {
     expect(formatTonnes(640)).toBe('640 t');
   });
 });
+
+import { flagEmoji } from '../src/lib/format';
+
+describe('flagEmoji', () => {
+  it('turns a two-letter code into its regional indicator pair', () => {
+    expect(flagEmoji('NO')).toBe('🇳🇴');
+    expect(flagEmoji('gb')).toBe('🇬🇧');
+  });
+
+  it('returns nothing for codes that are not two letters', () => {
+    expect(flagEmoji('EU27')).toBe('');
+    expect(flagEmoji('')).toBe('');
+  });
+});

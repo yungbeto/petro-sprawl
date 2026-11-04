@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
 import {
+  basinOilParts,
   basinsSummary,
   corridorRows,
   diffSnapshots,
@@ -312,5 +313,24 @@ describe('basinsSummary', () => {
   });
   it('is null with no oil figures', () => {
     expect(basinsSummary([{ ...basin, id: 'e' }])).toBeNull();
+  });
+});
+
+describe('basinOilParts', () => {
+  const oil = (produced: number | null, remaining: number | null, undiscovered: number | null) => ({
+    ...basin,
+    volumes: { oil: { produced, remaining, undiscovered }, gas: { produced: null, remaining: null, undiscovered: null } },
+  });
+  it('gives produced, remaining and undiscovered in that order, as shares of the three', () => {
+    expect(basinOilParts(oil(50, 200, 250))).toEqual([
+      { part: 'produced', value: 50, share: 10 },
+      { part: 'remaining', value: 200, share: 40 },
+      { part: 'undiscovered', value: 250, share: 50 },
+    ]);
+  });
+  it('is null when a part is missing, all are zero, or the basin has no volumes', () => {
+    expect(basinOilParts(oil(50, null, 250))).toBeNull();
+    expect(basinOilParts(oil(0, 0, 0))).toBeNull();
+    expect(basinOilParts({ ...basin })).toBeNull();
   });
 });

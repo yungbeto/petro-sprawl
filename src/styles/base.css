@@ -261,11 +261,6 @@ kbd {
 .rail__item:focus-visible .rail__tooltip {
   opacity: 1;
   transform: translate(0, -50%);
-  transition-delay: 300ms;
-}
-
-.rail__item:focus-visible .rail__tooltip {
-  transition-delay: 0ms;
 }
 
 .map {
@@ -1867,6 +1862,11 @@ a:hover {
   margin-top: var(--space-5);
 }
 
+/* A list that ends the hero leaves its last rule to the hero's own border, not a second one below it. */
+.hero > :last-child > .changes:last-child > li:last-child {
+  border-bottom: 0;
+}
+
 .hero__rest .section__title {
   margin-bottom: 0;
 }
@@ -2424,6 +2424,134 @@ a:hover {
   padding: 0 6px;
 }
 
+/* A card led by one figure (gas storage, basins): the name over the figure, a bar or a rule, then the
+   facts and, in smaller type, the notes (period, source, countries). */
+.view-list--cards .stat-card {
+  gap: var(--space-4);
+}
+
+.stat-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.stat-card__name {
+  font-size: var(--text-md);
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--text-muted);
+}
+
+.stat-card__figure {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+
+.stat-card__value {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-card__percent {
+  font-size: 16px;
+}
+
+.stat-card__unit {
+  font-size: var(--text-xs);
+  line-height: 16px;
+  color: var(--text-muted);
+}
+
+.stat-card__rule {
+  display: block;
+  border-top: 1px solid var(--border);
+}
+
+.stat-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.stat-card__notes {
+  font-size: 10px;
+  line-height: 16px;
+  color: color-mix(in srgb, var(--text-muted) 60%, transparent);
+}
+
+/* A notes part can be long (a basin's countries), so it may wrap, unlike the facts above it. */
+.stat-card__notes > span {
+  white-space: normal;
+}
+
+/* A basin's oil as assessed in 2000: produced, remaining, undiscovered, darkest for the card's figure. */
+.oil-bar {
+  position: relative;
+  display: flex;
+  gap: 2px;
+  height: 8px;
+}
+
+.oil-bar__slot {
+  display: flex;
+  min-width: 2px;
+}
+
+.oil-bar__part {
+  flex: 1;
+}
+
+.oil-bar__part--produced {
+  background: color-mix(in srgb, var(--flow-near) 40%, var(--surface-sunken));
+}
+
+.oil-bar__part--remaining {
+  background: var(--flow-near);
+}
+
+.oil-bar__part--undiscovered {
+  background: var(--surface-sunken);
+  /* Not yet found: an outline, not a fill. */
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+/* Placed against the whole bar, not its part, so it can be kept inside the card. */
+.oil-bar__tip {
+  bottom: calc(100% + 8px);
+}
+
+.oil-bar__slot:hover .oil-bar__tip {
+  opacity: 1;
+}
+
+.oil-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.oil-key li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.oil-key__swatch {
+  width: 12px;
+  height: 8px;
+}
+
 /* A chokepoint: name and band, the share as the figure, the trend, then the figures behind it. */
 .chokepoint-row__title {
   display: flex;
@@ -2612,7 +2740,6 @@ a:hover {
   display: block;
   height: 8px;
   background: var(--surface-sunken);
-  border-radius: 2px;
 }
 
 .fill-bar__fill {
@@ -2620,17 +2747,51 @@ a:hover {
   inset: 0 auto 0 0;
   /* Neutral: the map's colours say against last year, not how full. */
   background: var(--flow-near);
-  border-radius: 2px;
+  border-radius: 0 2px 2px 0;
 }
 
 .fill-bar__tick {
   position: absolute;
-  top: -3px;
-  bottom: -3px;
+  top: -4px;
+  bottom: -4px;
   width: 2px;
   margin-left: -1px;
   background: var(--text);
   border-radius: 1px;
+}
+
+/* A wider target than the 2px tick, for the hover. */
+.fill-bar__tick::before {
+  content: '';
+  position: absolute;
+  inset: -4px -6px;
+}
+
+.fill-bar__tip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  z-index: 10;
+  padding: 4px 8px;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--surface);
+  background: var(--text);
+  border-radius: var(--radius);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.fill-bar__tip-date {
+  margin-left: 4px;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.fill-bar__tick:hover .fill-bar__tip {
+  opacity: 1;
 }
 
 /* Phones: the More tab's list, one row per section. */

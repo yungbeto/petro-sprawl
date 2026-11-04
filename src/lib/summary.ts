@@ -106,6 +106,23 @@ export function basinViewRows(basins: Basin[]): Basin[] {
   });
 }
 
+export type BasinOilPart = 'produced' | 'remaining' | 'undiscovered';
+
+/**
+ * A basin's oil as USGS assessed it in 2000, in the order a field's life runs: produced, remaining in fields
+ * found by 1996, undiscovered (mean). Each part's share of the three together, as percents. Null when any
+ * of the three is missing or they add to nothing, so a bar is never drawn with a part left out.
+ */
+export function basinOilParts(basin: Basin): { part: BasinOilPart; value: number; share: number }[] | null {
+  const oil = basin.volumes?.oil;
+  if (!oil) return null;
+  const parts = (['produced', 'remaining', 'undiscovered'] as const).map((part) => ({ part, value: oil[part] }));
+  if (parts.some((p) => p.value == null || p.value < 0)) return null;
+  const total = parts.reduce((sum, p) => sum + p.value!, 0);
+  if (total <= 0) return null;
+  return parts.map((p) => ({ part: p.part, value: p.value!, share: (p.value! / total) * 100 }));
+}
+
 /** The basins view's headline: how much oil the provinces with a figure hold, and the largest few's share. */
 export function basinsSummary(basins: Basin[], top = 5): { provinces: number; oil: number; topShare: number; top: number } | null {
   const oil = basins.flatMap((b) => (b.volumes?.oil.remaining == null ? [] : [b.volumes.oil.remaining])).sort((a, b) => b - a);
