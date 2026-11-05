@@ -381,6 +381,14 @@
       {
         "status": "reduced",
         "sourceType": "press",
+        "statement": "Bloomberg reports that loading at Sheskharis has slowed, with tankers moored about twice as long as similar-sized ships take at Russia's Baltic facilities, amid rising security fears around the port (Bloomberg).",
+        "url": "https://www.bloomberg.com/news/articles/2026-10-13/russia-s-oil-exports-slow-as-black-sea-loading-takes-longer",
+        "observedAt": "2026-10-11",
+        "recordedAt": "2026-11-05"
+      },
+      {
+        "status": "reduced",
+        "sourceType": "press",
         "statement": "Drone attacks disrupted loadings at Sheskharis; traders expected Novorossiysk loadings to fall below 350,000 b/d in August from about 800,000 b/d in July (Baird Maritime, citing Reuters).",
         "url": "https://www.bairdmaritime.com/shipping/tankers/ukrainian-attacks-deal-severe-blow-to-russian-black-sea-oil-exports",
         "observedAt": "2026-08-28",
