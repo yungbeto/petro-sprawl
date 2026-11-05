@@ -506,6 +506,14 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "Reports that Leviathan partners led by Chevron have expanded gas exports to Egypt through the Arish-Ashkelon (East Mediterranean Gas) pipeline (Pipeline Journal).",
+        "url": "https://www.pipeline-journal.net/news/analysis-how-offshore-pipelines-define-energy-politics-eastern-mediterranean",
+        "observedAt": "2026-08-13",
+        "recordedAt": "2026-11-05"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "A new 45 km subsea line from Ashdod to Ashkelon links Leviathan to the EMG pipeline into Egypt at El-Arish, with export capacity on the route expected to rise from 6.5 to 8.5 bcm a year (OGE Journal).",
         "url": "https://ogejournal.com/israel-expands-gas-exports-to-egypt-with-new-pipeline-under-35bn-deal/",
         "observedAt": "2026-07-11",
