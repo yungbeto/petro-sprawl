@@ -1,23 +1,22 @@
 {
-  "recordedAt": "2026-11-05T11:18:39.662Z",
+  "recordedAt": "2026-11-05T20:18:04.177Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 15,
-      "failed": 10,
-      "articles": 0,
+      "requests": 11,
+      "failed": 11,
+      "articles": 45,
       "errors": [
+        "fetch failed",
         "answered 429",
-        "answered 429",
-        "answered 429",
-        "answered 429",
+        "fetch failed",
         "answered 429"
       ]
     },
     "google-news": {
       "requests": 13,
       "failed": 0,
-      "articles": 307,
+      "articles": 310,
       "errors": []
     }
   },
@@ -25,85 +24,57 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-05"
   },
-  "stories": 15,
-  "candidates": 6,
+  "stories": 16,
+  "candidates": 8,
   "usage": {
-    "input": 63637,
-    "output": 4365,
+    "input": 67607,
+    "output": 3409,
     "searches": 3
   },
-  "estimatedCostUsd": 0.039,
+  "estimatedCostUsd": 0.038,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
       "outcome": "review",
-      "detail": "jpost.com isn't on the trusted list",
+      "detail": "arabnews.com isn't on the trusted list",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.jpost.com/middle-east/article-913883",
-        "publisher": "Reuters (via Jerusalem Post)",
-        "quote": "after attempting to use unauthorized routes through the Strait of Hormuz.",
+        "url": "https://www.arabnews.com/middle-east/iran-says-five-tankers-and-tugboat-caught-fire-in-hormuz-3009888",
+        "publisher": "Arab News",
+        "quote": "Five oil tankers and a tugboat caught fire in the Strait of Hormuz, Iran's Revolutionary Guards and army said in separate statements, according to local media on Thursday.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": ""
       },
       "headlines": [
-        "- 2026-11-05 · Reuters: Iran's IRGC says two tankers and tugboat caught fire in Strait of Hormuz",
-        "- 2026-11-05 · The Guardian: South Korea says it will expand naval operations closer to strait of Hormuz",
-        "- 2026-11-05 · France 24: South Korea to deploy military mission to keep Strait of Hormuz open",
-        "- 2026-11-05 · The Jerusalem Post: IRGC says ships caught fire after unauthorized routes through Hormuz",
-        "- 2026-11-05 · IranWire: Mohsen Rezaei: We Defeated Trump in the Strait of Hormuz and Washington",
-        "- 2026-11-05 · NDTV: Iran Exempts India And China From Hormuz Restrictions. Why It Matters",
-        "- 2026-11-05 · Anadolu Ajansı: Iran says 3 vessels catch fire in Strait of Hormuz",
-        "- 2026-11-05 · AFP Fact Check: AI video misrepresented as cargo from Singaporean vessel in Hormuz",
-        "- 2026-11-05 · Reuters: South Korea to expand anti-piracy unit operations closer to Strait of Hormuz",
-        "- 2026-11-05 · Al Jazeera: South Korea plans to expand anti-piracy operations closer to Hormuz Strait",
-        "- 2026-11-05 · IranWire: IRGC Reports Tanker Fires in Hormuz and Capture of Two U.S. Drones",
-        "- 2026-11-05 · Anadolu Ajansı: Iranian, Omani foreign ministers discuss regional developments, diplomacy amid Strait of Hormuz tensions",
-        "- 2026-11-05 · Bloomberg.com: Watch Hormuz Diplomacy Gains Ground as Trump Plays Down New Iran Strikes",
-        "- 2026-11-05 · Asia News Network: Iran exempts India, China, Iraq and Qatar from transit restrictions in Strait of Hormuz",
-        "- 2026-11-05 · CNBC: Strait of Hormuz risks still elevated despite U.S. midterm results: Former Australian Trade Minister"
-      ]
-    },
-    {
-      "ref": "pipeline/east-west-crude",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-05 · MEED: Aramco seeks to expand East-West crude pipeline"
+        "- 2026-11-05 · Reuters: Tankers hit in Hormuz as Iran keeps up pressure after US vote",
+        "- 2026-11-05 · Al Jazeera: Iran says tankers struck in Hormuz amid fears of new US attack",
+        "- 2026-11-05 · The New Arab: Tankers burn in Hormuz as fears grow of new US attack on Iran",
+        "- 2026-11-05 · The American Conservative: Iran War Day 251: Ship Attacks Continue in Hormuz",
+        "- 2026-11-05 · Oklahoma Energy Today: Energy briefs–burning tankers in the Strait of Hormuz",
+        "- 2026-11-05 · Algemeiner.com: Tankers Hit in Hormuz as Iran Keeps Up Pressure After US Vote",
+        "- 2026-11-05 · Tomorrow's Affairs: Seoul sends ships to Hormuz, but not to Trump’s war",
+        "- 2026-11-05 · The New Arab: Two oil tankers catch fire in Hormuz as S Korea plans operation",
+        "- 2026-11-05 · Caspian Post: October Sees Surge in Attacks on Ships in Strait of Hormuz",
+        "- 2026-11-05 · Arab News: Iran says five tankers and tugboat caught fire in Hormuz",
+        "- 2026-11-05 · Caspian Post: Oil Tanker Catches Fire After Hitting Naval Mine in Strait of Hormuz",
+        "- 2026-11-05 · DW.com: Shipping crews caught in the crossfire of the Hormuz conflict",
+        "- 2026-11-05 · Crude Oil Prices Today | OilPrice.com: Iran Reports More Tanker Fires in Strait of Hormuz",
+        "- 2026-11-05 · NewsCord: Strait Of Hormuz Tensions Rise After U.S. Midterm Elections, Trump Netanyahu Discuss Iran: 5 outlets compared",
+        "- 2026-11-05 · Latest news from Azerbaijan: Iran says five tankers hit by mines in Strait of Hormuz"
       ]
     },
     {
       "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
-      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-04 · Hiiraan Online: Ciidanka Ilaalada Xeebaha Somaliland oo Sheegay In Ay Ka Go'an Tahay Sugidda Ammaanka Bab al-Mandab"
-      ]
-    },
-    {
-      "ref": "lng/gem-t100000130594-export",
-      "kind": "story",
-      "outcome": "rejected",
-      "detail": "the quote doesn't name the asset; page is older than 14 days",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "ras-laffan-north-2026-war",
-        "url": "https://www.bolnews.com/world/qatar-lng-plant-blast-leaves-multiple-dead-and-injured/",
-        "publisher": "Bol News",
-        "quote": "An explosion at Ras Laffan LNG Complex has killed 13 people and injured dozens more",
-        "cause": "accident",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": ""
-      },
-      "headlines": [
-        "- 2026-11-04 · Bol News: Qatar LNG plant blast leaves multiple dead and injured"
+        "- 2026-11-05 · EnergyNow: INSIGHT: Why is the Bab el-Mandeb Strait so Important?",
+        "- 2026-11-05 · The Jerusalem Post: Yemen targets Houthi finances with new customs and import rules",
+        "- 2026-11-04 · Newsmakers: Saudi Arabia Under Fire: Houthis Target Oil Refinery, Defence Ministry as US Orders Diplomatic Evacuation"
       ]
     },
     {
@@ -112,7 +83,21 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-05 · Laodong.vn: Germany sets 19 more trials for Nord Stream sabotage"
+        "- 2026-11-05 · Mezha.net: Germany’s Federal Network Agency: Nord Stream explosions had little impact on gas supplies",
+        "- 2026-11-05 · LIGA.net: Nord Stream blasts had almost no impact on gas supplies to Germany – regulator tells court"
+      ]
+    },
+    {
+      "ref": "pipeline/nord-stream-2",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-05 · INSIGHT EU MONITORING: EU Court of Justice upholds dismissal of Nord Stream 2 challenge to EU gas market rules",
+        "- 2026-11-05 · MLex: Nord Stream 2 loses final EU court appeal over gas pipeline exemptions",
+        "- 2026-11-05 · UA.NEWS: EU Court of Justice dismisses Nord Stream 2 appeal over gas directive — Interia",
+        "- 2026-11-05 · Mezha.net: EU Court upholds dismissal of Nord Stream 2 AG’s lawsuit over gas directive",
+        "- 2026-11-05 · Demócrata: The CJEU confirms that Nord Stream 2 must be brought into line with European gas market regulations"
       ]
     },
     {
@@ -121,7 +106,37 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-02 · The Daily News | Texas' Oldest Newspaper: A tug boat travels down the Port of Corpus Christi ship channel on April 24, 2022. Refineries line the channel in an area dubbed Refinery Row."
+        "- 2026-11-03 · MarketScale: Port of Corpus Christi weighs a DP World container terminal and 2,000-acre hub"
+      ]
+    },
+    {
+      "ref": "pipeline/druzhba-north",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-05 · marketscreener.com: Kazakhstan asks Russia to resume oil shipments via Druzhba and Ust-Luga, Interfax says",
+        "- 2026-11-05 · صوت الإمارات: Kazakhstan demands that Russia resume oil shipments via the Druzhba pipeline and the port of Ust-Luga"
+      ]
+    },
+    {
+      "ref": "pipeline/druzhba-south",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-05 · marketscreener.com: Kazakhstan asks Russia to resume oil shipments via Druzhba and Ust-Luga, Interfax says",
+        "- 2026-11-05 · صوت الإمارات: Kazakhstan demands that Russia resume oil shipments via the Druzhba pipeline and the port of Ust-Luga"
+      ]
+    },
+    {
+      "ref": "terminal/ust-luga",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-05 · marketscreener.com: Kazakhstan asks Russia to resume oil shipments via Druzhba and Ust-Luga, Interfax says",
+        "- 2026-11-05 · صوت الإمارات: Kazakhstan demands that Russia resume oil shipments via the Druzhba pipeline and the port of Ust-Luga"
       ]
     }
   ]
