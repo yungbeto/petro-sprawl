@@ -171,3 +171,16 @@ Home's cards only change when a disruption gets a new source, and the scan only 
 - **Check the headline feeds' terms.** Home now shows headline titles and links from both feeds. GDELT is open; Google News RSS is for personal, non-commercial use, which this site is, but showing its titles on a public page isn't clearly covered. If in doubt, keep only `feed: 'gdelt'` rows in `headlineFeed`.
 - **More nearby places** for other assets as misses show up (Kharg Island, Basra, the Red Sea ports). Keep the list short; ambiguous names go in `NEWS.weakTerms`.
 - **GDELT answers 429 from GitHub's runners** on most queries (2026-11-02: 13 of 13, then 9 of 13), so stories are found by search instead, at a little more cost. Worth a slower pace or a cache.
+
+## Refineries (M11, raised 2026-11-05)
+
+Sources checked by web search on 2026-11-05; none of the files has been downloaded yet.
+
+- **EIA Refinery Capacity Report, individual refinery spreadsheet:** released 2026-06-26, capacity as of 2026-01-01, 130 operable refineries (two fewer than 2025: LyondellBasell Houston and Phillips 66 Los Angeles closed). Check the spreadsheet's columns (operating and idle capacity per site, calendar and stream day) before writing the import.
+- **EIA refinery shapefile (2021, in `data/raw/eia/refineries/`):** list the sites it has that the 2026 spreadsheet doesn't, and the reverse. The Energy Atlas FeatureServer with current locations needs a token.
+- **HIFLD Open Petroleum Refineries:** find the current layer and its date; HIFLD Open moved in 2025, and the copy found is on the Data Rescue Project's portal.
+- **EEA Industrial Reporting database:** CC BY 4.0 per the EEA catalogue, latest version 2007 to 2024. One record notes limited public access under INSPIRE Article 13(1)(a); check which. Filter activity 1(a) with NACE 19.20, since 1(a) also covers some gas facilities (Concawe).
+- **Wikidata:** CC0. Find the class for oil refineries, the property used for capacity, and how many items in each country have a referenced capacity.
+- **OpenStreetMap `industrial=refinery`:** ODbL. Decide whether points taken from it make `public/data/refineries.json` a derived database that must be offered under ODbL, before publishing any.
+- **NASA FIRMS:** fire detections as a candidate signal for the news scan. Needs a MAP_KEY; check terms and how often flares trigger it.
+- **KAPSARC refinery capacities (Open Net Zero):** licence listed as unknown, so not used.

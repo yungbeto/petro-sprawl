@@ -484,6 +484,9 @@ Done when: a run on a week of real news adds at least one verified report to a d
 **M10: Beyond the EU and the US.** Gas storage and fuel origins come back from behind their flags once each reaches past one region, and the phone's tab bar learns to hold more sections than fit. Detail below.
 Done when: storage shows every country or region that publishes it on the sources below, and names the large holders that don't; "Where is a country's oil from?" answers for the 30 largest crude importers, each share with its source and period; the US keeps its regional view; and with every section on, the phone bar shows five slots with More holding the rest.
 
+**M11: Refineries.** Refineries join the map as a fourth kind of oil asset, beside pipelines, terminals and chokepoints: where they are, how much crude they can run, who runs them, and whether they're running, each from a cited source. The US first, then Europe, then the largest elsewhere. Detail below.
+Done when: every US refinery EIA lists as operable on 1 January 2026 is on the map with its EIA capacity and an operating or idle status from the same report; Europe's refineries from the EEA's industrial register are on the map with their operator, and a capacity only where one is cited; at least 20 of the largest refineries elsewhere are researched one by one with a cited capacity; the news scan and the claims refresh cover refineries under the same review rules; a refinery's page links the pipelines and terminals that serve it; and nothing on the surface shows a capacity or status that can't be sourced.
+
 ### M8 and M9 detail: a self-updating "What's happening"
 
 **Why.** Disruptions are hand-curated, so the hero only changed when someone edited `data/curated/disruptions.json`, and it was ordered by start date, so the newest report on Hormuz (started March) could never lead. Trending lists on Twitter, Bluesky and Reddit work by spotting what is moving against its own normal, grouping mentions into one story, ranking, and only then naming it. This site has its own version of each step: a measured series against its own recent weeks is the spike, an asset is the story mentions group into, and a cited source is the name. The aim is a hero that keeps itself current while never saying something no source or meter supports.
@@ -555,6 +558,72 @@ As built (2026-11-01, `fetch:crude-imports` to `public/data/crude-imports.json`,
 
 **Open for M10** (sources checked 2026-11-01; findings in `TODO-research.md`). Written answers from UNSD (comtrade@un.org) on derived import shares and from JODI (jodiinfo@ief.org) on its figures, both asked 2026-11-01; METI's page and terms, checked by hand; whether JODI's closing stocks match AGSI+'s working gas (Germany's 2026-08 figure, 11.8 bcm, is in range of working gas); Russia's and Iran's storage.
 
+### M11 detail: refineries
+
+**Why.** The map follows crude from fields and through pipelines, terminals and straits, and stops before the place it becomes fuel. A refinery fire or shutdown moves prices and fuel supply as much as a pipeline outage, and the news scan already reads those stories with nowhere to put them. "Where is my oil from?" (M6) ends at a region's refineries without showing one.
+
+**Sources** (checked 2026-11-05; open points in `TODO-research.md`).
+
+| Coverage | Source | What it gives | Terms |
+| --- | --- | --- | --- |
+| United States | EIA Refinery Capacity Report, individual refinery spreadsheet (`eia.gov/petroleum/refinerycapacity`), released each June with capacity as of 1 January | Every operable refinery: company, site, state, PADD, atmospheric distillation capacity in barrels per calendar day, split into operating and idle | US government work, public domain |
+| United States | EIA's refinery shapefile (2021, already in `data/raw/eia/refineries/`); HIFLD Open Petroleum Refineries where newer | Locations | Public domain |
+| Europe | EEA Industrial Reporting database (successor of E-PRTR), activity "mineral oil and gas refineries" (Annex I 1(a)) | Site, operator, location, yearly emissions | CC BY 4.0, credit the European Environment Agency |
+| Elsewhere | Wikidata items for oil refineries | Location, operator, sometimes capacity, always with whatever reference the item gives | CC0 |
+| Elsewhere | OpenStreetMap `industrial=refinery` | Outlines and locations | ODbL: credit, and a published derived database must stay under ODbL |
+| Not used | S&P Platts World Refinery Database, Enerdata | Complete worldwide | Paid; ruled out |
+
+Global Energy Monitor, the source for pipelines and LNG terminals, has no refinery tracker. No open source gives runs or outages for single refineries day to day.
+
+**Rules for the data.**
+
+- A capacity is shown only with its source and date. EIA's figure is barrels per calendar day as of 1 January; a press figure is whatever the article says, with the article. No capacity from memory or from a seller's summary. Without one, the page says "capacity not published".
+- Locations come from a dataset (EIA, HIFLD, EEA, Wikidata, OpenStreetMap), never typed in; `pointApprox` when the point is the site's centre from an outline or a nearby facility, not the plant.
+- EIA's split gives the first status in the US: capacity all idle is `idle`, part idle is `reduced`, none idle is `operating`, as dataset evidence dated 1 January. Newer claims and disruptions override it the same way they do for pipelines.
+- The EEA register says a site is permitted and reporting, not that it's running, so a European refinery's status starts `unknown` until a claim gives one. Its activity code also covers some gas processing sites (Concawe's note on E-PRTR), so rows are kept only when their NACE code is 19.20 (manufacture of refined petroleum products), and the import report lists what was dropped.
+- OpenStreetMap is used to place a refinery when no other dataset does, and the published file says which points came from it. Whether that makes `refineries.json` a derived database under ODbL is checked before the first OpenStreetMap point is published; until then, those refineries wait.
+
+**Phases.**
+
+1. **United States** (`import:refineries-us`): the EIA spreadsheet joined to the shapefile by site and company, with HIFLD for sites the 2021 shapefile doesn't have; refineries closed since then drop out because EIA no longer lists them. 130 operable on 1 January 2026.
+2. **Europe** (`import:refineries-eu`): the EEA register filtered as above, matched to Wikidata where an item exists, for aliases and a cited capacity.
+3. **Elsewhere, curated** (`data/curated/refineries.json`, like oil terminals): researched one by one, starting with the refineries at the end of a mapped pipeline or beside a mapped terminal, then the largest by cited capacity. Each needs a located point and a cited capacity to be added; status starts `unknown` without a claim.
+
+`build:curated` merges the three, curated records winning, as it does for pipelines.
+
+**Data model.** A new asset kind, `refinery`:
+
+```ts
+interface Refinery {
+  id: string;
+  name: string;
+  aliases: string[];
+  country: string;           // ISO 3166-1 alpha-2
+  point: [number, number];
+  pointApprox: boolean;
+  pointSource: 'eia' | 'hifld' | 'eea' | 'wikidata' | 'osm';
+  operator?: string;
+  owners?: Company[];
+  capacity?: { value: number; unit: 'b/cd' | 'b/sd' | 'b/d' | 'Mt/yr'; asOf: string; source: PageRef };
+  padd?: 1 | 2 | 3 | 4 | 5;  // US only, from EIA
+  evidence: Evidence[];      // newest first; EIA's operating/idle split is dataset evidence
+  pipelineIds?: string[];    // mapped pipelines that end at or start from it (by GEM endpoint, within REFINERIES.linkKm)
+  terminalIds?: string[];    // mapped oil terminals that supply it, cited
+}
+```
+
+Disruptions take `assetKind: 'refinery'`. The selection is `refinery/<id>`, the surface `view=refineries`, the layer `refineries` (an entry in `VIEW_LAYERS`), all behind `FEATURES.refineries` until phase 1 is done.
+
+**Surface.** A list of cards like the storage and basin cards: the name with its flag and status, capacity as the figure ("656,000 barrels a day"), operator and country in the notes, largest first, with group by country and by status as Terminals has. On the map, a point sized by capacity (one small size when unknown), coloured by status like the terminals.
+
+**A refinery's page.** The detail layout of every asset: the header, the status card with its evidence, capacity and its source with the date, operator and owners; then disruptions and reports, "In the news", the pipelines and terminals that serve it, and for a US refinery its region's refinery utilization (EIA weekly, by PADD, `pet/pnp/wiup`), labelled as the region's, not the plant's.
+
+**Keeping it current.** The news scan's matching and the claims refresh take refineries as they take terminals, under the review rules of 2026-11-05: a new source on a refinery disruption in effect publishes, a status change waits for a person. The US import runs once a year after EIA's June release; a scheduled check opens an issue when a newer spreadsheet is up. NASA FIRMS fire detections at a refinery's point could later mark a story as a candidate for the scan (as a measured change does, M8), never set a status; that waits on a key and a look at false alarms from flares.
+
+**Links to what's built.** Pipelines whose GEM end point lies within `REFINERIES.linkKm` of a refinery list it under "Ends at", as terminals do. M6's region view lists the region's largest refineries under its refinery runs, each opening its page. Home's figures stay four; refinery disruptions reach "Latest updates" like any other.
+
+**Open for M11.** Whether OpenStreetMap points make the published file a derived database under ODbL; which Wikidata property holds capacity and how often it's referenced; whether the EEA register's INSPIRE access note limits the download; the current HIFLD layer and its date; how far EIA's 2021 shapefile has drifted from the 2026 list.
+
 ## 12. Working notes for Claude Code
 
 - Read this spec fully before starting. Build milestone by milestone and stop for review at the end of each.
@@ -572,4 +641,5 @@ As built (2026-11-01, `fetch:crude-imports` to `public/data/crude-imports.json`,
 - M7 decided: the region view opens on gasoline; distillate is labelled "Diesel and heating oil".
 - M9 decided 2026-10-31: GDELT and Google News RSS, falling back to GDELT alone when Google News fails; every 12 hours; a new source from a trusted domain on a disruption in effect is committed without review and marked as unreviewed on the page.
 - M10 decided 2026-11-01: storage and fuel origins return once they reach past the EU and the US, on the sources in M10; fuel origins becomes country-first with the US regional view kept underneath; the phone bar gets a More slot rather than an off-canvas menu.
+- M11 proposed 2026-11-05: refineries in three phases (US from EIA, Europe from the EEA register, the largest elsewhere curated), capacity only when cited, behind `FEATURES.refineries` until the US is done.
 - Later: story placement beyond assets (company, then place, then country), and matching companies to assets via GEM's ownership tracker.
