@@ -1,13 +1,15 @@
 {
-  "recordedAt": "2026-11-04T20:08:50.429Z",
+  "recordedAt": "2026-11-05T01:45:07.205Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 6,
-      "failed": 13,
-      "articles": 0,
+      "requests": 23,
+      "failed": 9,
+      "articles": 1,
       "errors": [
         "fetch failed",
+        "fetch failed",
+        "answered 429",
         "answered 429",
         "answered 429"
       ]
@@ -15,55 +17,55 @@
     "google-news": {
       "requests": 13,
       "failed": 0,
-      "articles": 275,
+      "articles": 320,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-04"
+    "lastOk": "2026-11-05"
   },
-  "stories": 17,
-  "candidates": 5,
+  "stories": 15,
+  "candidates": 6,
   "usage": {
-    "input": 16384,
-    "output": 1237,
+    "input": 29074,
+    "output": 2933,
     "searches": 1
   },
-  "estimatedCostUsd": 0.012,
+  "estimatedCostUsd": 0.014,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "rejected",
-      "detail": "quote not found on the page",
+      "outcome": "review",
+      "detail": "rivieramm.com isn't on the trusted list",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.latintimes.com/us-strikes-iran-qeshm-island-retaliation-600888",
-        "publisher": "Latin Times",
-        "quote": "Limited U.S. strikes on Iran's Qeshm Island have intensified an eight-month conflict, as Tehran threatens broader retaliation, the Strait of Hormuz remains closed, and diplomacy continues.",
+        "url": "https://www.rivieramm.com/news-content-hub/fresh-hormuz-attacks-leave-seafarer-dead-and-several-vessels-damaged-90476",
+        "publisher": "Riviera",
+        "quote": "The Iranian navy has claimed, without independent verification, that multiple 'offending' tankers hit mines in the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": ""
       },
       "headlines": [
-        "- 2026-11-04 · The Media Line: Iran Rejects US Response to Hormuz Demands as Qatar Pushes for Deal",
-        "- 2026-11-04 · IranWire: Iran Exempts India, China, Iraq, and Qatar from Strait of Hormuz Restrictions",
-        "- 2026-11-04 · Anadolu Ajansı: FACTBOX – Why is Iran’s Qeshm Island a US target?",
-        "- 2026-11-04 · Bloomberg: UAE Mulls Third Crude Oil Pipeline to Avoid Strait of Hormuz",
-        "- 2026-11-04 · Energy Connects: Energy infrastructure resilience moves beyond efficiency as Hormuz crisis exposes vulnerabilities",
-        "- 2026-11-04 · Global Issues.org: U.S. Strikes Iranian Targets Along Strait of Hormuz Ahead of Midterm Elections as Diplomatic Talks Stall",
-        "- 2026-11-04 · Natural Gas Intelligence: Could Democrats Unlock Hormuz After Midterm Rout? LNG Markets Watching Washington",
-        "- 2026-11-04 · StoneX: How Gulf Port Capacity Limits Hormuz Fertilizer Supply Recovery",
-        "- 2026-11-04 · Anadolu Ajansı: UAE mulls 3rd oil pipeline to bypass Strait of Hormuz: Report",
-        "- 2026-11-04 · The Times of India: Iran exempts Indian vessels from Hormuz curbs, citing medicine imports",
-        "- 2026-11-04 · WANA News Agency: Iran’s Message to USA: Hormuz Will Stay Closed",
-        "- 2026-11-04 · Latin Times: U.S. strikes Qeshm Island after missile fire as Iran warns its response could have \"no geographical limits\"",
-        "- 2026-11-04 · Lloyd's List: Another day of attacks hits ships from Hormuz to Black Sea",
-        "- 2026-11-04 · Natural Gas Intelligence: Europe Faces Lowest Storage Levels Since 2013 as Hormuz Crisis Cuts Global LNG Supply",
-        "- 2026-11-04 · The Indian Express: Indian ships exempt from Hormuz curbs: What Iran wants in return"
+        "- 2026-11-05 · Centre for Research on Energy and Clean Air: China weathered the Hormuz shock. Clean energy can make that resilience last.",
+        "- 2026-11-05 · Crude Oil Prices Today | OilPrice.com: Africa's LNG Exports Set to Soar 175% as Buyers Flee Hormuz",
+        "- 2026-11-05 · Riviera Maritime Media: News Content Hub - Fresh Hormuz attacks leave seafarer dead, one vessel sunk and several damaged",
+        "- 2026-11-05 · Lloyd's List: A rare glimpse inside the high-risk, high-reward Hormuz trade",
+        "- 2026-11-05 · Korea JoongAng Daily: Korea to expand antipiracy mission closer to Hormuz, send more naval assets",
+        "- 2026-11-05 · CGTN: Seoul to deploy military mission to help keep Hormuz open: defence ministry",
+        "- 2026-11-05 · UA.NEWS: Seoul plans to expand mission to waters near the Strait of Hormuz — Korea Herald",
+        "- 2026-11-04 · Crude Oil Prices Today | OilPrice.com: Qatar Becomes Largest Buyer of U.S. LNG Amid Hormuz Crisis",
+        "- 2026-11-04 · Briefs Finance: UAE mulls third oil pipeline to avoid Hormuz",
+        "- 2026-11-04 · Mehr News Agency: US faces united front in Hormuz, Bab al-Mandab: Gen. Ghaani",
+        "- 2026-11-04 · investingLive: Citi targets $5,000 gold as a Hormuz reopening could flip the Fed from hikes to cuts",
+        "- 2026-11-04 · Anadolu Ajansı: Iran claims it downed US drone above Qeshm Island in Strait of Hormuz",
+        "- 2026-11-04 · investingLive: ICYMI: ADNOC denies report of third Hormuz bypass pipeline that could open to other producers",
+        "- 2026-11-04 · NewsCord: Gen. Ghaani Warns US Against Miscalculating Resistance Front Unity in Strait of Hormuz, Bab el-Mandeb",
+        "- 2026-11-04 · Pipeline and Gas Journal: Aramco begins expanding 7-MMbpd East-West pipeline that bypasses Strait of Hormuz"
       ]
     },
     {
@@ -72,28 +74,17 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-04 · Construction Review: Aramco Starts East-West Pipeline Expansion to 10 Million bpd to Bypass Strait of Hormuz",
-        "- 2026-11-04 · Sunsirs: Saudi Aramco Initiates Preliminary Design for East-West Pipeline, Bypassing the Strait of Hormuz",
-        "- 2026-11-03 · Offshore Engineer Magazine: Aramco Targets Hormuz Bypass with East-West Pipeline Expansion",
-        "- 2026-11-03 · BOE Report: Aramco exploring expansion of East-West Pipeline that avoids Hormuz"
+        "- 2026-11-04 · Pipeline and Gas Journal: Aramco begins expanding 7-MMbpd East-West pipeline that bypasses Strait of Hormuz"
       ]
     },
     {
-      "ref": "terminal/fujairah",
+      "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-04 · The National: Earthquake recorded off Fujairah coast as UAE monitors seismic activity",
-        "- 2026-11-04 · https://www.engine.online/: Fujairah’s LSMGO premium over Singapore widens by around $180/mt since September",
-        "- 2026-11-04 · Gulf Today: 2.3-magnitude tremor recorded off Fujairah coast, no impact on the country",
-        "- 2026-11-04 · Emirates 24|7: NCM records 2.3-magnitude earthquake on the Fujairah coast",
-        "- 2026-11-04 · Gulf News: UAE records 2.3-magnitude earthquake off Fujairah coast",
-        "- 2026-11-04 · ARN News Centre: H.H. Sheikh Mohammed praises Fujairah entity for topping government ranking",
-        "- 2026-11-04 · Khaleej Times: Watch: Hail, heavy rain lash several parts of Fujairah as UAE weather shifts",
-        "- 2026-11-04 · curlytales.com: UAE Government Service Ratings Announced; Fujairah Centre Makes History With 7 Stars",
-        "- 2026-11-04 · Khaleej Times: UAE records 2.3-magnitude quake off Fujairah coast",
-        "- 2026-11-04 · Gulf News: Rain sweeps across Fujairah as NCM forecasts more showers in UAE"
+        "- 2026-11-04 · Mehr News Agency: US faces united front in Hormuz, Bab al-Mandab: Gen. Ghaani",
+        "- 2026-11-04 · NewsCord: Gen. Ghaani Warns US Against Miscalculating Resistance Front Unity in Strait of Hormuz, Bab el-Mandeb"
       ]
     },
     {
@@ -102,7 +93,16 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-04 · Rediff MoneyWiz: Petronet LNG Faces Rs 625 Cr Claims Amid Qatar LNG Disruption"
+        "- 2026-11-02 · The Siasat Daily: Gulf countries condemn attack on Qatar LNG tanker"
+      ]
+    },
+    {
+      "ref": "pipeline/nord-stream-1",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-04 · upday News: Nord Stream Gas Fountains Would Have Sunk Small Vessels, Expert Tells Trial"
       ]
     },
     {
@@ -111,7 +111,8 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-10-22 · KRIS 6 News Corpus Christi: EPA chief tours Port of Corpus Christi, calls it vital to the national economy"
+        "- 2026-10-29 · KRIS 6 News Corpus Christi: Port of Corpus Christi leaders tout expansion, diversification during State of the Port",
+        "- 2026-10-28 · Corpus Christi Caller-Times: Trump headlines rally at Port of Corpus Christi. Here's what he said"
       ]
     }
   ]
