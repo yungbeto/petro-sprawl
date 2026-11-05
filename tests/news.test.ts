@@ -266,9 +266,9 @@ describe('checking drafts', () => {
     expect(disruptionReview(draft({ action: 'end_disruption', endedAt: '2026-10-28' }), fire, ['reuters.com'], story)).toBe('ends a disruption');
   });
 
-  it('commits only a trusted source on a disruption in effect with the same cause', () => {
+  it('commits a source from any domain on a disruption in effect with the same cause', () => {
     expect(disruptionReview(draft({}), fire, ['reuters.com'])).toBeNull();
-    expect(disruptionReview(draft({ url: 'https://smallsite.com/x' }), fire, ['reuters.com'])).toBe("smallsite.com isn't on the trusted list");
+    expect(disruptionReview(draft({ url: 'https://smallsite.com/x' }), fire, ['reuters.com'])).toBeNull();
     expect(disruptionReview(draft({ cause: 'conflict' }), fire, ['reuters.com'])).toBe('cause changes from other to conflict');
     expect(disruptionReview(draft({ action: 'new_disruption', startedAt: '2026-10-27' }), undefined, ['reuters.com'])).toBe('new disruption reported by 0 publishers');
     expect(disruptionReview(draft({ action: 'end_disruption' }), fire, ['reuters.com'])).toBe('ends a disruption');

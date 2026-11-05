@@ -58,6 +58,12 @@ export function Sparkline({ points, references, unit, label, lineLabel = 'Daily'
 
   return (
     <figure className={`sparkline${band ? ` sparkline--${band}` : ''}`}>
+      {/* The scale over the chart, where a y axis would end, so the dates under it have the line to themselves. */}
+      <p className="sparkline__scale mono">
+        max {format(max / 1.05)}
+        {/^[\s/%]/.test(unit) ? '' : ' '}
+        {unit}
+      </p>
       <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} preserveAspectRatio="none" role="img" aria-label={label}>
         <AreaFill id={gradient} line={path} width={WIDTH} height={HEIGHT} />
         {references.map((r) => (
@@ -74,9 +80,6 @@ export function Sparkline({ points, references, unit, label, lineLabel = 'Daily'
       </svg>
       <figcaption className="sparkline__caption mono">
         <span>{first.date}</span>
-        <span>
-          max {format(max / 1.05)} {unit}
-        </span>
         <span>{last.date}</span>
       </figcaption>
       <ul className="sparkline__legend">

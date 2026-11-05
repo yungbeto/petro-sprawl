@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   addEvidence,
   assetTerms,
+  claimUnreviewed,
   htmlToText,
   isTrusted,
   needsReview,
@@ -130,26 +131,30 @@ describe('verifyDraft for a first claim', () => {
   });
 
   it('always sends a first claim to review', () => {
-    expect(needsReview(draft(), null, { trustedDomains: ['reuters.com'], terms: ['CPC'] })).toBe('first claim for this asset');
+    expect(needsReview(draft(), null, { terms: ['CPC'] })).toBe('first claim for this asset');
   });
 });
 
 describe('needsReview', () => {
-  const trusted = { trustedDomains: ['reuters.com', 'gov'], terms: ['Caspian Pipeline Consortium', 'loading plan'] };
-  it('lets confirmations from trusted domains through when the quote names the asset', () => {
-    expect(needsReview(draft(), claim('operating', '2026-09-30'), trusted)).toBeNull();
-    expect(needsReview(draft(), claim('operating', '2026-09-30'), { ...trusted, terms: ['Blue Stream'] })).toBe(
-      "the quote doesn't name the asset",
-    );
-    expect(isTrusted('https://www.eia.gov/todayinenergy/', trusted.trustedDomains)).toBe(true);
-    expect(isTrusted('https://notreuters.com/x', trusted.trustedDomains)).toBe(false);
+  const terms = { terms: ['Caspian Pipeline Consortium', 'loading plan'] };
+  const trustedDomains = ['reuters.com', 'gov'];
+  it('lets confirmations through when the quote names the asset, from any domain', () => {
+    expect(needsReview(draft(), claim('operating', '2026-09-30'), terms)).toBeNull();
+    expect(needsReview(draft({ url: 'https://example.com/a' }), claim('operating', '2026-09-30'), terms)).toBeNull();
+    expect(needsReview(draft(), claim('operating', '2026-09-30'), { terms: ['Blue Stream'] })).toBe("the quote doesn't name the asset");
+    expect(isTrusted('https://www.eia.gov/todayinenergy/', trustedDomains)).toBe(true);
+    expect(isTrusted('https://notreuters.com/x', trustedDomains)).toBe(false);
   });
 
-  it('sends status changes and unfamiliar sites to review', () => {
-    expect(needsReview(draft(), claim('idle', '2026-09-30'), trusted)).toBe('status changes from idle to operating');
-    expect(needsReview(draft({ url: 'https://example.com/a' }), claim('operating', '2026-09-30'), trusted)).toBe(
-      "example.com isn't on the trusted list",
-    );
+  it('sends status changes to review', () => {
+    expect(needsReview(draft(), claim('idle', '2026-09-30'), terms)).toBe('status changes from idle to operating');
+  });
+
+  it('marks a confirmation from a domain off the trusted list as unreviewed', () => {
+    expect(claimUnreviewed(draft(), trustedDomains)).toBe(false);
+    expect(claimUnreviewed(draft({ url: 'https://example.com/a' }), trustedDomains)).toBe(true);
+    expect(toEvidence(draft(), '2026-10-29', true).unreviewed).toBe(true);
+    expect(toEvidence(draft(), '2026-10-29')).not.toHaveProperty('unreviewed');
   });
 });
 

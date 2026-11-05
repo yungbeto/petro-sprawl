@@ -1,8 +1,9 @@
 name: Claims
 
 # Weekly claims refresh (jobs/refresh-claims.ts). Claude looks for newer dated sources for cited claims
-# older than 30 days; every draft is checked against the page itself. Confirmations from trusted
-# domains are committed to main. Status changes and other drafts open a pull request for review.
+# older than 30 days; every draft is checked against the page itself. Confirmations whose quote names
+# the asset are committed to main (marked unreviewed when the domain is off the trusted list). Status
+# changes, first claims and quotes that don't name the asset go to one rolling pull request.
 
 on:
   schedule:
@@ -77,25 +78,46 @@ jobs:
           git pull --rebase --autostash
           git push
 
-      - name: Open a pull request for drafts that need review
+      # One rolling pull request (claims/review), rebuilt from main each run with the drafts still waiting on
+      # it plus this run's (jobs/lib/review.ts); it closes itself when none are left.
+      - name: Update the review pull request
         if: steps.recent.outputs.skip != 'true'
         run: |
+          branch="claims/review"
+          pending="$RUNNER_TEMP/pending.json"
+          echo '[]' > "$pending"
+          pr=$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$pr" ]; then
+            git fetch origin "$branch"
+            git show "origin/$branch:data/reports/claim-drafts.json" > "$pending" || echo '[]' > "$pending"
+          fi
+          npm run merge:review-drafts -- claims "$pending"
           if [ "$(jq length data/reports/claim-drafts.json)" -eq 0 ]; then
+            if [ -n "$pr" ]; then
+              gh pr close "$pr" --delete-branch --comment "Nothing left to review: main already cites these sources, or the assets are gone."
+            fi
             echo "No drafts need review"
             exit 0
           fi
-          branch="claims/$(date -u +%Y-%m-%d)"
-          git checkout -b "$branch"
+          git checkout -B "$branch"
           npm run apply:claim-drafts
           npm run build:curated
+          # claim-drafts.json is gitignored on main; on this branch it's what the next run carries over.
           git add data/curated public/data data/reports/dedup.json
+          git add -f data/reports/claim-drafts.json
           git commit -m "Claim drafts for review $(date -u +%Y-%m-%d)"
-          git push -u origin "$branch"
+          git push --force origin "$branch"
           {
             echo "Claims drafted by the weekly refresh that need a person to check them. Each passed the automatic checks: the quote is on the page, the date comes from the page, and the claim is newer than the one it replaces."
             echo
             jq -r '.[] | "- **\(.ref)**: \(.evidence.status), \(.evidence.observedAt). \(.evidence.statement) [Source](\(.evidence.url))\n  - Needs review because \(.reason)"' data/reports/claim-drafts.json
             echo
-            echo "Every outcome, including rejected drafts, is in the log of the workflow run that opened this pull request."
+            echo "This pull request is rebuilt from main on every refresh, keeping these drafts and adding new ones. Merge it to publish them all, or close it to drop them all. To drop one, delete it from data/reports/claim-drafts.json on this branch; the next refresh rebuilds the rest (other edits on the branch are replaced)."
+            echo
+            echo "Every outcome, including rejected drafts, is in the log of the workflow run that last updated this pull request."
           } > pr-body.md
-          gh pr create --base main --head "$branch" --title "Claim drafts for review $(date -u +%Y-%m-%d)" --body-file pr-body.md
+          if [ -n "$pr" ]; then
+            gh pr edit "$pr" --body-file pr-body.md
+          else
+            gh pr create --base main --head "$branch" --title "Claim drafts for review" --body-file pr-body.md
+          fi

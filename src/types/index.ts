@@ -21,6 +21,8 @@ export interface Evidence {
   url?: string;
   observedAt: string;
   recordedAt: string;
+  /** Committed by the claims refresh without a person checking it (its source is off the trusted list); delete to mark reviewed. */
+  unreviewed?: true;
 }
 
 export interface Pipeline {

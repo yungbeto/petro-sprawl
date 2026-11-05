@@ -1,22 +1,23 @@
 {
-  "recordedAt": "2026-11-05T20:18:04.177Z",
+  "recordedAt": "2026-11-05T21:56:37.295Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 11,
-      "failed": 11,
-      "articles": 45,
+      "requests": 19,
+      "failed": 9,
+      "articles": 46,
       "errors": [
-        "fetch failed",
         "answered 429",
         "fetch failed",
+        "fetch failed",
+        "answered 429",
         "answered 429"
       ]
     },
     "google-news": {
       "requests": 13,
       "failed": 0,
-      "articles": 310,
+      "articles": 312,
       "errors": []
     }
   },
@@ -25,66 +26,47 @@
     "lastOk": "2026-11-05"
   },
   "stories": 16,
-  "candidates": 8,
+  "candidates": 3,
   "usage": {
-    "input": 67607,
-    "output": 3409,
-    "searches": 3
+    "input": 22388,
+    "output": 2219,
+    "searches": 1
   },
-  "estimatedCostUsd": 0.038,
+  "estimatedCostUsd": 0.013,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "review",
-      "detail": "arabnews.com isn't on the trusted list",
+      "outcome": "committed",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.arabnews.com/middle-east/iran-says-five-tankers-and-tugboat-caught-fire-in-hormuz-3009888",
-        "publisher": "Arab News",
-        "quote": "Five oil tankers and a tugboat caught fire in the Strait of Hormuz, Iran's Revolutionary Guards and army said in separate statements, according to local media on Thursday.",
+        "url": "https://abcnews.com/International/us-carries-defensive-airstrikes-irans-qeshm-island-officials/story?id=137792518",
+        "publisher": "ABC News",
+        "quote": "The United States carried out defensive strikes on Iran's Qeshm Island in the Strait of Hormuz on Monday",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": ""
       },
       "headlines": [
-        "- 2026-11-05 · Reuters: Tankers hit in Hormuz as Iran keeps up pressure after US vote",
-        "- 2026-11-05 · Al Jazeera: Iran says tankers struck in Hormuz amid fears of new US attack",
-        "- 2026-11-05 · The New Arab: Tankers burn in Hormuz as fears grow of new US attack on Iran",
-        "- 2026-11-05 · The American Conservative: Iran War Day 251: Ship Attacks Continue in Hormuz",
-        "- 2026-11-05 · Oklahoma Energy Today: Energy briefs–burning tankers in the Strait of Hormuz",
-        "- 2026-11-05 · Algemeiner.com: Tankers Hit in Hormuz as Iran Keeps Up Pressure After US Vote",
-        "- 2026-11-05 · Tomorrow's Affairs: Seoul sends ships to Hormuz, but not to Trump’s war",
-        "- 2026-11-05 · The New Arab: Two oil tankers catch fire in Hormuz as S Korea plans operation",
-        "- 2026-11-05 · Caspian Post: October Sees Surge in Attacks on Ships in Strait of Hormuz",
-        "- 2026-11-05 · Arab News: Iran says five tankers and tugboat caught fire in Hormuz",
-        "- 2026-11-05 · Caspian Post: Oil Tanker Catches Fire After Hitting Naval Mine in Strait of Hormuz",
-        "- 2026-11-05 · DW.com: Shipping crews caught in the crossfire of the Hormuz conflict",
-        "- 2026-11-05 · Crude Oil Prices Today | OilPrice.com: Iran Reports More Tanker Fires in Strait of Hormuz",
-        "- 2026-11-05 · NewsCord: Strait Of Hormuz Tensions Rise After U.S. Midterm Elections, Trump Netanyahu Discuss Iran: 5 outlets compared",
-        "- 2026-11-05 · Latest news from Azerbaijan: Iran says five tankers hit by mines in Strait of Hormuz"
+        "- 2026-11-05 · The Maritime Executive: Iran Turns Down Putin's Offer to Mediate Hormuz Conflict",
+        "- 2026-11-05 · Middle East Forum: The Doha Trap: How Iran Is Using Hormuz to Extort the West",
+        "- 2026-11-05 · Anadolu Ajansı: Iran claims it downed 2 US reconnaissance drones over Qeshm Island",
+        "- 2026-11-05 · WANA News Agency: Rezaei: Strait of Hormuz Will Remain Closed and No Talks with US Will Take Place Until Iran’s Seven Conditions Are Met",
+        "- 2026-11-05 · WANA News Agency: IRGC Says Fifth and Sixth US MQM-170 Reconnaissance Drones Downed Over Qeshm Island",
+        "- 2026-11-05 · Latest news from Azerbaijan: IRGC reports intercepting two US spy drones over Qeshm Island",
+        "- 2026-11-05 · A News: Iranian, Omani foreign ministers discuss regional developments, diplomacy amid Strait of Hormuz tensions",
+        "- 2026-11-04 · ABC News - Breaking News, Latest News and Videos: US carries out defensive airstrikes on Iran's Qeshm Island: Officials"
       ]
     },
     {
       "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-05 · EnergyNow: INSIGHT: Why is the Bab el-Mandeb Strait so Important?",
-        "- 2026-11-05 · The Jerusalem Post: Yemen targets Houthi finances with new customs and import rules",
-        "- 2026-11-04 · Newsmakers: Saudi Arabia Under Fire: Houthis Target Oil Refinery, Defence Ministry as US Orders Diplomatic Evacuation"
-      ]
-    },
-    {
-      "ref": "pipeline/nord-stream-1",
-      "kind": "story",
-      "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-05 · Mezha.net: Germany’s Federal Network Agency: Nord Stream explosions had little impact on gas supplies",
-        "- 2026-11-05 · LIGA.net: Nord Stream blasts had almost no impact on gas supplies to Germany – regulator tells court"
+        "- 2026-11-04 · globaloilshock.com: Bab el-Mandeb Strait Explained: Oil and Trade Through the Red Sea Gateway"
       ]
     },
     {
@@ -93,50 +75,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-05 · INSIGHT EU MONITORING: EU Court of Justice upholds dismissal of Nord Stream 2 challenge to EU gas market rules",
-        "- 2026-11-05 · MLex: Nord Stream 2 loses final EU court appeal over gas pipeline exemptions",
-        "- 2026-11-05 · UA.NEWS: EU Court of Justice dismisses Nord Stream 2 appeal over gas directive — Interia",
-        "- 2026-11-05 · Mezha.net: EU Court upholds dismissal of Nord Stream 2 AG’s lawsuit over gas directive",
-        "- 2026-11-05 · Demócrata: The CJEU confirms that Nord Stream 2 must be brought into line with European gas market regulations"
-      ]
-    },
-    {
-      "ref": "terminal/corpus-christi",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-03 · MarketScale: Port of Corpus Christi weighs a DP World container terminal and 2,000-acre hub"
-      ]
-    },
-    {
-      "ref": "pipeline/druzhba-north",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-05 · marketscreener.com: Kazakhstan asks Russia to resume oil shipments via Druzhba and Ust-Luga, Interfax says",
-        "- 2026-11-05 · صوت الإمارات: Kazakhstan demands that Russia resume oil shipments via the Druzhba pipeline and the port of Ust-Luga"
-      ]
-    },
-    {
-      "ref": "pipeline/druzhba-south",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-05 · marketscreener.com: Kazakhstan asks Russia to resume oil shipments via Druzhba and Ust-Luga, Interfax says",
-        "- 2026-11-05 · صوت الإمارات: Kazakhstan demands that Russia resume oil shipments via the Druzhba pipeline and the port of Ust-Luga"
-      ]
-    },
-    {
-      "ref": "terminal/ust-luga",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-05 · marketscreener.com: Kazakhstan asks Russia to resume oil shipments via Druzhba and Ust-Luga, Interfax says",
-        "- 2026-11-05 · صوت الإمارات: Kazakhstan demands that Russia resume oil shipments via the Druzhba pipeline and the port of Ust-Luga"
+        "- 2026-11-05 · INSIGHT EU MONITORING: EU Court of Justice upholds dismissal of Nord Stream 2 challenge to EU gas market rules"
       ]
     }
   ]

@@ -4,7 +4,7 @@ import type { Selection } from '../app/urlState';
 import { CRUDE_IMPORTS, REGION_FUEL_LABELS, type RegionFuel } from '../lib/config';
 import { countryOrigins, crudeImportList, importPeriod, topSuppliers, topSuppliersLine } from '../lib/crudeImports';
 import { originsByRegion, type Datasets } from '../lib/data';
-import { formatCountry, formatShare } from '../lib/format';
+import { flagEmoji, formatCountry, formatShare } from '../lib/format';
 import { CrudeImportsSource, SourceLink } from './details';
 import { FuelTabs } from './FuelTabs';
 import { Info } from './Info';
@@ -53,7 +53,10 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
             {countries.map(({ record, rows }) => (
               <li key={record.id}>
                 <button type="button" className="view-row" onClick={() => onSelect({ kind: 'country', id: record.id.toLowerCase() })}>
-                  <span className="view-row__name">{formatCountry(record.id)}</span>
+                  <span className="stat-card__name">
+                    {flagEmoji(record.id) && <span aria-hidden="true">{flagEmoji(record.id)} </span>}
+                    {formatCountry(record.id)}
+                  </span>
                   <span className="origin-tops">
                     {rows.slice(0, TOP).map((row) => (
                       <span key={row.key} className="origin-tops__row">

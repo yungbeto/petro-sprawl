@@ -8,6 +8,13 @@
     "summary": "Days after US and Israeli strikes on Iran began on 2026-02-28, Iran declared the strait closed and traffic largely halted. Ships from states Iran calls non-hostile may pass through Iranian waters, reportedly for a toll, and in May Iran set up a Persian Gulf Strait Authority to run transits. The Commons Library cites WTO estimates of a 95% drop in crude carriers and 99% in LNG carriers from 28 February to 1 June. CRS reports a US blockade of Iranian ports from 13 April, a US-Iran memorandum on 17 June that briefly lifted crossings, and renewed attacks in July after which the US said the memorandum no longer applied. Start month is when PortWatch tanker transits fell, from 43.5 a day in February to 0.9 in March.",
     "sources": [
       {
+        "publisher": "ABC News",
+        "title": "US carries out defensive airstrikes on Iran's Qeshm Island: Officials",
+        "url": "https://abcnews.com/International/us-carries-defensive-airstrikes-irans-qeshm-island-officials/story?id=137792518",
+        "publishedAt": "2026-11-03",
+        "unreviewed": true
+      },
+      {
         "publisher": "Arab News",
         "title": "Iran says five tankers and tugboat caught fire in Hormuz",
         "url": "https://www.arabnews.com/middle-east/iran-says-five-tankers-and-tugboat-caught-fire-in-hormuz-3009888",
@@ -26,6 +33,20 @@
         "publishedAt": "2026-11-04"
       },
       {
+        "publisher": "Riviera",
+        "title": "Fresh Hormuz attacks leave seafarer dead, one vessel sunk and several damaged",
+        "url": "https://www.rivieramm.com/news-content-hub/fresh-hormuz-attacks-leave-seafarer-dead-and-several-vessels-damaged-90476",
+        "publishedAt": "2026-11-04",
+        "unreviewed": true
+      },
+      {
+        "publisher": "Stars and Stripes",
+        "title": "US quietly strikes Iranian island in Strait of Hormuz as Trump weighs next steps",
+        "url": "https://www.stripes.com/theaters/middle_east/2026-11-03/us-strikes-iran-qeshm-island-hormuz-23348317.html",
+        "publishedAt": "2026-11-03",
+        "unreviewed": true
+      },
+      {
         "publisher": "PBS",
         "title": "U.S. strikes Iranian targets in Strait of Hormuz, U.S. official tells AP",
         "url": "https://www.pbs.org/newshour/world/u-s-strikes-iranian-targets-in-strait-of-hormuz-u-s-official-tells-ap",
@@ -35,6 +56,13 @@
         "publisher": "Al Jazeera",
         "title": "Oman rescues 25 from burning oil tanker in Strait of Hormuz",
         "url": "https://www.aljazeera.com/news/2026/10/30/oman-rescues-25-from-burning-oil-tanker-in-strait-of-hormuz",
+        "publishedAt": "2026-10-30",
+        "unreviewed": true
+      },
+      {
+        "publisher": "gCaptain",
+        "title": "Tanker Hit by Limpet Mines in Strait of Hormuz as New Threat to Shipping Emerges",
+        "url": "https://gcaptain.com/tanker-hit-by-limpet-mines-in-strait-of-hormuz-as-new-threat-to-shipping-emerges/",
         "publishedAt": "2026-10-30",
         "unreviewed": true
       },

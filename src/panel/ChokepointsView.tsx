@@ -46,33 +46,57 @@ export function ChokepointsView({ data, onSelect }: { data: Datasets; onSelect: 
 }
 
 /**
- * One strait: its name and band, the share of its five-year average as the row's figure, the 7-day
- * average over the last 90 days against that average (dashed), and the figures behind the share.
+ * One strait, as the storage and basin cards are laid out: the name (with its band) over the figure, the
+ * share of its five-year average; the 7-day average over the last 90 days against that average (dashed)
+ * where their bar sits; then the figures behind the share and, in small type, the period and source.
  */
 function ChokepointRow({ row, onSelect }: { row: ChokepointViewRow; onSelect: (selection: Selection) => void }) {
   const { transits, cargo } = row;
+  const index = transits?.indexFiveYear ?? null;
+  const share = index !== null ? formatIndexShare(index) : null;
   return (
-    <button type="button" className="view-row chokepoint-row" onClick={() => onSelect(row.selection)}>
-      <span className="view-row__head">
-        <span className="chokepoint-row__title">
-          <span className="view-row__name">{row.name}</span>
-          {transits && <Band band={transits.band} />}
+    <button type="button" className="view-row stat-card chokepoint-row" onClick={() => onSelect(row.selection)}>
+      <span className="stat-card__head">
+        <span className="chokepoint-row__name">
+          <span className="stat-card__name">{row.name}</span>
+          {transits?.band && <Band band={transits.band} />}
         </span>
-        {transits?.indexFiveYear != null && (
-          <span className="view-row__figure">
-            <span className="view-row__value">{formatIndexShare(transits.indexFiveYear)}</span>
-            <span className="view-row__unit">of five-year</span>
-          </span>
-        )}
+        <span className="stat-card__figure">
+          {share !== null ? (
+            <>
+              <span className="stat-card__value">
+                {/* The percent sign is set smaller than its number, as on the storage cards. */}
+                {share.endsWith('%') ? (
+                  <>
+                    {share.slice(0, -1)}
+                    <span className="stat-card__percent">%</span>
+                  </>
+                ) : (
+                  share
+                )}
+              </span>
+              <span className="stat-card__unit">of five-year average</span>
+            </>
+          ) : (
+            <>
+              <span className="stat-card__value">{formatMbd(row.eiaReferenceMbd)}</span>
+              <span className="stat-card__unit">EIA reference volume</span>
+            </>
+          )}
+        </span>
       </span>
       {transits ? (
-        <>
-          <MiniSparkline
-            points={transits.trend}
-            reference={transits.fiveYear?.mean ?? null}
-            label={`Tanker transits at ${row.name}, 7-day average over the last 90 days, against the five-year average`}
-            className={transits.band ? `band--${transits.band}` : undefined}
-          />
+        <MiniSparkline
+          points={transits.trend}
+          reference={transits.fiveYear?.mean ?? null}
+          label={`Tanker transits at ${row.name}, 7-day average over the last 90 days, against the five-year average`}
+          className={transits.band ? `band--${transits.band}` : undefined}
+        />
+      ) : (
+        <span className="stat-card__rule" aria-hidden="true" />
+      )}
+      <span className="stat-card__details">
+        {transits ? (
           <span className="view-row__facts">
             <span>
               <strong>{transits.recent ? formatNumber(transits.recent.mean, 1) : 'n/a'}</strong> tankers a day
@@ -86,14 +110,20 @@ function ChokepointRow({ row, onSelect }: { row: ChokepointViewRow; onSelect: (s
               </span>
             )}
           </span>
-        </>
-      ) : (
-        <span className="view-row__facts">
-          <span>
-            No transit data. EIA reference volume <strong>{formatMbd(row.eiaReferenceMbd)}</strong>
+        ) : (
+          <span className="view-row__facts">
+            <span>No transit data</span>
           </span>
+        )}
+        <span className="view-row__facts stat-card__notes">
+          {transits && (
+            <span>
+              7-day average, to <span className="mono">{transits.latestDate}</span>
+            </span>
+          )}
+          <span>{transits ? 'IMF PortWatch' : 'EIA'}</span>
         </span>
-      )}
+      </span>
     </button>
   );
 }
