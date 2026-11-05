@@ -35,6 +35,14 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "Reuters reports that at least five supertankers carrying 10 million barrels of Saudi oil loaded at Ras Tanura have exited the Strait of Hormuz and Saudi Aramco is ramping up loadings from the terminal (Reuters).",
+        "url": "https://boereport.com/2026/07/02/saudi-aramco-ramps-up-exports-from-ras-tanura-switches-to-spot-sales-sources-say/",
+        "observedAt": "2026-07-02",
+        "recordedAt": "2026-11-05"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "Tankers loaded at Ras Tanura in late June, the first to use the terminal since early March, as Saudi Arabia restarted exports from its Gulf ports (gCaptain, citing Bloomberg).",
         "url": "https://gcaptain.com/saudi-arabia-is-ramping-up-oil-exports-as-gulf-ports-restart/",
         "observedAt": "2026-06-26",
@@ -133,6 +141,14 @@
       "hormuz"
     ],
     "evidence": [
+      {
+        "status": "unknown",
+        "sourceType": "press",
+        "statement": "Satellite detection found no dark tankers at either of Kharg Island's loading terminals from September 18 to November 1, and the article reports visible crude loadings there have halted, though crude may be going into onshore tanks (MarineLink).",
+        "url": "https://www.marinelink.com/news/visible-crude-loadings-halt-irans-empty-544152",
+        "observedAt": "2026-11-01",
+        "recordedAt": "2026-11-05"
+      },
       {
         "status": "operating",
         "sourceType": "press",
