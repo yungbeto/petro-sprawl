@@ -61,6 +61,8 @@ export const newsHeadlineSchema = z.object({
   publishedAt: isoDate,
   feed: z.enum(['gdelt', 'google-news']),
   refs: z.array(z.string().regex(/^(pipeline|chokepoint|lng|terminal)\/.+/)).min(1),
+  site: z.string().regex(/^[a-z0-9-]+(\.[a-z0-9-]+)+$/).optional(),
+  icon: z.string().regex(/^favicons\/[a-z0-9.-]+\.(png|ico|jpg|gif|webp)$/).optional(),
 });
 
 export const sourceRefSchema = z.object({

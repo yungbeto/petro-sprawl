@@ -37,6 +37,8 @@
   --text: #17191c;
   --text-muted: #5f646b;
   --border: #dddcd7;
+  /* Outlines on images and thumbnails: pure black or white at low opacity, never a tinted neutral. */
+  --image-outline: rgba(0, 0, 0, 0.1);
   --border-strong: #b9b8b2;
   --focus: #2b5fd9;
 
@@ -91,6 +93,7 @@
     --text: #e6e7e8;
     --text-muted: #9a9fa6;
     --border: #2c2f33;
+  --image-outline: rgba(255, 255, 255, 0.1);
     --border-strong: #464a50;
     --focus: #7aa2ff;
 
@@ -149,6 +152,7 @@
   --text: #e6e7e8;
   --text-muted: #9a9fa6;
   --border: #2c2f33;
+  --image-outline: rgba(255, 255, 255, 0.1);
   --border-strong: #464a50;
   --focus: #7aa2ff;
 

@@ -1990,6 +1990,151 @@ a:hover {
   text-underline-offset: 3px;
 }
 
+/* A headline with its map thumbnail to the right of the text, top-aligned (src/lib/thumbnail.ts). */
+.news__story {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--space-3);
+}
+
+.news__story > :not(.news__thumb) {
+  grid-column: 1;
+}
+
+.news__thumb {
+  position: relative;
+  display: block;
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  /* Water tinted and land light, as the basemap draws them (OpenFreeMap's Positron and Dark). */
+  background: var(--surface-sunken);
+  border: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* The image outline, drawn over the picture so the focus ring keeps outline: pure black or white at low opacity. */
+.news__thumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--image-outline);
+  pointer-events: none;
+}
+
+.news__thumb-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.news__item--lead .news__thumb {
+  width: 88px;
+  height: 88px;
+}
+
+/* In the app the thumbnail moves the map to what it shows (src/app/showOnMap.ts), so it presses like a button. */
+.news__thumb--button {
+  cursor: pointer;
+  transition-property: scale;
+  transition-duration: 120ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+.news__thumb--button:hover::after {
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+.news__thumb--button:active {
+  scale: 0.96;
+}
+
+.news__thumb-land {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 0.75;
+  vector-effect: non-scaling-stroke;
+}
+
+.news__thumb-mark {
+  color: var(--status-unknown);
+}
+
+.news__thumb-halo,
+.news__thumb-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.news__thumb-halo {
+  stroke: var(--surface);
+  stroke-width: 4;
+}
+
+.news__thumb-line {
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.news__thumb-point {
+  fill: currentColor;
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+
+/* A strait as the map draws it: a ring in its flow band's color. */
+.news__thumb-ring {
+  fill: color-mix(in srgb, currentColor 18%, transparent);
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.news__thumb-mark--status-operating {
+  color: var(--status-operating);
+}
+
+.news__thumb-mark--status-reduced {
+  color: var(--status-reduced);
+}
+
+.news__thumb-mark--status-offline,
+.news__thumb-mark--status-idle {
+  color: var(--status-offline);
+}
+
+.news__thumb-mark--flow-below {
+  color: var(--flow-below);
+}
+
+.news__thumb-mark--flow-near {
+  color: var(--flow-near);
+}
+
+.news__thumb-mark--flow-above {
+  color: var(--flow-above);
+}
+
+.news__thumb-mark--ink {
+  color: var(--text);
+}
+
+/* The publisher's icon before its name, at the kicker's cap height; served from this site (jobs/lib/favicons.ts). */
+.news__icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  vertical-align: -2px;
+  border-radius: 3px;
+  object-fit: contain;
+}
+
 /* The places it names, as small chips, so they read as tags on the story rather than more links. */
 .news__assets {
   display: flex;

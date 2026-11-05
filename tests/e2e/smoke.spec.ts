@@ -531,7 +531,8 @@ test('home lists the latest headlines on the map, each linking out and opening i
   await expect(link).toHaveAttribute('href', /^https:/);
   await expect(link).toHaveAttribute('target', '_blank');
   await expect(rows.first()).toContainText(/today|yesterday|\d+ days ago/);
-  await rows.first().getByRole('button').first().click();
+  // The place chips, not the map thumbnail ("Show … on the map"), which moves the map and opens nothing.
+  await rows.first().getByRole('button', { name: /^(?!Show .* on the map$)/ }).first().click();
   await expect(page).toHaveURL(/sel=(chokepoint|pipeline|lng|terminal)\//);
 });
 
@@ -541,7 +542,7 @@ test("an asset's detail lists the headlines naming it, without a chip for itself
   if (!(await home.count())) return;
   const first = home.getByRole('listitem').first();
   const title = (await first.getByRole('heading').textContent())!.trim();
-  const chip = first.getByRole('button').first();
+  const chip = first.getByRole('button', { name: /^(?!Show .* on the map$)/ }).first();
   const name = (await chip.textContent())!.trim();
   await chip.click();
   const panel = page.getByLabel('Panel', { exact: true });
@@ -1036,6 +1037,34 @@ async function restingCamera(page: import('@playwright/test').Page) {
 
 const near = (a: { lon: number; lat: number; zoom: number }, b: { lon: number; lat: number; zoom: number }) =>
   Math.abs(a.lon - b.lon) < 0.5 && Math.abs(a.lat - b.lat) < 0.5 && Math.abs(a.zoom - b.zoom) < 0.1;
+
+test("a headline's map thumbnail moves the map to what it shows, and opens nothing", async ({ page }) => {
+  await page.goto('/');
+  const news = page.getByRole('region', { name: 'In the news' });
+  const thumb = news.getByRole('button', { name: /^Show .+ on the map$/ }).first();
+  await expect(thumb).toBeVisible();
+  await page.waitForFunction(() => (window as unknown as { __etMap?: { loaded(): boolean } }).__etMap?.loaded());
+  const camera = () =>
+    page.evaluate(() => {
+      const map = (window as unknown as { __etMap: { getCenter(): { lng: number; lat: number }; getZoom(): number } }).__etMap;
+      return { ...map.getCenter(), zoom: map.getZoom() };
+    });
+  const before = await camera();
+  const url = page.url();
+  await thumb.click();
+  await page.waitForFunction(() => {
+    const map = (window as unknown as { __etMap: { isMoving(): boolean; getZoom(): number } }).__etMap;
+    return !map.isMoving();
+  });
+  await expect.poll(async () => {
+    const after = await camera();
+    return Math.abs(after.lng - before.lng) + Math.abs(after.lat - before.lat) + Math.abs(after.zoom - before.zoom);
+  }).toBeGreaterThan(0.5);
+  // Nothing opened: still Home, same URL apart from the camera.
+  await expect(news).toBeVisible();
+  expect(new URL(page.url()).searchParams.get('sel')).toBeNull();
+  expect(new URL(url).searchParams.get('sel')).toBeNull();
+});
 
 test('closing an item returns the map to where it was before, through a chain of items too', async ({ page }) => {
   // A basin, then one of its pipelines: Back returns to the basin's frame, Close to Home's.

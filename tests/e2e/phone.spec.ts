@@ -180,3 +180,23 @@ test('below full a drag on the page moves the sheet; at full the page scrolls an
   await expect(sheetOf(page)).not.toHaveAttribute('data-sheet', 'full');
   expect(await body.evaluate((el) => el.scrollTop)).toBe(0);
 });
+
+test("a headline's thumbnail brings a full sheet down to show the map, and back at full the list is where it was", async ({ page }) => {
+  await page.goto('/');
+  const news = page.getByRole('region', { name: 'In the news' });
+  const thumb = news.getByRole('button', { name: /^Show .+ on the map$/ }).nth(2);
+  await page.getByRole('button', { name: /Expand panel/ }).click();
+  await page.getByRole('button', { name: /Expand panel/ }).click();
+  await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'full');
+  await page.waitForTimeout(400);
+  await thumb.scrollIntoViewIfNeeded();
+  const body = page.locator('.panel__body');
+  const scrolled = await body.evaluate((el) => el.scrollTop);
+  expect(scrolled).toBeGreaterThan(0);
+  await thumb.click();
+  await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'half');
+  await expect(page).not.toHaveURL(/sel=/);
+  await page.getByRole('button', { name: /Expand panel/ }).click();
+  await expect(sheetOf(page)).toHaveAttribute('data-sheet', 'full');
+  await expect.poll(() => body.evaluate((el) => el.scrollTop)).toBe(scrolled);
+});

@@ -26,6 +26,7 @@ import { pipelinesTouchingBasin, resolveSelection } from '../lib/data';
 import { ENABLED_VIEWS, SURFACE_FILTERS, basinPipelineFocus, closeFrame, VIEW_LABELS, phoneTabs, scopeMatches, viewHighlight, viewPoints, visibleLayers, type ViewId } from '../lib/views';
 import { useVisitChanges } from './useVisitChanges';
 import { useIsPhone, useSheet } from './useSheet';
+import { ShowOnMapContext, type ShowOnMap } from './showOnMap';
 import { liftDetent } from '../lib/sheet';
 import type { Selection } from './urlState';
 
@@ -331,6 +332,8 @@ export function App() {
 
   // On phones, opening an item, a surface or a filter lifts a hidden or peeking sheet so its page shows.
   const pageKey = `${view}|${filter}|${selection?.kind}/${selection?.id}`;
+  const pageKeyRef = useRef(pageKey);
+  pageKeyRef.current = pageKey;
   const lastPage = useRef<string | null>(null);
   useEffect(() => {
     const previous = lastPage.current;
@@ -348,204 +351,228 @@ export function App() {
     setSheetDetent(liftDetent);
   }, [setSheetDetent]);
 
+  // A headline thumbnail's "show on map": the map moves to the square it draws, and nothing opens. On phones a
+  // sheet at full comes down to half so the map can be seen. Below full the page goes back to its top
+  // (useSheet), so where the list was is kept, and raising the sheet to full on the same page returns to it.
+  const listScroll = useRef<{ page: string; top: number } | null>(null);
+  const showOnMap = useCallback<ShowOnMap>(
+    (corners) => {
+      setFocus((prev) => ({ points: corners, nonce: (prev?.nonce ?? 0) + 1 }));
+      if (!phone) return;
+      const body = appRef.current?.querySelector('.panel__body');
+      if (sheetDetent === 'full' && body) listScroll.current = { page: pageKeyRef.current, top: body.scrollTop };
+      setSheetDetent((d) => (d === 'full' ? 'half' : d));
+    },
+    [phone, sheetDetent, setSheetDetent],
+  );
+  useEffect(() => {
+    const saved = listScroll.current;
+    if (!saved || sheetDetent !== 'full') return;
+    listScroll.current = null;
+    if (saved.page !== pageKeyRef.current) return;
+    requestAnimationFrame(() => appRef.current?.querySelector('.panel__body')?.scrollTo({ top: saved.top }));
+  }, [sheetDetent]);
+
   const setLayerVisible = useCallback((id: LayerId, visible: boolean) => {
     setVisibility((v) => ({ ...v, [id]: visible }));
   }, []);
 
   return (
-    <div ref={appRef} className="app" data-panel-collapsed={!phone && collapsed} data-sheet={phone ? sheetDetent : undefined}>
-      {/* Everything but the menu; inert while the menu is open, so focus and clicks stay in it. */}
-      <div className="app__content" inert={menu !== null || searchOpen}>
-        <header className="app-header">
-          <div className="app-header__brand">
-            <GlobeMark theme={theme} />
-            <h1 className="app-header__title">Petro Sprawl</h1>
-          </div>
-          {/* One search bar whether the panel is open or minimized, so it never moves. */}
-          <SearchBar onOpen={() => setSearchScope('all')} buttonRef={searchButtonRef} />
-          <div className="app-header__actions">
-            <button
-              type="button"
-              className="icon-button icon-button--lg"
-              onClick={() => openMenu(null)}
-              aria-label="Menu"
-              aria-haspopup="dialog"
-              title="Menu"
-            >
-              <ListIcon size={24} />
-            </button>
-          </div>
-        </header>
-        <nav className="rail" aria-label="Views">
-          <button
-            type="button"
-            className="rail__item"
-            aria-current={!view && !moreOpen ? 'page' : undefined}
-            onClick={() => openView(null)}
-            aria-label="Home"
-          >
-            <HouseIcon size={24} weight={!view && !moreOpen ? 'fill' : 'regular'} />
-            <span className="rail__tooltip" aria-hidden="true">
-              Home
-            </span>
-          </button>
-          {tabs.bar.map((id) => {
-            const Icon = VIEW_ICONS[id];
-            return (
+    <ShowOnMapContext.Provider value={showOnMap}>
+      <div ref={appRef} className="app" data-panel-collapsed={!phone && collapsed} data-sheet={phone ? sheetDetent : undefined}>
+        {/* Everything but the menu; inert while the menu is open, so focus and clicks stay in it. */}
+        <div className="app__content" inert={menu !== null || searchOpen}>
+          <header className="app-header">
+            <div className="app-header__brand">
+              <GlobeMark theme={theme} />
+              <h1 className="app-header__title">Petro Sprawl</h1>
+            </div>
+            {/* One search bar whether the panel is open or minimized, so it never moves. */}
+            <SearchBar onOpen={() => setSearchScope('all')} buttonRef={searchButtonRef} />
+            <div className="app-header__actions">
               <button
-                key={id}
                 type="button"
-                className="rail__item"
-                aria-current={view === id && !moreOpen ? 'page' : undefined}
-                onClick={() => openView(id)}
-                aria-label={VIEW_LABELS[id]}
+                className="icon-button icon-button--lg"
+                onClick={() => openMenu(null)}
+                aria-label="Menu"
+                aria-haspopup="dialog"
+                title="Menu"
               >
-                <Icon size={24} weight={view === id && !moreOpen ? 'fill' : 'regular'} />
-                <span className="rail__tooltip" aria-hidden="true">
-                  {VIEW_LABELS[id]}
-                </span>
+                <ListIcon size={24} />
               </button>
-            );
-          })}
-          {tabs.more.length > 0 && <MoreTab views={tabs.more} view={view} open={moreOpen} onOpen={openMore} />}
-          <button
-            type="button"
-            className="rail__item rail__item--end"
-            onClick={() => openMenu('about')}
-            aria-label="Help"
-            aria-haspopup="dialog"
-          >
-            <QuestionIcon size={24} />
-            <span className="rail__tooltip" aria-hidden="true">
-              Help
-            </span>
-          </button>
-        </nav>
-        <Panel
-          view={view}
-          pipelines={{
-            groups: pipelineGroupList,
-            grouping: pipelineGrouping,
-            onGrouping: changePipelineGrouping,
-            openGroup: openPipelineGroup,
-            onToggleGroup: togglePipelineGroup,
-          }}
-          origins={{ fuel: originsFuel, onFuel: setOriginsFuel, onFind: () => setSearchScope('us-places') }}
-          terminals={{
-            listing: terminalListing,
-            onKind: changeTerminalKind,
-            grouping: terminalGrouping[terminalKind],
-            onGrouping: changeTerminalGrouping,
-            openGroup: openTerminalGroup,
-            onToggleGroup: toggleTerminalGroup,
-          }}
-          surfaceLabel={surfaceLabel}
-          backLabel={backLabel}
-          onBack={back}
-          onClose={closeToSurface}
-          collapsed={!phone && collapsed}
-          onToggleCollapsed={toggleCollapsed}
-          sheet={phone ? sheet : null}
-          more={moreOpen ? { views: tabs.more, onOpen: openView } : null}
-          selection={selection}
-          onSelect={selectAndFocus}
-          fuel={fuel}
-          onFuel={setFuel}
-          data={data}
-          loaded={loaded}
-          failed={failed}
-          visit={visit}
-          filter={filter}
-          matches={matches}
-          freshness={freshness}
-          now={now}
-          onOpenMenu={openMenu}
-          onOpenView={openView}
-        />
-        <MapView
-          theme={theme}
-          initialCamera={initialCameraOnce}
-          onCameraChange={setCamera}
-          data={data}
-          visibility={mapLayers}
-          selection={selection}
-          fuel={fuel}
-          highlight={highlight}
-          onlyPipelines={basinFocus?.only ?? null}
-          regionsOnly={regionsOnly}
-          basinsFocus={view === 'basins'}
-          countryMode={view === 'origins' ? 'imports' : 'storage'}
-          onSelect={selectAndFocus}
-          focus={focus}
-          insets={sheet.insets}
-        >
-          <MapLoading loading={!loaded} theme={theme} />
-          {/* Their counts mean nothing until the data is in. */}
-          {loaded && (
-            <FilterChips
-              active={filter}
-              ids={surfaceFilters}
-              counts={Object.fromEntries(FILTER_IDS.map((id) => [id, matchCount(surfaceMatches[id])])) as Record<FilterId, number>}
-              onChange={changeFilter}
-            />
-          )}
-          {!phone && collapsed && (
+            </div>
+          </header>
+          <nav className="rail" aria-label="Views">
             <button
               type="button"
-              className="panel__tab panel__tab--expand"
-              onClick={toggleCollapsed}
-              aria-label="Expand panel"
-              title="Expand panel  ["
+              className="rail__item"
+              aria-current={!view && !moreOpen ? 'page' : undefined}
+              onClick={() => openView(null)}
+              aria-label="Home"
             >
-              <CaretRightIcon size={16} />
+              <HouseIcon size={24} weight={!view && !moreOpen ? 'fill' : 'regular'} />
+              <span className="rail__tooltip" aria-hidden="true">
+                Home
+              </span>
             </button>
-          )}
-          {/* Home's alone: a surface shows its own layers, and the regions view only its outlines. */}
-          {!view && !regionsOnly && <LayerControl
-            open={layersOpen}
-            onToggleOpen={() => setLayersOpen((open) => !open)}
-            onClose={closeLayers}
-            visibility={visibility}
-            onChange={setLayerVisible}
-            counts={{
-              storage: data.series.filter((s) => s.metric === 'storage_fill_pct').length,
-              basins: data.basins.length,
-              pipelines: data.pipelines.length,
-              lng: data.lngTerminals.length,
-              terminals: data.oilTerminals.length,
-              chokepoints: data.chokepoints.length,
+            {tabs.bar.map((id) => {
+              const Icon = VIEW_ICONS[id];
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  className="rail__item"
+                  aria-current={view === id && !moreOpen ? 'page' : undefined}
+                  onClick={() => openView(id)}
+                  aria-label={VIEW_LABELS[id]}
+                >
+                  <Icon size={24} weight={view === id && !moreOpen ? 'fill' : 'regular'} />
+                  <span className="rail__tooltip" aria-hidden="true">
+                    {VIEW_LABELS[id]}
+                  </span>
+                </button>
+              );
+            })}
+            {tabs.more.length > 0 && <MoreTab views={tabs.more} view={view} open={moreOpen} onOpen={openMore} />}
+            <button
+              type="button"
+              className="rail__item rail__item--end"
+              onClick={() => openMenu('about')}
+              aria-label="Help"
+              aria-haspopup="dialog"
+            >
+              <QuestionIcon size={24} />
+              <span className="rail__tooltip" aria-hidden="true">
+                Help
+              </span>
+            </button>
+          </nav>
+          <Panel
+            view={view}
+            pipelines={{
+              groups: pipelineGroupList,
+              grouping: pipelineGrouping,
+              onGrouping: changePipelineGrouping,
+              openGroup: openPipelineGroup,
+              onToggleGroup: togglePipelineGroup,
             }}
-          />}
-        </MapView>
+            origins={{ fuel: originsFuel, onFuel: setOriginsFuel, onFind: () => setSearchScope('us-places') }}
+            terminals={{
+              listing: terminalListing,
+              onKind: changeTerminalKind,
+              grouping: terminalGrouping[terminalKind],
+              onGrouping: changeTerminalGrouping,
+              openGroup: openTerminalGroup,
+              onToggleGroup: toggleTerminalGroup,
+            }}
+            surfaceLabel={surfaceLabel}
+            backLabel={backLabel}
+            onBack={back}
+            onClose={closeToSurface}
+            collapsed={!phone && collapsed}
+            onToggleCollapsed={toggleCollapsed}
+            sheet={phone ? sheet : null}
+            more={moreOpen ? { views: tabs.more, onOpen: openView } : null}
+            selection={selection}
+            onSelect={selectAndFocus}
+            fuel={fuel}
+            onFuel={setFuel}
+            data={data}
+            loaded={loaded}
+            failed={failed}
+            visit={visit}
+            filter={filter}
+            matches={matches}
+            freshness={freshness}
+            now={now}
+            onOpenMenu={openMenu}
+            onOpenView={openView}
+          />
+          <MapView
+            theme={theme}
+            initialCamera={initialCameraOnce}
+            onCameraChange={setCamera}
+            data={data}
+            visibility={mapLayers}
+            selection={selection}
+            fuel={fuel}
+            highlight={highlight}
+            onlyPipelines={basinFocus?.only ?? null}
+            regionsOnly={regionsOnly}
+            basinsFocus={view === 'basins'}
+            countryMode={view === 'origins' ? 'imports' : 'storage'}
+            onSelect={selectAndFocus}
+            focus={focus}
+            insets={sheet.insets}
+          >
+            <MapLoading loading={!loaded} theme={theme} />
+            {/* Their counts mean nothing until the data is in. */}
+            {loaded && (
+              <FilterChips
+                active={filter}
+                ids={surfaceFilters}
+                counts={Object.fromEntries(FILTER_IDS.map((id) => [id, matchCount(surfaceMatches[id])])) as Record<FilterId, number>}
+                onChange={changeFilter}
+              />
+            )}
+            {!phone && collapsed && (
+              <button
+                type="button"
+                className="panel__tab panel__tab--expand"
+                onClick={toggleCollapsed}
+                aria-label="Expand panel"
+                title="Expand panel  ["
+              >
+                <CaretRightIcon size={16} />
+              </button>
+            )}
+            {/* Home's alone: a surface shows its own layers, and the regions view only its outlines. */}
+            {!view && !regionsOnly && <LayerControl
+              open={layersOpen}
+              onToggleOpen={() => setLayersOpen((open) => !open)}
+              onClose={closeLayers}
+              visibility={visibility}
+              onChange={setLayerVisible}
+              counts={{
+                storage: data.series.filter((s) => s.metric === 'storage_fill_pct').length,
+                basins: data.basins.length,
+                pipelines: data.pipelines.length,
+                lng: data.lngTerminals.length,
+                terminals: data.oilTerminals.length,
+                chokepoints: data.chokepoints.length,
+              }}
+            />}
+          </MapView>
+        </div>
+        {searchOpen && (
+          <SearchDialog
+            data={data}
+            initialScope={searchScope}
+            onSelect={(next) => {
+              closeSearch();
+              selectAndFocus(next);
+            }}
+            onView={(next) => {
+              closeSearch();
+              openView(next);
+            }}
+            onClose={closeSearch}
+          />
+        )}
+        {menu && (
+          <AppMenu
+            onClose={closeMenu}
+            section={menu.section}
+            data={data}
+            freshness={freshness}
+            now={now}
+            theme={theme}
+            themePreference={preference}
+            onThemePreferenceChange={setPreference}
+          />
+        )}
       </div>
-      {searchOpen && (
-        <SearchDialog
-          data={data}
-          initialScope={searchScope}
-          onSelect={(next) => {
-            closeSearch();
-            selectAndFocus(next);
-          }}
-          onView={(next) => {
-            closeSearch();
-            openView(next);
-          }}
-          onClose={closeSearch}
-        />
-      )}
-      {menu && (
-        <AppMenu
-          onClose={closeMenu}
-          section={menu.section}
-          data={data}
-          freshness={freshness}
-          now={now}
-          theme={theme}
-          themePreference={preference}
-          onThemePreferenceChange={setPreference}
-        />
-      )}
-    </div>
+    </ShowOnMapContext.Provider>
   );
 }
 

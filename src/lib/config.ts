@@ -714,6 +714,19 @@ export const CLAIMS_REFRESH = {
  * STALE_AFTER_DAYS, or whose measured flow has recovered, get a search for an end report at most every
  * `endCheckDays`, `maxEndChecksPerRun` at a time.
  */
+/**
+ * A headline's map thumbnail (`src/lib/thumbnail.ts`, added 2026-11-05): a square `size` units across framing
+ * up to `maxAssets` of the places it names, with `padding` of the span on each side, never narrower than
+ * `minSpanDeg` (so a single terminal shows its coast). Outline points closer than `step` units are dropped.
+ */
+export const THUMBNAIL = {
+  size: 64,
+  maxAssets: 3,
+  padding: 0.2,
+  minSpanDeg: 4,
+  step: 0.6,
+} as const;
+
 export const NEWS = {
   lookbackDays: 3,
   /**
@@ -731,6 +744,15 @@ export const NEWS = {
   headlinesKept: 40,
   headlinesPerAsset: 5,
   headlinesShown: 6,
+  /**
+   * Publisher icons beside the headlines (added 2026-11-05), saved to public/favicons/ by the scan so the page
+   * never calls a publisher: up to `faviconsPerRun` new sites a run, each icon under `faviconMaxBytes`; a site
+   * without one is tried again after `faviconRetryDays`.
+   */
+  faviconsPerRun: 30,
+  faviconMaxBytes: 100_000,
+  faviconRetryDays: 14,
+  faviconTimeoutMs: 8_000,
   /** Left out of the headlines: social posts, reference pages and press release wires (subdomains count). */
   headlineSkipDomains: [
     'facebook.com',

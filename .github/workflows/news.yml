@@ -54,7 +54,7 @@ jobs:
           if ! git diff --quiet data/curated; then
             npm run build:curated
           fi
-          git add data/curated public/data data/reports/dedup.json data/reports/scan-news.json data/reports/news-state.json
+          git add data/curated public/data public/favicons data/reports/dedup.json data/reports/scan-news.json data/reports/news-state.json data/reports/favicons.json
           if git diff --cached --quiet; then
             echo "Nothing to commit"
             exit 0

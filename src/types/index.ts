@@ -251,6 +251,10 @@ export interface NewsHeadline {
   feed: 'gdelt' | 'google-news';
   /** The assets it names, as `<kind>/<id>`. */
   refs: string[];
+  /** The publisher's site, lowercase without "www." (from GDELT's domain or Google News's `<source url>`). */
+  site?: string;
+  /** The publisher's icon, saved by the scan and served from this site: "favicons/<site>.<ext>". */
+  icon?: string;
 }
 
 export interface SourceRef {

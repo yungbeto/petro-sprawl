@@ -330,6 +330,12 @@ describe('headlineFeed', () => {
     expect(feed.map((h) => h.title)).toEqual(['Strike on Qeshm', 'Kharg loads resume']);
     expect(feed[0]).toMatchObject({ refs: ['chokepoint/hormuz', 'terminal/kharg'], feed: 'gdelt', url: 'https://site.com/16' });
   });
+  it("keeps the publisher's site for its icon, lowercase without www", () => {
+    const story = { ref: 'terminal/kharg', articles: [{ ...article('Kharg loads resume', 'google-news'), domain: 'WWW.Site.com' }], publishers: ['site.com'], newest: '2026-11-03', fresh: true };
+    expect(headlineFeed([story], '2026-11-03')[0]?.site).toBe('site.com');
+    const none = { ...story, articles: [{ ...story.articles[0]!, domain: '' }] };
+    expect(headlineFeed([none], '2026-11-03')[0]).not.toHaveProperty('site');
+  });
   it('leaves out social posts, reference pages and press release wires', () => {
     const from = (domain: string, title: string) => ({ ...article(title, 'google-news'), domain, key: domain });
     const stories = [

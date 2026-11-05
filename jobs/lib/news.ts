@@ -5,6 +5,7 @@ import { z } from 'zod';
 import type { Disruption, NewsHeadline, SourceRef } from '../../src/types';
 import { NEWS } from '../../src/lib/config';
 import { daysBetween, htmlToText, isTrusted, matchKey, quoteOnPage, urlKey, type Page } from './claims';
+import { siteKey } from './favicons';
 
 export type Feed = 'gdelt' | 'google-news';
 
@@ -480,10 +481,23 @@ export function headlineFeed(
       const key = keyOf(a.title);
       const known = byTitle.get(key);
       if (!known) {
-        byTitle.set(key, { title: a.title, publisher: a.publisher, url: a.url, publishedAt: a.publishedAt, feed: a.feed, refs: [story.ref] });
+        const site = a.domain ? siteKey(a.domain) : null;
+        byTitle.set(key, {
+          title: a.title,
+          publisher: a.publisher,
+          url: a.url,
+          publishedAt: a.publishedAt,
+          feed: a.feed,
+          refs: [story.ref],
+          ...(site ? { site } : {}),
+        });
         continue;
       }
       if (!known.refs.includes(story.ref)) known.refs.push(story.ref);
+      if (!known.site && a.domain) {
+        const site = siteKey(a.domain);
+        if (site) known.site = site;
+      }
       if (known.feed === 'google-news' && a.feed === 'gdelt') Object.assign(known, { url: a.url, feed: a.feed });
     }
   }

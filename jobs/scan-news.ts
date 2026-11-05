@@ -9,7 +9,7 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { CLAIMS_REFRESH, NEWS } from '../src/lib/config';
 import type { Chokepoint, Disruption, LngTerminal, NewsHeadline, ObservationSeries, OilTerminal, Pipeline, SourceRef } from '../src/types';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
@@ -19,6 +19,7 @@ import { measuredChanges } from '../src/lib/measuredChanges';
 import { lastReported, quietSince } from '../src/lib/summary';
 import { publishDataset, readPublished } from './lib/output';
 import { newsHeadlineSchema } from './lib/schemas';
+import { fetchFavicon, sitesToFetch, type FaviconState } from './lib/favicons';
 import { CLAIMED, citedUrls, htmlToText, pagePublishedAt, tidyStatement, urlKey, type Page } from './lib/claims';
 import {
   addSource,
@@ -54,6 +55,7 @@ const DISRUPTIONS = 'data/curated/disruptions.json';
 const DRAFTS = 'data/reports/disruption-drafts.json';
 const LOG = 'data/reports/scan-news.json';
 const STATE = 'data/reports/news-state.json';
+const FAVICON_STATE = 'data/reports/favicons.json';
 
 interface State {
   seen: Record<string, string>;
@@ -204,6 +206,41 @@ const stories = groupStories(recent, terms, seen);
 const candidates = rankStories(stories, { trustedDomains: CLAIMS_REFRESH.trustedDomains, measured });
 console.log(`${stories.length} assets in the news, ${candidates.length} candidate stories`);
 
+/**
+ * Each headline's publisher icon (added 2026-11-05): looked up once per site and saved to public/favicons/,
+ * so the page serves it itself. What was tried is kept in data/reports/favicons.json.
+ */
+async function withIcons(records: NewsHeadline[]): Promise<NewsHeadline[]> {
+  let state: Record<string, FaviconState> = {};
+  try {
+    state = JSON.parse(await readFile(FAVICON_STATE, 'utf8')) as Record<string, FaviconState>;
+  } catch {
+    // First run: nothing tried yet.
+  }
+  const sites = sitesToFetch(
+    records.flatMap((h) => (h.site ? [h.site] : [])),
+    state,
+    today,
+  );
+  await mkdir('public/favicons', { recursive: true });
+  let saved = 0;
+  for (const site of sites) {
+    const icon = await fetchFavicon(site);
+    const file = icon ? `favicons/${site}.${icon.type}` : null;
+    if (icon && file) {
+      await writeFile(`public/${file}`, icon.bytes);
+      saved++;
+    }
+    state[site] = { file, checkedAt: today };
+  }
+  await writeFile(FAVICON_STATE, `${JSON.stringify(Object.fromEntries(Object.entries(state).sort(([a], [b]) => a.localeCompare(b))), null, 2)}\n`);
+  if (sites.length) console.log(`favicons: ${saved} of ${sites.length} new sites`);
+  return records.map((h) => {
+    const file = h.site ? state[h.site]?.file : null;
+    return file ? { ...h, icon: file } : h;
+  });
+}
+
 // Home's "In the news": the matched headlines as the feeds gave them. With no feed answering, the last
 // run's stay up rather than an empty list.
 const headlines = await publishDataset({
@@ -212,7 +249,7 @@ const headlines = await publishDataset({
   produce: async () => {
     if (!recent.length) throw new Error('no feed returned headlines');
     const previous = await readPublished<NewsHeadline>('news-headlines');
-    const records = headlineFeed(stories, today, { previous, refsFor: (title) => matchAssets(title, terms) });
+    const records = await withIcons(headlineFeed(stories, today, { previous, refsFor: (title) => matchAssets(title, terms) }));
     return {
       records,
       meta: {
