@@ -400,7 +400,8 @@ export function disruptionReview(
   // An end takes a card off Home: a misread ("talks to end the blockade") costs more than a new card.
   if (draft.action === 'end_disruption') return 'ends a disruption';
   if (draft.cause && disruption && draft.cause !== disruption.cause) return `cause changes from ${disruption.cause} to ${draft.cause}`;
-  if (!isTrusted(draft.url, trustedDomains)) return `${hostOf(draft.url)} isn't on the trusted list`;
+  // A new source on a disruption in effect is published from any domain (decided 2026-11-05): it passed the
+  // page checks, it only adds a citation to what the page already says, and it's marked unreviewed.
   return null;
 }
 

@@ -78,6 +78,7 @@ const evidenceSchema = z.object({
   url: z.string().url().optional(),
   observedAt: isoDate,
   recordedAt: isoDate,
+  unreviewed: z.literal(true).optional(),
 });
 
 const pageRefSchema = z.object({

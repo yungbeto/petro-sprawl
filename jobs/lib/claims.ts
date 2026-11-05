@@ -180,20 +180,25 @@ export function assetTerms(name: string, aliases: readonly string[]): string[] {
 }
 
 /**
- * Commit without review only when the quote names the asset, the status is the one we already show,
- * and the source is on the trusted list. A first claim for an asset always goes to review. A quote that never names the asset is where a model most
- * often attaches a true sentence to the wrong pipeline.
+ * Commit without review only when the quote names the asset and the status is the one we already show.
+ * A first claim for an asset always goes to review. A quote that never names the asset is where a model
+ * most often attaches a true sentence to the wrong pipeline. The domain no longer decides (2026-11-05): a
+ * confirmation from a domain off the trusted list is committed marked unreviewed (`claimUnreviewed`).
  */
 export function needsReview(
   draft: ClaimDraft,
   latest: Evidence | null,
-  { trustedDomains, terms }: { trustedDomains: readonly string[]; terms: readonly string[] },
+  { terms }: { terms: readonly string[] },
 ): string | null {
   if (!latest) return 'first claim for this asset';
   if (draft.status !== latest.status) return `status changes from ${latest.status} to ${draft.status}`;
-  if (!isTrusted(draft.url, trustedDomains)) return `${new URL(draft.url).hostname} isn't on the trusted list`;
   if (!terms.some((t) => quoteOnPage(t, draft.quote))) return "the quote doesn't name the asset";
   return null;
+}
+
+/** A claim committed without review is marked so on the page when its source is off the trusted list. */
+export function claimUnreviewed(draft: ClaimDraft, trustedDomains: readonly string[]): boolean {
+  return !isTrusted(draft.url, trustedDomains);
 }
 
 /** House style for UI copy: no em dashes. */
@@ -201,7 +206,7 @@ export function tidyStatement(statement: string): string {
   return statement.replace(/\s*—\s*/g, ', ').replace(/\s+/g, ' ').trim();
 }
 
-export function toEvidence(draft: ClaimDraft, recordedAt: string): Evidence {
+export function toEvidence(draft: ClaimDraft, recordedAt: string, unreviewed = false): Evidence {
   return {
     status: draft.status,
     sourceType: draft.sourceType,
@@ -209,6 +214,7 @@ export function toEvidence(draft: ClaimDraft, recordedAt: string): Evidence {
     url: draft.url,
     observedAt: draft.observedAt,
     recordedAt,
+    ...(unreviewed ? { unreviewed: true as const } : {}),
   };
 }
 

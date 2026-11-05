@@ -26,6 +26,20 @@
         "publishedAt": "2026-11-04"
       },
       {
+        "publisher": "Riviera",
+        "title": "Fresh Hormuz attacks leave seafarer dead, one vessel sunk and several damaged",
+        "url": "https://www.rivieramm.com/news-content-hub/fresh-hormuz-attacks-leave-seafarer-dead-and-several-vessels-damaged-90476",
+        "publishedAt": "2026-11-04",
+        "unreviewed": true
+      },
+      {
+        "publisher": "Stars and Stripes",
+        "title": "US quietly strikes Iranian island in Strait of Hormuz as Trump weighs next steps",
+        "url": "https://www.stripes.com/theaters/middle_east/2026-11-03/us-strikes-iran-qeshm-island-hormuz-23348317.html",
+        "publishedAt": "2026-11-03",
+        "unreviewed": true
+      },
+      {
         "publisher": "PBS",
         "title": "U.S. strikes Iranian targets in Strait of Hormuz, U.S. official tells AP",
         "url": "https://www.pbs.org/newshour/world/u-s-strikes-iranian-targets-in-strait-of-hormuz-u-s-official-tells-ap",
@@ -35,6 +49,13 @@
         "publisher": "Al Jazeera",
         "title": "Oman rescues 25 from burning oil tanker in Strait of Hormuz",
         "url": "https://www.aljazeera.com/news/2026/10/30/oman-rescues-25-from-burning-oil-tanker-in-strait-of-hormuz",
+        "publishedAt": "2026-10-30",
+        "unreviewed": true
+      },
+      {
+        "publisher": "gCaptain",
+        "title": "Tanker Hit by Limpet Mines in Strait of Hormuz as New Threat to Shipping Emerges",
+        "url": "https://gcaptain.com/tanker-hit-by-limpet-mines-in-strait-of-hormuz-as-new-threat-to-shipping-emerges/",
         "publishedAt": "2026-10-30",
         "unreviewed": true
       },

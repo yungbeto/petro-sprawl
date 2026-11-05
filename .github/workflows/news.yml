@@ -2,8 +2,8 @@ name: News
 
 # News scan every 3 hours (every 12 until 2026-11-03) (jobs/scan-news.ts, SPEC M9). Headlines from GDELT and Google News are matched
 # to mapped assets; Claude drafts from the articles and code checks every draft against the page. New
-# sources from trusted domains on disruptions in effect are committed to main, marked unreviewed. New
-# disruptions, end dates and anything else open a pull request. The run is red when neither feed answers
+# sources on disruptions in effect, and new disruptions that pass disruptionReview, are committed to main,
+# marked unreviewed. End dates, changes of cause and other new disruptions go to one rolling pull request. The run is red when neither feed answers
 # or Google News has failed three runs in a row, but what it found is still committed.
 
 on:
@@ -64,27 +64,47 @@ jobs:
           git pull --rebase --autostash
           git push
 
-      - name: Open a pull request for drafts that need review
+      # One rolling pull request (news/review): rebuilt from main each run with the drafts still waiting on
+      # it plus this run's, so it never conflicts with main or goes stale. jobs/lib/review.ts drops drafts
+      # main has made moot; the pull request closes itself when none are left.
+      - name: Update the review pull request
         run: |
+          branch="news/review"
+          pending="$RUNNER_TEMP/pending.json"
+          echo '[]' > "$pending"
+          pr=$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$pr" ]; then
+            git fetch origin "$branch"
+            git show "origin/$branch:data/reports/disruption-drafts.json" > "$pending" || echo '[]' > "$pending"
+          fi
+          npm run merge:review-drafts -- news "$pending"
           if [ "$(jq length data/reports/disruption-drafts.json)" -eq 0 ]; then
+            if [ -n "$pr" ]; then
+              gh pr close "$pr" --delete-branch --comment "Nothing left to review: main already has these sources, or they no longer apply."
+            fi
             echo "No drafts need review"
             exit 0
           fi
-          branch="news/$(date -u +%Y-%m-%d-%H%M)"
-          git checkout -b "$branch"
+          git checkout -B "$branch"
           npm run apply:disruption-drafts
           npm run build:curated
-          git add data/curated public/data data/reports/dedup.json
-          git commit -m "Disruption drafts for review $(date -u +%Y-%m-%d)"
-          git push -u origin "$branch"
+          git add data/curated public/data data/reports/dedup.json data/reports/disruption-drafts.json
+          git commit -m "Disruption drafts for review $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push --force origin "$branch"
           {
             echo "Disruption updates drafted by the news scan that need a person to check them. Each passed the automatic checks: the quote is on the page and names the asset, and the date comes from the page."
             echo
             jq -r '.[] | "- **\(.ref)** (\(.action | gsub("_"; " "))): \(if .disruption then .disruption.summary else "\(.disruptionId)\(if .endedAt then ", ended \(.endedAt)" else "" end)\(if .cause then ", cause \(.cause)" else "" end)" end) [\(.source.publisher), \(.source.publishedAt)](\(.source.url))\n  - Needs review because \(.reason)"' data/reports/disruption-drafts.json
             echo
-            echo "Every outcome, including rejected drafts, is in data/reports/scan-news.json and the log of the run that opened this pull request."
+            echo "This pull request is rebuilt from main on every scan, keeping these drafts and adding new ones. Merge it to publish them all, or close it to drop them all. To drop one, delete it from data/reports/disruption-drafts.json on this branch; the next scan rebuilds the rest (other edits on the branch are replaced)."
+            echo
+            echo "Every outcome, including rejected drafts, is in data/reports/scan-news.json and the log of the run that last updated this pull request."
           } > pr-body.md
-          gh pr create --base main --head "$branch" --title "Disruption drafts for review $(date -u +%Y-%m-%d)" --body-file pr-body.md
+          if [ -n "$pr" ]; then
+            gh pr edit "$pr" --body-file pr-body.md
+          else
+            gh pr create --base main --head "$branch" --title "Disruption drafts for review" --body-file pr-body.md
+          fi
 
       - name: Fail if the scan failed
         if: ${{ steps.scan.outcome == 'failure' }}

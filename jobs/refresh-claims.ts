@@ -15,6 +15,7 @@ import {
   addEvidence,
   assetTerms,
   citedUrls,
+  claimUnreviewed,
   claimDraftSchema,
   htmlToText,
   needsReview,
@@ -177,12 +178,10 @@ for (const asset of stale) {
       console.log(`rejected\t${asset.name}: ${problems.join('; ')}`);
       continue;
     }
-    const evidence = toEvidence(draft, today);
     cited.add(urlKey(draft.url));
-    const review = needsReview(draft, asset.latest, {
-      trustedDomains: CLAIMS_REFRESH.trustedDomains,
-      terms: assetTerms(asset.name, aliasesOf(asset.ref)),
-    });
+    const review = needsReview(draft, asset.latest, { terms: assetTerms(asset.name, aliasesOf(asset.ref)) });
+    // Applied from the review pull request, merging it is the review, so those carry no mark.
+    const evidence = toEvidence(draft, today, !review && claimUnreviewed(draft, CLAIMS_REFRESH.trustedDomains));
     if (review) {
       drafts.push({ ref: asset.ref, reason: review, evidence });
       log.push({ ref: asset.ref, name: asset.name, outcome: 'review', detail: review, draft });
@@ -192,7 +191,7 @@ for (const asset of stale) {
       else if (kind === 'terminal') records.terminal = addEvidence(records.terminal, id, evidence);
       else records.lng = addEvidence(records.lng, id, evidence);
       log.push({ ref: asset.ref, name: asset.name, outcome: 'committed', draft });
-      console.log(`committed\t${asset.name}: ${draft.status}, ${draft.observedAt}`);
+      console.log(`committed\t${asset.name}: ${draft.status}, ${draft.observedAt}${evidence.unreviewed ? ', unreviewed' : ''}`);
     }
   } catch (err) {
     log.push({ ref: asset.ref, name: asset.name, outcome: 'error', detail: err instanceof Error ? err.message : String(err) });

@@ -189,7 +189,7 @@ export function ChokepointDetail({ item, data, now, onSelect }: { item: Chokepoi
               aside={flow.fiveYear && <span className="mono">{flow.fiveYear.from.slice(0, 4)} to {flow.fiveYear.to.slice(0, 4)}</span>}
             />
           </Stats>
-          <section className="section">
+          <section className="section chart-card">
             <h3 className="section__title">Daily tanker transits, last 90 days</h3>
             <Sparkline
               points={flow.sparkline}
@@ -248,14 +248,17 @@ export function ChokepointDetail({ item, data, now, onSelect }: { item: Chokepoi
 function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: boolean }) {
   const { port, flow, exports } = calls;
   return (
-    <section className="section">
+    <section className="section chart-card">
       <div className="title-row">
-        <h3 className="section__title">Tanker calls at {port}, last 90 days</h3>
-        <Info label={`About tanker calls at ${port}`}>
+        <span className="title-row__main">
+          <h3 className="section__title">Tanker calls at {port}, last 90 days</h3>
+          <Info label={`About tanker calls at ${port}`}>
           Calls by tankers of any cargo, from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>.{' '}
           {terminal ? 'They count all tanker traffic at the port, not crude loadings.' : 'They show traffic at the port, not flow on this pipeline.'}
           {exports?.recent && " Exports are PortWatch's estimate from the change in each tanker's draft, in metric tons of any liquid cargo."}
-        </Info>
+          </Info>
+        </span>
+        <Band band={flow.band} />
       </div>
       <p className="section__lede">
         <span className="mono">{perDay(flow.recent?.mean)}</span> per day over the 7 days to{' '}
@@ -265,7 +268,7 @@ function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: bo
             , <span className="mono">{formatIndexShare(flow.indexFiveYear)}</span> of the five-year average
           </>
         )}
-        . <Band band={flow.band} />
+        .
       </p>
       <Sparkline
         points={flow.sparkline}
@@ -295,8 +298,11 @@ function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: bo
 /** A PortWatch tonnage estimate: the 7-day level against the five-year average, and 90 days of it. */
 function TonnesSection({ title, flow, noun, label }: { title: string; flow: ChokepointFlow; noun: string; label: string }) {
   return (
-    <section className="section">
-      <h3 className="section__title">{title}</h3>
+    <section className="section chart-card">
+      <div className="title-row">
+        <h3 className="section__title">{title}</h3>
+        {flow.recent && <Band band={flow.band} />}
+      </div>
       {flow.recent && (
         <p className="section__lede">
           <span className="mono">{formatTonnes(flow.recent.mean)}</span> {noun} per day over the 7 days to{' '}
@@ -306,7 +312,7 @@ function TonnesSection({ title, flow, noun, label }: { title: string; flow: Chok
               , <span className="mono">{formatIndexShare(flow.indexFiveYear)}</span> of the five-year average
             </>
           )}
-          . <Band band={flow.band} />
+          .
         </p>
       )}
       <Sparkline
@@ -545,6 +551,7 @@ function StatusSource({ evidence }: { evidence: Evidence }) {
     <>
       {REPORT_KIND[evidence.sourceType]}
       {from && ` from ${from}`}, <span className="mono">{evidence.observedAt}</span>
+      {evidence.unreviewed && ', not yet reviewed'}
     </>
   );
 }
@@ -576,6 +583,9 @@ function Reports({ evidence }: { evidence: Evidence[] }) {
                 </span>
               </p>
               <p className="report__text">{text || SOURCE_TYPE_LABELS[e.sourceType]}</p>
+              {e.unreviewed && (
+                <p className="report__unreviewed">Not yet reviewed: added automatically by the claims refresh. Read the source to check it.</p>
+              )}
               {e.url && (
                 <a className="report__link" href={e.url} target="_blank" rel="noreferrer">
                   Read on {host ?? 'the source'}
@@ -684,7 +694,7 @@ export function PipelineDetail({
         />
       </Stats>
       {flow && flow.sparkline.length > 1 && (
-        <section className="section">
+        <section className="section chart-card">
           <h3 className="section__title">Daily physical flow, last 90 days</h3>
           <Sparkline
             points={flow.sparkline.map((p) => ({ date: p.date, value: p.value / 1e6 }))}
@@ -1007,7 +1017,7 @@ function StorageFigures({ storage, name }: { storage: CountryStorage; name: stri
           }
         />
       </Stats>
-      <section className="section">
+      <section className="section chart-card">
         <h3 className="section__title">{storage.fill !== null ? 'Storage fill' : 'Gas in storage'}, last 12 months</h3>
         <Sparkline
           points={summary.year}
@@ -1112,7 +1122,7 @@ export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; da
         )}
       </Stats>
       {sendOut && sendOut.sparkline.length > 1 && (
-        <section className="section">
+        <section className="section chart-card">
           <h3 className="section__title">Daily send-out, last 90 days</h3>
           <Sparkline
             points={sendOut.sparkline.map((p) => ({ date: p.date, value: p.value / 1e6 }))}

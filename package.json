@@ -34,6 +34,7 @@
     "apply:claim-drafts": "tsx jobs/apply-claim-drafts.ts",
     "scan:news": "tsx --env-file-if-exists=.env jobs/scan-news.ts",
     "apply:disruption-drafts": "tsx jobs/apply-disruption-drafts.ts",
+    "merge:review-drafts": "tsx jobs/merge-review-drafts.ts",
     "import:globe": "tsx jobs/import-globe.ts",
     "render:og": "tsx jobs/render-og.ts",
     "build:share": "tsx jobs/build-share-index.ts",
