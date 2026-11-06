@@ -907,6 +907,17 @@ test('the refineries surface groups by region, and a refinery opens with its EIA
   await expect(panel.getByRole('heading', { name: /Refineries, largest first/ })).toBeVisible();
 });
 
+test('a European refinery opens with an unknown status and no capacity, credited to the EEA', async ({ page }) => {
+  test.skip(!FEATURES.refineries, 'FEATURES.refineries is off');
+  await page.goto('/?sel=refinery/eu-nl-shell-nederland-raffinaderij-bv');
+  const panel = page.getByRole('complementary', { name: 'Panel' });
+  await expect(panel.getByRole('heading', { name: 'Shell Nederland Raffinaderij BV', exact: true })).toBeVisible();
+  await expect(panel.getByText('Capacity not published')).toBeVisible();
+  await expect(panel.getByText(/a permit, not a sign it's running/)).toBeVisible();
+  await expect(panel.getByRole('link', { name: 'Industrial Reporting database' })).toBeVisible();
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/refinery-eu.png` });
+});
+
 test('search finds a refinery by its operator', async ({ page }) => {
   test.skip(!FEATURES.refineries, 'FEATURES.refineries is off');
   await page.goto('/');

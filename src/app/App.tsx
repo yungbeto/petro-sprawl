@@ -160,7 +160,7 @@ export function App() {
   const [refineryGrouping, setRefineryGrouping] = useState<RefineryGrouping>('region');
   const [openRefineryGroup, setOpenRefineryGroup] = useState<string | null>(null);
   const refineryGroupList = useMemo(
-    () => (view === 'refineries' ? refineryGroups(data.refineries, refineryGrouping, data.countryRegions) : []),
+    () => (view === 'refineries' ? refineryGroups(data.refineries, refineryGrouping) : []),
     [view, data, refineryGrouping],
   );
   const openRefineries = useMemo(

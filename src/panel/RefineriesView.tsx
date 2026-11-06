@@ -34,19 +34,24 @@ export interface RefineriesViewProps {
 export function RefineriesView({ data, groups, grouping, onGrouping, openGroup, onToggleGroup, onSelect }: RefineriesViewProps) {
   const total = data.refineries.length;
   const overall = useMemo(() => statusGroups(countStatuses(data.refineries.map(refineryStatus))), [data]);
-  const capacity = useMemo(() => data.refineries.reduce((sum, r) => sum + (r.capacity?.value ?? 0), 0), [data]);
+  const us = useMemo(() => data.refineries.filter((r) => r.pointSource === 'eia'), [data]);
+  const capacity = useMemo(() => us.reduce((sum, r) => sum + (r.capacity?.value ?? 0), 0), [us]);
+  const europe = total - us.length;
   return (
     <>
       <section className="section">
         <SectionTitle title="Refineries" level="page">
           <Info label="About this list">
             Every US refinery EIA lists as operable on 1 January 2026, with its crude distillation capacity and EIA's split
-            of that capacity into operating and idle. Europe and the largest elsewhere come next.
+            of that capacity into operating and idle. In Europe, every site the EEA's industrial register lists as a working
+            refinery: the register gives no capacity or running status. The largest elsewhere come next.
           </Info>
         </SectionTitle>
         <p className="view-headline">
-          {total.toLocaleString('en-US')} US refineries, {formatRefineryCapacity({ value: capacity })} of crude distillation
-          capacity on 1 January 2026, from EIA. Open a group to bring its refineries out on the map.
+          {us.length.toLocaleString('en-US')} US refineries, {formatRefineryCapacity({ value: capacity })} of crude distillation
+          capacity on 1 January 2026, from EIA
+          {europe > 0 && `, and ${europe.toLocaleString('en-US')} in Europe from the EEA's register, capacity not published`}. Open a
+          group to bring its refineries out on the map.
         </p>
         <StatusSummary groups={overall} total={total} />
       </section>
@@ -80,9 +85,10 @@ export function RefineriesView({ data, groups, grouping, onGrouping, openGroup, 
       </section>
 
       <Note kind="source">
-        Capacity, companies and status from <SourceLink href={REFINERIES.eiaPage}>EIA's Refinery Capacity Report</SourceLink>,
-        in barrels per calendar day; locations from EIA's refinery map layer (2021). A refinery the 2021 layer doesn't place
-        stays off the map until another dataset does.
+        In the US, capacity, companies and status from <SourceLink href={REFINERIES.eiaPage}>EIA's Refinery Capacity Report</SourceLink>,
+        in barrels per calendar day, and locations from EIA's refinery map layer (2021); a refinery the 2021 layer doesn't
+        place stays off the map. In Europe, sites, companies and locations from the European Environment Agency's{' '}
+        <SourceLink href={REFINERIES.eeaPage}>Industrial Reporting database</SourceLink>, CC BY 4.0.
       </Note>
     </>
   );

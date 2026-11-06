@@ -35,7 +35,9 @@ const CURATED_LNG = 'data/curated/lng-evidence.json';
 const GEM_LNG = 'data/derived/gem-lng-terminals.json';
 const CURATED_TERMINALS = 'data/curated/oil-terminals.json';
 const CURATED_REFINERIES = 'data/curated/refinery-evidence.json';
-const US_REFINERIES = 'data/derived/refineries-us.json';
+// Imported refineries, one file per source (import:refineries-us, import:refineries-eu).
+const IMPORTED_REFINERIES = ['us', 'eu'] as const;
+const importedRefineries = () => Promise.all(IMPORTED_REFINERIES.map((s) => readJson<Refinery[]>(`data/derived/refineries-${s}.json`))).then((l) => l.flat());
 
 const readJson = async <T>(path: string) => JSON.parse(await readFile(path, 'utf8')) as T;
 
@@ -45,7 +47,7 @@ const disruptions = await publishDataset({
   produce: async () => {
     const records = await readJson<Disruption[]>('data/curated/disruptions.json');
     // Refineries are imported (import:refineries-us); check against what that wrote.
-    const refineryIds = new Set((await readJson<{ id: string }[]>(US_REFINERIES)).map((r) => r.id));
+    const refineryIds = new Set((await importedRefineries()).map((r) => r.id));
     const missing = records.filter((d) => d.assetKind === 'refinery' && !refineryIds.has(d.assetId));
     if (missing.length) throw new Error(`disruptions name refineries that don't exist: ${missing.map((d) => `${d.id} (${d.assetId})`).join('; ')}`);
     return {
@@ -125,13 +127,15 @@ const refineries = await publishDataset({
     // Empty until the first claim; validateRecords refuses an empty list.
     const raw = await readJson<unknown[]>(CURATED_REFINERIES);
     const curated = (raw.length ? validateRecords('refinery-evidence', raw, curatedRefineryEvidenceSchema) : []) as CuratedRefineryEvidence[];
-    const usMeta = await readJson<DatasetMeta>('data/derived/meta/refineries-us.json');
+    const metas = await Promise.all(IMPORTED_REFINERIES.map((s) => readJson<DatasetMeta>(`data/derived/meta/refineries-${s}.json`)));
+    const records = await importedRefineries();
+    if (new Set(records.map((r) => r.id)).size < records.length) throw new Error('two imported refineries share an id');
     return {
-      records: mergeRefineryEvidence(curated, await readJson<Refinery[]>(US_REFINERIES)),
+      records: mergeRefineryEvidence(curated, records),
       meta: {
-        sourceUrl: usMeta.sourceUrl,
-        sourceVersion: `${usMeta.sourceVersion}; curated ${CURATED_REFINERIES} sha256:${await sha256File(CURATED_REFINERIES)}`,
-        license: `${usMeta.license}; curated evidence ours, linked sources keep their own terms`,
+        sourceUrl: metas.map((m) => m.sourceUrl).join(' and '),
+        sourceVersion: `${metas.map((m) => m.sourceVersion).join('; ')}; curated ${CURATED_REFINERIES} sha256:${await sha256File(CURATED_REFINERIES)}`,
+        license: `${metas.map((m) => m.license).join('; ')}; curated evidence ours, linked sources keep their own terms`,
       },
     };
   },

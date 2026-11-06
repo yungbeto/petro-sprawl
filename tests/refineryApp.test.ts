@@ -3,7 +3,7 @@ import { refineryRadiusPx, refineryStatus } from '../src/lib/encoding';
 import { REFINERY_RADIUS } from '../src/lib/config';
 import { kmBetween, pipelinesAtRefinery, refineriesAtPipeline, refineriesInPadd, refineryGroups } from '../src/lib/refineries';
 import { brandOf, refineryTerms } from '../jobs/lib/news';
-import { mergeRefineryEvidence } from '../jobs/lib/refineries';
+import { mergeRefineryEvidence, toEeaRefineries, type EeaRefinery } from '../jobs/lib/refineries';
 import type { Evidence, Pipeline, Refinery } from '../src/types';
 
 const eia = (status: Evidence['status']): Evidence => ({
@@ -60,7 +60,7 @@ describe('refineryGroups', () => {
   ];
 
   it('groups US refineries by PADD, largest group first, each largest first', () => {
-    const groups = refineryGroups(list, 'region', []);
+    const groups = refineryGroups(list, 'region');
     expect(groups.map((g) => [g.id, g.capacity])).toEqual([
       ['padd-3', 550_000],
       ['padd-5', 300_000],
@@ -70,12 +70,17 @@ describe('refineryGroups', () => {
   });
 
   it('groups by parent company, falling back to the operator, unknown last', () => {
-    const groups = refineryGroups(list, 'company', []);
+    const groups = refineryGroups(list, 'company');
     expect(groups.map((g) => g.label)).toEqual(['Valero Energy Corp', 'Chevron USA', 'Company unknown']);
   });
 
+  it('groups refineries outside the US by country', () => {
+    const groups = refineryGroups([refinery('nl', { country: 'NL', padd: undefined })], 'region');
+    expect(groups.map((g) => [g.id, g.label])).toEqual([['country-NL', 'Netherlands']]);
+  });
+
   it('groups by status in the status order', () => {
-    expect(refineryGroups(list, 'status', []).map((g) => g.id)).toEqual(['running', 'stopped']);
+    expect(refineryGroups(list, 'status').map((g) => g.id)).toEqual(['running', 'stopped']);
   });
 });
 
@@ -137,5 +142,40 @@ describe('mergeRefineryEvidence', () => {
 
   it("throws on a claim for a refinery that isn't there", () => {
     expect(() => mergeRefineryEvidence([{ id: 'gone', evidence: [press] }], [refinery('r')])).toThrow(/gone/);
+  });
+});
+
+describe('toEeaRefineries', () => {
+  const row = (over: Partial<EeaRefinery> = {}): EeaRefinery => ({
+    inspireId: 'NL.RIVM/1.FACILITY',
+    name: 'Shell Nederland Raffinaderij B.V.',
+    parentCompany: 'SHELL NEDERLAND RAFFINADERIJ B.V.',
+    country: 'NL',
+    city: 'Rotterdam',
+    lat: 51.88,
+    lon: 4.36,
+    reportingYear: 2024,
+    ...over,
+  });
+
+  it('keeps the status unknown, with the register line as dataset evidence and no capacity', () => {
+    const [r] = toEeaRefineries([row()], { today: '2026-11-06' });
+    expect(r).toMatchObject({ id: 'eu-nl-shell-nederland-raffinaderij-b-v', country: 'NL', pointSource: 'eea', point: [4.36, 51.88] });
+    expect(r!.capacity).toBeUndefined();
+    expect(r!.evidence).toEqual([expect.objectContaining({ status: 'unknown', sourceType: 'dataset', observedAt: '2024-12-31' })]);
+    expect(r!.corporation).toBe('Shell Nederland Raffinaderij B.V.');
+  });
+
+  it('reads capitals as a name, with joining words in lower case', () => {
+    expect(toEeaRefineries([row({ name: 'RAFFINERIA DI TARANTO' })], { today: '2026-11-06' })[0]!.name).toBe('Raffineria di Taranto');
+  });
+
+  it("maps the register's codes for Greece and the UK, and adds the city where names repeat", () => {
+    const rows = [row({ country: 'EL', name: 'MOTOR OIL', city: 'Korinthos' }), row({ country: 'EL', name: 'Motor Oil', city: 'Aspropyrgos' })];
+    const out = toEeaRefineries(rows, { today: '2026-11-06' });
+    expect(out.map((r) => [r.country, r.name, r.id])).toEqual([
+      ['GR', 'Motor Oil (Korinthos)', 'eu-gr-motor-oil-korinthos'],
+      ['GR', 'Motor Oil (Aspropyrgos)', 'eu-gr-motor-oil-aspropyrgos'],
+    ]);
   });
 });

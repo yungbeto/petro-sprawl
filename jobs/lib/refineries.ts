@@ -183,3 +183,71 @@ export function mergeRefineryEvidence(curated: readonly CuratedRefineryEvidence[
     return cited ? { ...r, evidence: [...cited, ...r.evidence].sort(byRankThenObservedDesc) } : r;
   });
 }
+
+/** A refinery as the EEA register lists it (jobs/import-refineries-eu.py). */
+export interface EeaRefinery {
+  inspireId: string;
+  name: string;
+  parentCompany: string | null;
+  /** The register's country code: EL is Greece, UK the United Kingdom. */
+  country: string;
+  city: string | null;
+  lat: number;
+  lon: number;
+  reportingYear: number;
+}
+
+const EEA_COUNTRY: Record<string, string> = { EL: 'GR', UK: 'GB' };
+
+/** Joining words in the register's languages stay lower case inside a name: "Raffineria di Taranto". */
+const EU_SMALL = new Set(['di', 'de', 'del', 'della', 'des', 'du', 'la', 'le', 'y', 'e', 'et', 'und', 'van', 'der', 'den', 'nad', 'w', 'u']);
+
+/** Names the register gives in capitals read as names; mixed case is kept as reported. */
+const asName = (s: string) =>
+  s === s.toUpperCase()
+    ? titleCase(s)
+        .split(' ')
+        .map((w, i) => (i > 0 && EU_SMALL.has(w.toLowerCase()) ? w.toLowerCase() : w))
+        .join(' ')
+    : s.trim().replace(/\s+/g, ' ');
+
+/**
+ * Refinery records from the EEA register. The register says a site is permitted and reporting, not that
+ * it's running, so the status is unknown until a claim gives one (SPEC M11); the register's line is kept as
+ * dataset evidence. It gives no capacity. Ids are country and name, with the city where two share a name.
+ */
+export function toEeaRefineries(rows: readonly EeaRefinery[], { today }: { today: string }): Refinery[] {
+  const ids = rows.map((r) => slug(`eu ${EEA_COUNTRY[r.country] ?? r.country} ${asName(r.name)}`));
+  const taken = new Map<string, number>();
+  for (const id of ids) taken.set(id, (taken.get(id) ?? 0) + 1);
+  return rows.map((r, i) => {
+    const country = EEA_COUNTRY[r.country] ?? r.country;
+    const repeated = taken.get(ids[i]!)! > 1;
+    const city = r.city ? asName(r.city) : null;
+    // A company's name on several sites ("TotalEnergies Raffinage France") says which one by its town.
+    const name = repeated && city ? `${asName(r.name)} (${city})` : asName(r.name);
+    const company = r.parentCompany ? asName(r.parentCompany) : undefined;
+    const id = repeated ? slug(`${ids[i]} ${city ?? r.inspireId}`) : ids[i]!;
+    const refinery: Refinery = {
+      id,
+      name,
+      aliases: company && company !== name ? [company] : [],
+      country,
+      point: [Number(r.lon.toFixed(5)), Number(r.lat.toFixed(5))],
+      pointApprox: false,
+      pointSource: 'eea',
+      ...(company ? { corporation: company } : {}),
+      evidence: [
+        {
+          status: 'unknown',
+          sourceType: 'dataset',
+          statement: `The EEA's industrial register lists it as a functional refinery in its ${r.reportingYear} report: a permit, not a sign it's running.`,
+          url: REFINERIES.eeaPage,
+          observedAt: `${r.reportingYear}-12-31`,
+          recordedAt: today,
+        },
+      ],
+    };
+    return refinery;
+  });
+}

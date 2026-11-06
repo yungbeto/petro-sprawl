@@ -602,6 +602,8 @@ export const FEATURES = {
 export const REFINERIES = {
   eiaPage: 'https://www.eia.gov/petroleum/refinerycapacity/',
   eiaTitle: 'Refinery Capacity Report 2026, capacity of individual refineries',
+  /** The EEA register's download (M11 phase 2), CC BY 4.0: credit the European Environment Agency. */
+  eeaPage: 'https://sdi.eea.europa.eu/datastore/public/eea_t_ied-eprtr_p_2007-2024_v16_r00/',
   linkKm: 5,
 } as const;
 

@@ -329,7 +329,7 @@ export function shareCards(data: Datasets): Record<ShareFile, ShareIndex> {
       focus: [...data.lngTerminals, ...data.oilTerminals].flatMap((t) => pointCells(t.point, 1)),
     }),
     refineries: () => ({
-      facts: [`${data.refineries.length} refineries, with their crude distillation capacity`],
+      facts: [`${data.refineries.length} refineries in the US and Europe, with their status and, in the US, crude distillation capacity`],
       focus: data.refineries.flatMap((r) => pointCells(r.point, 1)),
     }),
     basins: () => ({

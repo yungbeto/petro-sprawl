@@ -1,0 +1,1026 @@
+{
+ "source": "EEA Industrial Reporting database, Industrial_dataset_v_16_2026_02_16.accdb, sha256:804bdcab04a31a4c9fb7ffa7e4affde6253f44d4617b8eadd6a20a90648c28d7",
+ "newestYear": 2024,
+ "refineries": [
+  {
+   "inspireId": "AT.CAED/9008390661741.FACILITY",
+   "name": "OMV Downstream GmbH",
+   "parentCompany": "OMV Downstream GmbH",
+   "country": "AT",
+   "city": "Schwechat",
+   "lat": 48.144722,
+   "lon": 16.493889,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://data.ied_registry.omgeving.vlaanderen.be/id/productionfacility/BE.VL.000000118.FACILITY",
+   "name": "EXXONMOBIL PETROLEUM & CHEMICAL - ESSO RAFFINADERIJ",
+   "parentCompany": "EXXONMOBIL PETROLEUM & CHEMICAL",
+   "country": "BE",
+   "city": "Antwerpen",
+   "lat": 51.25712,
+   "lon": 4.34517,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://data.ied_registry.omgeving.vlaanderen.be/id/productionfacility/BE.VL.000000169.FACILITY",
+   "name": "TotalEnergies Refinery Antwerp",
+   "parentCompany": "TotalEnergies Refinery Antwerp",
+   "country": "BE",
+   "city": "Antwerpen",
+   "lat": 51.27011,
+   "lon": 4.32261,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "BG.CAED/008000008.FACILITY",
+   "name": "Bulgarian Petroleum Refinery",
+   "parentCompany": "“Българска Петролна Рафинерия”  ЕООД",
+   "country": "BG",
+   "city": "Плевен",
+   "lat": 43.41139,
+   "lon": 24.48611,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "BG.CAED/002000008.FACILITY",
+   "name": "Lukoil Neftohim Burgas AD",
+   "parentCompany": "“Лукойл Нефтохим Бургас” АД",
+   "country": "BG",
+   "city": "Бургас",
+   "lat": 42.54544,
+   "lon": 27.336508,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "BG.CAED/008000064.FACILITY",
+   "name": "RAFINERY PLAMA",
+   "parentCompany": "“РАФИНЕРИЯ ПЛАМА” АД",
+   "country": "BG",
+   "city": "Пловдив",
+   "lat": 43.400988,
+   "lon": 24.488705,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "BG.CAED/009001006.FACILITY",
+   "name": "Refinery Ins Oil",
+   "parentCompany": "“ИНСА ОЙЛ” ООД",
+   "country": "BG",
+   "city": "Раковски",
+   "lat": 42.201917,
+   "lon": 25.030972,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "CH.CAED/000000011.Facility",
+   "name": "Varo Refining Cressier SA / Raffinerie de Cressier",
+   "parentCompany": "Varo Refining Cressier SA",
+   "country": "CH",
+   "city": "Cressier",
+   "lat": 47.04,
+   "lon": 7.0358,
+   "reportingYear": 2023
+  },
+  {
+   "inspireId": "CZ.MZP.S204/CZ28045908.FACILITY",
+   "name": "HS Kolín",
+   "parentCompany": "PARAMO, a.s.",
+   "country": "CZ",
+   "city": "Kolín",
+   "lat": 50.04281165,
+   "lon": 15.211599,
+   "reportingYear": 2023
+  },
+  {
+   "inspireId": "CZ.MZP.E532/CZ11020488.FACILITY",
+   "name": "HS Pardubice",
+   "parentCompany": "PARAMO, a.s.",
+   "country": "CZ",
+   "city": "Pardubice VI",
+   "lat": 50.03146588,
+   "lon": 15.74508121,
+   "reportingYear": 2023
+  },
+  {
+   "inspireId": "CZ.MZP.S206/CZ41646031.FACILITY",
+   "name": "Rafinérie Kralupy nad Vltavou",
+   "parentCompany": "ORLEN Unipetrol RPA s.r.o.",
+   "country": "CZ",
+   "city": "Kralupy nad Vltavou",
+   "lat": 50.25840943,
+   "lon": 14.32869175,
+   "reportingYear": 2023
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.by.inspire.pf.ied/S00323",
+   "name": "BAYERNOIL Raffineriegesellschaft mbH, Betriebsteil Neustadt",
+   "parentCompany": "BAYERNOIL Raffineriegesellschaft mbH",
+   "country": "DE",
+   "city": "Neustadt a.d.Donau",
+   "lat": 48.7849835929634,
+   "lon": 11.7580033141637,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.by.inspire.pf.ied/S00223",
+   "name": "BAYERNOIL Raffineriegesellschaft mbH, Betriebsteil Vohburg",
+   "parentCompany": "BAYERNOIL Raffineriegesellschaft mbH",
+   "country": "DE",
+   "city": "Vohburg a.d.Donau",
+   "lat": 48.765795078838,
+   "lon": 11.5988829003106,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.ni.mu/10257401440",
+   "name": "BP Europa SE BP Lingen",
+   "parentCompany": "BP Europa SE BP Lingen",
+   "country": "DE",
+   "city": "Lingen (Ems), Stadt",
+   "lat": 52.56185,
+   "lon": 7.31181,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.by.inspire.pf.ied/S00135",
+   "name": "Gunvor Raffinerie Ingolstadt GmbH",
+   "parentCompany": "Gunvor Raffinerie Ingolstadt GmbH",
+   "country": "DE",
+   "city": "Kösching",
+   "lat": 48.7893600121951,
+   "lon": 11.4729508285131,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.ni.mu/10101531850",
+   "name": "H&R Chemisch Pharmazeutische Spezialitäten GmbH",
+   "parentCompany": "H&R Chemisch Pharmazeutische Spezialitäten GmbH",
+   "country": "DE",
+   "city": "Salzbergen",
+   "lat": 52.3176,
+   "lon": 7.34858,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.hh/pf.bube-eureg_/3340",
+   "name": "H&R Ölwerke Schindler GmbH",
+   "parentCompany": "H&R GmbH & Co. KGaA",
+   "country": "DE",
+   "city": "Hamburg",
+   "lat": 53.51562,
+   "lon": 9.95017,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.hh/pf.bube-eureg_/3426",
+   "name": "Holborn Europa Raffinerie GmbH",
+   "parentCompany": "Holborn Investment Company Ltd.",
+   "country": "DE",
+   "city": "Hamburg",
+   "lat": 53.47709,
+   "lon": 9.95158,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.hh/pf.bube-eureg_/4380",
+   "name": "Hywax GmbH Werk Witternstraße",
+   "parentCompany": "Hywax GmbH",
+   "country": "DE",
+   "city": "Hamburg",
+   "lat": 53.52305,
+   "lon": 9.9791,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.hh/pf.bube-eureg_/4379",
+   "name": "Hywax GmbH Werk Worthdamm",
+   "parentCompany": "Hywax GmbH",
+   "country": "DE",
+   "city": "Hamburg",
+   "lat": 53.53508,
+   "lon": 9.98327,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.bw.lubw.inspire.pf/pf-450-2719371-00000000",
+   "name": "MIRO-Mineralölraffinerie Oberrhein GmbH & Co.KG Werk 1",
+   "parentCompany": "MIRO-Mineralölraffinerie Oberrhein GmbH & Co.KG",
+   "country": "DE",
+   "city": "Karlsruhe",
+   "lat": 49.05779,
+   "lon": 8.32905,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.bw.lubw.inspire.pf/pf-450-2719398-00000000",
+   "name": "MIRO-Mineralölraffinerie Oberrhein GmbH & Co.KG Werk 2",
+   "parentCompany": "MIRO-Mineralölraffinerie Oberrhein GmbH & Co.KG",
+   "country": "DE",
+   "city": "Karlsruhe",
+   "lat": 49.05682,
+   "lon": 8.34641,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.st.lau.pf.anlagen-ied-euregistry/102634",
+   "name": "Mitteldeutsches Paraffinwerk Webau GmbH",
+   "parentCompany": "Mitteldeutsches Paraffinwerk Webau GmbH",
+   "country": "DE",
+   "city": "Hohenmölsen",
+   "lat": 51.16722,
+   "lon": 12.06926,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.hh/pf.bube-eureg_/4383",
+   "name": "Nynas GmbH & Co. KG Raffinerie Harburg",
+   "parentCompany": "Nynas GmbH & Co. KG",
+   "country": "DE",
+   "city": "Hamburg",
+   "lat": 53.48659,
+   "lon": 9.97024,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.by.inspire.pf.ied/S00108",
+   "name": "OMV Deutschland Operations GmbH & Co. KG, Werk Burghausen",
+   "parentCompany": "OMV Deutschland Operations GmbH & Co. KG",
+   "country": "DE",
+   "city": "Burghausen",
+   "lat": 48.193003924231,
+   "lon": 12.8365268762075,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.bb.inspire.pf.eureg/23020490",
+   "name": "PCK Raffinerie GmbH",
+   "parentCompany": "PCK Raffinerie GmbH",
+   "country": "DE",
+   "city": "Schwedt/Oder",
+   "lat": 53.08759,
+   "lon": 14.23812,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.sh/10039818",
+   "name": "Raffinerie Heide GmbH",
+   "parentCompany": "Raffinerie Heide GmbH",
+   "country": "DE",
+   "city": "Hemmingstedt",
+   "lat": 54.16075,
+   "lon": 9.07971,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.nw.inspire.pf.bube-eureg/arb-2017-513000-500-0073211",
+   "name": "Ruhr Oel GmbH Werk Horst",
+   "parentCompany": "RUHR OEL GMBH",
+   "country": "DE",
+   "city": "Gelsenkirchen",
+   "lat": 51.53961,
+   "lon": 7.0372,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.nw.inspire.pf.bube-eureg/arb-2017-513000-500-0053929",
+   "name": "Ruhr Oel GmbH Werk Scholven",
+   "parentCompany": "RUHR OEL GmbH",
+   "country": "DE",
+   "city": "Gelsenkirchen",
+   "lat": 51.59603,
+   "lon": 7.02891,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.nw.inspire.pf.bube-eureg/arb-2017-315000-300-0213768",
+   "name": "Shell Deutschland GmbH, Shell Energy and Chemicals Park Rheinland Nord",
+   "parentCompany": "Shell Deutschland GmbH, Shell Energy and Chemicals Park Rheinland Nord",
+   "country": "DE",
+   "city": "Köln",
+   "lat": 50.85499,
+   "lon": 6.97685,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.nw.inspire.pf.bube-eureg/arb-2017-362040-300-0215443",
+   "name": "Shell Deutschland GmbH, Shell Energy and Chemicals Park Rheinland Süd",
+   "parentCompany": "Shell Deutschland GmbH, Shell Energy and Chemicals Park Rheinland Süd",
+   "country": "DE",
+   "city": "Wesseling",
+   "lat": 50.81411,
+   "lon": 7.00576,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.bw.lubw.inspire.pf/pf-450-1878476-00000000",
+   "name": "Südöl Mineralöl-Raffinerie GmbH",
+   "parentCompany": "Südöl Mineralöl-Raffinerie GmbH",
+   "country": "DE",
+   "city": "Eislingen/ Fils",
+   "lat": 48.69586,
+   "lon": 9.7115,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.st.lau.pf.anlagen-ied-euregistry/100194",
+   "name": "TOTALEnergies Raffinerie Mitteldeutschland GmbH (Raffinerie, BB01)",
+   "parentCompany": "TOTALEnergies Raffinerie Mitteldeutschland GmbH",
+   "country": "DE",
+   "city": "Spergau",
+   "lat": 51.28764,
+   "lon": 12.00012,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://registry.gdi-de.org/id/de.sh/10038068",
+   "name": "TotalEnergies Bitumen Deutschland GmbH",
+   "parentCompany": "TotalEnergies Bitumen Deutschland GmbH",
+   "country": "DE",
+   "city": "Brunsbüttel",
+   "lat": 53.91055,
+   "lon": 9.18501,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "DK.CAED/000112739.FACILITY",
+   "name": "Crossbridge Energy Fredericia A/S",
+   "parentCompany": "Crossbridge Energy Fredericia A/S",
+   "country": "DK",
+   "city": "Fredericia",
+   "lat": 55.5912278550192,
+   "lon": 9.7524233697535,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "DK.CAED/000105244.FACILITY",
+   "name": "Kalundborg Refinery A/S",
+   "parentCompany": "Kalundborg Refinery A/S",
+   "country": "DK",
+   "city": "Kalundborg",
+   "lat": 55.6549303636195,
+   "lon": 11.1036079016392,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "EE.KAUR.TTR/49.FACILITY",
+   "name": "VKG Oil AS, Kohtla-Järve põlevkiviõlitööstus",
+   "parentCompany": "Viru Keemia Grupp AS",
+   "country": "EE",
+   "city": "Järve linnaosa, Kohtla-Järve linn",
+   "lat": 59.3889086796,
+   "lon": 27.2435356746,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "ES.CAED/001577000.FACILITY",
+   "name": "ASFALTOS ESPAÑOLES",
+   "parentCompany": "ASFALTOS ESPAÑOLES S.A.",
+   "country": "ES",
+   "city": "Tarragona",
+   "lat": 41.106309,
+   "lon": 1.216904,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "ES.CAED/000704000.FACILITY",
+   "name": "BP ENERGÍA ESPAÑA, S.A.",
+   "parentCompany": "BP ENERGÍA ESPAÑA, S.A.",
+   "country": "ES",
+   "city": "GRAO",
+   "lat": 39.976742,
+   "lon": 0.014574,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "ES.CAED/003701000.FACILITY",
+   "name": "PETROLEOS DEL NORTE, PETRONOR, S.A. (PETRONOR)",
+   "parentCompany": "PETROLEOS DEL NORTE, PETRONOR, S.A.",
+   "country": "ES",
+   "city": "Muskiz",
+   "lat": 43.325743,
+   "lon": -3.110944,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "ES.CAED/001480000.FACILITY",
+   "name": "REFINERÍA DE TENERIFE Y COTESA",
+   "parentCompany": "COMPAÑÍA ESPAÑOLA DE PETRÓLEOS, S.A.",
+   "country": "ES",
+   "city": "SANTA CRUZ DE TENERIFE",
+   "lat": 28.455185,
+   "lon": -16.260967,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "ES.CAED/001479000.FACILITY",
+   "name": "REFINERÍA GIBRALTAR",
+   "parentCompany": "COMPAÑÍA ESPAÑOLA DE PETRÓLEOS, S.A.",
+   "country": "ES",
+   "city": "San Roque",
+   "lat": 36.185634,
+   "lon": -5.39647,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "ES.CAED/001482000.FACILITY",
+   "name": "REFINERÍA LA RÁBIDA",
+   "parentCompany": "COMPAÑÍA ESPAÑOLA DE PETRÓLEOS, S.A.",
+   "country": "ES",
+   "city": "Palos de la Frontera",
+   "lat": 37.184329,
+   "lon": -6.894507,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "ES.CAED/001526000.FACILITY",
+   "name": "REPSOL COMPLEJO INDUSTRIAL A CORUÑA",
+   "parentCompany": "REPSOL PETROLEO, S.A.",
+   "country": "ES",
+   "city": "GRELA (LA)",
+   "lat": 43.353129,
+   "lon": -8.446743,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "ES.CAED/001528000.FACILITY",
+   "name": "REPSOL PETROLEO S.A.",
+   "parentCompany": "REPSOL PETROLEO, S.A.",
+   "country": "ES",
+   "city": "Puertollano",
+   "lat": 38.672,
+   "lon": -4.0497,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "ES.CAED/001529000.FACILITY",
+   "name": "REPSOL PETRÓLEO, S.A. - C.I. CARTAGENA",
+   "parentCompany": "REPSOL PETROLEO, S.A.",
+   "country": "ES",
+   "city": "CARTAGENA",
+   "lat": 37.622214,
+   "lon": -0.982184,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "ES.CAED/001527000.FACILITY",
+   "name": "REPSOL REFINERIA TARRAGONA",
+   "parentCompany": "REPSOL PETROLEO, S.A.",
+   "country": "ES",
+   "city": "Pobla de Mafumet, La",
+   "lat": 41.173678,
+   "lon": 1.227106,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "http://paikkatiedot.fi/so/1002031/pf/ProductionFacility/0000001866.ProductionFacility",
+   "name": "Neste Oyj, Porvoon jalostamo",
+   "parentCompany": "Neste Oyj",
+   "country": "FI",
+   "city": "Porvoo",
+   "lat": 60.31311,
+   "lon": 25.52596,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "FR.CAED/3834.FACILITY",
+   "name": "ESSO RAFFINAGE",
+   "parentCompany": "ESSO RAFFINAGE",
+   "country": "FR",
+   "city": "NOTRE DAME DE GRAVENCHON",
+   "lat": 49.48838,
+   "lon": 0.56521,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "FR.CAED/7874.FACILITY",
+   "name": "PETROINEOS MANUFACTURING FRANCE SAS",
+   "parentCompany": "SAS",
+   "country": "FR",
+   "city": "MARTIGUES",
+   "lat": 43.38403,
+   "lon": 5.02829,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "FR.CAED/7646.FACILITY",
+   "name": "RHONE ENERGIES FOS-SUR-MER SAS",
+   "parentCompany": "RHONE ENERGIES FOS SUR MER",
+   "country": "FR",
+   "city": "FOS SUR MER",
+   "lat": 43.44832,
+   "lon": 4.93111,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "FR.CAED/13783.FACILITY",
+   "name": "SA DE LA RAFFINERIE DES ANTILLES",
+   "parentCompany": "SARA",
+   "country": "FR",
+   "city": "LE LAMENTIN",
+   "lat": 14.61665,
+   "lon": -61.02625,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "FR.CAED/6705.FACILITY",
+   "name": "TOTALENERGIES MARKETING SERVICES",
+   "parentCompany": "SA",
+   "country": "FR",
+   "city": "DONGES",
+   "lat": 47.37229,
+   "lon": -2.12805,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "FR.CAED/3814.FACILITY",
+   "name": "TOTALENERGIES RAFFINAGE FRANCE",
+   "parentCompany": "TOTALENERGIES RAFFINAGE FRANCE",
+   "country": "FR",
+   "city": "GONFREVILLE L ORCHER",
+   "lat": 49.51034,
+   "lon": 0.22592,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "FR.CAED/5422.FACILITY",
+   "name": "TOTALENERGIES RAFFINAGE FRANCE",
+   "parentCompany": "TOTAL RAFFINERIE DE FEYZIN",
+   "country": "FR",
+   "city": "FEYZIN",
+   "lat": 45.67743,
+   "lon": 4.86113,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "FR.CAED/7658.FACILITY",
+   "name": "TOTALENERGIES RAFFINAGE FRANCE",
+   "parentCompany": "TOTALENERGIES RAFFINAGE FRANCE",
+   "country": "FR",
+   "city": "CHATEAUNEUF LES MARTIGUES",
+   "lat": 43.38846,
+   "lon": 5.15267,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "EL.CAED/100053.FACILITY",
+   "name": "HELLENIC PETROLEUM R.S.S.O.P.P. S.A. - INDUSTRIAL DIVISION OF ASPROPYRGOS",
+   "parentCompany": "HELLENIC PETROLEUM HOLDINGS S.A.",
+   "country": "GR",
+   "city": "ASPROPYRGOS",
+   "lat": 38.03236,
+   "lon": 23.60276,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "EL.CAED/100062.FACILITY",
+   "name": "HELLENIC PETROLEUM R.S.S.O.P.P. S.A. - THESSALONIKI INDUSTRIAL COMPLEX",
+   "parentCompany": "HELLENIC PETROLEUM HOLDINGS S.A.",
+   "country": "GR",
+   "city": "ECHEDOROS",
+   "lat": 40.67952,
+   "lon": 22.87819,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "EL.CAED/100058.FACILITY",
+   "name": "HELLENIC PETROLEUM R.S.S.O.P.P. S.A. –SOUTH REFINERIES COMPLEX – ELEFSIS INDUSTRIAL FACILITIES",
+   "parentCompany": "HELLENIC PETROLEUM HOLDINGS S.A.",
+   "country": "GR",
+   "city": "ELEFSIS",
+   "lat": 38.04222,
+   "lon": 23.51083,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "EL.CAED/100066.FACILITY",
+   "name": "MOTOR OIL HELLLAS-CORINTH REFINERIES S.A.",
+   "parentCompany": "MOTOR OIL HELLLAS-CORINTH REFINERIES S.A.",
+   "country": "GR",
+   "city": "SOUSSAKI, AG. THEODORI",
+   "lat": 37.91778,
+   "lon": 23.07361,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "HR.CAED/000000067.FACILITY",
+   "name": "Rafinerija nafte Rijeka",
+   "parentCompany": "INA-Industrija nafte, d.d.",
+   "country": "HR",
+   "city": "Kostrena",
+   "lat": 45.28543,
+   "lon": 14.5342,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "HR.CAED/000000024.FACILITY",
+   "name": "Rafinerija nafte Sisak",
+   "parentCompany": "INA-Industrija nafte, d.d.",
+   "country": "HR",
+   "city": "Sisak",
+   "lat": 45.46583,
+   "lon": 16.38287,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "HU.OKIR/100197274.FACILITY",
+   "name": "MOL Nyrt.",
+   "parentCompany": "MOL Nyrt.",
+   "country": "HU",
+   "city": "Zalaegerszeg",
+   "lat": 46.820778,
+   "lon": 16.853138,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "HU.OKIR/100368313.FACILITY",
+   "name": "MOL Nyrt.",
+   "parentCompany": "MOL Magyar Olaj- és Gázipari Nyrt.",
+   "country": "HU",
+   "city": "Százhalombatta",
+   "lat": 47.288829,
+   "lon": 18.896743,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "HU.OKIR/100963886.FACILITY",
+   "name": "MOL Nyrt.",
+   "parentCompany": "MOL NyRT.",
+   "country": "HU",
+   "city": "Ortaháza",
+   "lat": 46.625192,
+   "lon": 16.699104,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IE.CAED/P0266.FACILITY",
+   "name": "Irving Oil Whitegate Refinery Limited",
+   "parentCompany": "Irving Oil Whitegate Refinery Limited",
+   "country": "IE",
+   "city": "Cork",
+   "lat": 51.820571,
+   "lon": -8.24794,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IT.CAED/570171001.FACILITY",
+   "name": "Eni S.p.A. Raffineria di Livorno",
+   "parentCompany": "Eni S.p.A.",
+   "country": "IT",
+   "city": "LIVORNO",
+   "lat": 43.5872,
+   "lon": 10.3365,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IT.CAED/160121001.FACILITY",
+   "name": "Iplom S.p.A - Raffineria di Busalla",
+   "parentCompany": "IPLOM S.p.A",
+   "country": "IT",
+   "city": "BUSALLA",
+   "lat": 44.5752,
+   "lon": 8.9466,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IT.CAED/270391001.FACILITY",
+   "name": "RAFFINERIA DI SANNAZZARO DE' BURGONDI",
+   "parentCompany": "Eni S.p.A.",
+   "country": "IT",
+   "city": "SANNAZZARO DE' BURGONDI",
+   "lat": 45.0997,
+   "lon": 8.8768,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IT.CAED/741231002.FACILITY",
+   "name": "RAFFINERIA DI TARANTO",
+   "parentCompany": "Eni S.p.A.",
+   "country": "IT",
+   "city": "TARANTO",
+   "lat": 40.4892,
+   "lon": 17.193,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IT.CAED/280691001.FACILITY",
+   "name": "RAFFINERIA SARPOM DI TRECATE",
+   "parentCompany": "S.A.R.P.O.M. SOCIETA' A RESPONSABILITA' LIMITATA RAFFINERIA PADANA OLII MINERALI",
+   "country": "IT",
+   "city": "TRECATE",
+   "lat": 45.4372,
+   "lon": 8.7858,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IT.CAED/481231002.FACILITY",
+   "name": "Raffineria Alma Petroli S.p.A.",
+   "parentCompany": "ALMA PETROLI -S.P.A.",
+   "country": "IT",
+   "city": "RAVENNA",
+   "lat": 44.478942,
+   "lon": 12.259294,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IT.CAED/960101005.FACILITY",
+   "name": "Raffineria ISAB Impianti NORD",
+   "parentCompany": "ISAB S.r.l",
+   "country": "IT",
+   "city": "PRIOLO GARGALLO",
+   "lat": 37.1791,
+   "lon": 15.1825,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IT.CAED/961003163.FACILITY",
+   "name": "Raffineria ISAB Impianti SUD",
+   "parentCompany": "ISAB S.r.l",
+   "country": "IT",
+   "city": "PRIOLO GARGALLO",
+   "lat": 37.135556,
+   "lon": 15.219444,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IT.CAED/980571001.FACILITY",
+   "name": "Raffineria di Milazzo S.C.p.A.",
+   "parentCompany": "ENI - Kupit",
+   "country": "IT",
+   "city": "MILAZZO",
+   "lat": 38.2027,
+   "lon": 15.2723,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IT.CAED/090181001.FACILITY",
+   "name": "Sarlux srl",
+   "parentCompany": "Saras S.p.a",
+   "country": "IT",
+   "city": "SARROCH",
+   "lat": 39.0971,
+   "lon": 9.0113,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IT.CAED/960111001.FACILITY",
+   "name": "Sonatrach Raffineria Italiana-Raffineria di Augusta",
+   "parentCompany": "Sonatrach Raffineria Italiana S.r.l. con socio unico",
+   "country": "IT",
+   "city": "AUGUSTA",
+   "lat": 37.2216,
+   "lon": 15.1905,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "IT.CAED/600151001.FACILITY",
+   "name": "api Raffineria di Ancona spa",
+   "parentCompany": "Italiana Petroli",
+   "country": "IT",
+   "city": "FALCONARA MARITTIMA",
+   "lat": 43.6395,
+   "lon": 13.3813,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "LT.CAED/166451720.FACILITY",
+   "name": "AB \"ORLEN Lietuva\"",
+   "parentCompany": "AB \"ORLEN Lietuva\"",
+   "country": "LT",
+   "city": "Juodeikiai",
+   "lat": 56.381366,
+   "lon": 22.176387,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "LT.CAED/301730724.FACILITY",
+   "name": "UAB \"NAPC\"",
+   "parentCompany": "UAB \"NAPC\"",
+   "country": "LT",
+   "city": "Jonava",
+   "lat": 55.075635,
+   "lon": 24.32091,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "NL.RIVM/000010058.FACILITY",
+   "name": "BP Raffinaderij Rotterdam B.V.",
+   "parentCompany": "BP Nederland Holdings B.V.",
+   "country": "NL",
+   "city": "Europoort Rotterdam",
+   "lat": 51.94499,
+   "lon": 4.10779,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "NL.RIVM/000010061.FACILITY",
+   "name": "Esso Nederland BV (Raffinaderij Rotterdam)",
+   "parentCompany": "Esso Nederland BV",
+   "country": "NL",
+   "city": "Botlek Rotterdam",
+   "lat": 51.87221,
+   "lon": 4.29626,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "NL.RIVM/000010059.FACILITY",
+   "name": "Gunvor Energy Rotterdam B.V. (GPR)",
+   "parentCompany": "Gunvor Energy Rotterdam B.V. (GPR)",
+   "country": "NL",
+   "city": "Europoort Rotterdam",
+   "lat": 51.93494,
+   "lon": 4.16573,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "NL.RIVM/000010057.FACILITY",
+   "name": "Shell Nederland Raffinaderij BV",
+   "parentCompany": "Shell Nederland Raffinaderij B.V.",
+   "country": "NL",
+   "city": "Vondelingenplaat Rotterdam",
+   "lat": 51.88013,
+   "lon": 4.33533,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "NL.RIVM/000012177.FACILITY",
+   "name": "VPR Energy B.V.",
+   "parentCompany": "Vitol Refining Group B.V.",
+   "country": "NL",
+   "city": "Europoort Rotterdam",
+   "lat": 51.91026,
+   "lon": 4.21727,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "NL.RIVM/000051501.FACILITY",
+   "name": "Zeeland Refinery N.V.",
+   "parentCompany": "Zeeland Refinery N.V.",
+   "country": "NL",
+   "city": "Nieuwdorp",
+   "lat": 51.44562,
+   "lon": 3.72705,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "PL.MŚ/000000214.FACILITY",
+   "name": "Grupa LOTOS S.A.",
+   "parentCompany": "Grupa LOTOS S.A.",
+   "country": "PL",
+   "city": "Gdańsk",
+   "lat": 54.3453598022461,
+   "lon": 18.7371673583984,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "PL.MŚ/000000024.FACILITY",
+   "name": "LOTOS ASfalt Sp. z o.o.",
+   "parentCompany": "\"LOTOS Asfalt\" Sp. z o.o.",
+   "country": "PL",
+   "city": "Jasło",
+   "lat": 49.7224159240723,
+   "lon": 21.4542236328125,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "PL.MŚ/000000344.FACILITY",
+   "name": "ORLEN POŁUDNIE SPÓŁKA AKCYJNA",
+   "parentCompany": "ORLEN POŁUDNIE SPÓŁKA AKCYJNA",
+   "country": "PL",
+   "city": "Trzebinia",
+   "lat": 50.15999985,
+   "lon": 19.4430542,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "PL.MŚ/000000075.FACILITY",
+   "name": "ORLEN Południe Spółka Akcyjna - Zakład Jedlicze",
+   "parentCompany": "ORLEN POŁUDNIE SPÓŁKA AKCYJNA",
+   "country": "PL",
+   "city": "Jedlicze",
+   "lat": 49.7134857177734,
+   "lon": 21.662166595459,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "PT.CAED/PT.APA05769662.CI",
+   "name": "Refinaria de Sines (CI)",
+   "parentCompany": "Petrogal, S.A.",
+   "country": "PT",
+   "city": "SINES",
+   "lat": 37.963901,
+   "lon": -8.800138,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "RO.CAED/106PH0001.FACILITY",
+   "name": "OMV PETROM SA - Petrobrazi",
+   "parentCompany": "OMV PETROM SA",
+   "country": "RO",
+   "city": "comuna BRAZI",
+   "lat": 44.876519,
+   "lon": 26.010388,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "RO.CAED/117OT0001.FACILITY",
+   "name": "SC DAROGAS OIL SRL",
+   "parentCompany": "SC DAROGAS OIL SRL",
+   "country": "RO",
+   "city": "Dranovatu",
+   "lat": 44.428333,
+   "lon": 24.268611,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "RO.CAED/105PH0001.FACILITY",
+   "name": "SC PETROTEL LUKOIL SA",
+   "parentCompany": "COMPANIA PETROLIERA LUKOIL",
+   "country": "RO",
+   "city": "Ploiesti",
+   "lat": 44.946413,
+   "lon": 26.079463,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "RO.CAED/101CT0002.FACILITY",
+   "name": "SC ROMPETROL RAFINARE SA - punct de lucru Rompetrol Rafinare - Navodari",
+   "parentCompany": "SC ROMPETROL RAFINARE SA",
+   "country": "RO",
+   "city": "NAVODARI",
+   "lat": 44.339117,
+   "lon": 28.646779,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "RO.CAED/101PH0001.FACILITY",
+   "name": "SC Rompetrol Rafinare SA - Rafinaria Vega",
+   "parentCompany": "ROMPETROL RAFINARE SA",
+   "country": "RO",
+   "city": "Ploiesti",
+   "lat": 44.962371,
+   "lon": 26.024671,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "RS.SEPA.NRIZ/FACILITY.000000004",
+   "name": "Rafinerija nafte  Beograd ad",
+   "parentCompany": "DRUŠTVO ZA PROIZVODNJU ULJA RAFINERIJA NAFTE AKCIONARSKO DRUŠTVO BEOGRAD",
+   "country": "RS",
+   "city": "Beograd-Palilula",
+   "lat": 44.81656,
+   "lon": 20.4896,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "SE.CAED/10014265.Facility",
+   "name": "NYNAS AB, Oljeraffinaderiet i Nynäshamn",
+   "parentCompany": "NYNAS AB",
+   "country": "SE",
+   "city": "NYNÄSHAMN",
+   "lat": 58.92093,
+   "lon": 17.96672,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "SE.CAED/10019434.Facility",
+   "name": "Preem  AB Preemraff Göteborg",
+   "parentCompany": "Preem AB",
+   "country": "SE",
+   "city": "GÖTEBORG",
+   "lat": 57.71094,
+   "lon": 11.82119,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "SE.CAED/10019649.Facility",
+   "name": "Preemraff, Lysekil",
+   "parentCompany": "Preem AB",
+   "country": "SE",
+   "city": "LYSEKIL",
+   "lat": 58.34674,
+   "lon": 11.42308,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "SE.CAED/10019436.Facility",
+   "name": "St1 Refinery AB",
+   "parentCompany": "St1 Refinery AB",
+   "country": "SE",
+   "city": "GÖTEBORG",
+   "lat": 57.70185,
+   "lon": 11.87983,
+   "reportingYear": 2024
+  },
+  {
+   "inspireId": "https://data.gov.sk/set/data/so/b4d884b3-4442-43db-a19c-ceb6e127960f/SK37012102.NRZ.FACILITY",
+   "name": "SLOVNAFT, a.s.",
+   "parentCompany": "SLOVNAFT, a.s.",
+   "country": "SK",
+   "city": "Bratislava - Ružinov",
+   "lat": 48.119024,
+   "lon": 17.18056,
+   "reportingYear": 2022
+  }
+ ]
+}

@@ -1,9 +1,9 @@
 // Refineries in the app (M11): the surface's groups, and the links to pipelines and regions. Pure.
 
-import type { CountryRegion, Pipeline, Refinery } from '../types';
+import type { Pipeline, Refinery } from '../types';
 import { PADDS, REFINERIES } from './config';
 import { refineryStatus } from './encoding';
-import { regionLabel } from './pipelineGroups';
+import { formatCountry } from './format';
 import { STATUS_GROUPS, countStatuses, statusGroups, type StatusGroupId } from './summary';
 
 export const REFINERY_GROUPINGS = ['region', 'company', 'status'] as const;
@@ -12,9 +12,9 @@ export type RefineryGrouping = (typeof REFINERY_GROUPINGS)[number];
 export const REFINERY_GROUPING_LABELS: Record<RefineryGrouping, string> = { region: 'Region', company: 'Company', status: 'Status' };
 
 export const REFINERY_GROUPING_NOTES: Record<RefineryGrouping, string> = {
-  region: "In the US by EIA's region (PADD); elsewhere by the region of the country.",
+  region: "In the US by EIA's region (PADD); elsewhere by country.",
   company: 'By the parent company EIA names, or the operator where it names none.',
-  status: "By the newest status: in the US, EIA's split of capacity into operating and idle on 1 January.",
+  status: "By the newest status: in the US, EIA's split of capacity into operating and idle on 1 January; in Europe unknown until a cited source.",
 };
 
 export interface RefineryGroup {
@@ -36,7 +36,7 @@ export function paddName(padd: number): string {
   return name ? `${name} (PADD ${padd})` : `PADD ${padd}`;
 }
 
-function groupKey(r: Refinery, by: RefineryGrouping, regionOf: Map<string, string>): { id: string; label: string } {
+function groupKey(r: Refinery, by: RefineryGrouping): { id: string; label: string } {
   if (by === 'status') {
     const status = refineryStatus(r);
     const group = STATUS_GROUPS.find((g) => (g.statuses as readonly string[]).includes(status))!;
@@ -47,19 +47,17 @@ function groupKey(r: Refinery, by: RefineryGrouping, regionOf: Map<string, strin
     return name ? { id: `company-${name.toLowerCase()}`, label: name } : { id: 'unknown', label: 'Company unknown' };
   }
   if (r.country === 'US' && r.padd) return { id: `padd-${r.padd}`, label: paddName(r.padd) };
-  const region = regionOf.get(r.country);
-  return region ? { id: region, label: regionLabel(region) } : { id: 'unknown', label: 'Region unknown' };
+  return { id: `country-${r.country}`, label: formatCountry(r.country) };
 }
 
 /**
  * Refineries in groups, each listed largest first. Groups by status keep the status order; the others
  * go by total capacity, largest first, with the unknown group last.
  */
-export function refineryGroups(refineries: Refinery[], by: RefineryGrouping, regions: CountryRegion[]): RefineryGroup[] {
-  const regionOf = new Map(regions.map((r) => [r.id, r.region]));
+export function refineryGroups(refineries: Refinery[], by: RefineryGrouping): RefineryGroup[] {
   const buckets = new Map<string, { id: string; label: string; refineries: Refinery[] }>();
   for (const r of refineries) {
-    const key = groupKey(r, by, regionOf);
+    const key = groupKey(r, by);
     const b = buckets.get(key.id) ?? { ...key, refineries: [] };
     b.refineries.push(r);
     buckets.set(key.id, b);
@@ -74,7 +72,11 @@ export function refineryGroups(refineries: Refinery[], by: RefineryGrouping, reg
   return groups.sort(
     by === 'status'
       ? (a, b) => statusOrder(a.id) - statusOrder(b.id)
-      : (a, b) => Number(a.id === 'unknown') - Number(b.id === 'unknown') || b.capacity - a.capacity || a.label.localeCompare(b.label),
+      : (a, b) =>
+          Number(a.id === 'unknown') - Number(b.id === 'unknown') ||
+          b.capacity - a.capacity ||
+          b.refineries.length - a.refineries.length ||
+          a.label.localeCompare(b.label),
   );
 }
 

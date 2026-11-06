@@ -54,16 +54,18 @@ export function RefineryDetail({ item, data, now, onSelect }: { item: Refinery; 
               </span>
             </>
           ) : (
-            <span className="muted">Not sourced</span>
+            <span className="muted">Capacity not published</span>
           )}
         </Row>
-        {item.operator && (
+        {item.operator ? (
           <Row label="Operator">
             <span>
               {item.operator}
               {company && <span className="facts__aside"> · part of {company}</span>}
             </span>
           </Row>
+        ) : (
+          item.corporation && <Row label="Company">{item.corporation}</Row>
         )}
         {region && item.padd && (
           <Row label="Region">
@@ -92,11 +94,23 @@ export function RefineryDetail({ item, data, now, onSelect }: { item: Refinery; 
         </Row>
       </Facts>
       <Note kind="source">
-        Capacity is crude distillation in barrels per calendar day, as{' '}
-        <SourceLink href={REFINERIES.eiaPage}>EIA's Refinery Capacity Report</SourceLink> gives it on 1 January; the status is
-        its split into operating and idle on that day until a later dated source. Pipelines ending nearby have an end within{' '}
-        <span className="num-inline">{REFINERIES.linkKm}</span> km of the refinery's point in Global Energy Monitor's data, not a
-        cited connection. EIA publishes refinery use by region only, never for one plant.
+        {item.pointSource === 'eea' ? (
+          <>
+            Site, company and location from the European Environment Agency's{' '}
+            <SourceLink href={REFINERIES.eeaPage}>Industrial Reporting database</SourceLink> (CC BY 4.0), which lists sites
+            with a permit and their yearly reports, not whether they're running or how much they can refine, so the status
+            stays unknown until a dated source.
+          </>
+        ) : (
+          <>
+            Capacity is crude distillation in barrels per calendar day, as{' '}
+            <SourceLink href={REFINERIES.eiaPage}>EIA's Refinery Capacity Report</SourceLink> gives it on 1 January; the status
+            is its split into operating and idle on that day until a later dated source. EIA publishes refinery use by region
+            only, never for one plant.
+          </>
+        )}{' '}
+        Pipelines ending nearby have an end within <span className="num-inline">{REFINERIES.linkKm}</span> km of the refinery's
+        point in Global Energy Monitor's data, not a cited connection.
       </Note>
     </>
   );
