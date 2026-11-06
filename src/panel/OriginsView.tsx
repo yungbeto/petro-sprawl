@@ -11,6 +11,7 @@ import { FuelTabs } from './FuelTabs';
 import { Info } from './Info';
 import { SectionTitle } from '../ui/SectionTitle';
 import { Note } from '../ui/Note';
+import { cardClass } from '../ui/Card';
 
 export interface OriginsViewProps {
   data: Datasets;
@@ -55,7 +56,7 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
           <ul className="view-list view-list--cards" aria-label="Crude imports by country">
             {countries.map(({ record, rows }) => (
               <li key={record.id}>
-                <button type="button" className="view-row" onClick={() => onSelect({ kind: 'country', id: record.id.toLowerCase() })}>
+                <button type="button" className={cardClass({ interactive: true, className: 'view-row' })} onClick={() => onSelect({ kind: 'country', id: record.id.toLowerCase() })}>
                   <span className="stat-card__name">
                     {flagEmoji(record.id) && <span aria-hidden="true">{flagEmoji(record.id)} </span>}
                     {formatCountry(record.id)}
@@ -101,7 +102,7 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
               {regions.map(({ region, rows }) => {
                 return (
                   <li key={region.id}>
-                    <button type="button" className="view-row" onClick={() => onSelect({ kind: 'region', id: region.id }, fuel)}>
+                    <button type="button" className={cardClass({ interactive: true, className: 'view-row' })} onClick={() => onSelect({ kind: 'region', id: region.id }, fuel)}>
                       <span className="view-row__name">{region.name}</span>
                       {/* Spans, not a list: a button holds phrasing content only. */}
                       <span className="origin-tops">
