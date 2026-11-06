@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { Tag } from '../ui/Tag';
 import type { Selection } from '../app/urlState';
 import { PIPELINE_GROUPS } from '../lib/config';
 import type { Datasets } from '../lib/data';
@@ -102,7 +103,7 @@ function PipelineRow({ pipeline: p, onSelect }: { pipeline: Pipeline; onSelect: 
       <span className="view-row__meta">
         <span className={`status status--${status}`}>{statusLabel(status)}</span>
         {route && <span className="mono">{route}</span>}
-        {isResearched(p) && <span className="tag">Researched</span>}
+        {isResearched(p) && <Tag>Researched</Tag>}
       </span>
     </button>
   );

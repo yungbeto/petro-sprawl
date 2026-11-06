@@ -7,6 +7,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/components/bar.css';
 import './styles/components/card.css';
+import './styles/components/pill.css';
 import './styles/text.css';
 
 createRoot(document.getElementById('root')!).render(

@@ -1,3 +1,4 @@
+import { Chip } from '../ui/Chip';
 import { FILTER_DESCRIPTIONS, FILTER_LABELS, type FilterId } from '../lib/filters';
 
 interface FilterChipsProps {
@@ -13,17 +14,9 @@ export function FilterChips({ ids, active, counts, onChange }: FilterChipsProps)
   return (
     <div className="chips" role="toolbar" aria-label="Filters">
       {ids.map((id) => (
-        <button
-          key={id}
-          type="button"
-          className="chip"
-          aria-pressed={active === id}
-          title={FILTER_DESCRIPTIONS[id]}
-          onClick={() => onChange(active === id ? null : id)}
-        >
+        <Chip key={id} float pressed={active === id} count={counts[id]} title={FILTER_DESCRIPTIONS[id]} onClick={() => onChange(active === id ? null : id)}>
           {FILTER_LABELS[id]}
-          <span className="chip__count">{counts[id].toLocaleString('en-US')}</span>
-        </button>
+        </Chip>
       ))}
     </div>
   );

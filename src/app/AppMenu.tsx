@@ -1,4 +1,5 @@
 import { ArrowRightIcon } from '@phosphor-icons/react';
+import { SegmentedOptions } from '../ui/Segmented';
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { BASEMAP_CREDITS, DATASET_FRESHNESS, GLOBE, SITE } from '../lib/config';
 import type { Datasets } from '../lib/data';
@@ -179,20 +180,13 @@ export function AppMenu({ onClose, section, data, freshness, now, theme, themePr
             <div className="menu__columns">
               <section className="section">
                 <h2 className="section__title">Appearance</h2>
-                <div className="segmented" role="radiogroup" aria-label="Theme">
-                  {THEME_PREFERENCES.map((preference) => (
-                    <button
-                      key={preference}
-                      type="button"
-                      role="radio"
-                      aria-checked={themePreference === preference}
-                      className="segmented__option"
-                      onClick={() => onThemePreferenceChange(preference)}
-                    >
-                      {THEME_LABELS[preference]}
-                    </button>
-                  ))}
-                </div>
+                <SegmentedOptions
+                  label="Theme"
+                  options={THEME_PREFERENCES}
+                  labels={THEME_LABELS}
+                  value={themePreference}
+                  onChange={onThemePreferenceChange}
+                />
               </section>
               <section className="section">
                 <h2 className="section__title">Keyboard shortcuts</h2>

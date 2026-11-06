@@ -1,4 +1,5 @@
 import { useId, useMemo, useState, type ReactNode } from 'react';
+import { Tag } from '../ui/Tag';
 import { ArrowUpRightIcon } from '@phosphor-icons/react';
 import type { AssetStatus, Basin, Chokepoint, Company, Country, CountryCrudeImports, Evidence, LngTerminal, LngUnit, OilOriginRegion, OilRoute, OilTerminal, Pipeline } from '../types';
 import type { Selection } from '../app/urlState';
@@ -375,7 +376,7 @@ function DisruptionCard({ disruption: d, now }: { disruption: Disruption; now: D
     <Card as="li" className={`disruption${d.endedAt ? ' disruption--ended' : ''}`}>
       <p className="disruption__head">
         <span className="disruption__when">{when}</span>
-        <span className="disruption__cause">{capitalize(d.cause)}</span>
+        <Tag className="disruption__cause">{capitalize(d.cause)}</Tag>
       </p>
       <p id={summaryId} className={`disruption__summary${long && !summaryOpen ? ' disruption__summary--clamped' : ''}`}>
         {d.summary}

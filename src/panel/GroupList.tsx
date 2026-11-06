@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react';
+import { SegmentedOptions } from '../ui/Segmented';
 import { CaretDownIcon, CaretRightIcon } from '@phosphor-icons/react';
 import { formatIndexShare } from '../lib/format';
 import type { StatusGroupId } from '../lib/summary';
@@ -51,13 +52,7 @@ export function Segmented<T extends string>({
       <span className={hideLabel ? 'visually-hidden' : 'group-by__label'} id={id}>
         {label}
       </span>
-      <div className="segmented" role="radiogroup" aria-labelledby={id}>
-        {options.map((o) => (
-          <button key={o} type="button" role="radio" aria-checked={value === o} className="segmented__option" onClick={() => onChange(o)}>
-            {labels[o]}
-          </button>
-        ))}
-      </div>
+      <SegmentedOptions options={options} labels={labels} value={value} onChange={onChange} labelledBy={id} />
     </div>
   );
 }

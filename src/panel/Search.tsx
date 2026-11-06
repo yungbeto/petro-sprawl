@@ -1,4 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode, type Ref } from 'react';
+import { Chip } from '../ui/Chip';
 import { MagnifyingGlassIcon, XIcon } from '@phosphor-icons/react';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
@@ -200,11 +201,10 @@ export function SearchDialog({ data, onSelect, onView, onClose, initialScope = '
         </div>
         <div className="search-dialog__scopes" role="toolbar" aria-label="Search in">
           {ENABLED_SEARCH_SCOPES.map((s) => (
-            <button
+            <Chip
               key={s}
-              type="button"
-              className="chip"
-              aria-pressed={scope === s}
+              size="sm"
+              pressed={scope === s}
               onClick={() => {
                 setScope(s);
                 setActive(0);
@@ -212,7 +212,7 @@ export function SearchDialog({ data, onSelect, onView, onClose, initialScope = '
               }}
             >
               {SEARCH_SCOPE_LABELS[s]}
-            </button>
+            </Chip>
           ))}
         </div>
         {items.length === 0 ? (

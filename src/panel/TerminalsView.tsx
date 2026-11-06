@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { Tag } from '../ui/Tag';
 import type { Selection } from '../app/urlState';
 import { TERMINAL_GROUPS } from '../lib/config';
 import type { Datasets } from '../lib/data';
@@ -156,9 +157,9 @@ function LngRow({ terminal: t, onSelect }: { terminal: LngTerminal; onSelect: (s
         ) : (
           planned > 0 && <span className="num-inline">{formatMtpa(planned)} Mtpa planned</span>
         )}
-        {t.sendOutSeriesId && <span className="tag">Send-out measured</span>}
-        {!t.sendOutSeriesId && isResearchedLng(t) && <span className="tag">Researched</span>}
-        {t.floating && <span className="tag">Floating</span>}
+        {t.sendOutSeriesId && <Tag>Send-out measured</Tag>}
+        {!t.sendOutSeriesId && isResearchedLng(t) && <Tag>Researched</Tag>}
+        {t.floating && <Tag>Floating</Tag>}
       </span>
     </button>
   );
@@ -177,7 +178,7 @@ function OilRow({ terminal: t, onSelect }: { terminal: OilTerminal; onSelect: (s
             {t.throughput.value} {t.throughput.unit} loaded
           </span>
         )}
-        {t.role === 'import' && <span className="tag">Import</span>}
+        {t.role === 'import' && <Tag>Import</Tag>}
       </span>
     </button>
   );

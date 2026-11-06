@@ -1,0 +1,107 @@
+/*
+ * Small controls and labels (docs/design-system.md): tags (static, square), chips (toggles), and the
+ * segmented control (one of a few). The news's place links (.news__asset) are round because they go
+ * somewhere; a tag never does.
+ */
+
+/* Tag (src/ui/Tag.tsx): a static label beside a name. */
+.tag {
+  display: inline-block;
+  padding: 0 6px;
+  font-size: var(--text-xs);
+  line-height: 20px;
+  color: var(--text);
+  white-space: nowrap;
+  background: var(--surface-sunken);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--ring);
+}
+
+/* Chip (src/ui/Chip.tsx): a toggle, pressed or not. */
+.chip {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 var(--space-3);
+  font-size: var(--text-ui);
+  font-weight: 500;
+  white-space: nowrap;
+  background: var(--surface);
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: var(--ring);
+  cursor: pointer;
+}
+
+.chip:hover {
+  background: var(--surface-sunken);
+}
+
+/* Over the map: lifted like the map's other controls, so it holds on any basemap. */
+.chip--float {
+  box-shadow: var(--shadow-float);
+}
+
+.chip--float:hover {
+  background: var(--surface);
+  box-shadow: var(--shadow-float-hover);
+}
+
+/* Inside a dialog: smaller, flat. */
+.chip--sm {
+  height: 28px;
+  padding: 0 var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.chip[aria-pressed='true'] {
+  color: var(--surface);
+  background: var(--text);
+}
+
+.chip__count {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.chip[aria-pressed='true'] .chip__count {
+  color: inherit;
+  opacity: 0.75;
+}
+
+/* Segmented control (src/ui/Segmented.tsx): the options inset 2px in a sunken track. */
+.segmented {
+  display: inline-flex;
+  padding: 2px;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  /* Concentric: the options' radius plus the 2px inset. */
+  border-radius: calc(var(--radius) + 2px);
+}
+
+.segmented__option {
+  position: relative;
+  min-height: 28px;
+  padding: 0 var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  background: none;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+/* A 40px target on a 28px option. */
+.segmented__option::after {
+  content: '';
+  position: absolute;
+  inset: -6px 0;
+}
+
+.segmented__option[aria-checked='true'] {
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: var(--ring);
+}

@@ -5,8 +5,8 @@ the tokens, the text styles and the components, and the rules for using them. Th
 the end. Sentence case, no uppercase eyebrows, no em dashes, as everywhere in the app.
 
 Status (2026-11-05): tokens are done (`src/styles/tokens.css`, used throughout `base.css`); text styles are
-done (`src/styles/text.css`); of the shared components, `StatusBlock`, the bars (`MeterBar`, `PartsBar`) and `Card` are built and the
-rest are proposed.
+done (`src/styles/text.css`); of the shared components, `StatusBlock`, the bars, `Card`, `Tag`, `Chip` and `SegmentedOptions` are built
+and the rest are proposed.
 
 ## Principles
 
@@ -97,8 +97,9 @@ component; the rest are class patterns repeated by hand.
 | `MeterBar`, `PartsBar` (`src/ui/Bar.tsx`) | `.fill-bar`, `.oil-bar`, `.part-bar`, `.status-bar`, the origins and top-origins bars | one value with an optional tick; parts with tips or titles; sizes sm 4px, md 6px, lg 8px; tones below | Yes |
 | `Status` | `.status status--*` | dot + label | No (class only) |
 | `Band` | `.band` | below, near, above | Yes |
-| `Tag` | `.tag`, `.disruption__cause` | neutral | No |
-| `Chip` | `.chip`, `.segmented__option`, `.group-by` | toggle, with count | No |
+| `Tag` (`src/ui/Tag.tsx`) | `.tag`, the disruption cause | static, square corners: never a control | Yes |
+| `Chip` (`src/ui/Chip.tsx`) | the map's filter chips, the search scopes | toggle with optional count; `float` over the map, `sm` in a dialog | Yes |
+| `SegmentedOptions` (`src/ui/Segmented.tsx`) | the group-by switch (`Segmented` in GroupList wraps it with its label), the theme setting | one of a few | Yes |
 | `Tabs` | `.fuel-tabs` | underline | Yes (`FuelTabs`) |
 | `Button` | `.button`, `.icon-button`, `.link-button` | default, icon, text | No |
 | `SectionTitle` | `.section__title`, `.title-row` + `Info` | with count, with info, with a control | No |
@@ -156,6 +157,6 @@ Proposed home: `src/ui/` for the components, one file each, with their CSS in `s
    cards on the ring; figures out of mono.
 2. Done 2026-11-05. `.t-*` classes in `src/styles/text.css`; the title, figure, small and note classes take
    their type from there.
-3. Components, most repeated first: `StatusBlock` (done), bars (done), `Card` (done), `Tag`/`Chip`, `Button`,
+3. Components, most repeated first: `StatusBlock`, bars, `Card`, `Tag`/`Chip`/`SegmentedOptions` (done), `Button`,
    `SectionTitle`, `Note`.
 4. Split `base.css` and `details.tsx` along the component lines.
