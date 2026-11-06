@@ -15,7 +15,8 @@ export function formatCapacity(capacity: { value: number; unit: string }): strin
 }
 
 /** A refinery's crude distillation capacity, which EIA gives in barrels per calendar day: 656,400 barrels a day. */
-export function formatRefineryCapacity(capacity: { value: number }): string {
+export function formatRefineryCapacity(capacity: { value: number; unit?: string }): string {
+  if (capacity.unit === 'Mt/yr') return `${capacity.value.toLocaleString('en-US', { maximumFractionDigits: 1 })} million tonnes a year`;
   return `${Math.round(capacity.value).toLocaleString('en-US')} barrels a day`;
 }
 

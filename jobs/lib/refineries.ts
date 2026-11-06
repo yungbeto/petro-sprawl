@@ -4,6 +4,7 @@
 import { REFINERIES } from '../../src/lib/config';
 import type { AssetStatus, Evidence, Refinery } from '../../src/types';
 import { byRankThenObservedDesc } from './curated-pipelines';
+import { kmBetween } from '../../src/lib/refineries';
 
 /** One site from data/derived/eia-refineries.json (jobs/import-refineries-us.py). Barrels per calendar day. */
 export interface EiaRefinery {
@@ -182,6 +183,25 @@ export function mergeRefineryEvidence(curated: readonly CuratedRefineryEvidence[
     const cited = byId.get(r.id);
     return cited ? { ...r, evidence: [...cited, ...r.evidence].sort(byRankThenObservedDesc) } : r;
   });
+}
+
+/**
+ * Adds the curated refineries (phase 3) to the imported ones. A curated record with an imported refinery's id
+ * replaces it (curated wins); one within REFINERIES.sameSiteKm of an imported refinery under another id is the
+ * same plant twice, and throws, as do two curated records with one id.
+ */
+export function withCuratedRefineries(curated: readonly Refinery[], imported: readonly Refinery[], sameSiteKm: number = REFINERIES.sameSiteKm): Refinery[] {
+  const ids = new Set<string>();
+  for (const c of curated) {
+    if (ids.has(c.id)) throw new Error(`two curated refineries share the id ${c.id}`);
+    ids.add(c.id);
+  }
+  const kept = imported.filter((r) => !ids.has(r.id));
+  const twins = curated.flatMap((c) =>
+    kept.filter((r) => kmBetween(r.point, c.point) <= sameSiteKm).map((r) => `${c.id} is within ${sameSiteKm} km of ${r.id}`),
+  );
+  if (twins.length) throw new Error(`curated refineries already imported: ${twins.join('; ')}`);
+  return [...kept, ...curated];
 }
 
 /** A refinery as the EEA register lists it (jobs/import-refineries-eu.py). */

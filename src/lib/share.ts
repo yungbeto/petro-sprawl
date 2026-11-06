@@ -241,7 +241,9 @@ export function shareCards(data: Datasets): Record<ShareFile, ShareIndex> {
       title: r.name,
       facts: [
         [r.state, formatCountry(r.country)].filter(Boolean).join(', '),
-        r.capacity ? `${status}, ${formatRefineryCapacity(r.capacity)} of crude distillation capacity (${r.capacity.source.publisher}, ${r.capacity.asOf})` : status,
+        r.capacity
+          ? `${status}, ${formatRefineryCapacity(r.capacity)} of ${r.pointSource === 'wikidata' ? 'crude' : 'crude distillation'} capacity (${r.capacity.source.publisher}, ${r.capacity.asOf})`
+          : status,
       ],
       source: statusSource(r.evidence[0]),
       center: round1(r.point),

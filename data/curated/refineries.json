@@ -1,0 +1,557 @@
+[
+  {
+    "id": "ae-ruwais",
+    "name": "Ruwais",
+    "aliases": [],
+    "country": "AE",
+    "point": [
+      52.727833,
+      24.106288
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q39049731",
+    "operator": "ADNOC",
+    "capacity": {
+      "value": 922000,
+      "unit": "b/d",
+      "asOf": "2026-09-03",
+      "source": {
+        "publisher": "Egypt Oil & Gas",
+        "title": "ADNOC Restores 922,000 bbl/d Ruwais Refinery to Full Capacity",
+        "url": "https://egyptoil-gas.com/news/adnoc-restores-922000-bbl-d-ruwais-refinery-to-full-capacity/",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "ADNOC Restores 922,000 bbl/d Ruwais Refinery to Full Capacity"
+    },
+    "evidence": []
+  },
+  {
+    "id": "au-geelong",
+    "name": "Geelong",
+    "aliases": [],
+    "country": "AU",
+    "point": [
+      144.3821741,
+      -38.0777744
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q77024153",
+    "operator": "Viva Energy",
+    "capacity": {
+      "value": 120000,
+      "unit": "b/d",
+      "asOf": "2026-04-22",
+      "source": {
+        "publisher": "Rigzone",
+        "title": "Geelong Refinery to Restore 90 Pct of Transport Fuel Production in Weeks",
+        "url": "https://www.rigzone.com/news/geelong_refinery_to_restore_90_pct_of_transport_fuel_production_in_weeks-22-apr-2026-183506-article/",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "With a processing capacity of 120,000 barrels of oil per day, the Geelong Refinery supplies over 50 percent of Victoria’s and 10 percent of Australia's fuel"
+    },
+    "evidence": []
+  },
+  {
+    "id": "au-lytton",
+    "name": "Lytton",
+    "aliases": [],
+    "country": "AU",
+    "point": [
+      153.157,
+      -27.415
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q77023949",
+    "operator": "Ampol",
+    "capacity": {
+      "value": 109000,
+      "unit": "b/d",
+      "asOf": "2020-08-25",
+      "source": {
+        "publisher": "Argus",
+        "title": "Australia's Ampol reviews refinery in uncertain market",
+        "url": "https://www.argusmedia.com/en/news-and-insights/latest-market-news/2135312-australia-s-ampol-reviews-refinery-in-uncertain-market",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "Ampol operates the 109,000 b/d Lytton refinery in Brisbane, Queensland."
+    },
+    "evidence": []
+  },
+  {
+    "id": "ca-burnaby",
+    "name": "Burnaby",
+    "aliases": [],
+    "country": "CA",
+    "point": [
+      -122.99666667,
+      49.29083333
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q4999598",
+    "capacity": {
+      "value": 55000,
+      "unit": "b/d",
+      "asOf": "2022-05-09",
+      "source": {
+        "publisher": "The Globe and Mail",
+        "title": "Parkland’s B.C. refinery plans $600-million expansion of renewable fuel production",
+        "url": "https://www.theglobeandmail.com/business/article-parklands-bc-refinery-plans-600-million-expansion-of-renewable-fuel/",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "The refinery in the Vancouver suburb of Burnaby has the capacity to process 55,000 barrels a day of crude oil"
+    },
+    "evidence": []
+  },
+  {
+    "id": "ca-montreal",
+    "name": "Montreal",
+    "aliases": [],
+    "country": "CA",
+    "point": [
+      -73.5224,
+      45.6438
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q6906318",
+    "operator": "Suncor Energy",
+    "capacity": {
+      "value": 137000,
+      "unit": "b/d",
+      "asOf": "2025-10-23",
+      "source": {
+        "publisher": "BOE Report (Reuters)",
+        "title": "Suncor reports restart of units at Montreal refinery",
+        "url": "https://boereport.com/2025/10/23/suncor-reports-restart-of-units-at-montreal-refinery/",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "Suncor Energy on Thursday reported the restart of units in sequence at its 137,000 barrels-per-day Montreal refinery."
+    },
+    "evidence": []
+  },
+  {
+    "id": "ca-saint-john",
+    "name": "Saint John",
+    "aliases": [
+      "Irving Oil refinery"
+    ],
+    "country": "CA",
+    "point": [
+      -66.0125,
+      45.27888889
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q6074708",
+    "operator": "Irving Oil",
+    "capacity": {
+      "value": 320000,
+      "unit": "b/d",
+      "asOf": "2026-07-19",
+      "source": {
+        "publisher": "Pipeline & Gas Journal (Reuters)",
+        "title": "Irving Oil's Saint John Refinery to Begin Fall Turnaround in September",
+        "url": "https://pgjonline.com/news/2026/july/irving-oils-saint-john-refinery-to-begin-fall-turnaround-in-september",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "Irving Oil's 320,000-barrel-per-day refinery in Saint John, New Brunswick, will begin a two-month turnaround in September"
+    },
+    "evidence": []
+  },
+  {
+    "id": "ca-sarnia-suncor",
+    "name": "Sarnia (Suncor)",
+    "aliases": [],
+    "country": "CA",
+    "point": [
+      -82.439921,
+      42.931323
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q130782325",
+    "operator": "Suncor Energy",
+    "capacity": {
+      "value": 85000,
+      "unit": "b/d",
+      "asOf": "2026-06-19",
+      "source": {
+        "publisher": "BOE Report (Reuters)",
+        "title": "Suncor says fire that occurred at its Sarnia site has been extinguished",
+        "url": "https://boereport.com/2026/06/19/suncor-says-fire-that-occurred-at-its-sarnia-site-has-been-extinguished/",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "Suncor ’s 85,000 barrels per day refinery in Sarnia, Ontario had a small fire at the facility that was quickly contained and extinguished"
+    },
+    "sharedSite": true,
+    "evidence": []
+  },
+  {
+    "id": "ca-strathcona",
+    "name": "Strathcona",
+    "aliases": [],
+    "country": "CA",
+    "point": [
+      -113.392,
+      53.5461
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q7622084",
+    "operator": "Imperial Oil",
+    "capacity": {
+      "value": 187000,
+      "unit": "b/d",
+      "asOf": "2024-12-16",
+      "source": {
+        "publisher": "Industrial Info Resources",
+        "title": "Imperial Oil Hikes Production, Refining Guidance for 2025",
+        "url": "https://www.industrialinfo.com/news/article/imperial-oil-hikes-production-refining-guidance-for-2025--337304",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "The 187,000-barrel-per-day (BBL/d) Strathcona Refinery"
+    },
+    "evidence": []
+  },
+  {
+    "id": "gb-fawley",
+    "name": "Fawley",
+    "aliases": [],
+    "country": "GB",
+    "point": [
+      -1.365,
+      50.833
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q5438770",
+    "operator": "ExxonMobil",
+    "capacity": {
+      "value": 270000,
+      "unit": "b/d",
+      "asOf": "2022-11-09",
+      "source": {
+        "publisher": "Stabroek News (Reuters)",
+        "title": "Exxon shuts unit at Britain's Fawley oil refinery after flaring incident",
+        "url": "https://www.stabroeknews.com/2022/11/09/news/guyana/exxon-shuts-unit-at-britains-fawley-oil-refinery-after-flaring-incident/",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "it had isolated a unit at its 270,000 barrel-per-day Fawley oil refinery in southern England"
+    },
+    "evidence": []
+  },
+  {
+    "id": "gb-humber",
+    "name": "Humber",
+    "aliases": [
+      "South Killingholme refinery"
+    ],
+    "country": "GB",
+    "point": [
+      -0.252,
+      53.633
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q5939818",
+    "operator": "Phillips 66",
+    "capacity": {
+      "value": 221000,
+      "unit": "b/d",
+      "asOf": "2014-08-13",
+      "source": {
+        "publisher": "Forecourt Trader",
+        "title": "Competitive process",
+        "url": "https://forecourttrader.co.uk/suppliers/competitive-process/635473.article",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "The Humber Refinery is a modern/compact refinery in North Lincolnshire with a crude oil processing capacity of 221,000 barrels a day."
+    },
+    "evidence": []
+  },
+  {
+    "id": "in-jamnagar",
+    "name": "Jamnagar",
+    "aliases": [],
+    "country": "IN",
+    "point": [
+      69.86888889,
+      22.34805556
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q3417395",
+    "operator": "Reliance Industries",
+    "capacity": {
+      "value": 1400000,
+      "unit": "b/d",
+      "asOf": "2026-10-21",
+      "source": {
+        "publisher": "Business Today",
+        "title": "Rubio visits Jamnagar: What makes Reliance's oil refining complex the world's largest?",
+        "url": "https://www.businesstoday.in/latest/economy/story/rubio-visits-jamnagar-what-makes-reliances-oil-refining-complex-the-worlds-largest-562781-2026-10-21",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "The Jamnagar complex, operated by Mukesh Ambani-led Reliance Industries, has the capacity to process around 1.4 million barrels of crude oil every day"
+    },
+    "evidence": []
+  },
+  {
+    "id": "in-panipat",
+    "name": "Panipat",
+    "aliases": [],
+    "country": "IN",
+    "point": [
+      76.872,
+      29.471
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q7131186",
+    "operator": "Indian Oil",
+    "capacity": {
+      "value": 300000,
+      "unit": "b/d",
+      "asOf": "2019-01-24",
+      "source": {
+        "publisher": "Hydrocarbon Processing (Reuters)",
+        "title": "Indian Oil to shut half of Panipat refinery from mid-Feb for a month",
+        "url": "https://www.hydrocarbonprocessing.com/news/2019/01/indian-oil-to-shut-half-of-panipat-refinery-from-mid-feb-for-a-month",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "will shut half of its 300,000 barrels per day Panipat refinery"
+    },
+    "evidence": []
+  },
+  {
+    "id": "mx-tula",
+    "name": "Tula",
+    "aliases": [
+      "Miguel Hidalgo refinery"
+    ],
+    "country": "MX",
+    "point": [
+      -99.2719035,
+      20.0487427
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q98833946",
+    "operator": "Pemex",
+    "capacity": {
+      "value": 315000,
+      "unit": "b/d",
+      "asOf": "2024-05-28",
+      "source": {
+        "publisher": "Bloomberg Línea",
+        "title": "Refinería de Tula golpea avance de Pemex en procesamiento de petróleo",
+        "url": "https://www.bloomberglinea.com/latinoamerica/mexico/refineria-de-tula-golpea-avance-de-pemex-en-procesamiento-de-petroleo/",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "ordenaron a Pemex reducir el procesamiento de crudo en la refinería de Tula al 75% de su capacidad de 315.000 barriles diarios"
+    },
+    "evidence": []
+  },
+  {
+    "id": "ng-dangote",
+    "name": "Dangote",
+    "aliases": [
+      "Lekki refinery"
+    ],
+    "country": "NG",
+    "point": [
+      3.99075,
+      6.44134
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q60748485",
+    "operator": "Dangote Petroleum Refinery",
+    "capacity": {
+      "value": 650000,
+      "unit": "b/d",
+      "asOf": "2026-02-12",
+      "source": {
+        "publisher": "Nairametrics",
+        "title": "Dangote Refinery hits 650,000 bpd capacity, sets global record",
+        "url": "https://nairametrics.com/2026/02/12/dangote-refinery-hits-650000-bpd-capacity-sets-global-record/",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "The Dangote Petroleum Refinery has reached its full designed capacity of 650,000 barrels of crude oil per day (bpd)"
+    },
+    "evidence": []
+  },
+  {
+    "id": "no-mongstad",
+    "name": "Mongstad",
+    "aliases": [],
+    "country": "NO",
+    "point": [
+      5.02979,
+      60.81022
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q59199378",
+    "operator": "Equinor",
+    "capacity": {
+      "value": 226000,
+      "unit": "b/d",
+      "asOf": "2023-07-19",
+      "source": {
+        "publisher": "Offshore Engineer (Reuters)",
+        "title": "Full Output Resumes at Norway's Mongstad Oil Refinery, Equinor Says",
+        "url": "https://www.oedigital.com/news/506645-full-output-resumes-at-norway-s-mongstad-oil-refinery-equinor-says",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "Mongstad is Equinor's largest refinery with a crude oil and condensate distillation capacity of 226,000 barrels per day."
+    },
+    "evidence": []
+  },
+  {
+    "id": "om-duqm",
+    "name": "Duqm",
+    "aliases": [
+      "OQ8"
+    ],
+    "country": "OM",
+    "point": [
+      57.683,
+      19.68459
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q111710552",
+    "operator": "OQ8",
+    "capacity": {
+      "value": 230000,
+      "unit": "b/d",
+      "asOf": "2025-04-08",
+      "source": {
+        "publisher": "Oman Observer",
+        "title": "OQ8 completes LRT, unlocking $4 billion in shareholder guarantees",
+        "url": "https://www.omanobserver.om/article/1168757/business/energy/oq8-completes-lrt-unlocking-4-billion-in-shareholder-guarantees",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "Duqm Refinery, located in the Al Wusta region on Oman’s southeast coast, has exceeded 110% of its nameplate capacity, boosting output from 230,000 barrels per day (bpd) to 255,000 bpd."
+    },
+    "evidence": []
+  },
+  {
+    "id": "pe-talara",
+    "name": "Talara",
+    "aliases": [],
+    "country": "PE",
+    "point": [
+      -81.282294,
+      -4.583962
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q19950531",
+    "operator": "Petroperú",
+    "capacity": {
+      "value": 95000,
+      "unit": "b/d",
+      "asOf": "2022-12-08",
+      "source": {
+        "publisher": "Andina",
+        "title": "Petroperú: Refinería de Talara producirá combustible bioamigable con rentabilidad",
+        "url": "https://andina.pe/agencia/noticia-petroperu-refineria-talara-producira-combustible-bioamigable-rentabilidad-920766.aspx",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "La Refinería de Talara tiene capacidad para procesar hasta 95,000 barriles por día de crudo liviano y pesado"
+    },
+    "evidence": []
+  },
+  {
+    "id": "sa-ras-tanura",
+    "name": "Ras Tanura",
+    "aliases": [],
+    "country": "SA",
+    "point": [
+      50.1079,
+      26.6919
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q16510565",
+    "operator": "Saudi Aramco",
+    "capacity": {
+      "value": 550000,
+      "unit": "b/d",
+      "asOf": "2026-03-02",
+      "source": {
+        "publisher": "The National",
+        "title": "Saudi Aramco shuts down Ras Tanura refinery due to 'drone attack'",
+        "url": "https://www.thenationalnews.com/business/2026/03/02/saudi-aramco-shuts-down-ras-tanura-refinery-following-drone-attack",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "The fire at Ras Tanura has temporarily halted loadings at the 550,000 barrels per day refinery."
+    },
+    "evidence": []
+  },
+  {
+    "id": "tw-mailiao",
+    "name": "Mailiao",
+    "aliases": [],
+    "country": "TW",
+    "point": [
+      120.194888888,
+      23.792333333
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q7215612",
+    "operator": "Formosa Petrochemical",
+    "capacity": {
+      "value": 540000,
+      "unit": "b/d",
+      "asOf": "2020-07-15",
+      "source": {
+        "publisher": "Hydrocarbon Processing (Reuters)",
+        "title": "Taiwan's Formosa shuts unit at Mailiao oil refinery after fire",
+        "url": "https://www.hydrocarbonprocessing.com/news/2020/07/taiwans-formosa-shuts-unit-at-mailiao-oil-refinery-after-fire",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "its 540,000 barrels-per-day (bpd) Mailiao refinery"
+    },
+    "evidence": []
+  },
+  {
+    "id": "ve-paraguana",
+    "name": "Paraguaná",
+    "aliases": [
+      "Paraguana",
+      "Amuay",
+      "Cardón",
+      "Cardon"
+    ],
+    "country": "VE",
+    "point": [
+      -70.195,
+      11.74666667
+    ],
+    "pointApprox": false,
+    "pointSource": "wikidata",
+    "wikidata": "Q2219131",
+    "operator": "PDVSA",
+    "capacity": {
+      "value": 955000,
+      "unit": "b/d",
+      "asOf": "2025-05-07",
+      "source": {
+        "publisher": "Hydrocarbon Processing (Reuters)",
+        "title": "Venezuela restarts Carbon refinery's FCCU after a year out of service",
+        "url": "https://hydrocarbonprocessing.com/news/2025/05/venezuela-restarts-carbon-refinerys-fccu-after-a-year-out-of-service/",
+        "accessedAt": "2026-11-06"
+      },
+      "quote": "The Paraguana Refining Center, which includes both the Amuay and Cardon refineries, was on Tuesday processing about 187,000 bpd, equivalent to 20% of its installed capacity of 955,000 bpd"
+    },
+    "evidence": []
+  }
+]

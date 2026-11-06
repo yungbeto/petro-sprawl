@@ -605,6 +605,10 @@ export const REFINERIES = {
   /** The EEA register's download (M11 phase 2), CC BY 4.0: credit the European Environment Agency. */
   eeaPage: 'https://sdi.eea.europa.eu/datastore/public/eea_t_ied-eprtr_p_2007-2024_v16_r00/',
   linkKm: 5,
+  /** A curated refinery (phase 3) this close to an imported one is the same plant listed twice: build:curated stops. */
+  sameSiteKm: 3,
+  /** Where curated refineries' points come from: Wikidata, CC0. */
+  wikidataPage: 'https://www.wikidata.org/wiki/',
 } as const;
 
 /**

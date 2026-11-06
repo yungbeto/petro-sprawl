@@ -174,12 +174,35 @@ export const refinerySchema = z.object({
   corporation: z.string().min(1).optional(),
   // A capacity is shown only with its source and date (SPEC M11).
   capacity: z
-    .object({ value: z.number().positive(), unit: z.enum(['b/cd', 'b/sd', 'b/d', 'Mt/yr']), asOf: isoDate, source: pageRefSchema })
+    .object({
+      value: z.number().positive(),
+      unit: z.enum(['b/cd', 'b/sd', 'b/d', 'Mt/yr']),
+      asOf: isoDate,
+      source: pageRefSchema,
+      /** The source's own sentence, for a curated capacity: what a person checks the figure against. */
+      quote: z.string().min(1).optional(),
+    })
     .optional(),
   padd: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).optional(),
   state: z.string().min(1).optional(),
+  /** The Wikidata item a curated refinery's point comes from. */
+  wikidata: z.string().regex(/^Q\d+$/).optional(),
+  /** Other refineries share the site's name, so the news scan asks for the company too. */
+  sharedSite: z.literal(true).optional(),
   evidence: z.array(evidenceSchema),
   pipelineIds: z.array(z.string().min(1)).optional(),
+});
+
+/**
+ * A refinery outside the imported registers (M11 phase 3), researched one by one: a Wikidata point (CC0) and a
+ * capacity quoted from a dated page. Its status stays unknown until a cited claim in refinery-evidence.json.
+ */
+export const curatedRefinerySchema = refinerySchema.extend({
+  id: z.string().regex(/^[a-z]{2}-[a-z0-9-]+$/),
+  pointSource: z.literal('wikidata'),
+  wikidata: z.string().regex(/^Q\d+$/),
+  capacity: refinerySchema.shape.capacity.unwrap().extend({ quote: z.string().min(1) }),
+  evidence: z.array(evidenceSchema).max(0),
 });
 
 /** Cited claims for one refinery, by its id: like LNG evidence, never dataset or measured. */

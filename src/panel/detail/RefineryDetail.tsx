@@ -50,7 +50,8 @@ export function RefineryDetail({ item, data, now, onSelect }: { item: Refinery; 
             <>
               <span className="key-facts__value">{formatRefineryCapacity(item.capacity)}</span>
               <span className="facts__aside">
-                crude distillation, {item.capacity.asOf}, <SourceLink href={item.capacity.source.url}>{item.capacity.source.publisher}</SourceLink>
+                {item.pointSource === 'wikidata' ? 'crude, as reported' : 'crude distillation'}, {item.capacity.asOf},{' '}
+                <SourceLink href={item.capacity.source.url}>{item.capacity.source.publisher}</SourceLink>
               </span>
             </>
           ) : (
@@ -90,11 +91,22 @@ export function RefineryDetail({ item, data, now, onSelect }: { item: Refinery; 
       <Facts>
         <Row label="Location">
           <span className="mono">{formatLonLat(item.point)}</span>
-          <span className="facts__aside">{POINT_SOURCES[item.pointSource]}</span>
+          <span className="facts__aside">
+            {item.wikidata ? (
+              <SourceLink href={`${REFINERIES.wikidataPage}${item.wikidata}`}>{`${POINT_SOURCES.wikidata} ${item.wikidata}`}</SourceLink>
+            ) : (
+              POINT_SOURCES[item.pointSource]
+            )}
+          </span>
         </Row>
       </Facts>
       <Note kind="source">
-        {item.pointSource === 'eea' ? (
+        {item.pointSource === 'wikidata' ? (
+          <>
+            Location from Wikidata (CC0). Capacity as the linked page reports it on that date, in its own words: sources
+            measure it differently, so compare refineries with care. The status stays unknown until a dated source.
+          </>
+        ) : item.pointSource === 'eea' ? (
           <>
             Site, company and location from the European Environment Agency's{' '}
             <SourceLink href={REFINERIES.eeaPage}>Industrial Reporting database</SourceLink> (CC BY 4.0), which lists sites

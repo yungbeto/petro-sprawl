@@ -14,12 +14,13 @@ import type { DatasetMeta, Disruption, LngTerminal, OilTerminal, Pipeline, Refin
 import { linkSendOut, mergeLngEvidence, type CuratedLngEvidence } from './lib/curated-lng';
 import { mergePipelines, type CuratedPipeline } from './lib/curated-pipelines';
 import { prepareTerminals } from './lib/curated-terminals';
-import { mergeRefineryEvidence, type CuratedRefineryEvidence } from './lib/refineries';
+import { mergeRefineryEvidence, withCuratedRefineries, type CuratedRefineryEvidence } from './lib/refineries';
 import { publishDataset, report, sha256File, validateRecords } from './lib/output';
 import {
   curatedLngEvidenceSchema,
   curatedPipelineSchema,
   curatedRefineryEvidenceSchema,
+  curatedRefinerySchema,
   disruptionSchema,
   lngTerminalSchema,
   oilRouteSchema,
@@ -35,6 +36,12 @@ const CURATED_LNG = 'data/curated/lng-evidence.json';
 const GEM_LNG = 'data/derived/gem-lng-terminals.json';
 const CURATED_TERMINALS = 'data/curated/oil-terminals.json';
 const CURATED_REFINERIES = 'data/curated/refinery-evidence.json';
+// Refineries outside the imported registers, researched one by one (M11 phase 3).
+const CURATED_REFINERY_SITES = 'data/curated/refineries.json';
+const curatedRefineries = async () =>
+  validateRecords('refineries', await readJson<unknown[]>(CURATED_REFINERY_SITES), curatedRefinerySchema) as Refinery[];
+/** Every refinery: the imported ones, with the curated ones added (curated wins). */
+const allRefineries = async () => withCuratedRefineries(await curatedRefineries(), await importedRefineries());
 // Imported refineries, one file per source (import:refineries-us, import:refineries-eu).
 const IMPORTED_REFINERIES = ['us', 'eu'] as const;
 const importedRefineries = () => Promise.all(IMPORTED_REFINERIES.map((s) => readJson<Refinery[]>(`data/derived/refineries-${s}.json`))).then((l) => l.flat());
@@ -46,8 +53,8 @@ const disruptions = await publishDataset({
   schema: disruptionSchema,
   produce: async () => {
     const records = await readJson<Disruption[]>('data/curated/disruptions.json');
-    // Refineries are imported (import:refineries-us); check against what that wrote.
-    const refineryIds = new Set((await importedRefineries()).map((r) => r.id));
+    // Refineries are imported (import:refineries-us, import:refineries-eu) or curated; check against both.
+    const refineryIds = new Set((await allRefineries()).map((r) => r.id));
     const missing = records.filter((d) => d.assetKind === 'refinery' && !refineryIds.has(d.assetId));
     if (missing.length) throw new Error(`disruptions name refineries that don't exist: ${missing.map((d) => `${d.id} (${d.assetId})`).join('; ')}`);
     return {
@@ -128,14 +135,14 @@ const refineries = await publishDataset({
     const raw = await readJson<unknown[]>(CURATED_REFINERIES);
     const curated = (raw.length ? validateRecords('refinery-evidence', raw, curatedRefineryEvidenceSchema) : []) as CuratedRefineryEvidence[];
     const metas = await Promise.all(IMPORTED_REFINERIES.map((s) => readJson<DatasetMeta>(`data/derived/meta/refineries-${s}.json`)));
-    const records = await importedRefineries();
-    if (new Set(records.map((r) => r.id)).size < records.length) throw new Error('two imported refineries share an id');
+    const imported = await importedRefineries();
+    if (new Set(imported.map((r) => r.id)).size < imported.length) throw new Error('two imported refineries share an id');
     return {
-      records: mergeRefineryEvidence(curated, records),
+      records: mergeRefineryEvidence(curated, withCuratedRefineries(await curatedRefineries(), imported)),
       meta: {
-        sourceUrl: metas.map((m) => m.sourceUrl).join(' and '),
-        sourceVersion: `${metas.map((m) => m.sourceVersion).join('; ')}; curated ${CURATED_REFINERIES} sha256:${await sha256File(CURATED_REFINERIES)}`,
-        license: `${metas.map((m) => m.license).join('; ')}; curated evidence ours, linked sources keep their own terms`,
+        sourceUrl: [...metas.map((m) => m.sourceUrl), 'https://www.wikidata.org/'].join(' and '),
+        sourceVersion: `${metas.map((m) => m.sourceVersion).join('; ')}; curated ${CURATED_REFINERY_SITES} sha256:${await sha256File(CURATED_REFINERY_SITES)}; curated ${CURATED_REFINERIES} sha256:${await sha256File(CURATED_REFINERIES)}`,
+        license: `${metas.map((m) => m.license).join('; ')}; curated refinery points from Wikidata, CC0; curated capacities and evidence ours, linked sources keep their own terms`,
       },
     };
   },

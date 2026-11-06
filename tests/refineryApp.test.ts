@@ -3,7 +3,10 @@ import { refineryRadiusPx, refineryStatus } from '../src/lib/encoding';
 import { REFINERY_RADIUS } from '../src/lib/config';
 import { kmBetween, pipelinesAtRefinery, refineriesAtPipeline, refineriesInPadd, refineryGroups } from '../src/lib/refineries';
 import { brandOf, refineryTerms } from '../jobs/lib/news';
-import { mergeRefineryEvidence, toEeaRefineries, type EeaRefinery } from '../jobs/lib/refineries';
+import { mergeRefineryEvidence, toEeaRefineries, withCuratedRefineries, type EeaRefinery } from '../jobs/lib/refineries';
+import { formatRefineryCapacity } from '../src/lib/format';
+import { curatedRefinerySchema } from '../jobs/lib/schemas';
+import curatedRefineries from '../data/curated/refineries.json';
 import type { Evidence, Pipeline, Refinery } from '../src/types';
 
 const eia = (status: Evidence['status']): Evidence => ({
@@ -129,6 +132,40 @@ describe('refineryTerms', () => {
     ]);
     expect(terms.some((t) => t.key === 'port arthur refinery')).toBe(false);
     expect(terms.every((t) => !t.weak)).toBe(true);
+  });
+
+  it('names the company for a curated refinery that shares its site with refineries not on the map', () => {
+    const sarnia = refinery('ca-sarnia-suncor', { name: 'Sarnia (Suncor)', operator: 'Suncor Energy', sharedSite: true });
+    expect(refineryTerms([sarnia], [sarnia]).map((t) => t.text)).toEqual(['Suncor Sarnia refinery', "Suncor's Sarnia refinery"]);
+  });
+});
+
+describe('withCuratedRefineries', () => {
+  const curated = refinery('in-jamnagar', { country: 'IN', point: [69.87, 22.35], pointSource: 'wikidata', padd: undefined, evidence: [] });
+
+  it('adds curated refineries, replacing an imported one with the same id', () => {
+    const out = withCuratedRefineries([curated], [refinery('a'), refinery('in-jamnagar', { point: [69.87, 22.35] })]);
+    expect(out.map((r) => [r.id, r.pointSource])).toEqual([
+      ['a', 'eia'],
+      ['in-jamnagar', 'wikidata'],
+    ]);
+  });
+
+  it('throws on a curated refinery beside an imported one under another id, or two with one id', () => {
+    expect(() => withCuratedRefineries([curated], [refinery('eu-x', { point: [69.88, 22.35] })], 3)).toThrow(/in-jamnagar is within 3 km of eu-x/);
+    expect(() => withCuratedRefineries([curated, curated], [])).toThrow(/share the id/);
+  });
+
+  it('keeps every curated record to its schema: a Wikidata point, a quoted capacity, no status yet', () => {
+    expect(curatedRefineries.length).toBeGreaterThanOrEqual(20);
+    for (const r of curatedRefineries) expect(curatedRefinerySchema.safeParse(r).success, r.id).toBe(true);
+  });
+});
+
+describe('formatRefineryCapacity', () => {
+  it('reads barrels a day, and million tonnes a year when that is the unit', () => {
+    expect(formatRefineryCapacity({ value: 656_400 })).toBe('656,400 barrels a day');
+    expect(formatRefineryCapacity({ value: 68.2, unit: 'Mt/yr' })).toBe('68.2 million tonnes a year');
   });
 });
 

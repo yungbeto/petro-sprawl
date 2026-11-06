@@ -174,12 +174,16 @@ export interface Refinery {
   operator?: string;
   /** EIA's parent corporation. */
   corporation?: string;
-  /** Atmospheric crude distillation capacity, with where it comes from. */
-  capacity?: { value: number; unit: 'b/cd' | 'b/sd' | 'b/d' | 'Mt/yr'; asOf: string; source: PageRef };
+  /** Crude capacity, with where it comes from: atmospheric distillation from EIA, as the page words it elsewhere. */
+  capacity?: { value: number; unit: 'b/cd' | 'b/sd' | 'b/d' | 'Mt/yr'; asOf: string; source: PageRef; quote?: string };
   /** US only, from EIA. */
   padd?: 1 | 2 | 3 | 4 | 5;
   /** US only: the state, as EIA names it. */
   state?: string;
+  /** The Wikidata item a curated refinery's point comes from. */
+  wikidata?: string;
+  /** Other refineries share the site's name, so the news scan asks for the company too. */
+  sharedSite?: true;
   /** Newest first. */
   evidence: Evidence[];
   /** Mapped pipelines that end at or start from it. */

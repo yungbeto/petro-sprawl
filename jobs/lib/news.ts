@@ -151,17 +151,18 @@ export function brandOf(operator: string): string {
  * refinery". Where EIA lists more than one refinery at a site (Port Arthur has three), the site alone
  * would match all of them, so the term takes the company too, plain and possessive ("Motiva's Port Arthur
  * refinery"): the operator's and the parent's, since news often names the parent (Premcor's is Valero's).
- * Without either such a refinery gets no term.
+ * Without either such a refinery gets no term. A curated refinery marked sharedSite (Suncor's Sarnia, beside
+ * refineries this map doesn't hold) takes the company the same way.
  */
 export function refineryTerms(
-  refineries: readonly Pick<Refinery, 'id' | 'name' | 'operator' | 'corporation'>[],
+  refineries: readonly Pick<Refinery, 'id' | 'name' | 'operator' | 'corporation' | 'sharedSite'>[],
   all: readonly Pick<Refinery, 'name'>[],
 ): AssetTerm[] {
   const sites = new Map<string, number>();
   for (const r of all) sites.set(matchKey(siteOf(r.name)), (sites.get(matchKey(siteOf(r.name))) ?? 0) + 1);
   return refineries.flatMap((r) => {
     const site = siteOf(r.name);
-    const shared = (sites.get(matchKey(site)) ?? 0) > 1;
+    const shared = r.sharedSite || (sites.get(matchKey(site)) ?? 0) > 1;
     const brands = [...new Set([r.operator, r.corporation].filter((c): c is string => !!c).map(brandOf))];
     const texts = !shared ? [`${site} refinery`] : brands.flatMap((brand) => [`${brand} ${site} refinery`, `${brand}'s ${site} refinery`]);
     return texts.map((text) => ({ ref: `refinery/${r.id}`, text, key: matchKey(text), weak: false }));

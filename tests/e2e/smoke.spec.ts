@@ -918,6 +918,19 @@ test('a European refinery opens with an unknown status and no capacity, credited
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/refinery-eu.png` });
 });
 
+test('a curated refinery opens with its quoted capacity, the page it comes from, and its Wikidata point', async ({ page }) => {
+  test.skip(!FEATURES.refineries, 'FEATURES.refineries is off');
+  await page.goto('/?sel=refinery/in-jamnagar');
+  const panel = page.getByRole('complementary', { name: 'Panel' });
+  await expect(panel.getByRole('heading', { name: 'Jamnagar', exact: true })).toBeVisible();
+  await expect(panel.getByText('1,400,000 barrels a day', { exact: true })).toBeVisible();
+  await expect(panel.getByText(/crude, as reported, 2026-10-21/)).toBeVisible();
+  await expect(panel.getByRole('link', { name: 'Business Today' })).toBeVisible();
+  await expect(panel.getByRole('link', { name: 'Wikidata Q3417395' })).toBeVisible();
+  await expect(panel.getByText('No dated source on its status yet')).toBeVisible();
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/refinery-curated.png` });
+});
+
 test('search finds a refinery by its operator', async ({ page }) => {
   test.skip(!FEATURES.refineries, 'FEATURES.refineries is off');
   await page.goto('/');
