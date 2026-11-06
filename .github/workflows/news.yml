@@ -94,7 +94,7 @@ jobs:
           {
             echo "Disruption updates drafted by the news scan that need a person to check them. Each passed the automatic checks: the quote is on the page and names the asset, and the date comes from the page."
             echo
-            jq -r '.[] | "- **\(.ref)** (\(.action | gsub("_"; " "))): \(if .disruption then .disruption.summary else "\(.disruptionId)\(if .endedAt then ", ended \(.endedAt)" else "" end)\(if .cause then ", cause \(.cause)" else "" end)" end) [\(.source.publisher), \(.source.publishedAt)](\(.source.url))\n  - Needs review because \(.reason)"' data/reports/disruption-drafts.json
+            jq -r '.[] | "- **\(.ref)** (\(.action | gsub("_"; " "))): \(if .disruption then .disruption.summary else "\(.disruptionId)\(if .endedAt then ", ended \(.endedAt)" else "" end)\(if .cause then ", cause \(.cause)" else "" end)\(if .event then ", \(.event.at): \(.event.text)" else "" end)" end) [\(.source.publisher), \(.source.publishedAt)](\(.source.url))\n  - Needs review because \(.reason)"' data/reports/disruption-drafts.json
             echo
             echo "This pull request is rebuilt from main on every scan, keeping these drafts and adding new ones. Merge it to publish them all, or close it to drop them all. To drop one, delete it from data/reports/disruption-drafts.json on this branch; the next scan rebuilds the rest (other edits on the branch are replaced)."
             echo

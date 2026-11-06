@@ -42,6 +42,19 @@ describe('reviewDisruptionDrafts', () => {
     const fresh: DisruptionDraftRecord = { ...taken, source: source('https://gcaptain.com/d'), disruption: { ...hormuz, id: 'hormuz-2026-11-05' } };
     expect(reviewDisruptionDrafts([cited, gone, endEnded, taken], [fresh], main)).toEqual([fresh]);
   });
+
+  it('keeps an event whose source main already cites, and drops it once main has the event or the disruption ended', () => {
+    const event = (disruptionId = hormuz.id): DisruptionDraftRecord => ({
+      ...addSource('https://www.reuters.com/a', disruptionId),
+      reason: 'adds a dated event',
+      action: 'add_event',
+      event: { at: '2026-11-04', text: 'Iran attacks two tankers.', source: 'https://www.reuters.com/a' },
+    });
+    expect(reviewDisruptionDrafts([], [event()], main)).toEqual([event()]);
+    const done = { ...hormuz, events: [{ at: '2026-11-04', text: 'Iran attacks two tankers.', source: 'https://reuters.com/a/' }] };
+    expect(reviewDisruptionDrafts([event()], [], [done, ended])).toEqual([]);
+    expect(reviewDisruptionDrafts([event(ended.id)], [], main)).toEqual([]);
+  });
 });
 
 describe('reviewClaimDrafts', () => {

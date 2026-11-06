@@ -2,7 +2,7 @@
 // stories, and the checks every draft must pass before it touches data/curated/disruptions.json. Pure.
 
 import { z } from 'zod';
-import type { Disruption, NewsHeadline, SourceRef } from '../../src/types';
+import type { Disruption, DisruptionEvent, NewsHeadline, SourceRef } from '../../src/types';
 import { NEWS } from '../../src/lib/config';
 import { daysBetween, htmlToText, isTrusted, matchKey, quoteOnPage, urlKey, type Page } from './claims';
 import { siteKey } from './favicons';
@@ -282,6 +282,9 @@ export const newsDraftSchema = z.object({
   startedAt: z.string(),
   summary: z.string(),
   endedAt: z.string(),
+  /** With add_source, a dated step the article reports, in our words: the date it happened, and one sentence. */
+  eventAt: z.string(),
+  eventText: z.string(),
 });
 export type NewsDraft = z.infer<typeof newsDraftSchema>;
 
@@ -289,12 +292,14 @@ export type NewsDraft = z.infer<typeof newsDraftSchema>;
 export interface DisruptionDraftRecord {
   ref: string;
   reason: string;
-  action: Exclude<NewsDraft['action'], 'none'>;
+  /** `add_event`: an event from `source` for `disruptionId` (the source itself may be on main already). */
+  action: Exclude<NewsDraft['action'], 'none'> | 'add_event';
   disruptionId?: string;
   source: SourceRef;
   disruption?: Disruption;
   endedAt?: string;
   cause?: Disruption['cause'];
+  event?: DisruptionEvent;
 }
 
 /**
@@ -376,6 +381,38 @@ export function verifyNewsDraft(
       break;
   }
   return problems;
+}
+
+/**
+ * Why a drafted event can't be used; empty when it passes. Checked apart from its source, so a bad event
+ * never costs the source. The date must be a day the page could report: on or after the disruption's start,
+ * not after the page's own date, and within NEWS.eventMaxLagDays before it.
+ */
+export function verifyNewsEvent(draft: NewsDraft, published: string, target: Disruption | undefined): string[] {
+  const problems: string[] = [];
+  const text = draft.eventText.trim();
+  if (draft.action !== 'add_source' || !text) return ['no event'];
+  if (!target) problems.push('no disruption for the event');
+  if (text.length > NEWS.eventMaxChars) problems.push(`event is longer than ${NEWS.eventMaxChars} characters`);
+  if (!isDate(draft.eventAt)) problems.push(`event date "${draft.eventAt}" isn't a day`);
+  else {
+    if (draft.eventAt > published) problems.push('event is after the page was published');
+    else if (daysBetween(draft.eventAt, published) > NEWS.eventMaxLagDays) problems.push(`event is more than ${NEWS.eventMaxLagDays} days before the page`);
+    if (target && draft.eventAt < target.startedAt) problems.push('event is before the disruption started');
+    if (target?.events?.some((e) => e.at === draft.eventAt && e.source === draft.url)) problems.push('event already listed');
+  }
+  return problems;
+}
+
+/** Adds a drafted event, keeping events in date order; adds its source too when the disruption lacks it. */
+export function addEvent(disruptions: Disruption[], id: string, event: DisruptionEvent, source: SourceRef): Disruption[] {
+  if (!disruptions.some((d) => d.id === id)) throw new Error(`no disruption ${id}`);
+  return disruptions.map((d) => {
+    if (d.id !== id) return d;
+    const sources = d.sources.some((s) => urlKey(s.url) === urlKey(event.source)) ? d.sources : [source, ...d.sources];
+    const events = [...(d.events ?? []), event].sort((a, b) => a.at.localeCompare(b.at));
+    return { ...d, sources, events };
+  });
 }
 
 /**

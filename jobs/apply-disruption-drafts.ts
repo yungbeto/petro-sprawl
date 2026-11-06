@@ -5,12 +5,19 @@
 
 import { readFile, writeFile } from 'node:fs/promises';
 import type { Disruption } from '../src/types';
-import { addSource, type DisruptionDraftRecord } from './lib/news';
+import { addEvent, addSource, type DisruptionDraftRecord } from './lib/news';
 
 const FILE = 'data/curated/disruptions.json';
 const drafts = JSON.parse(await readFile('data/reports/disruption-drafts.json', 'utf8')) as DisruptionDraftRecord[];
 let disruptions = JSON.parse(await readFile(FILE, 'utf8')) as Disruption[];
-for (const d of drafts) {
+// Events last, so one whose source is also waiting here finds it added.
+const ordered = [...drafts.filter((d) => d.action !== 'add_event'), ...drafts.filter((d) => d.action === 'add_event')];
+for (const d of ordered) {
+  if (d.action === 'add_event') {
+    if (!d.disruptionId || !d.event) throw new Error(`event draft for ${d.ref} names no disruption or event`);
+    disruptions = addEvent(disruptions, d.disruptionId, d.event, d.source);
+    continue;
+  }
   if (d.action === 'new_disruption' && d.disruption) {
     disruptions = [...disruptions, d.disruption];
     continue;

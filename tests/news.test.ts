@@ -20,6 +20,8 @@ import {
   verifyNewsDraft,
   type Article,
   type NewsDraft,
+  addEvent,
+  verifyNewsEvent,
 } from '../jobs/lib/news';
 import type { Disruption } from '../src/types';
 
@@ -218,6 +220,8 @@ describe('checking drafts', () => {
     startedAt: '',
     summary: '',
     endedAt: '',
+    eventAt: '',
+    eventText: '',
     ...over,
   });
   const options = {
@@ -308,6 +312,31 @@ describe('checking drafts', () => {
     expect(picks({})).toEqual(['quiet', 'recovered']);
     expect(picks({ quiet: '2026-10-28' })).toEqual(['recovered']);
     expect(picks({ quiet: '2026-10-24' })).toEqual(['recovered', 'quiet']);
+  });
+
+  it('checks a drafted event on its own: a day on or after the start, not after the page, within the lag', () => {
+    const event = (over: Partial<NewsDraft>) => verifyNewsEvent(draft({ eventText: 'The Houthis say they struck the terminal.', eventAt: '2026-10-27', ...over }), '2026-10-28', fire);
+    expect(event({})).toEqual([]);
+    expect(event({ eventText: '' })).toEqual(['no event']);
+    expect(event({ action: 'end_disruption' })).toEqual(['no event']);
+    expect(event({ eventAt: '2026-10' })).toEqual(['event date "2026-10" isn\'t a day']);
+    expect(event({ eventAt: '2026-10-29' })).toEqual(['event is after the page was published']);
+    expect(event({ eventAt: '2026-10-26' })).toEqual(['event is before the disruption started']);
+    expect(verifyNewsEvent(draft({ eventText: 'Old news.', eventAt: '2026-10-27' }), '2026-11-06', fire)).toEqual(['event is more than 7 days before the page']);
+    expect(event({ eventText: 'x'.repeat(300) })).toEqual(['event is longer than 220 characters']);
+    const listed = { ...fire, events: [{ at: '2026-10-27', text: 'Struck.', source: 'https://www.reuters.com/world/ras-tanura' }] };
+    expect(verifyNewsEvent(draft({ eventText: 'Struck.', eventAt: '2026-10-27' }), '2026-10-28', listed)).toEqual(['event already listed']);
+  });
+
+  it('adds an event in date order, and its source when the disruption lacks it', () => {
+    const source = { publisher: 'Reuters', title: 'Strike', url: 'https://www.reuters.com/world/ras-tanura', publishedAt: '2026-10-28' };
+    const withEarlier = { ...fire, events: [{ at: '2026-10-30', text: 'Later.', source: fire.sources[0]!.url }] };
+    const [out] = addEvent([withEarlier], fire.id, { at: '2026-10-27', text: 'Struck.', source: source.url }, source);
+    expect(out!.events!.map((e) => e.at)).toEqual(['2026-10-27', '2026-10-30']);
+    expect(out!.sources.map((x) => x.url)).toEqual([source.url, fire.sources[0]!.url]);
+    const [again] = addEvent([out!], fire.id, { at: '2026-10-28', text: 'Again.', source: source.url }, source);
+    expect(again!.sources).toHaveLength(2);
+    expect(() => addEvent([fire], 'nope', { at: '2026-10-27', text: 'x', source: source.url }, source)).toThrow();
   });
 });
 

@@ -26,6 +26,11 @@ export function reviewDisruptionDrafts(
   const cited = new Set(main.flatMap((d) => d.sources.map((s) => urlKey(s.url))));
   const byId = new Map(main.map((d) => [d.id, d]));
   const keep = (d: DisruptionDraftRecord) => {
+    if (d.action === 'add_event') {
+      // Its source is usually on main already (the scan commits sources); moot once main has the event.
+      const target = d.disruptionId ? byId.get(d.disruptionId) : undefined;
+      return !!target && !!d.event && !target.endedAt && !target.events?.some((e) => e.at === d.event!.at && urlKey(e.source) === urlKey(d.event!.source));
+    }
     if (cited.has(urlKey(d.source.url))) return false;
     if (d.action === 'new_disruption') return !!d.disruption && !byId.has(d.disruption.id);
     const target = d.disruptionId ? byId.get(d.disruptionId) : undefined;
@@ -33,7 +38,7 @@ export function reviewDisruptionDrafts(
     return !(d.action === 'end_disruption' && target.endedAt);
   };
   const out = new Map<string, DisruptionDraftRecord>();
-  for (const d of [...pending, ...fresh]) if (keep(d)) out.set(`${d.action} ${urlKey(d.source.url)}`, d);
+  for (const d of [...pending, ...fresh]) if (keep(d)) out.set(`${d.action} ${urlKey(d.source.url)}${d.event ? ` ${d.event.at}` : ''}`, d);
   return [...out.values()];
 }
 

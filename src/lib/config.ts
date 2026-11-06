@@ -738,6 +738,12 @@ export const THUMBNAIL = {
 export const NEWS = {
   lookbackDays: 3,
   /**
+   * A drafted event (a dated step on a disruption in effect, 2026-11-06) must fall within this many days
+   * before its page's publication date: news reports what just happened. Events always go to review.
+   */
+  eventMaxLagDays: 7,
+  eventMaxChars: 220,
+  /**
    * A new disruption is published without review (marked unreviewed, decided 2026-11-03) when this many
    * outlets carry the story, the drafted page is a trusted one, it started within `newDisruptionMaxAgeDays`,
    * and the asset shows no disruption in effect. Anything else, and every end date, waits for review.
