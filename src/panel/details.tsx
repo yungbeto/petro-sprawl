@@ -68,6 +68,9 @@ import { OilBar, OilKey } from './BasinsView';
 import { MeterBar, PartsBar, type BarTone } from '../ui/Bar';
 import { Card } from '../ui/Card';
 import { assetHeadlines } from '../lib/headlines';
+import { TextButton } from '../ui/Button';
+import { SectionTitle } from '../ui/SectionTitle';
+import { Note } from '../ui/Note';
 
 /** A region can open on a given fuel (M7); everything else ignores it. */
 type OnSelect = (selection: Selection, fuel?: RegionFuel) => void;
@@ -91,7 +94,7 @@ function Header({ name, icon, lede }: { name: string; icon: ReactNode; lede?: Re
     <header className="detail__header">
       {icon}
       <div className="detail__heading">
-        <h2 className="detail__title">{name}</h2>
+        <SectionTitle title={name} level="page" />
         {lede && <p className="detail__lede">{lede}</p>}
       </div>
     </header>
@@ -102,7 +105,7 @@ function Header({ name, icon, lede }: { name: string; icon: ReactNode; lede?: Re
 function Facts({ children }: { children: ReactNode }) {
   return (
     <section className="section">
-      <h3 className="section__title">Details</h3>
+      <SectionTitle title="Details" />
       <dl className="facts">{children}</dl>
     </section>
   );
@@ -177,7 +180,7 @@ export function ChokepointDetail({ item, data, now, onSelect }: { item: Chokepoi
             </Row>
           </dl>
           <Card as="section" className="section">
-            <h3 className="section__title">Daily tanker transits, last 90 days</h3>
+            <SectionTitle title="Daily tanker transits, last 90 days" />
             <Sparkline
               points={flow.sparkline}
               unit="/day"
@@ -218,12 +221,12 @@ export function ChokepointDetail({ item, data, now, onSelect }: { item: Chokepoi
           <span className="mono">{formatLonLat(item.point)}</span>
         </Row>
       </Facts>
-      <p className="source">
+      <Note kind="source">
         Transits are vessel counts from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>, and cargo
         is PortWatch's estimate from each tanker's draft and size, in metric tons of any liquid cargo. The EIA figure is
         barrels, shown for scale. They aren't compared.
         {note && ` ${note}`}
-      </p>
+      </Note>
     </>
   );
 }
@@ -236,17 +239,13 @@ function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: bo
   const { port, flow, exports } = calls;
   return (
     <Card as="section" className="section">
-      <div className="title-row">
-        <span className="title-row__main">
-          <h3 className="section__title">Tanker calls at {port}, last 90 days</h3>
-          <Info label={`About tanker calls at ${port}`}>
+      <SectionTitle title={`Tanker calls at ${port}, last 90 days`} aside={<Band band={flow.band} />}>
+        <Info label={`About tanker calls at ${port}`}>
           Calls by tankers of any cargo, from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>.{' '}
           {terminal ? 'They count all tanker traffic at the port, not crude loadings.' : 'They show traffic at the port, not flow on this pipeline.'}
           {exports?.recent && " Exports are PortWatch's estimate from the change in each tanker's draft, in metric tons of any liquid cargo."}
-          </Info>
-        </span>
-        <Band band={flow.band} />
-      </div>
+        </Info>
+      </SectionTitle>
       <p className="section__lede">
         <span className="num-inline">{perDay(flow.recent?.mean)}</span> per day over the 7 days to{' '}
         <span className="mono">{flow.latestDate}</span>
@@ -286,10 +285,7 @@ function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: bo
 function TonnesSection({ title, flow, noun, label }: { title: string; flow: ChokepointFlow; noun: string; label: string }) {
   return (
     <Card as="section" className="section">
-      <div className="title-row">
-        <h3 className="section__title">{title}</h3>
-        {flow.recent && <Band band={flow.band} />}
-      </div>
+      <SectionTitle title={title} aside={flow.recent && <Band band={flow.band} />} />
       {flow.recent && (
         <p className="section__lede">
           <span className="num-inline">{formatTonnes(flow.recent.mean)}</span> {noun} per day over the 7 days to{' '}
@@ -328,15 +324,12 @@ function AssetNews({ selection, data, now, onSelect }: { selection: Selection; d
   if (!rows.length) return null;
   return (
     <section className="section" aria-labelledby={titleId}>
-      <div className="title-row">
-        <h3 className="section__title" id={titleId}>
-          In the news
-        </h3>
+      <SectionTitle title="In the news" id={titleId}>
         <Info label="About the headlines">
           Recent headlines from GDELT and Google News that name this place, from the last {NEWS.headlineDays} days, as the feeds list them.
           They aren't reviewed: read the article before relying on it. Disruptions and reports above are the cited record.
         </Info>
-      </div>
+      </SectionTitle>
       <NewsList rows={rows} data={data} now={now} onSelect={onSelect} />
     </section>
   );
@@ -346,7 +339,7 @@ function DisruptionList({ disruptions, now }: { disruptions: Disruption[]; now: 
   if (disruptions.length === 0) return null;
   return (
     <section className="section">
-      <h3 className="section__title">Disruptions</h3>
+      <SectionTitle title="Disruptions" />
       <ul className="disruptions">
         {disruptions.map((d) => (
           <DisruptionCard key={d.id} disruption={d} now={now} />
@@ -382,9 +375,9 @@ function DisruptionCard({ disruption: d, now }: { disruption: Disruption; now: D
         {d.summary}
       </p>
       {long && (
-        <button type="button" className="link-button disruption__toggle" aria-expanded={summaryOpen} aria-controls={summaryId} onClick={() => setSummaryOpen((v) => !v)}>
+        <TextButton className="disruption__toggle" aria-expanded={summaryOpen} aria-controls={summaryId} onClick={() => setSummaryOpen((v) => !v)}>
           {summaryOpen ? 'Show less' : 'Read more'}
-        </button>
+        </TextButton>
       )}
       <div className="disruption__sources-head">
         <h4 className="disruption__label">Sources</h4>
@@ -408,11 +401,11 @@ function DisruptionCard({ disruption: d, now }: { disruption: Disruption; now: D
         ))}
       </ul>
       {sources.length > DISRUPTION_CARD.sourcesShown && (
-        <button type="button" className="link-button disruption__toggle" aria-expanded={sourcesOpen} onClick={() => setSourcesOpen((v) => !v)}>
+        <TextButton className="disruption__toggle" aria-expanded={sourcesOpen} onClick={() => setSourcesOpen((v) => !v)}>
           {sourcesOpen ? 'Show fewer' : `Show ${hidden} more`}
-        </button>
+        </TextButton>
       )}
-      {shown.some((s) => s.unreviewed) && <p className="disruption__note">{UNREVIEWED_NOTE}</p>}
+      {shown.some((s) => s.unreviewed) && <Note kind="caption">{UNREVIEWED_NOTE}</Note>}
     </Card>
   );
 }
@@ -477,12 +470,12 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
           <span className="mono">{item.code}</span>
         </Row>
       </Facts>
-      <p className="source">
+      <Note kind="source">
         <SourceLink href="https://www.sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3">
           USGS World Petroleum Assessment 2000
         </SourceLink>
         ; countries from <SourceLink href="https://www.naturalearthdata.com/">Natural Earth</SourceLink>
-      </p>
+      </Note>
     </>
   );
 }
@@ -511,16 +504,13 @@ function BasinVolumesSection({ basin }: { basin: Basin }) {
   const cell = (value: number | null) => (value === null ? <span className="muted">–</span> : formatThousandfold(value));
   return (
     <section className="section" aria-labelledby={titleId}>
-      <div className="title-row">
-        <h3 className="section__title" id={titleId}>
-          Oil and gas, as assessed in 2000
-        </h3>
+      <SectionTitle title="Oil and gas, as assessed in 2000" id={titleId}>
         <Info label="About these volumes">
           From the USGS World Petroleum Assessment 2000. Produced and remaining are for fields discovered by 1996, from an
           industry database; undiscovered is the assessment's mean estimate of what is yet to be found. Nothing produced or
           found since is counted, so remaining is not what is left today.
         </Info>
-      </div>
+      </SectionTitle>
       {volumes ? (
         <table className="table">
           <thead>
@@ -654,9 +644,7 @@ function Reports({ evidence }: { evidence: Evidence[] }) {
   if (!items.some(isReport)) return null;
   return (
     <section className="section" aria-labelledby={titleId}>
-      <h3 className="section__title" id={titleId}>
-        Reports <span className="section__count">{items.length}</span>
-      </h3>
+      <SectionTitle title="Reports" id={titleId} count={items.length} />
       <ol className="reports">
         {items.map((e, i) => {
           const { text, publisher, host } = reportParts(e);
@@ -671,7 +659,7 @@ function Reports({ evidence }: { evidence: Evidence[] }) {
               </p>
               <p className="report__text">{text || SOURCE_TYPE_LABELS[e.sourceType]}</p>
               {e.unreviewed && (
-                <p className="report__unreviewed">Not yet reviewed: added automatically by the claims refresh. Read the source to check it.</p>
+                <Note kind="unreviewed">Not yet reviewed: added automatically by the claims refresh. Read the source to check it.</Note>
               )}
               {e.url && (
                 <a className="report__link" href={e.url} target="_blank" rel="noreferrer">
@@ -755,7 +743,7 @@ export function PipelineDetail({
       {/* With a 7-day mean the chart sits in the flow card above; without one it stands alone. */}
       {flow && flow.recentMean == null && flow.sparkline.length > 1 && (
         <Card as="section" className="section">
-          <h3 className="section__title">Daily physical flow, last 90 days</h3>
+          <SectionTitle title="Daily physical flow, last 90 days" />
           <Sparkline
             points={flow.sparkline.map((p) => ({ date: p.date, value: p.value / 1e6 }))}
             unit=" GWh/d"
@@ -851,8 +839,8 @@ export function PipelineDetail({
           onSelect={onSelect}
         />
       )}
-      {item.geometryApprox && <p className="note">Route is approximate. The source marks it as low accuracy.</p>}
-      <p className="source">
+      {item.geometryApprox && <Note>Route is approximate. The source marks it as low accuracy.</Note>}
+      <Note kind="source">
         Route and inventory: <SourceLink href="https://globalenergymonitor.org/">Global Energy Monitor</SourceLink>, CC BY
         4.0{curated && '; status evidence curated from the sources linked above'}
         {flow && (
@@ -860,7 +848,7 @@ export function PipelineDetail({
             ; flows: <SourceLink href={ENTSOG_URL}>ENTSOG Transparency Platform</SourceLink>
           </>
         )}
-      </p>
+      </Note>
     </>
   );
 }
@@ -1042,9 +1030,7 @@ export function CountryDetail({ item, data, view, onSelect }: { item: Country; d
   const showImports = viewEnabled('origins');
   const storageSection = showStorage && (
     <section className="country-section" aria-labelledby={storageId} key="storage">
-      <h3 className="country-section__title" id={storageId}>
-        Gas storage
-      </h3>
+      <SectionTitle title="Gas storage" level="part" id={storageId} />
       {storage ? (
         <StorageFigures storage={storage} name={item.name} />
       ) : (
@@ -1071,15 +1057,12 @@ function CrudeImports({ country, data, onSelect }: { country: string; data: Data
   const record = origins?.record;
   return (
     <section className="country-section" aria-labelledby={id}>
-      <div className="title-row">
-        <h3 className="country-section__title" id={id}>
-          Where its crude comes from
-        </h3>
+      <SectionTitle title="Where its crude comes from" level="part" id={id}>
         <Info label="About where the country's crude comes from">
           Crude oil imports by partner country, as shares of the total. Each source names the partner as it records it, so crude
           shipped through a third country can carry that country's name. Crude produced at home isn't counted here.
         </Info>
-      </div>
+      </SectionTitle>
       {!origins || !record ? (
         <p className="muted">No crude import data for this country.</p>
       ) : (
@@ -1098,15 +1081,13 @@ function CrudeImports({ country, data, onSelect }: { country: string; data: Data
           <OnTheWay origins={origins} data={data} onSelect={onSelect} />
           {country === 'US' && data.oilOrigins.length > 0 && (
             <section className="section" aria-labelledby={`${id}-regions`}>
-              <h3 className="section__title" id={`${id}-regions`}>
-                By fuel region
-              </h3>
+              <SectionTitle title="By fuel region" id={`${id}-regions`} />
               <ul className="plain-list">
                 {data.oilOrigins.map((r) => (
                   <li key={r.id}>
-                    <button type="button" className="link-button" onClick={() => onSelect({ kind: 'region', id: r.id }, 'crude')}>
+                    <TextButton onClick={() => onSelect({ kind: 'region', id: r.id }, 'crude')}>
                       {r.name}
-                    </button>
+                    </TextButton>
                   </li>
                 ))}
               </ul>
@@ -1122,7 +1103,7 @@ function CrudeImports({ country, data, onSelect }: { country: string; data: Data
 /** Each import source's credit, with what was done to it. */
 export function CrudeImportsSource({ record }: { record: Pick<CountryCrudeImports, 'source' | 'basis' | 'to' | 'retrieved'> }) {
   return (
-    <p className="source">
+    <Note kind="source">
       {record.source === 'eurostat' && (
         <>
           <SourceLink href={EUROSTAT_OIL.pageUrl}>Eurostat, imports of oil and petroleum products by partner country, monthly</SourceLink> (
@@ -1143,7 +1124,7 @@ export function CrudeImportsSource({ record }: { record: Pick<CountryCrudeImport
           origin into the five fuel regions, summed.
         </>
       )}
-    </p>
+    </Note>
   );
 }
 
@@ -1183,7 +1164,7 @@ function StorageFigures({ storage, name }: { storage: CountryStorage; name: stri
         </Row>
       </dl>
       <Card as="section" className="section">
-        <h3 className="section__title">{storage.fill !== null ? 'Storage fill' : 'Gas in storage'}, last 12 months</h3>
+        <SectionTitle title={`${storage.fill !== null ? 'Storage fill' : 'Gas in storage'}, last 12 months`} />
         <Sparkline
           points={summary.year}
           unit={storage.fill !== null ? '%' : series.unit}
@@ -1194,9 +1175,7 @@ function StorageFigures({ storage, name }: { storage: CountryStorage; name: stri
       </Card>
       {storage.parts.length > 0 && (
         <section className="section" aria-labelledby="storage-parts">
-          <h3 className="section__title" id="storage-parts">
-            {storage.source === 'eia' ? 'By storage region' : 'By province'}
-          </h3>
+          <SectionTitle title={storage.source === 'eia' ? 'By storage region' : 'By province'} id="storage-parts" />
           <ul className="plain-list">
             {storage.parts.map((p) => {
               const vs = vsLastYearPct(p.summary);
@@ -1325,7 +1304,7 @@ export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; da
       {/* Send-out with too few days for a mean: the chart on its own. */}
       {sendOut && sendOut.recentMean == null && sendOut.sparkline.length > 1 && (
         <Card as="section" className="section">
-          <h3 className="section__title">Daily send-out, last 90 days</h3>
+          <SectionTitle title="Daily send-out, last 90 days" />
           <Sparkline
             points={sendOut.sparkline.map((p) => ({ date: p.date, value: p.value / 1e6 }))}
             unit=" GWh/d"
@@ -1342,8 +1321,7 @@ export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; da
       <Reports evidence={item.evidence} />
       <AssetNews selection={{ kind: 'lng', id: item.id }} data={data} now={now} onSelect={onSelect} />
       <section className="section">
-        <div className="title-row">
-          <h3 className="section__title">Units</h3>
+        <SectionTitle title="Units">
           {current && current.sourceType !== 'dataset' && (
             <Info label="About the units">
               Unit statuses and capacities are Global Energy Monitor's, as of{' '}
@@ -1353,7 +1331,7 @@ export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; da
                 : 'The status above comes from later cited reports.'}
             </Info>
           )}
-        </div>
+        </SectionTitle>
         <table className="table">
           <thead>
             <tr>
@@ -1388,7 +1366,7 @@ export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; da
           <span className="mono">{formatLonLat(item.point)}</span>
         </Row>
       </Facts>
-      <p className="source">
+      <Note kind="source">
         <SourceLink href="https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/">
           Global Energy Monitor
         </SourceLink>
@@ -1400,7 +1378,7 @@ export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; da
             Send-out: <SourceLink href={ALSI_URL}>GIE ALSI</SourceLink>.
           </>
         )}
-      </p>
+      </Note>
     </>
   );
 }
@@ -1484,10 +1462,10 @@ export function OilTerminalDetail({ item, data, now, onSelect }: { item: OilTerm
           </span>
         </Row>
       </Facts>
-      <p className="source">
+      <Note kind="source">
         Hand-curated. Each claim links its source; a terminal with no dated source shows its status as unknown. Loadings
         are a cited average over the period shown, not capacity.
-      </p>
+      </Note>
     </>
   );
 }
@@ -1560,10 +1538,7 @@ function RelatedList({
   const shown = rows.slice(0, limit);
   return (
     <section className="section" aria-labelledby={titleId}>
-      <h3 className="section__title" id={titleId}>
-        {title}
-        {rows.length > 0 && <span className="section__count">{rows.length.toLocaleString('en-US')}</span>}
-      </h3>
+      <SectionTitle title={title} id={titleId} count={rows.length > 0 ? rows.length : undefined} />
       {rows.length === 0 ? (
         <p className="muted">{empty}</p>
       ) : (
@@ -1575,9 +1550,9 @@ function RelatedList({
             </button>
           )}
           {expanded && rows.length > shown.length && (
-            <p className="note">
+            <Note>
               Showing the first <span className="num-inline">{shown.length}</span>; the map shows all of them.
-            </p>
+            </Note>
           )}
         </>
       )}
@@ -1644,13 +1619,12 @@ function OnTheWay({ origins, data, onSelect }: { origins: { exposure: Chokepoint
     <>
     {origins.exposure.length > 0 && (
       <section className="section">
-        <div className="title-row">
-          <h3 className="section__title">Chokepoints on the way</h3>
+        <SectionTitle title="Chokepoints on the way">
           <Info label="About chokepoints on the way">
             "Up to" where a country can also load at a terminal that avoids the chokepoint. Only countries with a cited
             route are counted.
           </Info>
-        </div>
+        </SectionTitle>
         <ul className="origins">
           {origins.exposure.map((e) => {
             const chokepoint = data.chokepoints.find((c) => c.id === e.chokepoint);
@@ -1683,7 +1657,7 @@ function OnTheWay({ origins, data, onSelect }: { origins: { exposure: Chokepoint
     )}
     {origins.routes.length > 0 && (
       <section className="section">
-        <h3 className="section__title">Routes</h3>
+        <SectionTitle title="Routes" />
         <ul className="region__routes">
           {origins.routes.map((r) => (
             <li key={r.country}>
@@ -1772,8 +1746,7 @@ function FuelOriginsView({ item, fuel, data, onSelect }: { item: OilOriginRegion
       </p>
       <FuelUsedCard supplied={origins.suppliedPerDay} inflow={origins.inflowPerDay} />
       <section className="section">
-        <div className="title-row">
-          <h3 className="section__title">Where it comes from</h3>
+        <SectionTitle title="Where it comes from">
           <Info label={`About where the region's ${label} comes from`}>
             <p>
               Where the {label} used in the region comes from. Fuel from different refineries mixes in pipelines and
@@ -1781,10 +1754,10 @@ function FuelOriginsView({ item, fuel, data, onSelect }: { item: OilOriginRegion
             </p>
             {origins.basis === 'inflow' && <p>More flowed in than the region used, so it passes some on. The shares are of what flowed in.</p>}
           </Info>
-        </div>
+        </SectionTitle>
         <OriginList rows={origins.rows} onRegion={(id) => onSelect({ kind: 'region', id }, 'crude')} />
       </section>
-      <p className="source">
+      <Note kind="source">
         Monthly EIA data from <span className="mono">{monthLabel(origins.from)}</span> to{' '}
         <span className="mono">{monthLabel(origins.to)}</span>:{' '}
         {fuelSeries(eia, fuel).map(([text, href], i) => (
@@ -1799,7 +1772,7 @@ function FuelOriginsView({ item, fuel, data, onSelect }: { item: OilOriginRegion
         What's left after receipts and imports is the region's own refining and blending plus changes in stocks, so it is
         not a measured flow. Regions as <SourceLink href={PADD_SOURCE}>EIA defines them</SourceLink>. Arcs on the map are
         schematic.
-      </p>
+      </Note>
     </>
   );
 }
@@ -1861,18 +1834,17 @@ function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: D
             )}
           </dl>
           <section className="section">
-            <div className="title-row">
-              <h3 className="section__title">Where it comes from</h3>
+            <SectionTitle title="Where it comes from">
               <Info label="About where the region's crude comes from">
                 Where the crude flowing into the region comes from: imported, received from other regions or pumped there.
                 Refineries blend crude from many sources and fuel travels after refining, so this is the region's picture,
                 not any one town's.
               </Info>
-            </div>
+            </SectionTitle>
             <OriginList rows={origins.rows} onRegion={(id) => onSelect({ kind: 'region', id }, 'crude')} />
           </section>
           <OnTheWay origins={origins} data={data} onSelect={onSelect} />
-          <p className="source">
+          <Note kind="source">
             Monthly EIA data from <span className="mono">{monthLabel(origins.from)}</span> to{' '}
             <span className="mono">{monthLabel(origins.to)}</span>:{' '}
             {eiaSeries(padd?.eia ?? 'R10').map(([label, href], i) => (
@@ -1884,7 +1856,7 @@ function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: D
             . Imports count where the crude is refined. Some crude moves on to other regions or abroad, so the shares describe
             what flows in, not exactly what the refineries run. Regions as <SourceLink href={PADD_SOURCE}>EIA defines them</SourceLink>.
             Arcs on the map are schematic: they show where crude comes from, not the path it takes.
-          </p>
+          </Note>
         </>
       )}
     </>

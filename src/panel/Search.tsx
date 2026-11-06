@@ -19,6 +19,7 @@ import { ENABLED_VIEWS, VIEW_LABELS, type ViewId } from '../lib/views';
 import { FEATURES, SEARCH } from '../lib/config';
 import { AssetIcon } from './AssetIcon';
 import { HOME_ICON, VIEW_ICONS } from '../app/viewIcons';
+import { IconButton } from '../ui/Button';
 
 // Places and ZIP codes open fuel origins, so they're offered only while it's on.
 const PLACEHOLDER = FEATURES.fuelOrigins
@@ -195,9 +196,9 @@ export function SearchDialog({ data, onSelect, onView, onClose, initialScope = '
             autoComplete="off"
             spellCheck={false}
           />
-          <button type="button" className="icon-button search-dialog__close" onClick={onClose} aria-label="Close search" title="Close  Esc">
+          <IconButton size="md" className="search-dialog__close" onClick={onClose} label="Close search" title="Close  Esc">
             <XIcon size={18} />
-          </button>
+          </IconButton>
         </div>
         <div className="search-dialog__scopes" role="toolbar" aria-label="Search in">
           {ENABLED_SEARCH_SCOPES.map((s) => (

@@ -8,6 +8,8 @@ import { formatAge, formatUtcClock, overallFreshness, type Freshness } from '../
 import { THEME_PREFERENCES, type ThemePreference } from '../lib/theme';
 import { Globe } from './Globe';
 import { useIsPhone } from './useSheet';
+import { IconButton } from '../ui/Button';
+import { SectionTitle } from '../ui/SectionTitle';
 
 export type MenuSection = 'about' | 'data' | 'settings';
 
@@ -100,9 +102,9 @@ export function AppMenu({ onClose, section, data, freshness, now, theme, themePr
             <Globe size={GLOBE.size} dots={GLOBE.dots} className="brand-mark" theme={theme} />
             {SITE.name}
           </span>
-          <button ref={closeRef} type="button" className="icon-button" onClick={onClose} aria-label="Close menu" title="Close  Esc">
+          <IconButton ref={closeRef} onClick={onClose} label="Close menu" title="Close  Esc">
             <CloseIcon />
-          </button>
+          </IconButton>
         </div>
       </header>
 
@@ -179,7 +181,7 @@ export function AppMenu({ onClose, section, data, freshness, now, theme, themePr
           {tab === 'settings' && (
             <div className="menu__columns">
               <section className="section">
-                <h2 className="section__title">Appearance</h2>
+                <SectionTitle title="Appearance" as="h2" />
                 <SegmentedOptions
                   label="Theme"
                   options={THEME_PREFERENCES}
@@ -189,7 +191,7 @@ export function AppMenu({ onClose, section, data, freshness, now, theme, themePr
                 />
               </section>
               <section className="section">
-                <h2 className="section__title">Keyboard shortcuts</h2>
+                <SectionTitle title="Keyboard shortcuts" as="h2" />
                 <dl className="shortcuts">
                   {SHORTCUTS.map(([key, action]) => (
                     <div key={key} className="shortcuts__row">
@@ -230,7 +232,7 @@ function AboutTab() {
   return (
     <>
       <section className="section menu__why">
-        <h2 className="section__title">Why</h2>
+        <SectionTitle title="Why" as="h2" />
         <p>
           The movement of energy explains a lot about why international decisions get made, alliances form and ruptures
           happen. {SITE.name} puts that structure on a map, so a headline lands on the pipeline, the strait or the basin
@@ -301,7 +303,7 @@ function CloseIcon() {
 function FreshnessSection({ freshness, now }: { freshness: Freshness[]; now: Date }) {
   return (
     <section className="section" id="menu-freshness">
-      <h2 className="section__title">Data freshness</h2>
+      <SectionTitle title="Data freshness" as="h2" />
       {freshness.length === 0 ? (
         <p className="muted">No datasets loaded.</p>
       ) : (
@@ -346,7 +348,7 @@ function SourcesSection({ data }: { data: Datasets }) {
   );
   return (
     <section className="section">
-      <h2 className="section__title">Sources</h2>
+      <SectionTitle title="Sources" as="h2" />
       <ul className="sources">
         {metas.map((m) => (
           <li key={m.id}>

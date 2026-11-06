@@ -13,6 +13,7 @@ import { HomeHero } from './HomeHero';
 import { AssetIcon } from './AssetIcon';
 import type { Commodity } from '../types';
 import type { ViewId } from '../lib/views';
+import { SectionTitle } from '../ui/SectionTitle';
 
 type OnSelect = (selection: Selection) => void;
 
@@ -84,7 +85,7 @@ function ChangesSection({
 }) {
   return (
     <section className="section" id="summary-changes">
-      <h2 className="section__title">What changed since last visit</h2>
+      <SectionTitle title="What changed since last visit" as="h2" />
       {!visit?.since ? (
         <p className="muted">First visit on this browser. Changes show from your next visit.</p>
       ) : (

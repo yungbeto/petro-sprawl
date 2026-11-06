@@ -66,7 +66,7 @@
 /* Notes and captions under a figure or a list: the period, the source, what a mark means. */
 .t-note,
 .stat-card__notes,
-.disruption__note {
+.note--caption {
   font-size: var(--text-xs);
   line-height: 16px;
   color: var(--text-subtle);

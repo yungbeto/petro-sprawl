@@ -101,17 +101,17 @@ component; the rest are class patterns repeated by hand.
 | `Chip` (`src/ui/Chip.tsx`) | the map's filter chips, the search scopes | toggle with optional count; `float` over the map, `sm` in a dialog | Yes |
 | `SegmentedOptions` (`src/ui/Segmented.tsx`) | the group-by switch (`Segmented` in GroupList wraps it with its label), the theme setting | one of a few | Yes |
 | `Tabs` | `.fuel-tabs` | underline | Yes (`FuelTabs`) |
-| `Button` | `.button`, `.icon-button`, `.link-button` | default, icon, text | No |
-| `SectionTitle` | `.section__title`, `.title-row` + `Info` | with count, with info, with a control | No |
+| `IconButton`, `TextButton` (`src/ui/Button.tsx`) | `.icon-button`, `.link-button` (the bordered `.button` had no uses left and is gone) | icon alone, named by `label`: `sm` 28px in a row of controls, `md` 32px in a bar (panel back and close, search close), `lg` 40px in the header, 40px hit area at every size; text, underlined like a link (show more, read more) | Yes |
+| `SectionTitle` (`src/ui/SectionTitle.tsx`) | every hand-written heading and `.title-row`: `.detail__title`, `.section__title`, `.country-section__title` | `level` page (h2), section (h3), part (h3, a part of a country's page); `count`; an `Info` as children, beside the heading so its name stays its text; `aside` at the row's end (a chart's band, the terminals' kind switch) | Yes |
 | `Sparkline` | the 90-day and 12-month charts | references, band tone | Yes |
-| `Note` | `.source`, `.note`, `.report__unreviewed`, `.disruption__note` | source, unreviewed | No |
+| `Note` (`src/ui/Note.tsx`) | `.source`, `.note`, `.report__unreviewed`, `.hero__unreviewed`, `.disruption__note` | `note` (an aside under a list), `source` (closes a page under a rule), `unreviewed` (under a claim or source nobody has checked), `caption` (the finest print, under a card) | Yes |
 
 Bar tones (`BarTone`): `neutral` (how full, how much: the default), `soft` (what's spent: produced oil),
 `outline` (not there yet: planned, undiscovered), `strong` and `muted` (lesser rows), `ink` (countries, as on
 the map's arcs), and `operating`, `offline`, `unknown` for status mixes only.
 
 Proposed home: `src/ui/` for the components, one file each, with their CSS in `src/styles/components/`.
-`base.css` (4,053 lines) keeps resets and layout; `details.tsx` (1,898 lines) keeps the pages.
+`base.css` (3,567 lines) keeps resets and layout; `details.tsx` (1,864 lines) keeps the pages.
 
 ## Audit, 2026-11-05
 
@@ -157,6 +157,6 @@ Proposed home: `src/ui/` for the components, one file each, with their CSS in `s
    cards on the ring; figures out of mono.
 2. Done 2026-11-05. `.t-*` classes in `src/styles/text.css`; the title, figure, small and note classes take
    their type from there.
-3. Components, most repeated first: `StatusBlock`, bars, `Card`, `Tag`/`Chip`/`SegmentedOptions` (done), `Button`,
-   `SectionTitle`, `Note`.
+3. Done 2026-11-06. Components, most repeated first: `StatusBlock`, bars, `Card`, `Tag`/`Chip`/`SegmentedOptions`,
+   `IconButton`/`TextButton`, `SectionTitle`, `Note`.
 4. Split `base.css` and `details.tsx` along the component lines.

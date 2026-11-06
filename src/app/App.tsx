@@ -29,6 +29,7 @@ import { useIsPhone, useSheet } from './useSheet';
 import { ShowOnMapContext, type ShowOnMap } from './showOnMap';
 import { liftDetent } from '../lib/sheet';
 import type { Selection } from './urlState';
+import { IconButton } from '../ui/Button';
 
 /** Each line's two ends: enough to frame a group of pipelines without walking every vertex. */
 function lineEnds(pipelines: Pipeline[]): [number, number][] {
@@ -390,16 +391,9 @@ export function App() {
             {/* One search bar whether the panel is open or minimized, so it never moves. */}
             <SearchBar onOpen={() => setSearchScope('all')} buttonRef={searchButtonRef} />
             <div className="app-header__actions">
-              <button
-                type="button"
-                className="icon-button icon-button--lg"
-                onClick={() => openMenu(null)}
-                aria-label="Menu"
-                aria-haspopup="dialog"
-                title="Menu"
-              >
+              <IconButton size="lg" onClick={() => openMenu(null)} label="Menu" aria-haspopup="dialog" title="Menu">
                 <ListIcon size={24} />
-              </button>
+              </IconButton>
             </div>
           </header>
           <nav className="rail" aria-label="Views">

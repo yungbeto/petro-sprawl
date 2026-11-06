@@ -6,7 +6,9 @@ import { pageviewFilter } from './lib/analytics';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/components/bar.css';
+import './styles/components/button.css';
 import './styles/components/card.css';
+import './styles/components/note.css';
 import './styles/components/pill.css';
 import './styles/text.css';
 

@@ -156,28 +156,6 @@ kbd {
   margin-left: 30px;
 }
 
-.button {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  height: 40px;
-  padding: 0 var(--space-2);
-  font-size: var(--text-ui);
-  font-weight: 500;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  cursor: pointer;
-}
-
-.button svg {
-  color: var(--text-muted);
-}
-
-.button:hover {
-  border-color: var(--border-strong);
-}
-
 /* The rail: views at the top, settings at the bottom. */
 .rail {
   grid-area: rail;
@@ -508,8 +486,6 @@ kbd {
 
 .panel__back {
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
   margin-left: calc(-1 * var(--space-2));
 }
 
@@ -527,8 +503,6 @@ kbd {
 
 .panel__close {
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
   margin-left: auto;
 }
 
@@ -627,7 +601,7 @@ kbd {
   margin-bottom: var(--space-2);
 }
 
-.title-row:has(> .detail__title) {
+.title-row:has(> .detail__title, > .title-row__main > .detail__title) {
   margin: var(--space-1) 0 var(--space-3);
 }
 
@@ -864,18 +838,6 @@ kbd {
   display: block;
 }
 
-.note,
-.source {
-  margin-top: var(--space-4);
-}
-
-/* The sources close the view, set off from it. */
-.source {
-  margin-top: var(--space-5);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--border);
-}
-
 a {
   color: inherit;
   text-decoration-color: var(--border-strong);
@@ -883,21 +845,6 @@ a {
 }
 
 a:hover {
-  text-decoration-color: currentColor;
-}
-
-.link-button {
-  padding: 2px 0;
-  text-align: left;
-  text-decoration: underline;
-  text-decoration-color: var(--border-strong);
-  text-underline-offset: 2px;
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-
-.link-button:hover {
   text-decoration-color: currentColor;
 }
 
@@ -1112,7 +1059,7 @@ a:hover {
   min-width: 0;
 }
 
-.title-row__main > .section__title {
+.title-row__main > :is(.section__title, .detail__title) {
   margin: 0;
 }
 
@@ -1326,52 +1273,6 @@ a:hover {
   color: var(--text);
 }
 
-.disruption__note {
-  margin: var(--space-3) 0 0;
-}
-
-/* A claim the claims refresh committed without review, under its statement. */
-.report__unreviewed {
-  margin-top: var(--space-1);
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-  text-wrap: pretty;
-}
-
-.hero__unreviewed {
-  margin-top: var(--space-1);
-  font-size: var(--text-sm);
-  line-height: 1.5;
-  color: var(--text-muted);
-  text-wrap: pretty;
-}
-
-/* Controls */
-
-.icon-button {
-  display: inline-grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  color: var(--text-muted);
-  background: none;
-  border: 0;
-  border-radius: var(--radius);
-  cursor: pointer;
-}
-
-.icon-button:hover {
-  color: var(--text);
-  background: var(--surface-sunken);
-}
-
-.icon-button--lg {
-  width: 40px;
-  height: 40px;
-  color: var(--text);
-}
-
 /* MapLibre controls, quieted to match the panel */
 
 .maplibregl-ctrl-scale {
@@ -1487,8 +1388,6 @@ a:hover {
 
 .search-dialog__close {
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
   margin-right: calc(-1 * var(--space-1));
 }
 
@@ -1777,12 +1676,6 @@ a:hover {
 .hero__cards-nav {
   display: flex;
   gap: var(--space-1);
-}
-
-.hero__cards-nav .icon-button:disabled {
-  opacity: 0.4;
-  cursor: default;
-  background: none;
 }
 
 /* Touch screens swipe; the buttons are for a mouse. */
@@ -2837,7 +2730,6 @@ a:hover {
 /* Interaction details: quick, interruptible state changes; press feedback on compact controls;
    40px hit areas on small icon buttons; one-shot entrances for the search dialog and the menu. */
 
-.button,
 .chip,
 .icon-button,
 .segmented__option,
@@ -2858,28 +2750,12 @@ a:hover {
   transition-timing-function: var(--ease-out);
 }
 
-.button:active,
 .chip:active,
 .icon-button:active,
 .segmented__option:active,
 .layer-control__toggle:active,
 .find-region:active {
   scale: 0.96;
-}
-
-/* Icon buttons draw at 28 to 32px; the hit area is 40px. */
-.icon-button {
-  position: relative;
-}
-
-.icon-button::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: max(100%, 40px);
-  height: max(100%, 40px);
-  translate: -50% -50%;
 }
 
 /* Segmented options sit side by side, so only their height grows. */
@@ -2916,7 +2792,6 @@ a:hover {
     animation: none;
   }
 
-  .button:active,
   .chip:active,
   .icon-button:active,
   .segmented__option:active,
@@ -2974,8 +2849,7 @@ a:hover {
     pointer-events: auto;
   }
 
-  .app-header__brand,
-  .app-header__actions .button {
+  .app-header__brand {
     display: none;
   }
 

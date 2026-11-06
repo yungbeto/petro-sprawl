@@ -4,6 +4,7 @@ import { CaretDownIcon, CaretRightIcon } from '@phosphor-icons/react';
 import { formatIndexShare } from '../lib/format';
 import type { StatusGroupId } from '../lib/summary';
 import { StatusBar } from './Dashboard';
+import { TextButton } from '../ui/Button';
 
 type StatusGroups = { id: StatusGroupId; label: string; count: number }[];
 
@@ -103,9 +104,9 @@ export function GroupItem<T>({
             ))}
           </ul>
           {items.length > shown.length && (
-            <button type="button" className="link-button group-list__more" onClick={() => setShowAll(true)}>
+            <TextButton className="group-list__more" onClick={() => setShowAll(true)}>
               Show all {items.length.toLocaleString('en-US')}
-            </button>
+            </TextButton>
           )}
         </div>
       )}

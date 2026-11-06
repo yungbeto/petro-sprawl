@@ -8,6 +8,8 @@ import type { Basin } from '../types';
 import { SourceLink } from './details';
 import { Info } from './Info';
 import { BarSwatch, PartsBar, type BarTone } from '../ui/Bar';
+import { SectionTitle } from '../ui/SectionTitle';
+import { Note } from '../ui/Note';
 
 /** The basins view: every mapped oil and gas province, the most oil remaining (as of 2000) first. */
 export function BasinsView({ data, onSelect }: { data: Datasets; onSelect: (selection: Selection) => void }) {
@@ -16,14 +18,13 @@ export function BasinsView({ data, onSelect }: { data: Datasets; onSelect: (sele
   return (
     <>
       <section className="section">
-        <div className="title-row">
-          <h2 className="detail__title">Basins</h2>
+        <SectionTitle title="Basins" level="page">
           <Info label="About this list">
             Oil and gas provinces from the USGS World Petroleum Assessment 2000. Ordered by oil remaining in fields
             discovered by 1996, in billion barrels; nothing produced or found since is counted. Provinces with no oil
             figure, the United States among them, come last.
           </Info>
-        </div>
+        </SectionTitle>
         {total && (
           <p className="view-headline">
             {total.provinces} provinces hold {formatThousandfold(total.oil)} billion barrels of oil in fields found by 1996 (USGS,
@@ -39,13 +40,13 @@ export function BasinsView({ data, onSelect }: { data: Datasets; onSelect: (sele
           </li>
         ))}
       </ul>
-      <p className="source">
+      <Note kind="source">
         Outlines and volumes from the{' '}
         <SourceLink href="https://www.sciencebase.gov/catalog/item/60ad2fd7d34e4043c850edb3">
           USGS World Petroleum Assessment 2000
         </SourceLink>
         .
-      </p>
+      </Note>
     </>
   );
 }

@@ -9,6 +9,8 @@ import { flagEmoji, formatCountry, formatShare } from '../lib/format';
 import { CrudeImportsSource, SourceLink } from './details';
 import { FuelTabs } from './FuelTabs';
 import { Info } from './Info';
+import { SectionTitle } from '../ui/SectionTitle';
+import { Note } from '../ui/Note';
 
 export interface OriginsViewProps {
   data: Datasets;
@@ -40,13 +42,12 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
   return (
     <>
       <section className="section">
-        <div className="title-row">
-          <h2 className="detail__title">Oil origins</h2>
+        <SectionTitle title="Oil origins" level="page">
           <Info label="About this list">
             Where each country's crude oil imports come from, by partner country, for the {CRUDE_IMPORTS.largest} largest importers and
             every country Eurostat reports. Largest importer by value first. Crude produced at home isn't counted.
           </Info>
-        </div>
+        </SectionTitle>
         {leaders && <p className="view-headline">Largest supplier to the most importers: {leaders}.</p>}
         {countries.length === 0 ? (
           <p className="muted">No crude import data.</p>
@@ -84,7 +85,7 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
       </section>
 
       <section className="section">
-        <h3 className="section__title">United States, by fuel region</h3>
+        <SectionTitle title="United States, by fuel region" />
         <button type="button" className="find-region" onClick={onFind}>
           <MagnifyingGlassIcon size={18} aria-hidden="true" />
           Find your region by ZIP code, city or state
@@ -127,10 +128,10 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
         const record = countries.find((c) => c.record.source === source)?.record;
         return record ? <CrudeImportsSource key={source} record={record} /> : null;
       })}
-      <p className="source">
+      <Note kind="source">
         Monthly supply by region from the <SourceLink href="https://www.eia.gov/opendata/">US Energy Information
         Administration</SourceLink>, averaged over the latest months it reports.
-      </p>
+      </Note>
     </>
   );
 }

@@ -7,6 +7,8 @@ import { chokepointsSummary, chokepointViewRows, type ChokepointViewRow } from '
 import { Band, SourceLink } from './details';
 import { MiniSparkline } from './Sparkline';
 import { Info } from './Info';
+import { SectionTitle } from '../ui/SectionTitle';
+import { Note } from '../ui/Note';
 
 /** The chokepoints view: every strait on one page, furthest from its five-year average first. */
 export function ChokepointsView({ data, onSelect }: { data: Datasets; onSelect: (selection: Selection) => void }) {
@@ -16,14 +18,13 @@ export function ChokepointsView({ data, onSelect }: { data: Datasets; onSelect: 
   return (
     <>
       <section className="section">
-        <div className="title-row">
-          <h2 className="detail__title">Chokepoints</h2>
+        <SectionTitle title="Chokepoints" level="page">
           <Info label="About this list">
             Tanker transits a day, averaged over 7 days, for the 90 days to <span className="mono">{latest ?? 'n/a'}</span>,
             against each strait's five-year average (dashed). The figure is the last 7 days as a share of that average;
             cargo is the same for PortWatch's estimate of the tonnage carried. Furthest from normal first.
           </Info>
-        </div>
+        </SectionTitle>
         {summary.measured > 0 && (
           <p className="view-headline">
             {summary.below} of {summary.measured} straits are below their five-year baseline.
@@ -38,10 +39,10 @@ export function ChokepointsView({ data, onSelect }: { data: Datasets; onSelect: 
           </li>
         ))}
       </ul>
-      <p className="source">
+      <Note kind="source">
         Transits and cargo are from <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>. Cargo is
         PortWatch's estimate, in metric tons, from each tanker's draft and size.
-      </p>
+      </Note>
     </>
   );
 }

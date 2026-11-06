@@ -9,6 +9,8 @@ import { median, storageRows, type StorageRow } from '../lib/summary';
 import { SourceLink } from './details';
 import { Info } from './Info';
 import { MeterBar } from '../ui/Bar';
+import { SectionTitle } from '../ui/SectionTitle';
+import { Note } from '../ui/Note';
 
 export const CADENCE_LABEL: Record<Cadence, string> = { daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly' };
 
@@ -27,14 +29,13 @@ export function StorageView({ data, onSelect }: { data: Datasets; onSelect: (sel
   return (
     <>
       <section className="section">
-        <div className="title-row">
-          <h2 className="detail__title">Gas storage</h2>
+        <SectionTitle title="Gas storage" level="page">
           <Info label="About this list">
             How much gas each country holds against the same day, week or month a year earlier, from the most frequent source that
             reports it. Countries holding the least against last year come first. Where AGSI+ reports a country, the figure is how full
             its storage is.
           </Info>
-        </div>
+        </SectionTitle>
         {gaps.length > 0 && (
           <p className="view-headline">
             {below} of {gaps.length} countries hold less gas than a year ago
@@ -63,9 +64,7 @@ export function StorageView({ data, onSelect }: { data: Datasets; onSelect: (sel
       </section>
 
       <section className="section" aria-labelledby="storage-not-covered">
-        <h3 className="section__title" id="storage-not-covered">
-          Not covered
-        </h3>
+        <SectionTitle title="Not covered" id="storage-not-covered" />
         <ul className="plain-list">
           {STORAGE_NOT_COVERED.map((c) => (
             <li key={c.country}>
@@ -169,7 +168,7 @@ export function StorageSources({ sources, data }: { sources: StorageSourceId[]; 
       {order
         .filter((s) => sources.includes(s))
         .map((s) => (
-          <p className="source" key={s}>
+          <Note kind="source" key={s}>
             {s === 'agsi' && (
               <>
                 <SourceLink href={STORAGE_SOURCES.agsi.url}>GIE AGSI+</SourceLink>, reported daily by storage operators; fill is gas in
@@ -198,7 +197,7 @@ export function StorageSources({ sources, data }: { sources: StorageSourceId[]; 
                 as comparable or to use with caution are shown.
               </>
             )}
-          </p>
+          </Note>
         ))}
     </>
   );

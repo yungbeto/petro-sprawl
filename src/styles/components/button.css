@@ -1,0 +1,65 @@
+/* Buttons (src/ui/Button.tsx, docs/design-system.md). Press feedback and transitions are with the other
+   controls' in base.css. */
+
+/* An icon alone: draws at 28px (32px medium, 40px large), hits at 40px at any size. */
+.icon-button {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--text-muted);
+  background: none;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.icon-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 40px);
+  height: max(100%, 40px);
+  translate: -50% -50%;
+}
+
+.icon-button:hover {
+  color: var(--text);
+  background: var(--surface-sunken);
+}
+
+.icon-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+  background: none;
+}
+
+.icon-button--md {
+  width: 32px;
+  height: 32px;
+}
+
+.icon-button--lg {
+  width: 40px;
+  height: 40px;
+  color: var(--text);
+}
+
+/* An action set as text, underlined like a link. */
+.link-button {
+  padding: var(--space-half) 0;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 2px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  text-decoration-color: currentColor;
+}

@@ -20,6 +20,8 @@ import type { LngTerminal, OilTerminal } from '../types';
 import { SourceLink, statusLabel } from './details';
 import { GroupItem, Segmented, StatusSummary } from './GroupList';
 import { Info } from './Info';
+import { SectionTitle } from '../ui/SectionTitle';
+import { Note } from '../ui/Note';
 
 export type TerminalListing =
   | { kind: 'lng'; groups: TerminalGroup<LngTerminal>[] }
@@ -55,8 +57,11 @@ export function TerminalsView({ data, listing, onKind, grouping, onGrouping, ope
   return (
     <>
       <section className="section">
-        <div className="title-row">
-          <h2 className="detail__title">Terminals</h2>
+        <SectionTitle
+          title="Terminals"
+          level="page"
+          aside={<Segmented id="terminals-kind" label="Kind" options={TERMINAL_KINDS} labels={TERMINAL_KIND_LABELS} value={kind} onChange={onKind} hideLabel />}
+        >
           <Info label="About this list">
             {kind === 'lng' ? (
               <>
@@ -70,8 +75,7 @@ export function TerminalsView({ data, listing, onKind, grouping, onGrouping, ope
               </>
             )}
           </Info>
-          <Segmented id="terminals-kind" label="Kind" options={TERMINAL_KINDS} labels={TERMINAL_KIND_LABELS} value={kind} onChange={onKind} hideLabel />
-        </div>
+        </SectionTitle>
         <p className="view-headline">
           {kind === 'lng'
             ? `${total.toLocaleString('en-US')} LNG terminals from Global Energy Monitor, built or not; ${researched} researched, with measured send-out or cited claims.`
@@ -90,7 +94,7 @@ export function TerminalsView({ data, listing, onKind, grouping, onGrouping, ope
           value={grouping}
           onChange={onGrouping}
         />
-        {note && <p className="note group-by__note">{note}</p>}
+        {note && <Note className="group-by__note">{note}</Note>}
 
         <ul className="group-list" aria-label={groupList}>
           {listing.kind === 'lng'
@@ -126,18 +130,18 @@ export function TerminalsView({ data, listing, onKind, grouping, onGrouping, ope
       </section>
 
       {kind === 'lng' ? (
-        <p className="source">
+        <Note kind="source">
           LNG terminals, their units, capacity and dataset status are from{' '}
           <SourceLink href="https://globalenergymonitor.org/">Global Energy Monitor</SourceLink>; measured send-out from{' '}
           <SourceLink href="https://alsi.gie.eu/">GIE ALSI</SourceLink>; regions from{' '}
           <SourceLink href="https://www.naturalearthdata.com/">Natural Earth</SourceLink>.
-        </p>
+        </Note>
       ) : (
-        <p className="source">
+        <Note kind="source">
           Oil terminals are researched, each claim with its source. Locations come from{' '}
           <SourceLink href="https://portwatch.imf.org/">IMF PortWatch</SourceLink>'s ports or the end of a Global Energy
           Monitor pipeline; regions from <SourceLink href="https://www.naturalearthdata.com/">Natural Earth</SourceLink>.
-        </p>
+        </Note>
       )}
     </>
   );

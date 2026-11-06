@@ -17,6 +17,8 @@ import type { Pipeline } from '../types';
 import { SourceLink, statusLabel } from './details';
 import { GroupItem, Segmented, StatusSummary } from './GroupList';
 import { Info } from './Info';
+import { SectionTitle } from '../ui/SectionTitle';
+import { Note } from '../ui/Note';
 
 export interface PipelinesViewProps {
   data: Datasets;
@@ -41,13 +43,12 @@ export function PipelinesView({ data, groups, grouping, onGrouping, openGroup, o
   return (
     <>
       <section className="section">
-        <div className="title-row">
-          <h2 className="detail__title">Pipelines</h2>
+        <SectionTitle title="Pipelines" level="page">
           <Info label="About this list">
             All <span className="num-inline">{total.toLocaleString('en-US')}</span> mapped pipelines. Researched ones, with
             cited claims or metered flow, are marked and come first in each group.
           </Info>
-        </div>
+        </SectionTitle>
         <p className="view-headline">
           {total.toLocaleString('en-US')} pipelines from Global Energy Monitor; {researched} researched, with cited claims or metered
           flow. Open a group to bring its lines out on the map.
@@ -64,7 +65,7 @@ export function PipelinesView({ data, groups, grouping, onGrouping, openGroup, o
           value={grouping}
           onChange={onGrouping}
         />
-        <p className="note group-by__note">{PIPELINE_GROUPING_NOTES[grouping]}</p>
+        <Note className="group-by__note">{PIPELINE_GROUPING_NOTES[grouping]}</Note>
 
         <ul className="group-list" aria-label={`Pipelines by ${PIPELINE_GROUPING_LABELS[grouping].toLowerCase()}`}>
           {groups.map((group) => (
@@ -84,12 +85,12 @@ export function PipelinesView({ data, groups, grouping, onGrouping, openGroup, o
         </ul>
       </section>
 
-      <p className="source">
+      <Note kind="source">
         Pipelines, their dataset status and owners are from{' '}
         <SourceLink href="https://globalenergymonitor.org/">Global Energy Monitor</SourceLink>; regions from{' '}
         <SourceLink href="https://www.naturalearthdata.com/">Natural Earth</SourceLink>. Researched pipelines carry cited
         claims, or measured flow from ENTSOG where there is a metering point.
-      </p>
+      </Note>
     </>
   );
 }

@@ -12,6 +12,9 @@ import { AssetIcon } from './AssetIcon';
 import { Info } from './Info';
 import { NewsList } from './NewsList';
 import { SourceLink } from './details';
+import { IconButton, TextButton } from '../ui/Button';
+import { SectionTitle } from '../ui/SectionTitle';
+import { Note } from '../ui/Note';
 
 interface HomeHeroProps {
   data: Datasets;
@@ -73,9 +76,9 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
       {FEATURES.visitChanges && (
         <p className="hero__visit">
           {visit?.since ? (
-            <button type="button" className="link-button" onClick={onShowChanges}>
+            <TextButton onClick={onShowChanges}>
               {plural(visit.changes.length, 'change')} since your last visit
-            </button>
+            </TextButton>
           ) : (
             <span>First visit on this browser</span>
           )}
@@ -95,24 +98,19 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
 
       {headlines.length > 0 && (
         <section className="hero__rest" aria-labelledby="hero-news">
-          <div className="title-row">
-            <h3 className="section__title" id="hero-news">
-              In the news
-            </h3>
+          <SectionTitle title="In the news" id="hero-news">
             <Info label="About the headlines">
               The newest headlines from GDELT and Google News that name a place on the map, as the feeds list them.
               They aren't reviewed: read the article before relying on it.
             </Info>
-          </div>
+          </SectionTitle>
           <NewsList rows={headlines} data={data} now={now} onSelect={onSelect} lead />
         </section>
       )}
 
       {rest.length > 0 && (
         <section className="hero__rest" aria-labelledby="hero-rest">
-          <h3 className="section__title" id="hero-rest">
-            Also in effect <span className="section__count">{rest.length}</span>
-          </h3>
+          <SectionTitle title="Also in effect" id="hero-rest" count={rest.length} />
           <p className="hero__tally">{tally(s)}</p>
           <ul className="changes">
             {shown.map((o) => {
@@ -138,23 +136,20 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
             })}
           </ul>
           {rest.length > shown.length && (
-            <button type="button" className="link-button hero__more" onClick={() => setShowAll(true)}>
+            <TextButton className="hero__more" onClick={() => setShowAll(true)}>
               Show all {rest.length}
-            </button>
+            </TextButton>
           )}
         </section>
       )}
 
       <section className="hero__rest" aria-labelledby="hero-measured">
-        <div className="title-row">
-          <h3 className="section__title" id="hero-measured">
-            Measured changes {changes.length > 0 && <span className="section__count">{changes.length}</span>}
-          </h3>
+        <SectionTitle title="Measured changes" id="hero-measured" count={changes.length > 0 ? changes.length : undefined}>
           <Info label="About measured changes">
             The latest {MEASURED_CHANGES.recentDays} days of meters and ship counts against the {MEASURED_CHANGES.priorDays / 7} weeks
             before. What moved, not why.
           </Info>
-        </div>
+        </SectionTitle>
         {changes.length === 0 && (
           <p className="hero__tally">Nothing past its threshold in the latest {MEASURED_CHANGES.recentDays} days of meters and ship counts.</p>
         )}
@@ -176,9 +171,9 @@ export function HomeHero({ data, visit, now, onSelect, onShowChanges }: HomeHero
           </ul>
         )}
         {changes.length > shownChanges.length && (
-          <button type="button" className="link-button hero__more" onClick={() => setShowAllChanges(true)}>
+          <TextButton className="hero__more" onClick={() => setShowAllChanges(true)}>
             Show all {changes.length}
-          </button>
+          </TextButton>
         )}
       </section>
     </section>
@@ -230,17 +225,15 @@ function HeroCards({ cards, now, byline, onSelect }: HeroCardsProps) {
   return (
     <section className="hero__cards" aria-labelledby="hero-latest">
       <div className="hero__cards-top">
-        <h3 className="section__title" id="hero-latest">
-          Latest updates <span className="section__count">{cards.length}</span>
-        </h3>
+        <SectionTitle title="Latest updates" id="hero-latest" count={cards.length} />
         {cards.length > 1 && (
           <div className="hero__cards-nav">
-            <button type="button" className="icon-button" aria-label="Previous update" disabled={edges.start} onClick={() => step(-1)}>
+            <IconButton label="Previous update" disabled={edges.start} onClick={() => step(-1)}>
               <CaretLeftIcon size={16} aria-hidden="true" />
-            </button>
-            <button type="button" className="icon-button" aria-label="Next update" disabled={edges.end} onClick={() => step(1)}>
+            </IconButton>
+            <IconButton label="Next update" disabled={edges.end} onClick={() => step(1)}>
               <CaretRightIcon size={16} aria-hidden="true" />
-            </button>
+            </IconButton>
           </div>
         )}
       </div>
@@ -273,7 +266,7 @@ function HeroCards({ cards, now, byline, onSelect }: HeroCardsProps) {
                     </>
                   )}
                 </p>
-                {source?.unreviewed && <p className="hero__unreviewed">Added automatically from the news, not yet reviewed.</p>}
+                {source?.unreviewed && <Note kind="unreviewed">Added automatically from the news, not yet reviewed.</Note>}
               </article>
             </li>
           );

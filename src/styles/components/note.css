@@ -1,0 +1,23 @@
+/* Small print (src/ui/Note.tsx, docs/design-system.md). Type is in text.css (.note and .source are
+   t-small, .note--caption is t-note); this is spacing. */
+
+.note {
+  margin-top: var(--space-4);
+}
+
+/* The sources close the view, set off from it under a rule. */
+.source {
+  margin-top: var(--space-5);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+/* Under the claim or source it qualifies. */
+.note--unreviewed {
+  margin-top: var(--space-1);
+  line-height: 1.5;
+}
+
+.note--caption {
+  margin: var(--space-3) 0 0;
+}

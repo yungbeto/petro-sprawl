@@ -1,12 +1,13 @@
 import { CaretRightIcon } from '@phosphor-icons/react';
 import { VIEW_ICONS } from '../app/viewIcons';
 import { VIEW_LABELS, type ViewId } from '../lib/views';
+import { SectionTitle } from '../ui/SectionTitle';
 
 /** Phones: the sections that don't fit in the tab bar, each with its icon and name (SPEC M10). */
 export function MoreView({ views, current, onOpen }: { views: ViewId[]; current: ViewId | null; onOpen: (view: ViewId) => void }) {
   return (
     <section className="section">
-      <h2 className="detail__title">More</h2>
+      <SectionTitle title="More" level="page" />
       <ul className="view-list" aria-label="More sections">
         {views.map((id) => {
           const Icon = VIEW_ICONS[id];

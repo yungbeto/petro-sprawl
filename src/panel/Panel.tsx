@@ -21,6 +21,8 @@ import { MoreView } from './MoreView';
 import { DetailSkeleton, HomeSkeleton, ListSkeleton } from './Skeleton';
 import { OriginsView, type OriginsViewProps } from './OriginsView';
 import { BasinDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RegionDetail, CountryDetail } from './details';
+import { IconButton } from '../ui/Button';
+import { SectionTitle } from '../ui/SectionTitle';
 
 interface PanelProps {
   /** The rail view; its list shows when nothing is selected or filtered. Null is home. */
@@ -127,26 +129,26 @@ export function Panel(props: PanelProps) {
       {!props.more && (props.selection || props.filter) && (
         <div className="panel__nav" onPointerDown={sheet?.onDragStart}>
           {props.backLabel && (
-            <button
-              type="button"
-              className="icon-button panel__back"
+            <IconButton
+              size="md"
+              className="panel__back"
               onClick={props.onBack}
-              aria-label={`Back to ${props.backLabel}`}
+              label={`Back to ${props.backLabel}`}
               title={`Back to ${props.backLabel}  Esc`}
             >
               <ArrowLeftIcon size={18} />
-            </button>
+            </IconButton>
           )}
           <p className="panel__title">{navTitle(props.selection, props.filter, props.data)}</p>
-          <button
-            type="button"
-            className="icon-button panel__close"
+          <IconButton
+            size="md"
+            className="panel__close"
             onClick={props.onClose}
-            aria-label={`Close, back to ${props.surfaceLabel}`}
+            label={`Close, back to ${props.surfaceLabel}`}
             title={`Close, back to ${props.surfaceLabel}`}
           >
             <XIcon size={18} />
-          </button>
+          </IconButton>
         </div>
       )}
       <div ref={bodyRef} className="panel__body" onPointerDown={sheet?.onContentPointerDown}>
@@ -265,7 +267,7 @@ function Detail({
       {!resolved && (
         <section className="section">
           <p className="muted">{KIND_LABELS[selection.kind]}</p>
-          <h2 className="detail__title mono">{selection.id}</h2>
+          <SectionTitle title={selection.id} level="page" className="mono" />
           <p className="muted">Not in the loaded data.</p>
         </section>
       )}

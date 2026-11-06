@@ -3,6 +3,8 @@ import { FILTERS } from '../lib/config';
 import type { Datasets } from '../lib/data';
 import { FILTER_DESCRIPTIONS, FILTER_LABELS, filterRows, type FilterId, type FilterMatches } from '../lib/filters';
 import { AssetList } from './details';
+import { SectionTitle } from '../ui/SectionTitle';
+import { Note } from '../ui/Note';
 
 interface FilterListProps {
   filter: FilterId;
@@ -19,7 +21,7 @@ export function FilterList({ filter, matches, data, onSelect, within }: FilterLi
   const shown = rows.slice(0, FILTERS.listLimit);
   return (
     <section className="section">
-      <h2 className="detail__title">{FILTER_LABELS[filter]}</h2>
+      <SectionTitle title={FILTER_LABELS[filter]} level="page" />
       <p className="muted section__lede">
         <span className="num-inline">{rows.length.toLocaleString('en-US')}</span> {rows.length === 1 ? 'match' : 'matches'}.{' '}
         {FILTER_DESCRIPTIONS[filter]}
@@ -31,9 +33,9 @@ export function FilterList({ filter, matches, data, onSelect, within }: FilterLi
         <AssetList rows={shown} data={data} onSelect={onSelect} />
       )}
       {rows.length > shown.length && (
-        <p className="note">
+        <Note>
           Showing the first <span className="num-inline">{shown.length}</span>; the map shows all of them.
-        </p>
+        </Note>
       )}
     </section>
   );
