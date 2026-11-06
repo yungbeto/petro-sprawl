@@ -3,12 +3,20 @@
     "file": "favicons/aa.com.tr.ico",
     "checkedAt": "2026-11-06"
   },
+  "africa.businessinsider.com": {
+    "file": "favicons/africa.businessinsider.com.ico",
+    "checkedAt": "2026-11-06"
+  },
   "akipress.com": {
     "file": "favicons/akipress.com.png",
     "checkedAt": "2026-11-06"
   },
   "anews.com.tr": {
     "file": "favicons/anews.com.tr.png",
+    "checkedAt": "2026-11-06"
+  },
+  "arabnews.com": {
+    "file": "favicons/arabnews.com.png",
     "checkedAt": "2026-11-06"
   },
   "asiatimes.com": {
@@ -55,6 +63,14 @@
     "file": "favicons/ddnews.gov.in.png",
     "checkedAt": "2026-11-06"
   },
+  "demokratis.co.id": {
+    "file": "favicons/demokratis.co.id.png",
+    "checkedAt": "2026-11-06"
+  },
+  "devdiscourse.com": {
+    "file": "favicons/devdiscourse.com.ico",
+    "checkedAt": "2026-11-06"
+  },
   "donga.com": {
     "file": "favicons/donga.com.ico",
     "checkedAt": "2026-11-06"
@@ -71,6 +87,10 @@
     "file": "favicons/energyandcleanair.org.png",
     "checkedAt": "2026-11-06"
   },
+  "energynews.pro": {
+    "file": "favicons/energynews.pro.png",
+    "checkedAt": "2026-11-06"
+  },
   "energynow.ca": {
     "file": "favicons/energynow.ca.ico",
     "checkedAt": "2026-11-06"
@@ -83,8 +103,20 @@
     "file": "favicons/english.globalarabnetwork.com.png",
     "checkedAt": "2026-11-06"
   },
+  "english.nv.ua": {
+    "file": "favicons/english.nv.ua.ico",
+    "checkedAt": "2026-11-06"
+  },
+  "english.pravda.ru": {
+    "file": "favicons/english.pravda.ru.ico",
+    "checkedAt": "2026-11-06"
+  },
   "eualive.net": {
     "file": null,
+    "checkedAt": "2026-11-06"
+  },
+  "eurasiareview.com": {
+    "file": "favicons/eurasiareview.com.jpg",
     "checkedAt": "2026-11-06"
   },
   "euronews.com": {
@@ -103,8 +135,16 @@
     "file": "favicons/fxempire.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "galvnews.com": {
+    "file": "favicons/galvnews.com.ico",
+    "checkedAt": "2026-11-06"
+  },
   "gulfnews.com": {
     "file": "favicons/gulfnews.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "hoodline.com": {
+    "file": "favicons/hoodline.com.ico",
     "checkedAt": "2026-11-06"
   },
   "houseofsaud.com": {
@@ -121,6 +161,10 @@
   },
   "ieu-monitoring.com": {
     "file": "favicons/ieu-monitoring.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "informat.ro": {
+    "file": "favicons/informat.ro.png",
     "checkedAt": "2026-11-06"
   },
   "intellinews.com": {
@@ -179,6 +223,10 @@
     "file": "favicons/meed.com.png",
     "checkedAt": "2026-11-06"
   },
+  "meforum.org": {
+    "file": null,
+    "checkedAt": "2026-11-06"
+  },
   "mezha.net": {
     "file": "favicons/mezha.net.ico",
     "checkedAt": "2026-11-06"
@@ -203,6 +251,10 @@
     "file": "favicons/montelnews.com.png",
     "checkedAt": "2026-11-06"
   },
+  "nairametrics.com": {
+    "file": "favicons/nairametrics.com.png",
+    "checkedAt": "2026-11-06"
+  },
   "nationthailand.com": {
     "file": "favicons/nationthailand.com.png",
     "checkedAt": "2026-11-06"
@@ -219,6 +271,14 @@
     "file": null,
     "checkedAt": "2026-11-06"
   },
+  "news.metal.com": {
+    "file": "favicons/news.metal.com.ico",
+    "checkedAt": "2026-11-06"
+  },
+  "oilprice.com": {
+    "file": "favicons/oilprice.com.png",
+    "checkedAt": "2026-11-06"
+  },
   "orfme.org": {
     "file": "favicons/orfme.org.png",
     "checkedAt": "2026-11-06"
@@ -227,8 +287,24 @@
     "file": "favicons/pgjonline.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "proshare.co": {
+    "file": null,
+    "checkedAt": "2026-11-06"
+  },
+  "qcintel.com": {
+    "file": "favicons/qcintel.com.ico",
+    "checkedAt": "2026-11-06"
+  },
   "radar.am": {
     "file": "favicons/radar.am.png",
+    "checkedAt": "2026-11-06"
+  },
+  "radionigeria.gov.ng": {
+    "file": null,
+    "checkedAt": "2026-11-06"
+  },
+  "report.az": {
+    "file": null,
     "checkedAt": "2026-11-06"
   },
   "reuters.com": {
@@ -237,6 +313,50 @@
   },
   "scmp.com": {
     "file": "favicons/scmp.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "sofx.com": {
+    "file": "favicons/sofx.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "texasgopvote.com": {
+    "file": "favicons/texasgopvote.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "theedgemalaysia.com": {
+    "file": "favicons/theedgemalaysia.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "thepeninsulaqatar.com": {
+    "file": "favicons/thepeninsulaqatar.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "timesca.com": {
+    "file": "favicons/timesca.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "timesofisrael.com": {
+    "file": "favicons/timesofisrael.com.ico",
+    "checkedAt": "2026-11-06"
+  },
+  "tradefinanceglobal.com": {
+    "file": null,
+    "checkedAt": "2026-11-06"
+  },
+  "tradingview.com": {
+    "file": "favicons/tradingview.com.ico",
+    "checkedAt": "2026-11-06"
+  },
+  "ua.news": {
+    "file": "favicons/ua.news.ico",
+    "checkedAt": "2026-11-06"
+  },
+  "voiceofemirates.com": {
+    "file": "favicons/voiceofemirates.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "wanaen.com": {
+    "file": "favicons/wanaen.com.png",
     "checkedAt": "2026-11-06"
   }
 }
