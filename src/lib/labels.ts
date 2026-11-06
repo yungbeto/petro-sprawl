@@ -36,6 +36,8 @@ export function detailKind(resolved: Resolved): string {
     }
     case 'terminal':
       return OIL_ROLE[resolved.item.role];
+    case 'refinery':
+      return 'Oil refinery';
     case 'region':
       return 'US fuel region';
   }

@@ -1,10 +1,10 @@
 import { ArcLayer, GeoJsonLayer, IconLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
 import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon, Position } from 'geojson';
 import type { Layer } from '@deck.gl/core';
-import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, OilTerminal, Pipeline, UsRegion } from '../types';
+import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, OilTerminal, Pipeline, Refinery, UsRegion } from '../types';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, ORIGIN_ARC, PIPELINE_WIDTH, REGION_OUTLINE, STORAGE_NOT_COVERED, TERMINAL_MARKER } from '../lib/config';
+import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, ORIGIN_ARC, PIPELINE_WIDTH, REFINERY_RADIUS, REGION_OUTLINE, STORAGE_NOT_COVERED, TERMINAL_MARKER } from '../lib/config';
 import { storageColor, type CountryStorage } from '../lib/gasStorage';
 import type { OriginArc } from '../lib/oilOrigins';
 import type { FilterMatches } from '../lib/filters';
@@ -16,6 +16,8 @@ import {
   lngStatus,
   pipelineStatus,
   pipelineWidthPx,
+  refineryRadiusPx,
+  refineryStatus,
   terminalStatus,
 } from '../lib/encoding';
 import type { ChokepointFlow, FlowBand } from '../lib/flow';
@@ -32,6 +34,7 @@ export type PickedObject =
   | { kind: 'country'; item: Country }
   | { kind: 'lng'; item: LngTerminal }
   | { kind: 'terminal'; item: OilTerminal }
+  | { kind: 'refinery'; item: Refinery }
   | { kind: 'region'; item: UsRegion };
 
 interface PipelinePath {
@@ -58,6 +61,17 @@ const DIAMOND = {
   id: 'diamond',
   url: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><path d="M32 3 L61 32 L32 61 L3 32 Z" fill="#000"/></svg>',
+  )}`,
+  width: 64,
+  height: 64,
+  mask: true,
+};
+
+/** A square with rounded corners, for refineries: the same mask trick, a shape LNG's dots and the terminals' diamonds don't use. */
+const SQUARE = {
+  id: 'square',
+  url: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect x="4" y="4" width="56" height="56" rx="10" fill="#000"/></svg>',
   )}`,
   width: 64,
   height: 64,
@@ -197,7 +211,7 @@ export function buildLayers({
   basinLabelMinZoom,
   fontFamily,
 }: BuildLayersInput): Layer[] {
-  if (regionsOnly) visibility = { storage: false, basins: false, pipelines: false, lng: false, terminals: false, chokepoints: false };
+  if (regionsOnly) visibility = { storage: false, basins: false, pipelines: false, lng: false, terminals: false, refineries: false, chokepoints: false };
   const isSelected = (kind: Selection['kind'], id: string) => selection?.kind === kind && selection.id === id;
   // A quick filter fades whatever it doesn't match; the selection always stays at full strength.
   const pipelineFade = (id: string) =>
@@ -207,6 +221,8 @@ export function buildLayers({
   const lngFade = (id: string) => (!highlight || highlight.lng.has(id) || isSelected('lng', id) ? 1 : FILTERS.fadeAlpha);
   const terminalFade = (id: string) =>
     !highlight || highlight.terminals.has(id) || isSelected('terminal', id) ? 1 : FILTERS.fadeAlpha;
+  const refineryFade = (id: string) =>
+    !highlight || highlight.refineries.has(id) || isSelected('refinery', id) ? 1 : FILTERS.fadeAlpha;
   const importTerminals = data.lngTerminals.filter((t) => t.facility === 'import');
 
   const basinFeatures = basinCollection(data.basins);
@@ -439,6 +455,46 @@ export function buildLayers({
       getFillColor: (t) => withAlpha(colors.halo, lngFade(t.id)),
       updateTriggers: { getFillColor: [colors, highlight, selection] },
     }),
+    // Refineries: a square colored by status, its side from crude distillation capacity, on a halo.
+    new ScatterplotLayer<Refinery>({
+      id: 'refinery-selection',
+      data: data.refineries.filter((r) => isSelected('refinery', r.id)),
+      visible: visibility.refineries,
+      getPosition: (r) => r.point,
+      getRadius: (r) => refineryRadiusPx(r) * Math.SQRT2 + REFINERY_RADIUS.selectionGapPx,
+      radiusUnits: 'pixels',
+      stroked: true,
+      filled: false,
+      getLineColor: colors.selection,
+      getLineWidth: 2,
+      lineWidthUnits: 'pixels',
+      updateTriggers: { getLineColor: [colors] },
+    }),
+    new IconLayer<Refinery>({
+      id: 'refinery-halo',
+      data: data.refineries,
+      visible: visibility.refineries,
+      getPosition: (r) => r.point,
+      getIcon: () => SQUARE,
+      getSize: (r) => refineryRadiusPx(r) * 2 + REFINERY_RADIUS.haloPx,
+      sizeUnits: 'pixels',
+      getColor: (r) => withAlpha(colors.halo, refineryFade(r.id)),
+      updateTriggers: { getColor: [colors, highlight, selection] },
+    }),
+    new IconLayer<Refinery>({
+      id: 'refineries',
+      data: data.refineries,
+      visible: visibility.refineries,
+      pickable: true,
+      getPosition: (r) => r.point,
+      getIcon: () => SQUARE,
+      getSize: (r) => refineryRadiusPx(r) * 2,
+      sizeUnits: 'pixels',
+      getColor: (r) => withAlpha(statusColor(refineryStatus(r), colors), refineryFade(r.id)),
+      autoHighlight: true,
+      highlightColor: withAlpha(colors.selection, 0.5),
+      updateTriggers: { getColor: [colors, highlight, selection] },
+    }),
     // Oil terminals: a diamond colored by the latest claim's status, on a halo that lifts it off the lines below.
     new ScatterplotLayer<OilTerminal>({
       id: 'terminal-selection',
@@ -560,6 +616,8 @@ export function toPicked(layerId: string | undefined, object: unknown): PickedOb
       return { kind: 'lng', item: object as LngTerminal };
     case 'terminals':
       return { kind: 'terminal', item: object as OilTerminal };
+    case 'refineries':
+      return { kind: 'refinery', item: object as Refinery };
     case 'regions':
       return { kind: 'region', item: (object as Feature<Polygon | MultiPolygon, UsRegion>).properties };
     default:

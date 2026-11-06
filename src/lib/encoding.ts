@@ -1,7 +1,7 @@
 // Visual encodings that depend only on the data: line widths, ring sizes, current status.
 
-import type { AssetStatus, Chokepoint, LngTerminal, OilTerminal, Pipeline, PipelineHistory } from '../types';
-import { CHOKEPOINT_RADIUS, LNG_RADIUS, PIPELINE_WIDTH } from './config';
+import type { AssetStatus, Chokepoint, LngTerminal, OilTerminal, Pipeline, PipelineHistory, Refinery } from '../types';
+import { CHOKEPOINT_RADIUS, LNG_RADIUS, PIPELINE_WIDTH, REFINERY_RADIUS } from './config';
 
 export function pipelineStatus(pipeline: Pipeline): AssetStatus {
   return pipeline.evidence[0]?.status ?? 'unknown';
@@ -33,6 +33,18 @@ export function lngStatus(terminal: LngTerminal): AssetStatus {
 /** The newest cited claim's status; unknown when nothing could be sourced. */
 export function terminalStatus(terminal: OilTerminal): AssetStatus {
   return terminal.evidence[0]?.status ?? 'unknown';
+}
+
+/** The newest evidence's status: EIA's split on 1 January until a later claim; unknown without one. */
+export function refineryStatus(refinery: Refinery): AssetStatus {
+  return refinery.evidence[0]?.status ?? 'unknown';
+}
+
+/** Dot radius from crude distillation capacity; the smallest when none is published. */
+export function refineryRadiusPx(refinery: Refinery): number {
+  const { scale, minPx, maxPx } = REFINERY_RADIUS;
+  const kbd = refinery.capacity ? refinery.capacity.value / 1000 : 0;
+  return Math.min(maxPx, Math.max(minPx, Math.sqrt(kbd) * scale));
 }
 
 /** Dot radius from capacity in operation, or from planned capacity when nothing operates yet. */

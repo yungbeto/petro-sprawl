@@ -6,6 +6,7 @@ import { CaretRightIcon, DotsThreeOutlineIcon, HouseIcon, ListIcon, QuestionIcon
 import { VIEW_ICONS } from './viewIcons';
 import { pipelineGroups, type PipelineGrouping } from '../lib/pipelineGroups';
 import { lngGroups, oilGroups, type TerminalGrouping, type TerminalKind } from '../lib/terminalGroups';
+import { refineryGroups, type RefineryGrouping } from '../lib/refineries';
 import type { TerminalListing } from '../panel/TerminalsView';
 import type { Pipeline } from '../types';
 import { Panel } from '../panel/Panel';
@@ -61,6 +62,7 @@ export function App() {
     pipelines: true,
     lng: true,
     terminals: true,
+    refineries: true,
     chokepoints: true,
   }));
   const [focus, setFocus] = useState<FocusRequest | null>(null);
@@ -154,16 +156,31 @@ export function App() {
     return group?.terminals ?? null;
   }, [terminalListing, openTerminalGroup]);
 
+  // The refineries surface's grouping and open group.
+  const [refineryGrouping, setRefineryGrouping] = useState<RefineryGrouping>('region');
+  const [openRefineryGroup, setOpenRefineryGroup] = useState<string | null>(null);
+  const refineryGroupList = useMemo(
+    () => (view === 'refineries' ? refineryGroups(data.refineries, refineryGrouping, data.countryRegions) : []),
+    [view, data, refineryGrouping],
+  );
+  const openRefineries = useMemo(
+    () => refineryGroupList.find((g) => g.id === openRefineryGroup)?.refineries ?? null,
+    [refineryGroupList, openRefineryGroup],
+  );
+
   const groupMatches = useMemo((): FilterMatches | null => {
     const none = () => new Set<string>();
-    if (openGroup) return { pipelines: new Set(openGroup.pipelines.map((p) => p.id)), chokepoints: none(), lng: none(), terminals: none() };
+    if (openGroup) return { pipelines: new Set(openGroup.pipelines.map((p) => p.id)), chokepoints: none(), lng: none(), terminals: none(), refineries: none() };
+    if (view === 'refineries' && openRefineries) {
+      return { pipelines: none(), chokepoints: none(), lng: none(), terminals: none(), refineries: new Set(openRefineries.map((r) => r.id)) };
+    }
     if (view !== 'terminals') return null;
     // The kind switch keeps its own kind bright; an open group narrows that to the group.
     const ids = new Set(
       openTerminals ? openTerminals.map((t) => t.id) : (terminalKind === 'lng' ? data.lngTerminals : data.oilTerminals).map((t) => t.id),
     );
-    return { pipelines: none(), chokepoints: none(), lng: terminalKind === 'lng' ? ids : none(), terminals: terminalKind === 'oil' ? ids : none() };
-  }, [openGroup, view, openTerminals, terminalKind, data]);
+    return { pipelines: none(), chokepoints: none(), lng: terminalKind === 'lng' ? ids : none(), terminals: terminalKind === 'oil' ? ids : none(), refineries: none() };
+  }, [openGroup, view, openTerminals, openRefineries, terminalKind, data]);
 
   // Fuel origins shows only the regions: on its own page, and on a region opened from anywhere. Opening
   // anything else from the surface brings the other layers back.
@@ -235,6 +252,21 @@ export function App() {
       if (opening && group) setFocus((prev) => ({ points: lineEnds(group.pipelines), nonce: (prev?.nonce ?? 0) + 1 }));
     },
     [openPipelineGroup, pipelineGroupList],
+  );
+
+  const changeRefineryGrouping = useCallback((next: RefineryGrouping) => {
+    setRefineryGrouping(next);
+    setOpenRefineryGroup(null);
+  }, []);
+  // Opening a group frames its refineries.
+  const toggleRefineryGroup = useCallback(
+    (id: string) => {
+      const opening = openRefineryGroup !== id;
+      setOpenRefineryGroup(opening ? id : null);
+      const group = refineryGroupList.find((g) => g.id === id);
+      if (opening && group) setFocus((prev) => ({ points: group.refineries.map((r) => r.point), nonce: (prev?.nonce ?? 0) + 1 }));
+    },
+    [openRefineryGroup, refineryGroupList],
   );
 
   const changeTerminalKind = useCallback((next: TerminalKind) => {
@@ -459,6 +491,13 @@ export function App() {
               openGroup: openTerminalGroup,
               onToggleGroup: toggleTerminalGroup,
             }}
+            refineries={{
+              groups: refineryGroupList,
+              grouping: refineryGrouping,
+              onGrouping: changeRefineryGrouping,
+              openGroup: openRefineryGroup,
+              onToggleGroup: toggleRefineryGroup,
+            }}
             surfaceLabel={surfaceLabel}
             backLabel={backLabel}
             onBack={back}
@@ -533,6 +572,7 @@ export function App() {
                 pipelines: data.pipelines.length,
                 lng: data.lngTerminals.length,
                 terminals: data.oilTerminals.length,
+                refineries: data.refineries.length,
                 chokepoints: data.chokepoints.length,
               }}
             />}

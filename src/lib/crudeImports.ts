@@ -159,6 +159,7 @@ export function importsSurfaceHighlight(data: Pick<Datasets, 'crudeImports' | 'o
     chokepoints: new Set(terminals.flatMap((t) => t.exitVia as string[])),
     lng: new Set(),
     terminals: new Set(terminals.map((t) => t.id)),
+    refineries: new Set(),
   };
 }
 
@@ -169,6 +170,7 @@ export function countryHighlight(origins: CountryOrigins | null): FilterMatches 
     chokepoints: new Set(origins?.exposure.map((e) => e.chokepoint) ?? []),
     lng: new Set(),
     terminals: new Set(origins?.rows.flatMap((r) => r.terminals?.map((t) => t.id) ?? []) ?? []),
+    refineries: new Set(),
   };
 }
 

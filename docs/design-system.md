@@ -117,6 +117,19 @@ Stylesheets (all imported by `src/main.tsx`, in cascade order): `tokens.css`; `b
 file goes where its rules belong in that order. Detail pages are one file each in `src/panel/detail/`, with
 what they share in `parts.tsx` and `status.tsx`; `src/panel/details.tsx` only re-exports them.
 
+### Map markers
+
+Each kind of point has its own shape, so kind never needs a colour; fill is the status colour (`--map-*`), on a
+halo that lifts it off the lines below, and a selection ring when open (`src/map/layers.ts`). Sizes live in
+`src/lib/config.ts`.
+
+| Kind | Shape | Size |
+| --- | --- | --- |
+| Chokepoint | Ring | EIA reference volume (`CHOKEPOINT_RADIUS`) |
+| LNG terminal | Dot, hollow centre for import | Capacity in operation (`LNG_RADIUS`) |
+| Oil terminal | Diamond | One size (`TERMINAL_MARKER`) |
+| Refinery (M11) | Rounded square | Crude distillation capacity, the smallest when unknown (`REFINERY_RADIUS`) |
+
 ## Audit, 2026-11-05
 
 ### Fixed

@@ -10,19 +10,22 @@
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { ALSI, ENTSOG, alsiSeriesId, entsogSeriesId } from '../src/lib/config';
-import type { DatasetMeta, Disruption, LngTerminal, OilTerminal, Pipeline } from '../src/types';
+import type { DatasetMeta, Disruption, LngTerminal, OilTerminal, Pipeline, Refinery } from '../src/types';
 import { linkSendOut, mergeLngEvidence, type CuratedLngEvidence } from './lib/curated-lng';
 import { mergePipelines, type CuratedPipeline } from './lib/curated-pipelines';
 import { prepareTerminals } from './lib/curated-terminals';
+import { mergeRefineryEvidence, type CuratedRefineryEvidence } from './lib/refineries';
 import { publishDataset, report, sha256File, validateRecords } from './lib/output';
 import {
   curatedLngEvidenceSchema,
   curatedPipelineSchema,
+  curatedRefineryEvidenceSchema,
   disruptionSchema,
   lngTerminalSchema,
   oilRouteSchema,
   oilTerminalSchema,
   pipelineSchema,
+  refinerySchema,
 } from './lib/schemas';
 
 const CURATED_PIPELINES = 'data/curated/pipelines-evidence.json';
@@ -31,20 +34,29 @@ const DEDUP_REPORT = 'data/reports/dedup.json';
 const CURATED_LNG = 'data/curated/lng-evidence.json';
 const GEM_LNG = 'data/derived/gem-lng-terminals.json';
 const CURATED_TERMINALS = 'data/curated/oil-terminals.json';
+const CURATED_REFINERIES = 'data/curated/refinery-evidence.json';
+const US_REFINERIES = 'data/derived/refineries-us.json';
 
 const readJson = async <T>(path: string) => JSON.parse(await readFile(path, 'utf8')) as T;
 
 const disruptions = await publishDataset({
   id: 'disruptions',
   schema: disruptionSchema,
-  produce: async () => ({
-    records: await readJson<unknown[]>('data/curated/disruptions.json'),
-    meta: {
-      sourceUrl: 'data/curated/disruptions.json',
-      sourceVersion: 'Hand-curated; every record cites its sources',
-      license: 'Ours; linked sources keep their own terms',
-    },
-  }),
+  produce: async () => {
+    const records = await readJson<Disruption[]>('data/curated/disruptions.json');
+    // Refineries are imported (import:refineries-us); check against what that wrote.
+    const refineryIds = new Set((await readJson<{ id: string }[]>(US_REFINERIES)).map((r) => r.id));
+    const missing = records.filter((d) => d.assetKind === 'refinery' && !refineryIds.has(d.assetId));
+    if (missing.length) throw new Error(`disruptions name refineries that don't exist: ${missing.map((d) => `${d.id} (${d.assetId})`).join('; ')}`);
+    return {
+      records,
+      meta: {
+        sourceUrl: 'data/curated/disruptions.json',
+        sourceVersion: 'Hand-curated; every record cites its sources',
+        license: 'Ours; linked sources keep their own terms',
+      },
+    };
+  },
 });
 report(disruptions, 'disruptions');
 
@@ -105,6 +117,26 @@ const lng = await publishDataset({
   },
 });
 report(lng, 'lng-terminals');
+
+const refineries = await publishDataset({
+  id: 'refineries',
+  schema: refinerySchema,
+  produce: async () => {
+    // Empty until the first claim; validateRecords refuses an empty list.
+    const raw = await readJson<unknown[]>(CURATED_REFINERIES);
+    const curated = (raw.length ? validateRecords('refinery-evidence', raw, curatedRefineryEvidenceSchema) : []) as CuratedRefineryEvidence[];
+    const usMeta = await readJson<DatasetMeta>('data/derived/meta/refineries-us.json');
+    return {
+      records: mergeRefineryEvidence(curated, await readJson<Refinery[]>(US_REFINERIES)),
+      meta: {
+        sourceUrl: usMeta.sourceUrl,
+        sourceVersion: `${usMeta.sourceVersion}; curated ${CURATED_REFINERIES} sha256:${await sha256File(CURATED_REFINERIES)}`,
+        license: `${usMeta.license}; curated evidence ours, linked sources keep their own terms`,
+      },
+    };
+  },
+});
+report(refineries, 'refineries');
 
 const terminals = await publishDataset({
   id: 'oil-terminals',

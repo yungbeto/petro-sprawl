@@ -8,9 +8,9 @@ import { DETAIL, FILTERS, MEASURED_FLOW, NEWS, type RegionFuel } from '../../lib
 import { pipelineFlow } from '../../lib/evidence';
 import type { PortCalls, Datasets } from '../../lib/data';
 import type { FlowBand } from '../../lib/flow';
-import { formatIndexShare, formatNumber, formatTonnes } from '../../lib/format';
+import { formatIndexShare, formatNumber, formatRefineryCapacity, formatTonnes } from '../../lib/format';
 import { Sparkline } from '../Sparkline';
-import { lngStatus, pipelineStatus, shareCoverage, terminalStatus } from '../../lib/encoding';
+import { lngStatus, pipelineStatus, refineryStatus, shareCoverage, terminalStatus } from '../../lib/encoding';
 import type { FilterRow } from '../../lib/filters';
 import { chokepointRows } from '../../lib/summary';
 import { AssetIcon } from '../AssetIcon';
@@ -287,6 +287,7 @@ export function AssetList({ rows, data, onSelect }: { rows: FilterRow[]; data: D
   const pipelines = new Map(data.pipelines.map((p) => [p.id, p]));
   const terminals = new Map(data.lngTerminals.map((t) => [t.id, t]));
   const oilTerminals = new Map(data.oilTerminals.map((t) => [t.id, t]));
+  const refineries = new Map(data.refineries.map((r) => [r.id, r]));
   const bands = new Map(chokepointRows(data).map((c) => [c.selection.id, c.band]));
   return (
     <ul className="changes">
@@ -294,11 +295,14 @@ export function AssetList({ rows, data, onSelect }: { rows: FilterRow[]; data: D
         const pipeline = row.selection.kind === 'pipeline' ? pipelines.get(row.selection.id) : undefined;
         const terminal = row.selection.kind === 'lng' ? terminals.get(row.selection.id) : undefined;
         const oilTerminal = row.selection.kind === 'terminal' ? oilTerminals.get(row.selection.id) : undefined;
+        const refinery = row.selection.kind === 'refinery' ? refineries.get(row.selection.id) : undefined;
         const status = pipeline
           ? pipelineStatus(pipeline)
           : terminal
             ? lngStatus(terminal)
-            : oilTerminal && terminalStatus(oilTerminal);
+            : oilTerminal
+              ? terminalStatus(oilTerminal)
+              : refinery && refineryStatus(refinery);
         return (
           <li key={`${row.selection.kind}/${row.selection.id}`}>
             <button type="button" className="change" onClick={() => onSelect(row.selection)}>
@@ -312,7 +316,11 @@ export function AssetList({ rows, data, onSelect }: { rows: FilterRow[]; data: D
                       ? LNG_FACILITY[terminal.facility]
                       : oilTerminal
                         ? OIL_ROLE[oilTerminal.role]
-                        : 'Chokepoint'}
+                        : refinery
+                          ? refinery.capacity
+                            ? formatRefineryCapacity(refinery.capacity)
+                            : 'Refinery'
+                          : 'Chokepoint'}
                   {' · '}
                   {status ? (
                     <span className={`status status--${status}`}>{statusLabel(status)}</span>

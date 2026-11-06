@@ -23,9 +23,9 @@ import { pipelineFlow } from '../lib/evidence';
 import { storageByCountry, type CountryStorage } from '../lib/gasStorage';
 import type { ChokepointFlow } from '../lib/flow';
 import { boundsOf } from '../lib/geo';
-import { formatCapacity, formatIndexShare, formatMbd, formatNumber, formatShare, formatSignedPct } from '../lib/format';
+import { formatCapacity, formatIndexShare, formatMbd, formatNumber, formatRefineryCapacity, formatShare, formatSignedPct } from '../lib/format';
 import type { FilterMatches } from '../lib/filters';
-import { terminalStatus } from '../lib/encoding';
+import { refineryStatus, terminalStatus } from '../lib/encoding';
 import { statusLabel } from '../panel/details';
 import { buildLayers, selectionId, toPicked, type CountryMode, type LayerVisibility, type PickedObject } from './layers';
 import { countryArcs, countryHighlight, countryOrigins, importPeriod, originsOfCountry } from '../lib/crudeImports';
@@ -109,6 +109,10 @@ function tooltipFigure(
     case 'terminal': {
       const role = picked.item.role === 'export' ? 'Export terminal' : 'Import terminal';
       return `${role} · ${statusLabel(terminalStatus(picked.item)).toLowerCase()}`;
+    }
+    case 'refinery': {
+      const status = statusLabel(refineryStatus(picked.item)).toLowerCase();
+      return picked.item.capacity ? `${formatRefineryCapacity(picked.item.capacity)} · ${status}` : `Capacity unknown · ${status}`;
     }
     case 'region': {
       const states = PADDS.find((p) => p.id === picked.item.id)?.states.length;
@@ -343,7 +347,7 @@ export function MapView(props: MapViewProps) {
     }
     const resolved = resolveSelection(target.selection, data);
     if (!resolved) return;
-    if (resolved.kind === 'chokepoint' || resolved.kind === 'lng' || resolved.kind === 'terminal') {
+    if (resolved.kind === 'chokepoint' || resolved.kind === 'lng' || resolved.kind === 'terminal' || resolved.kind === 'refinery') {
       map.flyTo({ center: resolved.item.point, zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM), padding });
     } else if (resolved.kind === 'country' && countryView?.arcs.length) {
       // The country and every partner it draws an arc from.

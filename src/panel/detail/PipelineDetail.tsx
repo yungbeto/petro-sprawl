@@ -14,6 +14,7 @@ import { Note } from '../../ui/Note';
 import { type OnSelect, Row, Header, Facts, SourceLink, PortCallsSection, AssetNews, FlowMeter, GemOwnership, CompanyList, RelatedList } from './parts';
 import { DisruptionList, StatusBlock, Reports } from './status';
 import { oilTerminalRows } from './OilTerminalDetail';
+import { refineriesAtPipeline } from '../../lib/refineries';
 
 export function PipelineDetail({
   item,
@@ -35,11 +36,17 @@ export function PipelineDetail({
   const disruptions = pipelineDisruptions(data, item.id);
   const portCalls = portCallsFor(data, item.id);
   const endTerminals = oilTerminalRows(terminalsForPipeline(data, item.id));
+  // Refineries beside one of its ends (REFINERIES.linkKm); empty while the refineries surface is off.
+  const endRefineries = refineriesAtPipeline(item, data.refineries).map((r) => ({
+    selection: { kind: 'refinery' as const, id: r.id },
+    name: r.name,
+    curated: true,
+  }));
   const route = [item.fromCountry, ...item.transitCountries, item.toCountry].filter(Boolean).join(' → ');
   const curated = item.sources.includes('curated');
   const sections = systemSections(item, data.pipelines);
   const none = new Set<string>();
-  const sectionRows = filterRows({ pipelines: new Set(sections.map((p) => p.id)), chokepoints: none, lng: none, terminals: none }, data);
+  const sectionRows = filterRows({ pipelines: new Set(sections.map((p) => p.id)), chokepoints: none, lng: none, terminals: none, refineries: none }, data);
   return (
     <>
       <Header
@@ -97,8 +104,8 @@ export function PipelineDetail({
       {portCalls.map((calls) => (
         <PortCallsSection key={calls.port} calls={calls} />
       ))}
-      {endTerminals.length > 0 && (
-        <RelatedList title="Ends at" empty="" rows={endTerminals} data={data} onSelect={onSelect} />
+      {endTerminals.length + endRefineries.length > 0 && (
+        <RelatedList title="Ends at" empty="" rows={[...endTerminals, ...endRefineries]} data={data} onSelect={onSelect} />
       )}
       <DisruptionList disruptions={disruptions} now={now} />
       <Reports evidence={item.evidence} />

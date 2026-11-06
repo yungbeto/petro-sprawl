@@ -9,8 +9,8 @@ import { DEFAULT_REGION_FUEL, GLOBE, REGION_FUEL_LABELS, REGION_FUELS, SHARE, ST
 import { countryOrigins, importPeriod } from './crudeImports';
 import { chokepointFlow } from './flow';
 import { fuelOriginsFor, originsFor, seriesById, type Datasets } from './data';
-import { lngStatus, pipelineStatus, terminalStatus } from './encoding';
-import { formatCapacity, formatCountry, formatIndexShare, formatNumber, formatShare, formatSignedPct } from './format';
+import { lngStatus, pipelineStatus, refineryStatus, terminalStatus } from './encoding';
+import { formatCapacity, formatCountry, formatRefineryCapacity, formatIndexShare, formatNumber, formatShare, formatSignedPct } from './format';
 import { STORAGE_HEADLINE, storageByCountry, storageFigure, type CountryStorage } from './gasStorage';
 import { cellIndex } from './globe';
 import { pointInPolygon } from './geo';
@@ -174,7 +174,7 @@ const IMPORT_SOURCE = { eurostat: 'Eurostat', comtrade: 'UN Comtrade', eia: 'EIA
 
 /** Every page's card, by file and key. */
 export function shareCards(data: Datasets): Record<ShareFile, ShareIndex> {
-  const out: Record<ShareFile, ShareIndex> = { pipeline: {}, chokepoint: {}, basin: {}, country: {}, lng: {}, terminal: {}, region: {}, view: {} };
+  const out: Record<ShareFile, ShareIndex> = { pipeline: {}, chokepoint: {}, basin: {}, country: {}, lng: {}, terminal: {}, refinery: {}, region: {}, view: {} };
 
   for (const c of data.chokepoints) {
     const flow = chokepointFlow(seriesById(data, c.transitSeriesId));
@@ -230,6 +230,22 @@ export function shareCards(data: Datasets): Record<ShareFile, ShareIndex> {
       source: statusSource(t.evidence[0]),
       center: round1(t.point),
       focus: pointCells(t.point),
+    };
+  }
+
+  // Empty while the refineries surface is off (assembleDatasets).
+  for (const r of data.refineries) {
+    const status = statusLabel(refineryStatus(r));
+    out.refinery[`refinery/${r.id}`] = {
+      kicker: detailKind({ kind: 'refinery', item: r }),
+      title: r.name,
+      facts: [
+        [r.state, formatCountry(r.country)].filter(Boolean).join(', '),
+        r.capacity ? `${status}, ${formatRefineryCapacity(r.capacity)} of crude distillation capacity (${r.capacity.source.publisher}, ${r.capacity.asOf})` : status,
+      ],
+      source: statusSource(r.evidence[0]),
+      center: round1(r.point),
+      focus: pointCells(r.point),
     };
   }
 
@@ -311,6 +327,10 @@ export function shareCards(data: Datasets): Record<ShareFile, ShareIndex> {
     terminals: () => ({
       facts: [`${data.lngTerminals.length.toLocaleString('en-US')} LNG terminals and ${data.oilTerminals.length} oil terminals`],
       focus: [...data.lngTerminals, ...data.oilTerminals].flatMap((t) => pointCells(t.point, 1)),
+    }),
+    refineries: () => ({
+      facts: [`${data.refineries.length} refineries, with their crude distillation capacity`],
+      focus: data.refineries.flatMap((r) => pointCells(r.point, 1)),
     }),
     basins: () => ({
       facts: [`${data.basins.length} petroleum provinces, as USGS assessed them`],

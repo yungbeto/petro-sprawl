@@ -19,12 +19,12 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
   const pipelines = pipelinesTouchingBasin(item, data.pipelines);
   const terminals = lngTerminalsInBasin(item, data.lngTerminals);
   const none = new Set<string>();
-  const pipelineRows = filterRows({ pipelines: new Set(pipelines.map((p) => p.id)), chokepoints: none, lng: none, terminals: none }, data);
+  const pipelineRows = filterRows({ pipelines: new Set(pipelines.map((p) => p.id)), chokepoints: none, lng: none, terminals: none, refineries: none }, data);
   const chokepointRowsInside = filterRows(
-    { pipelines: none, chokepoints: new Set(chokepoints.map((c) => c.id)), lng: none, terminals: none },
+    { pipelines: none, chokepoints: new Set(chokepoints.map((c) => c.id)), lng: none, terminals: none, refineries: none },
     data,
   );
-  const terminalRows = filterRows({ pipelines: none, chokepoints: none, lng: new Set(terminals.map((t) => t.id)), terminals: none }, data);
+  const terminalRows = filterRows({ pipelines: none, chokepoints: none, lng: new Set(terminals.map((t) => t.id)), terminals: none, refineries: none }, data);
   return (
     <>
       <Header name={item.name} icon={<AssetIcon kind="basin" large />} />

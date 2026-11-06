@@ -184,3 +184,6 @@ Sources checked by web search on 2026-11-05; none of the files has been download
 - **OpenStreetMap `industrial=refinery`:** ODbL. Decide whether points taken from it make `public/data/refineries.json` a derived database that must be offered under ODbL, before publishing any.
 - **NASA FIRMS:** fire detections as a candidate signal for the news scan. Needs a MAP_KEY; check terms and how often flares trigger it.
 - **KAPSARC refinery capacities (Open Net Zero):** licence listed as unknown, so not used.
+- **Weekly refinery use by PADD (`pet/pnp/wiup`):** the spec names the weekly series for a refinery's page; phase 1 shows the monthly `pnp/unc` figure the region view already fetches. Switch if weekly turns out worth a second fetch.
+- **Pipelines and refineries:** links are by distance (a GEM line end within `REFINERIES.linkKm`), 60 of 121 refineries. Some are wrong (a products line ending at a terminal beside a refinery); cited connections and `terminalIds` would need research one by one.
+- **News terms at towns with more than one refinery:** Texas City has Valero's refinery and Marathon's Galveston Bay plant. "Texas City refinery" is Valero's only term, so a story about Marathon's there can match it; the drafting step names the operator, and status changes always go to review.

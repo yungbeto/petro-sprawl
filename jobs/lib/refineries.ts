@@ -3,6 +3,7 @@
 
 import { REFINERIES } from '../../src/lib/config';
 import type { AssetStatus, Evidence, Refinery } from '../../src/types';
+import { byRankThenObservedDesc } from './curated-pipelines';
 
 /** One site from data/derived/eia-refineries.json (jobs/import-refineries-us.py). Barrels per calendar day. */
 export interface EiaRefinery {
@@ -161,4 +162,24 @@ export function toRefineries(
       return refinery;
     })
     .sort((a, b) => (b.capacity?.value ?? 0) - (a.capacity?.value ?? 0) || a.id.localeCompare(b.id));
+}
+
+/** Cited claims for one refinery (data/curated/refinery-evidence.json), by its id. */
+export interface CuratedRefineryEvidence {
+  id: string;
+  evidence: Evidence[];
+}
+
+/**
+ * Adds each record's claims to its refinery, ranked like pipeline evidence (cited claims before the
+ * dataset's, then newest). Throws on an id that isn't there, so a renamed refinery can't drop its claims.
+ */
+export function mergeRefineryEvidence(curated: readonly CuratedRefineryEvidence[], refineries: readonly Refinery[]): Refinery[] {
+  const byId = new Map(curated.map((c) => [c.id, c.evidence]));
+  const missing = [...byId.keys()].filter((id) => !refineries.some((r) => r.id === id));
+  if (missing.length) throw new Error(`curated refinery evidence points at refineries that don't exist: ${missing.join(', ')}`);
+  return refineries.map((r) => {
+    const cited = byId.get(r.id);
+    return cited ? { ...r, evidence: [...cited, ...r.evidence].sort(byRankThenObservedDesc) } : r;
+  });
 }

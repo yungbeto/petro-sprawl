@@ -17,10 +17,11 @@ import { ChokepointsView } from './ChokepointsView';
 import { PipelinesView, type PipelinesViewProps } from './PipelinesView';
 import { TerminalsView, type TerminalsViewProps } from './TerminalsView';
 import { StorageView } from './StorageView';
+import { RefineriesView, type RefineriesViewProps } from './RefineriesView';
 import { MoreView } from './MoreView';
 import { DetailSkeleton, HomeSkeleton, ListSkeleton } from './Skeleton';
 import { OriginsView, type OriginsViewProps } from './OriginsView';
-import { BasinDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RegionDetail, CountryDetail } from './details';
+import { BasinDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RefineryDetail, RegionDetail, CountryDetail } from './details';
 import { IconButton } from '../ui/Button';
 import { SectionTitle } from '../ui/SectionTitle';
 
@@ -31,6 +32,8 @@ interface PanelProps {
   pipelines: Pick<PipelinesViewProps, 'groups' | 'grouping' | 'onGrouping' | 'openGroup' | 'onToggleGroup'>;
   /** The terminals surface's kind, groups and grouping, held by the app. */
   terminals: Omit<TerminalsViewProps, 'data' | 'onSelect'>;
+  /** The refineries surface's groups and grouping, held by the app. */
+  refineries: Omit<RefineriesViewProps, 'data' | 'onSelect'>;
   /** The fuel origins surface's fuel, held by the app, and its way into search. */
   origins: Pick<OriginsViewProps, 'fuel' | 'onFuel' | 'onFind'>;
   /** The rail surface's name, for the close button: "Home" or the view's. */
@@ -70,6 +73,7 @@ const KIND_LABELS: Record<SelectionKind, string> = {
   country: 'Country',
   lng: 'LNG terminal',
   terminal: 'Oil terminal',
+  refinery: 'Refinery',
   region: 'US fuel region',
 };
 
@@ -186,6 +190,8 @@ export function Panel(props: PanelProps) {
           <PipelinesView data={props.data} {...props.pipelines} onSelect={props.onSelect} />
         ) : props.view === 'terminals' ? (
           <TerminalsView data={props.data} {...props.terminals} onSelect={props.onSelect} />
+        ) : props.view === 'refineries' ? (
+          <RefineriesView data={props.data} {...props.refineries} onSelect={props.onSelect} />
         ) : props.view === 'basins' ? (
           <BasinsView data={props.data} onSelect={props.onSelect} />
         ) : props.view === 'storage' ? (
@@ -263,6 +269,7 @@ function Detail({
       {resolved?.kind === 'country' && <CountryDetail item={resolved.item} data={data} view={view} onSelect={onSelect} />}
       {resolved?.kind === 'lng' && <LngDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'terminal' && <OilTerminalDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
+      {resolved?.kind === 'refinery' && <RefineryDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'region' && <RegionDetail item={resolved.item} data={data} onSelect={onSelect} fuel={fuel} onFuel={onFuel} />}
       {!resolved && (
         <section className="section">

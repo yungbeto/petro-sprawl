@@ -15,13 +15,14 @@ import type {
   OilRoute,
   OilTerminal,
   Pipeline,
+  Refinery,
   UsLookup,
 } from '../types';
 import { chokepointFlow, type ChokepointFlow } from './flow';
 import type { FilterMatches } from './filters';
 import { regionOrigins, type OriginRow, type RegionOrigins } from './oilOrigins';
 import { fuelOrigins, type FuelOrigins } from './fuelOrigins';
-import { PORT_CALLS, portCallsSeriesId, portExportsSeriesId, type FuelId, type RegionFuel } from './config';
+import { FEATURES, PORT_CALLS, portCallsSeriesId, portExportsSeriesId, type FuelId, type RegionFuel } from './config';
 import type { Selection } from '../app/urlState';
 import { lineTouchesPolygon, pointInPolygon } from './geo';
 import { withMeasuredEvidence, withMeasuredLngEvidence } from './evidence';
@@ -32,6 +33,8 @@ export interface Datasets {
   pipelines: Pipeline[];
   lngTerminals: LngTerminal[];
   oilTerminals: OilTerminal[];
+  /** Refineries (M11): empty while `FEATURES.refineries` is off. */
+  refineries: Refinery[];
   countries: Country[];
   /** Every country's World Bank region, keyed by ISO code. */
   countryRegions: CountryRegion[];
@@ -58,6 +61,7 @@ export const EMPTY_DATASETS: Datasets = {
   pipelines: [],
   lngTerminals: [],
   oilTerminals: [],
+  refineries: [],
   countries: [],
   countryRegions: [],
   series: [],
@@ -73,7 +77,7 @@ export const EMPTY_DATASETS: Datasets = {
 };
 
 /** Every published dataset the app loads, as `public/data/<id>.json`. */
-export const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'countries', 'country-regions', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'gas-storage-us', 'gas-storage-ca', 'gas-storage-jodi', 'lng-sendout', 'disruptions', 'news-headlines', 'oil-origins', 'fuel-origins', 'oil-routes', 'crude-imports', 'us-lookup', 'us-regions'] as const;
+export const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'refineries', 'countries', 'country-regions', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'gas-storage-us', 'gas-storage-ca', 'gas-storage-jodi', 'lng-sendout', 'disruptions', 'news-headlines', 'oil-origins', 'fuel-origins', 'oil-routes', 'crude-imports', 'us-lookup', 'us-regions'] as const;
 export type DatasetId = (typeof DATASET_IDS)[number];
 
 /**
@@ -99,6 +103,8 @@ export function assembleDatasets(get: (id: DatasetId) => unknown[], meta: Datase
     // Measured send-out goes first for EU import terminals ALSI reports.
     lngTerminals: withMeasuredLngEvidence(get('lng-terminals') as Datasets['lngTerminals'], series),
     oilTerminals: get('oil-terminals') as Datasets['oilTerminals'],
+    // Off, nothing in the app sees a refinery: no layer, list, search entry or link.
+    refineries: FEATURES.refineries ? (get('refineries') as Datasets['refineries']) : [],
     countries: get('countries') as Datasets['countries'],
     countryRegions: get('country-regions') as Datasets['countryRegions'],
     series,
@@ -111,7 +117,7 @@ export function assembleDatasets(get: (id: DatasetId) => unknown[], meta: Datase
     // One record holding every table.
     usLookup: (get('us-lookup')[0] as Datasets['usLookup']) ?? null,
     usRegions: get('us-regions') as Datasets['usRegions'],
-    meta,
+    meta: FEATURES.refineries ? meta : meta.filter((m) => m.id !== 'refineries'),
   };
 }
 
@@ -169,6 +175,7 @@ export type Resolved =
   | { kind: 'country'; item: Country }
   | { kind: 'lng'; item: LngTerminal }
   | { kind: 'terminal'; item: OilTerminal }
+  | { kind: 'refinery'; item: Refinery }
   | { kind: 'region'; item: OilOriginRegion };
 
 /** Finds the selected item in the loaded data, or null if it isn't there. */
@@ -198,6 +205,10 @@ export function resolveSelection(selection: Selection | null, data: Datasets): R
     case 'terminal': {
       const item = data.oilTerminals.find((t) => t.id === selection.id);
       return item ? { kind: 'terminal', item } : null;
+    }
+    case 'refinery': {
+      const item = data.refineries.find((r) => r.id === selection.id);
+      return item ? { kind: 'refinery', item } : null;
     }
     case 'region': {
       const item = data.oilOrigins.find((r) => r.id === selection.id);
@@ -281,6 +292,7 @@ export function fuelSurfaceHighlight(data: Datasets): FilterMatches {
     chokepoints: new Set(lit.flatMap((l) => [...l.chokepoints])),
     lng: new Set(),
     terminals: new Set(lit.flatMap((l) => [...l.terminals])),
+    refineries: new Set(),
   };
 }
 
@@ -291,5 +303,6 @@ export function regionHighlight(origins: RegionOrigins | null): FilterMatches {
     chokepoints: new Set(origins?.exposure.map((e) => e.chokepoint) ?? []),
     lng: new Set(),
     terminals: new Set(origins?.rows.flatMap((r) => r.terminals?.map((t) => t.id) ?? []) ?? []),
+    refineries: new Set(),
   };
 }

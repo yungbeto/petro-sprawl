@@ -2,7 +2,7 @@
 
 import type { Selection } from '../app/urlState';
 import type { Datasets } from './data';
-import { lngStatus, pipelineStatus, terminalStatus } from './encoding';
+import { lngStatus, pipelineStatus, refineryStatus, terminalStatus } from './encoding';
 import { isUnverified } from './evidence';
 import { chokepointRows, corridorRows } from './summary';
 
@@ -20,12 +20,12 @@ export const FILTER_LABELS: Record<FilterId, string> = {
 
 /** One line under the list title, saying exactly what the filter selects. */
 export const FILTER_DESCRIPTIONS: Record<FilterId, string> = {
-  offline: 'Pipelines, LNG terminals and oil terminals whose current status is offline or idle.',
+  offline: 'Pipelines, LNG terminals, oil terminals and refineries whose current status is offline or idle.',
   'below-baseline': 'Chokepoints whose tanker transits over the last 7 days are below their baseline.',
   unverified: 'Corridor pipelines and oil terminals whose latest claim is past the aging threshold, with no metered flow to back it.',
   metered: 'Pipelines with measured ENTSOG flow, and LNG terminals with measured GIE ALSI send-out.',
   gas: 'Gas pipelines and LNG terminals.',
-  oil: 'Oil pipelines, oil terminals, and the chokepoints, whose reference volumes are oil.',
+  oil: 'Oil pipelines, oil terminals, refineries, and the chokepoints, whose reference volumes are oil.',
 };
 
 export function parseFilter(value: string | null): FilterId | null {
@@ -37,6 +37,7 @@ export interface FilterMatches {
   chokepoints: Set<string>;
   lng: Set<string>;
   terminals: Set<string>;
+  refineries: Set<string>;
 }
 
 export function filterMatches(filter: FilterId, data: Datasets, now: Date): FilterMatches {
@@ -46,6 +47,7 @@ export function filterMatches(filter: FilterId, data: Datasets, now: Date): Filt
     new Set(data.lngTerminals.filter(keep).map((t) => t.id));
   const terminals = (keep: (t: Datasets['oilTerminals'][number]) => boolean) =>
     new Set(data.oilTerminals.filter(keep).map((t) => t.id));
+  const refineries = (keep: (r: Datasets['refineries'][number]) => boolean) => new Set(data.refineries.filter(keep).map((r) => r.id));
   const none = new Set<string>();
   switch (filter) {
     case 'offline': {
@@ -55,6 +57,7 @@ export function filterMatches(filter: FilterId, data: Datasets, now: Date): Filt
         chokepoints: none,
         lng: lng((t) => stopped(lngStatus(t))),
         terminals: terminals((t) => stopped(terminalStatus(t))),
+        refineries: refineries((r) => stopped(refineryStatus(r))),
       };
     }
     case 'below-baseline':
@@ -63,6 +66,7 @@ export function filterMatches(filter: FilterId, data: Datasets, now: Date): Filt
         chokepoints: new Set(chokepointRows(data).filter((c) => c.band === 'below').map((c) => c.selection.id)),
         lng: none,
         terminals: none,
+        refineries: none,
       };
     case 'unverified':
       return {
@@ -70,6 +74,7 @@ export function filterMatches(filter: FilterId, data: Datasets, now: Date): Filt
         chokepoints: none,
         lng: none,
         terminals: terminals((t) => isUnverified(t.evidence[0], now)),
+        refineries: none,
       };
     case 'metered':
       return {
@@ -77,21 +82,23 @@ export function filterMatches(filter: FilterId, data: Datasets, now: Date): Filt
         chokepoints: none,
         lng: lng((t) => t.evidence[0]?.sourceType === 'measured'),
         terminals: none,
+        refineries: none,
       };
     case 'gas':
-      return { pipelines: pipelines((p) => p.commodity === 'gas'), chokepoints: none, lng: lng(() => true), terminals: none };
+      return { pipelines: pipelines((p) => p.commodity === 'gas'), chokepoints: none, lng: lng(() => true), terminals: none, refineries: none };
     case 'oil':
       return {
         pipelines: pipelines((p) => p.commodity === 'oil'),
         chokepoints: new Set(data.chokepoints.map((c) => c.id)),
         lng: none,
         terminals: terminals(() => true),
+        refineries: refineries(() => true),
       };
   }
 }
 
 export function matchCount(matches: FilterMatches): number {
-  return matches.pipelines.size + matches.chokepoints.size + matches.lng.size + matches.terminals.size;
+  return matches.pipelines.size + matches.chokepoints.size + matches.lng.size + matches.terminals.size + matches.refineries.size;
 }
 
 export interface FilterRow {
@@ -101,7 +108,7 @@ export interface FilterRow {
   curated: boolean;
 }
 
-/** Matches as a list: chokepoints, oil terminals, corridor pipelines, the rest, then LNG terminals, each by name. */
+/** Matches as a list: chokepoints, oil terminals, refineries (largest first), corridor pipelines, the rest, then LNG terminals. */
 export function filterRows(matches: FilterMatches, data: Datasets): FilterRow[] {
   const chokepoints = data.chokepoints
     .filter((c) => matches.chokepoints.has(c.id))
@@ -117,5 +124,8 @@ export function filterRows(matches: FilterMatches, data: Datasets): FilterRow[] 
     .filter((t) => matches.terminals.has(t.id))
     .map((t) => ({ selection: { kind: 'terminal' as const, id: t.id }, name: t.name, curated: true }))
     .sort((a, b) => a.name.localeCompare(b.name));
-  return [...chokepoints.sort((a, b) => a.name.localeCompare(b.name)), ...oilTerminals, ...pipelines, ...terminals];
+  const refineries = data.refineries
+    .filter((r) => matches.refineries.has(r.id))
+    .map((r) => ({ selection: { kind: 'refinery' as const, id: r.id }, name: r.name, curated: true }));
+  return [...chokepoints.sort((a, b) => a.name.localeCompare(b.name)), ...oilTerminals, ...refineries, ...pipelines, ...terminals];
 }

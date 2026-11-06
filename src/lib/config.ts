@@ -116,6 +116,9 @@ export const CHOKEPOINT_RADIUS = { scale: 4, minPx: 5, haloPx: 6 } as const;
  */
 export const LNG_RADIUS = { scale: 1.4, minPx: 4, maxPx: 10, centreShare: 0.45, selectionGapPx: 4 } as const;
 
+/** Refinery dots (M11): area from crude distillation capacity in thousand barrels a day; unknown capacity draws the smallest. */
+export const REFINERY_RADIUS = { scale: 0.34, minPx: 3, maxPx: 9, haloPx: 3, selectionGapPx: 3 } as const;
+
 /** Oil terminals are diamonds of one size: no comparable capacity figures to scale them by. */
 export const TERMINAL_MARKER = { sizePx: 15, haloPx: 19, selectionRadiusPx: 13 } as const;
 
@@ -589,7 +592,7 @@ export const FEATURES = {
   gasStorage: true,
   fuelOrigins: true,
   /** Refineries (SPEC M11), off until phase 1 (the US) is done. */
-  refineries: false,
+  refineries: true,
 } as const;
 
 /**
@@ -829,6 +832,11 @@ export const NEWS = {
   googleNewsMaxFailures: 3,
   /** Terms per feed query, and the gap GDELT asks for between requests. */
   termsPerQuery: 8,
+  /**
+   * Refineries the scan looks for (M11): the largest by capacity, plus any with a disruption or a cited
+   * claim. All 121 would add about 20 queries a run to a GDELT that already answers 429 at times.
+   */
+  refineriesLargest: 40,
   /** GDELT asks for 5 seconds between requests but answers 429 at that pace; a 429 waits `gdeltBackoffMs`. */
   gdeltGapMs: 8_000,
   gdeltBackoffMs: 30_000,

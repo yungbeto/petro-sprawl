@@ -8,16 +8,17 @@ import { importsSurfaceHighlight } from './crudeImports';
 import type { Datasets } from './data';
 
 /** The map's switchable layers. */
-export type LayerId = 'storage' | 'basins' | 'pipelines' | 'lng' | 'terminals' | 'chokepoints';
+export type LayerId = 'storage' | 'basins' | 'pipelines' | 'lng' | 'terminals' | 'refineries' | 'chokepoints';
 export type LayerVisibility = Record<LayerId, boolean>;
 
-export const VIEW_IDS = ['chokepoints', 'pipelines', 'terminals', 'basins', 'storage', 'origins'] as const;
+export const VIEW_IDS = ['chokepoints', 'pipelines', 'terminals', 'refineries', 'basins', 'storage', 'origins'] as const;
 export type ViewId = (typeof VIEW_IDS)[number];
 
 export const VIEW_LABELS: Record<ViewId, string> = {
   chokepoints: 'Chokepoints',
   pipelines: 'Pipelines',
   terminals: 'Terminals',
+  refineries: 'Refineries',
   basins: 'Basins',
   storage: 'Gas storage',
   origins: 'Oil origins',
@@ -27,6 +28,7 @@ export const VIEW_LABELS: Record<ViewId, string> = {
 export function viewEnabled(view: ViewId): boolean {
   if (view === 'storage') return FEATURES.gasStorage;
   if (view === 'origins') return FEATURES.fuelOrigins;
+  if (view === 'refineries') return FEATURES.refineries;
   return true;
 }
 
@@ -37,6 +39,7 @@ export const ENABLED_VIEWS: readonly ViewId[] = VIEW_IDS.filter(viewEnabled);
 export function selectionEnabled(kind: SelectionKind): boolean {
   if (kind === 'country') return viewEnabled('storage') || viewEnabled('origins');
   if (kind === 'region') return viewEnabled('origins');
+  if (kind === 'refinery') return viewEnabled('refineries');
   return true;
 }
 
@@ -54,6 +57,7 @@ export const VIEW_LAYERS: Record<ViewId, LayerId[]> = {
   chokepoints: ['chokepoints', 'terminals'],
   pipelines: ['pipelines'],
   terminals: ['lng', 'terminals'],
+  refineries: ['refineries'],
   basins: ['basins'],
   storage: ['storage'],
   origins: ['storage', 'chokepoints', 'terminals'],
@@ -67,6 +71,7 @@ const SELECTION_LAYERS: Record<SelectionKind, LayerId[]> = {
   country: ['storage'],
   lng: ['lng'],
   terminal: ['terminals'],
+  refinery: ['refineries'],
   region: [],
 };
 
@@ -78,6 +83,7 @@ export function visibleLayers(view: ViewId | null, selection: { kind: SelectionK
   const selected = selection ? SELECTION_LAYERS[selection.kind] : [];
   const shown = (id: LayerId) => {
     if (id === 'storage' && !FEATURES.gasStorage) return false;
+    if (id === 'refineries' && !FEATURES.refineries) return false;
     if (selected.includes(id)) return true;
     return view ? VIEW_LAYERS[view].includes(id) : chosen[id];
   };
@@ -87,6 +93,7 @@ export function visibleLayers(view: ViewId | null, selection: { kind: SelectionK
     pipelines: shown('pipelines'),
     lng: shown('lng'),
     terminals: shown('terminals'),
+    refineries: shown('refineries'),
     chokepoints: shown('chokepoints'),
   };
 }
@@ -118,6 +125,7 @@ export function basinPipelineFocus(
     chokepoints: new Set(data.chokepoints.map((c) => c.id)),
     lng: new Set(data.lngTerminals.map((t) => t.id)),
     terminals: new Set(data.oilTerminals.map((t) => t.id)),
+    refineries: new Set(data.refineries.map((r) => r.id)),
   };
   return { only: view ? basinPipelines : null, highlight: filtering ? highlight : { ...base, pipelines: basinPipelines } };
 }
@@ -132,6 +140,7 @@ export const SURFACE_FILTERS: Record<ViewId | 'home', FilterId[]> = {
   pipelines: ['offline', 'unverified', 'metered', 'gas', 'oil'],
   // Gas and oil would repeat the surface's own LNG and oil switch.
   terminals: ['offline', 'unverified', 'metered'],
+  refineries: ['offline'],
   // Basins and storage are areas, not assets the chips match.
   basins: [],
   storage: [],
@@ -139,6 +148,7 @@ export const SURFACE_FILTERS: Record<ViewId | 'home', FilterId[]> = {
 };
 
 const none = () => new Set<string>();
+const nothing = (): FilterMatches => ({ pipelines: none(), chokepoints: none(), lng: none(), terminals: none(), refineries: none() });
 
 /** What the map keeps bright in a view; everything else fades. */
 export function viewHighlight(view: ViewId, data: Datasets): FilterMatches {
@@ -146,24 +156,20 @@ export function viewHighlight(view: ViewId, data: Datasets): FilterMatches {
     case 'chokepoints':
       // The straits, and the oil terminals whose cargo has to pass one.
       return {
-        pipelines: none(),
+        ...nothing(),
         chokepoints: new Set(data.chokepoints.map((c) => c.id)),
-        lng: none(),
         terminals: new Set(data.oilTerminals.filter((t) => t.exitVia.length > 0).map((t) => t.id)),
       };
     case 'pipelines':
-      return { pipelines: new Set(data.pipelines.map((p) => p.id)), chokepoints: none(), lng: none(), terminals: none() };
+      return { ...nothing(), pipelines: new Set(data.pipelines.map((p) => p.id)) };
     case 'terminals':
-      return {
-        pipelines: none(),
-        chokepoints: none(),
-        lng: new Set(data.lngTerminals.map((t) => t.id)),
-        terminals: new Set(data.oilTerminals.map((t) => t.id)),
-      };
+      return { ...nothing(), lng: new Set(data.lngTerminals.map((t) => t.id)), terminals: new Set(data.oilTerminals.map((t) => t.id)) };
+    case 'refineries':
+      return { ...nothing(), refineries: new Set(data.refineries.map((r) => r.id)) };
     case 'basins':
     case 'storage':
       // No assets show; the outlines or the fill are the whole map.
-      return { pipelines: none(), chokepoints: none(), lng: none(), terminals: none() };
+      return nothing();
     case 'origins':
       return importsSurfaceHighlight(data);
   }
@@ -179,6 +185,7 @@ export function scopeMatches(matches: FilterMatches, view: ViewId | null, data: 
     chokepoints: within(matches.chokepoints, lit.chokepoints),
     lng: within(matches.lng, lit.lng),
     terminals: within(matches.terminals, lit.terminals),
+    refineries: within(matches.refineries, lit.refineries),
   };
 }
 
@@ -191,6 +198,9 @@ export function viewPoints(view: ViewId, data: Datasets): [number, number][] {
     case 'terminals':
     case 'basins':
       // Every mapped pipeline, terminal or basin, worldwide.
+      return WORLD_BOUNDS;
+    case 'refineries':
+      return data.refineries.length ? data.refineries.map((r) => r.point) : WORLD_BOUNDS;
       return WORLD_BOUNDS;
     case 'storage':
       return STORAGE_BOUNDS;

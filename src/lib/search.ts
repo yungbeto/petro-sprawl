@@ -74,6 +74,10 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
     ...data.oilTerminals.map((t) =>
       entry({ kind: 'terminal', id: t.id }, t.name, `Oil ${t.role} terminal · ${t.country}`, t.aliases, 1),
     ),
+    // Empty while the refineries surface is off (assembleDatasets).
+    ...data.refineries.map((r) =>
+      entry({ kind: 'refinery', id: r.id }, r.name, `Refinery${r.state ? ` · ${r.state}` : ''} · ${r.country}`, [...r.aliases, ...(r.operator ? [r.operator] : [])], 2),
+    ),
     ...data.basins.map((b) => entry({ kind: 'basin', id: b.id }, b.name, 'Basin', [], 3)),
     ...usPlaceEntries(data, entry),
     ...data.lngTerminals.map((t) =>
@@ -168,12 +172,12 @@ export function search(index: SearchEntry[], query: string, limit: number = SEAR
 }
 
 /** What the search can be narrowed to: the rail's surfaces, and basins, which are context only. */
-export const SEARCH_SCOPES = ['all', 'chokepoints', 'pipelines', 'terminals', 'countries', 'us-places', 'basins'] as const;
+export const SEARCH_SCOPES = ['all', 'chokepoints', 'pipelines', 'terminals', 'refineries', 'countries', 'us-places', 'basins'] as const;
 export type SearchScope = (typeof SEARCH_SCOPES)[number];
 
 /** The scopes the search offers: countries only while gas storage or oil origins is on, US places only with oil origins. */
 export const ENABLED_SEARCH_SCOPES: readonly SearchScope[] = SEARCH_SCOPES.filter(
-  (s) => (s !== 'countries' || viewEnabled('storage') || viewEnabled('origins')) && (s !== 'us-places' || viewEnabled('origins')),
+  (s) => (s !== 'refineries' || viewEnabled('refineries')) && (s !== 'countries' || viewEnabled('storage') || viewEnabled('origins')) && (s !== 'us-places' || viewEnabled('origins')),
 );
 
 export const SEARCH_SCOPE_LABELS: Record<SearchScope, string> = {
@@ -181,6 +185,7 @@ export const SEARCH_SCOPE_LABELS: Record<SearchScope, string> = {
   chokepoints: 'Chokepoints',
   pipelines: 'Pipelines',
   terminals: 'Terminals',
+  refineries: 'Refineries',
   countries: 'Countries',
   'us-places': 'US places',
   basins: 'Basins',
@@ -191,6 +196,7 @@ const SCOPE_OF: Record<Selection['kind'], Exclude<SearchScope, 'all'>> = {
   pipeline: 'pipelines',
   terminal: 'terminals',
   lng: 'terminals',
+  refinery: 'refineries',
   country: 'countries',
   region: 'us-places',
   basin: 'basins',
@@ -202,6 +208,7 @@ export const SEARCH_GROUP_LABELS: Record<Selection['kind'], string> = {
   pipeline: 'Pipelines',
   terminal: 'Oil terminals',
   lng: 'LNG terminals',
+  refinery: 'Refineries',
   country: 'Countries',
   region: 'US places',
   basin: 'Basins',

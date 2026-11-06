@@ -60,7 +60,7 @@ describe('parseView', () => {
 });
 
 describe('visibleLayers', () => {
-  const all: LayerVisibility = { storage: true, basins: true, pipelines: true, lng: true, terminals: true, chokepoints: true };
+  const all: LayerVisibility = { storage: true, basins: true, pipelines: true, lng: true, terminals: true, refineries: true, chokepoints: true };
   const shown = (v: LayerVisibility) => Object.entries(v).filter(([, on]) => on).map(([id]) => id);
 
   it('shows only the layers of a surface, whatever the layer list says', () => {
@@ -83,7 +83,7 @@ describe('visibleLayers', () => {
 
   it('follows the layer list on Home, with storage only while it is switched on', () => {
     expect(shown(visibleLayers(null, null, { ...all, lng: false }))).toEqual(
-      [FEATURES.gasStorage && 'storage', 'basins', 'pipelines', 'terminals', 'chokepoints'].filter(Boolean),
+      [FEATURES.gasStorage && 'storage', 'basins', 'pipelines', 'terminals', FEATURES.refineries && 'refineries', 'chokepoints'].filter(Boolean),
     );
   });
 });
@@ -143,7 +143,7 @@ describe('the storage and oil origins views on the map', () => {
 
 describe('surface filters', () => {
   it('match within the surface only', () => {
-    const matches = { pipelines: new Set(['p1']), chokepoints: new Set(['hormuz']), lng: new Set(['l1']), terminals: new Set(['ras-tanura']) };
+    const matches = { pipelines: new Set(['p1']), chokepoints: new Set(['hormuz']), lng: new Set(['l1']), terminals: new Set(['ras-tanura']), refineries: new Set<string>() };
     const inPipelines = scopeMatches(matches, 'pipelines', { ...data, pipelines: [pipeline({ id: 'p1' }), pipeline({ id: 'p2' })] });
     expect([...inPipelines.pipelines]).toEqual(['p1']);
     expect(inPipelines.chokepoints.size + inPipelines.lng.size + inPipelines.terminals.size).toBe(0);
@@ -215,7 +215,7 @@ describe('basinPipelineFocus', () => {
   });
 
   it('a quick filter keeps deciding what stays bright', () => {
-    const filter = { pipelines: new Set(['b']), chokepoints: new Set<string>(), lng: new Set<string>(), terminals: new Set<string>() };
+    const filter = { pipelines: new Set(['b']), chokepoints: new Set<string>(), lng: new Set<string>(), terminals: new Set<string>(), refineries: new Set<string>() };
     expect(basinPipelineFocus(null, touching, null, filter, true, data)!.highlight).toBe(filter);
     expect(basinPipelineFocus('basins', touching, null, filter, true, data)!.highlight).toBe(filter);
   });

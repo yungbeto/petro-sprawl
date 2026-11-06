@@ -1,7 +1,8 @@
 // Manual import, step 2 of 2 (SPEC M11 phase 1): the EIA capacities from step 1
 // (data/derived/eia-refineries.json, jobs/import-refineries-us.py) placed at the points of EIA's 2021 refinery
-// shapefile (data/raw/eia/refineries/), -> public/data/refineries.json. A refinery without a point from the
-// shapefile is left off the map and named in the report; points are never typed in.
+// shapefile (data/raw/eia/refineries/), -> data/derived/refineries-us.json. A refinery without a point from the
+// shapefile is left off the map and named in the report; points are never typed in. build:curated adds the
+// cited claims (data/curated/refinery-evidence.json) and publishes public/data/refineries.json.
 // Run: npm run import:refineries-us (both steps)
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -16,7 +17,8 @@ const REPORT_PATH = 'data/reports/import-refineries-us.json';
 const today = new Date().toISOString().slice(0, 10);
 
 const result = await publishDataset({
-  id: 'refineries',
+  id: 'refineries-us',
+  dataDir: 'data/derived',
   schema: refinerySchema,
   produce: async () => {
     const eia = JSON.parse(await readFile('data/derived/eia-refineries.json', 'utf8')) as { source: string; asOf: string; refineries: EiaRefinery[] };
@@ -61,4 +63,5 @@ const result = await publishDataset({
     };
   },
 });
-report(result, 'refineries');
+report(result, 'refineries-us');
+console.log('run build:curated to publish public/data/refineries.json');

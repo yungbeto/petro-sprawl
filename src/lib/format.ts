@@ -14,6 +14,11 @@ export function formatCapacity(capacity: { value: number; unit: string }): strin
   return `${value} ${capacity.unit}`;
 }
 
+/** A refinery's crude distillation capacity, which EIA gives in barrels per calendar day: 656,400 barrels a day. */
+export function formatRefineryCapacity(capacity: { value: number }): string {
+  return `${Math.round(capacity.value).toLocaleString('en-US')} barrels a day`;
+}
+
 /** 26.2969° N, 56.8598° E */
 export function formatLonLat([lon, lat]: [number, number]): string {
   const ns = lat >= 0 ? 'N' : 'S';

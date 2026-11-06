@@ -17,7 +17,7 @@ describe('parseSelection', () => {
     expect(parseSelection(null)).toBeNull();
     expect(parseSelection('')).toBeNull();
     expect(parseSelection('pipeline')).toBeNull();
-    expect(parseSelection('refinery/x')).toBeNull();
+    expect(parseSelection('factory/x')).toBeNull();
     expect(parseSelection('pipeline/')).toBeNull();
     expect(parseSelection('pipeline/Nord Stream')).toBeNull();
     expect(parseSelection('pipeline/a/b')).toBeNull();

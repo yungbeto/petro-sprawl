@@ -26,8 +26,8 @@ export function OilTerminalDetail({ item, data, now, onSelect }: { item: OilTerm
   const disruptions = disruptionsFor(data, 'terminal', item.id);
   const calls = item.portwatchId ? portCallsAt(data, item.portwatchId, item.name) : null;
   const none = new Set<string>();
-  const pipelineRows = filterRows({ pipelines: new Set(item.pipelineIds), chokepoints: none, lng: none, terminals: none }, data);
-  const chokepointRowsOut = filterRows({ pipelines: none, chokepoints: new Set(item.exitVia), lng: none, terminals: none }, data);
+  const pipelineRows = filterRows({ pipelines: new Set(item.pipelineIds), chokepoints: none, lng: none, terminals: none, refineries: none }, data);
+  const chokepointRowsOut = filterRows({ pipelines: none, chokepoints: new Set(item.exitVia), lng: none, terminals: none, refineries: none }, data);
   const chokepointNames = item.exitVia.map((id) => data.chokepoints.find((c) => c.id === id)?.name ?? id);
   return (
     <>

@@ -882,6 +882,40 @@ test('the terminals surface switches between LNG and oil, and keeps its group wh
   await expect(panel.getByRole('radio', { name: 'Oil' })).toHaveAttribute('aria-checked', 'true');
 });
 
+test('the refineries surface groups by region, and a refinery opens with its EIA capacity and region', async ({ page }) => {
+  test.skip(!FEATURES.refineries, 'FEATURES.refineries is off');
+  await page.goto('/');
+  await page.getByRole('navigation', { name: 'Views' }).getByRole('button', { name: 'Refineries' }).click();
+  await expect(page).toHaveURL(/view=refineries/);
+  const panel = page.getByRole('complementary', { name: 'Panel' });
+  const list = panel.getByRole('list', { name: 'Refineries by region' });
+  await expect(list).toBeVisible();
+  await panel.getByRole('button', { name: /^Gulf Coast \(PADD 3\)/ }).click();
+  const gulf = panel.getByRole('list', { name: 'Gulf Coast (PADD 3)' });
+  // Largest first: Motiva's Port Arthur is the largest in the US.
+  await expect(gulf.getByRole('button').first()).toContainText('Port Arthur (Motiva Enterprises)');
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/refineries-surface.png` });
+  await gulf.getByRole('button').first().click();
+  await expect(page).toHaveURL(/sel=refinery\/us-texas-port-arthur-motiva-enterprises/);
+  await expect(panel.getByRole('heading', { name: 'Port Arthur (Motiva Enterprises)', exact: true })).toBeVisible();
+  await expect(panel.getByText('656,400 barrels a day', { exact: true })).toBeVisible();
+  await expect(panel.getByText(/EIA lists all 656,400 barrels a day/)).toBeVisible();
+  await expect(panel.getByText(/not this plant's/)).toBeVisible();
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/refinery-detail.png` });
+  await panel.getByRole('button', { name: 'Gulf Coast (PADD 3)' }).click();
+  await expect(page).toHaveURL(/sel=region\/padd-3/);
+  await expect(panel.getByRole('heading', { name: /Refineries, largest first/ })).toBeVisible();
+});
+
+test('search finds a refinery by its operator', async ({ page }) => {
+  test.skip(!FEATURES.refineries, 'FEATURES.refineries is off');
+  await page.goto('/');
+  const search = await openSearch(page);
+  await search.fill('Motiva');
+  await page.getByRole('option', { name: /Port Arthur \(Motiva Enterprises\)/ }).click();
+  await expect(page).toHaveURL(/sel=refinery\/us-texas-port-arthur-motiva-enterprises/);
+});
+
 test('the gas storage surface lists countries past Europe against last year and shows only storage on the map', async ({ page }) => {
   test.skip(!FEATURES.gasStorage, 'FEATURES.gasStorage is off');
   await page.goto('/');

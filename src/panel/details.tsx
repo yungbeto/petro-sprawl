@@ -9,3 +9,4 @@ export { CountryDetail, CrudeImportsSource } from './detail/CountryDetail';
 export { LngDetail } from './detail/LngDetail';
 export { OilTerminalDetail } from './detail/OilTerminalDetail';
 export { RegionDetail } from './detail/RegionDetail';
+export { RefineryDetail } from './detail/RefineryDetail';

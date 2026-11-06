@@ -2,7 +2,7 @@
 // stories, and the checks every draft must pass before it touches data/curated/disruptions.json. Pure.
 
 import { z } from 'zod';
-import type { Disruption, DisruptionEvent, NewsHeadline, SourceRef } from '../../src/types';
+import type { Disruption, DisruptionEvent, NewsHeadline, Refinery, SourceRef } from '../../src/types';
 import { NEWS } from '../../src/lib/config';
 import { daysBetween, htmlToText, isTrusted, matchKey, quoteOnPage, urlKey, type Page } from './claims';
 import { siteKey } from './favicons';
@@ -94,7 +94,7 @@ export function parseGoogleNewsRss(xml: string): Article[] {
 }
 
 export interface AssetEntry {
-  /** "pipeline/<id>", "chokepoint/<id>", "lng/<id>" or "terminal/<id>". */
+  /** "pipeline/<id>", "chokepoint/<id>", "lng/<id>", "terminal/<id>" or "refinery/<id>". */
   ref: string;
   name: string;
   aliases: string[];
@@ -135,6 +135,37 @@ export function assetTermsFor(asset: AssetEntry): AssetTerm[] {
     terms.push({ ref: asset.ref, text, key, weak: weak.has(key) || key.replace(/ /g, '').length <= 4 });
   }
   return terms;
+}
+
+/** A refinery's site, without the company a shared site's name carries: "Port Arthur (Motiva Enterprises)" is Port Arthur. */
+const siteOf = (name: string) => name.replace(/\s*\(.*\)\s*$/, '');
+
+/** The company's name as headlines use it: its first word, or two when the second is a number ("Phillips 66"). */
+export function brandOf(operator: string): string {
+  const [first = '', second = ''] = operator.split(/\s+/);
+  return /^\d+$/.test(second) ? `${first} ${second}` : first;
+}
+
+/**
+ * News terms for refineries (M11). A site's name is a town, so a term always ends in "refinery": "Superior
+ * refinery". Where EIA lists more than one refinery at a site (Port Arthur has three), the site alone
+ * would match all of them, so the term takes the company too, plain and possessive ("Motiva's Port Arthur
+ * refinery"): the operator's and the parent's, since news often names the parent (Premcor's is Valero's).
+ * Without either such a refinery gets no term.
+ */
+export function refineryTerms(
+  refineries: readonly Pick<Refinery, 'id' | 'name' | 'operator' | 'corporation'>[],
+  all: readonly Pick<Refinery, 'name'>[],
+): AssetTerm[] {
+  const sites = new Map<string, number>();
+  for (const r of all) sites.set(matchKey(siteOf(r.name)), (sites.get(matchKey(siteOf(r.name))) ?? 0) + 1);
+  return refineries.flatMap((r) => {
+    const site = siteOf(r.name);
+    const shared = (sites.get(matchKey(site)) ?? 0) > 1;
+    const brands = [...new Set([r.operator, r.corporation].filter((c): c is string => !!c).map(brandOf))];
+    const texts = !shared ? [`${site} refinery`] : brands.flatMap((brand) => [`${brand} ${site} refinery`, `${brand}'s ${site} refinery`]);
+    return texts.map((text) => ({ ref: `refinery/${r.id}`, text, key: matchKey(text), weak: false }));
+  });
 }
 
 /**

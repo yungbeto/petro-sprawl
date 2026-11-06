@@ -12,7 +12,8 @@ import { Info } from '../Info';
 import { MeterBar, type BarTone } from '../../ui/Bar';
 import { SectionTitle } from '../../ui/SectionTitle';
 import { Note } from '../../ui/Note';
-import { type OnSelect, Row, Header, SourceLink, LeadCard, monthLabel } from './parts';
+import { type OnSelect, Row, Header, SourceLink, LeadCard, RelatedList, monthLabel } from './parts';
+import { refineriesInPadd } from '../../lib/refineries';
 
 /** EIA's own tables behind a region view; the imports table is per region (R10 to R50). Checked 2026-10-29. */
 const eiaSeries = (eia: string) =>
@@ -253,6 +254,11 @@ const PRODUCT_NAMES: Record<string, string> = {
 function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: Datasets; onSelect: OnSelect }) {
   const origins = originsFor(data, item);
   const padd = PADDS.find((p) => p.id === item.id);
+  const refineryRows = refineriesInPadd(data.refineries, Number(item.id.replace('padd-', ''))).map((r) => ({
+    selection: { kind: 'refinery' as const, id: r.id },
+    name: r.name,
+    curated: true,
+  }));
   return (
     <>
       {!origins ? (
@@ -294,6 +300,9 @@ function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: D
               </Row>
             )}
           </dl>
+          {refineryRows.length > 0 && (
+            <RelatedList title="Refineries, largest first" empty="" rows={refineryRows} data={data} onSelect={onSelect} />
+          )}
           <section className="section">
             <SectionTitle title="Where it comes from">
               <Info label="About where the region's crude comes from">

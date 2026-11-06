@@ -60,7 +60,7 @@ export const newsHeadlineSchema = z.object({
   url: z.string().url(),
   publishedAt: isoDate,
   feed: z.enum(['gdelt', 'google-news']),
-  refs: z.array(z.string().regex(/^(pipeline|chokepoint|lng|terminal)\/.+/)).min(1),
+  refs: z.array(z.string().regex(/^(pipeline|chokepoint|lng|terminal|refinery)\/.+/)).min(1),
   site: z.string().regex(/^[a-z0-9-]+(\.[a-z0-9-]+)+$/).optional(),
   icon: z.string().regex(/^favicons\/[a-z0-9.-]+\.(png|ico|jpg|gif|webp)$/).optional(),
 });
@@ -161,7 +161,7 @@ export const curatedLngEvidenceSchema = z.object({
   evidence: z.array(evidenceSchema.extend({ sourceType: z.enum(['operator', 'regulator', 'government', 'press']) })).min(1),
 });
 
-/** A curated oil terminal. Its claims must link a source, and can't pose as dataset or measured. */
+/** A refinery (M11), imported from a dataset; cited claims join it from data/curated/refinery-evidence.json. */
 export const refinerySchema = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
   name: z.string().min(1),
@@ -182,6 +182,21 @@ export const refinerySchema = z.object({
   pipelineIds: z.array(z.string().min(1)).optional(),
 });
 
+/** Cited claims for one refinery, by its id: like LNG evidence, never dataset or measured. */
+export const curatedRefineryEvidenceSchema = z.object({
+  id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
+  evidence: z
+    .array(
+      evidenceSchema.extend({
+        sourceType: z.enum(['operator', 'regulator', 'government', 'press']),
+        statement: z.string().min(1),
+        url: z.string().url(),
+      }),
+    )
+    .min(1),
+});
+
+/** A curated oil terminal. Its claims must link a source, and can't pose as dataset or measured. */
 export const oilTerminalSchema = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
   name: z.string().min(1),
@@ -209,7 +224,7 @@ export const oilTerminalSchema = z.object({
 
 export const disruptionSchema = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
-  assetKind: z.enum(['pipeline', 'chokepoint', 'lng', 'terminal']),
+  assetKind: z.enum(['pipeline', 'chokepoint', 'lng', 'terminal', 'refinery']),
   assetId: z.string().min(1),
   startedAt: isoDate,
   endedAt: isoDate.optional(),
