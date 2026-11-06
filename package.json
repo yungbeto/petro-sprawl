@@ -13,6 +13,7 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",
+    "import:refineries-us": "python3 -I jobs/import-refineries-us.py && tsx jobs/import-refineries-us.ts",
     "import:basins": "tsx jobs/import-basins.ts",
     "import:countries": "tsx jobs/import-countries.ts",
     "import:us-lookup": "tsx jobs/import-us-lookup.ts",

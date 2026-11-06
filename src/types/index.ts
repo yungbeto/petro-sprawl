@@ -155,6 +155,37 @@ export interface Chokepoint {
 }
 
 /** An owner or parent company and its share. `url` is its home page as GEM's ownership tracker gives it. */
+/**
+ * A refinery (SPEC M11, added 2026-11-06). Phase 1 is the US, from EIA: capacity in barrels per calendar day
+ * as of 1 January, and a first status from EIA's operating and idle split, as dataset evidence.
+ */
+export interface Refinery {
+  id: string;
+  /** The site, as EIA names it; with its company when two refineries share a site. EIA gives no plant names. */
+  name: string;
+  aliases: string[];
+  /** ISO 3166-1 alpha-2 */
+  country: string;
+  point: [number, number];
+  /** The point is near the plant, not at it. */
+  pointApprox: boolean;
+  pointSource: 'eia' | 'hifld' | 'eea' | 'wikidata' | 'osm';
+  /** The operating company, as the source names it. */
+  operator?: string;
+  /** EIA's parent corporation. */
+  corporation?: string;
+  /** Atmospheric crude distillation capacity, with where it comes from. */
+  capacity?: { value: number; unit: 'b/cd' | 'b/sd' | 'b/d' | 'Mt/yr'; asOf: string; source: PageRef };
+  /** US only, from EIA. */
+  padd?: 1 | 2 | 3 | 4 | 5;
+  /** US only: the state, as EIA names it. */
+  state?: string;
+  /** Newest first. */
+  evidence: Evidence[];
+  /** Mapped pipelines that end at or start from it. */
+  pipelineIds?: string[];
+}
+
 export interface Company {
   name: string;
   sharePct?: number;

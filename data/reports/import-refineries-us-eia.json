@@ -1,0 +1,14 @@
+{
+  "recordedAt": "2026-11-06",
+  "sitesInSpreadsheet": 130,
+  "withCrudeDistillation": 124,
+  "withoutCrudeDistillation": [
+    "ENTERPRISE PROD TEXAS OPERATING LLC / MONT BELVIEU / Texas",
+    "EQUISTAR CHEMICALS LP / CHANNELVIEW / Texas",
+    "EXCEL PARALUBES / WESTLAKE / Louisiana",
+    "PASADENA PERFORMANCE PRODUCTS LLC / PASADENA / Texas",
+    "TARGA DOWNSTREAM LLC / MONT BELVIEU / Texas",
+    "TRECORA HYDROCARBONS LLC / SILSBEE / Texas"
+  ],
+  "operableBarrelsPerCalendarDay": 18160493
+}

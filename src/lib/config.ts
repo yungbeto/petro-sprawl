@@ -588,6 +588,18 @@ export const FEATURES = {
   visitChanges: false,
   gasStorage: true,
   fuelOrigins: true,
+  /** Refineries (SPEC M11), off until phase 1 (the US) is done. */
+  refineries: false,
+} as const;
+
+/**
+ * Refineries (SPEC M11). The US import's source page, and how far a GEM pipeline's end may be from a refinery
+ * to list it under the refinery's pipelines.
+ */
+export const REFINERIES = {
+  eiaPage: 'https://www.eia.gov/petroleum/refinerycapacity/',
+  eiaTitle: 'Refinery Capacity Report 2026, capacity of individual refineries',
+  linkKm: 5,
 } as const;
 
 /**

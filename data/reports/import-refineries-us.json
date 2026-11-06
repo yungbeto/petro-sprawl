@@ -1,0 +1,28 @@
+{
+  "recordedAt": "2026-11-06",
+  "refineries": 124,
+  "placed": 121,
+  "unplaced": [
+    "TALLEY ASPHALT PRODUCTS INC / KERN / California (1,700 b/cd)",
+    "CPI OPERATIONS LLC / PAULSBORO / New Jersey (32,000 b/cd)",
+    "TEXAS INTERNATIONAL TERMINALS / GALVESTON / Texas (45,000 b/cd)"
+  ],
+  "byElimination": [
+    "PAR MONTANA LLC at BILLINGS: 2021 point of EXXONMOBIL REFINING & SUPPLY CO",
+    "OHIO REFINING COMPANY LLC at TOLEDO: 2021 point of BP-HUSKY REFINING LLC",
+    "TOTALENERGIES PETROCHEM & REFG USA at PORT ARTHUR: 2021 point of TOTAL PETROCHEMICALS & REFINING USA",
+    "HF SINCLAIR WOODS CROSS REFINING LLC at WOODS CROSS: 2021 point of HOLLYFRONTIER WOODS CROSS REFINING L",
+    "HF SINCLAIR PUGET SOUND REFG LLC at ANACORTES: 2021 point of Shell Oil Products US"
+  ],
+  "pointsUnused": [
+    "PHILLIPS 66 COMPANY / Belle Chasse / Louisiana",
+    "PHILLIPS 66 COMPANY / Rodeo / California",
+    "PHILLIPS 66 COMPANY / Wilmington / California",
+    "HOUSTON REFINING LP / Houston / Texas",
+    "CALIFORNIA ASPHALT PRODUCTION INC / Santa Maria / California",
+    "SOUTH HAMPTON RESOURCES INC / Silsbee / Texas",
+    "EXCEL PARALUBES / Westlake / Louisiana",
+    "EQUISTAR CHEMICALS LP / Channelview / Texas",
+    "LIMETREE BAY REFINING LLC / Kingshill / Virgin Islands"
+  ]
+}

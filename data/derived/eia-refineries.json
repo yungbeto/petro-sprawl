@@ -1,0 +1,1246 @@
+{
+ "source": "EIA Refinery Capacity Report, individual refinery capacities, as of 2026-01-01; refcap26.xlsx sha256:5b3c06f37b2924a6924e7643cc7ad529ebdb85fd6049e780f5883f88dfb17eb4",
+ "asOf": "2026-01-01",
+ "refineries": [
+  {
+   "corporation": "GOODWAY REFINING LLC",
+   "company": "GOODWAY REFINING LLC",
+   "site": "ATMORE",
+   "state": "Alabama",
+   "padd": 3,
+   "operable": 4100,
+   "operating": 4100,
+   "idle": 0
+  },
+  {
+   "corporation": "VERTEX ENERGY LP",
+   "company": "VERTEX REFINING ALABAMA LLC",
+   "site": "SARALAND",
+   "state": "Alabama",
+   "padd": 3,
+   "operable": 88000,
+   "operating": 88000,
+   "idle": 0
+  },
+  {
+   "corporation": "HUNT CONSLD INC",
+   "company": "HUNT REFINING CO",
+   "site": "TUSCALOOSA",
+   "state": "Alabama",
+   "padd": 3,
+   "operable": 50000,
+   "operating": 50000,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "TESORO ALASKA COMPANY LLC",
+   "site": "KENAI",
+   "state": "Alaska",
+   "padd": 5,
+   "operable": 68000,
+   "operating": 68000,
+   "idle": 0
+  },
+  {
+   "corporation": "ARCTIC SLOPE REGIONAL CORP",
+   "company": "PETRO STAR INC",
+   "site": "NORTH POLE",
+   "state": "Alaska",
+   "padd": 5,
+   "operable": 25000,
+   "operating": 25000,
+   "idle": 0
+  },
+  {
+   "corporation": "CONOCOPHILLIPS",
+   "company": "CONOCOPHILLIPS ALASKA INC",
+   "site": "PRUDHOE BAY",
+   "state": "Alaska",
+   "padd": 5,
+   "operable": 15000,
+   "operating": 15000,
+   "idle": 0
+  },
+  {
+   "corporation": "HILCORP ENERGY CO",
+   "company": "HILCORP NORTH SLOPE LLC",
+   "site": "PRUDHOE BAY",
+   "state": "Alaska",
+   "padd": 5,
+   "operable": 6500,
+   "operating": 6500,
+   "idle": 0
+  },
+  {
+   "corporation": "ARCTIC SLOPE REGIONAL CORP",
+   "company": "PETRO STAR INC",
+   "site": "VALDEZ",
+   "state": "Alaska",
+   "padd": 5,
+   "operable": 62500,
+   "operating": 62500,
+   "idle": 0
+  },
+  {
+   "corporation": "DELEK GROUP LTD",
+   "company": "LION OIL CO",
+   "site": "EL DORADO",
+   "state": "Arkansas",
+   "padd": 3,
+   "operable": 83000,
+   "operating": 83000,
+   "idle": 0
+  },
+  {
+   "corporation": "MARTIN RESOURCE MANAGEMENT GRP",
+   "company": "CROSS OIL REFINING & MARKETING INC",
+   "site": "SMACKOVER",
+   "state": "Arkansas",
+   "padd": 3,
+   "operable": 7500,
+   "operating": 7500,
+   "idle": 0
+  },
+  {
+   "corporation": "KERN OIL & REFINING CO",
+   "company": "KERN OIL & REFINING CO",
+   "site": "BAKERSFIELD",
+   "state": "California",
+   "padd": 5,
+   "operable": 26000,
+   "operating": 26000,
+   "idle": 0
+  },
+  {
+   "corporation": "SAN JOAQUIN REFINING CO INC",
+   "company": "SAN JOAQUIN REFINING CO INC",
+   "site": "BAKERSFIELD",
+   "state": "California",
+   "padd": 5,
+   "operable": 15000,
+   "operating": 15000,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "VALERO REFINING CO CALIFORNIA",
+   "site": "BENICIA",
+   "state": "California",
+   "padd": 5,
+   "operable": 145000,
+   "operating": 145000,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "TESORO REFINING & MARKETING CO",
+   "site": "CARSON",
+   "state": "California",
+   "padd": 5,
+   "operable": 365000,
+   "operating": 365000,
+   "idle": 0
+  },
+  {
+   "corporation": "CHEVRON CORP",
+   "company": "CHEVRON USA INC",
+   "site": "EL SEGUNDO",
+   "state": "California",
+   "padd": 5,
+   "operable": 285000,
+   "operating": 285000,
+   "idle": 0
+  },
+  {
+   "corporation": "TALLEY ASPHALT PRODUCTS INC",
+   "company": "TALLEY ASPHALT PRODUCTS INC",
+   "site": "KERN",
+   "state": "California",
+   "padd": 5,
+   "operable": 1700,
+   "operating": 1700,
+   "idle": 0
+  },
+  {
+   "corporation": "PBF ENERGY CO LLC",
+   "company": "MARTINEZ REFINING CO LLC",
+   "site": "MARTINEZ",
+   "state": "California",
+   "padd": 5,
+   "operable": 156400,
+   "operating": 156400,
+   "idle": 0
+  },
+  {
+   "corporation": "CHEVRON CORP",
+   "company": "CHEVRON USA INC",
+   "site": "RICHMOND",
+   "state": "California",
+   "padd": 5,
+   "operable": 245271,
+   "operating": 245271,
+   "idle": 0
+  },
+  {
+   "corporation": "WORLD OIL CO",
+   "company": "LUNDAY THAGARD CO",
+   "site": "SOUTH GATE",
+   "state": "California",
+   "padd": 5,
+   "operable": 8500,
+   "operating": 8500,
+   "idle": 0
+  },
+  {
+   "corporation": "PBF ENERGY CO LLC",
+   "company": "TORRANCE REFINING CO LLC",
+   "site": "TORRANCE",
+   "state": "California",
+   "padd": 5,
+   "operable": 160000,
+   "operating": 160000,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "VALERO REFINING CO CALIFORNIA",
+   "site": "WILMINGTON ASPHALT PLANT",
+   "state": "California",
+   "padd": 5,
+   "operable": 6300,
+   "operating": 6300,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "ULTRAMAR INC",
+   "site": "WILMINGTON REFINERY",
+   "state": "California",
+   "padd": 5,
+   "operable": 85000,
+   "operating": 85000,
+   "idle": 0
+  },
+  {
+   "corporation": "SUNCOR ENERGY INC",
+   "company": "SUNCOR ENERGY (USA) INC",
+   "site": "COMMERCE CITY EAST",
+   "state": "Colorado",
+   "padd": 4,
+   "operable": 36000,
+   "operating": 36000,
+   "idle": 0
+  },
+  {
+   "corporation": "SUNCOR ENERGY INC",
+   "company": "SUNCOR ENERGY (USA) INC",
+   "site": "COMMERCE CITY WEST",
+   "state": "Colorado",
+   "padd": 4,
+   "operable": 67000,
+   "operating": 67000,
+   "idle": 0
+  },
+  {
+   "corporation": "PBF ENERGY CO LLC",
+   "company": "DELAWARE CITY REFINING CO LLC",
+   "site": "DELAWARE CITY",
+   "state": "Delaware",
+   "padd": 1,
+   "operable": 171000,
+   "operating": 171000,
+   "idle": 0
+  },
+  {
+   "corporation": "PAR PETROLEUM INC",
+   "company": "PAR HAWAII REFINING LLC",
+   "site": "KAPOLEI",
+   "state": "Hawaii",
+   "padd": 5,
+   "operable": 93500,
+   "operating": 93500,
+   "idle": 0
+  },
+  {
+   "corporation": "EXXON MOBIL CORP",
+   "company": "EXXONMOBIL REFINING & SUPPLY CO",
+   "site": "JOLIET",
+   "state": "Illinois",
+   "padd": 2,
+   "operable": 267000,
+   "operating": 267000,
+   "idle": 0
+  },
+  {
+   "corporation": "PDV AMERICA INC",
+   "company": "PDV MIDWEST REFINING LLC",
+   "site": "LEMONT",
+   "state": "Illinois",
+   "padd": 2,
+   "operable": 188023,
+   "operating": 188023,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "MARATHON PETROLEUM CO LP",
+   "site": "ROBINSON",
+   "state": "Illinois",
+   "padd": 2,
+   "operable": 253000,
+   "operating": 253000,
+   "idle": 0
+  },
+  {
+   "corporation": "WRB REFINING LP",
+   "company": "WRB REFINING LP",
+   "site": "WOOD RIVER",
+   "state": "Illinois",
+   "padd": 2,
+   "operable": 345000,
+   "operating": 345000,
+   "idle": 0
+  },
+  {
+   "corporation": "COUNTRYMARK COOP INC",
+   "company": "COUNTRYMARK REFINING & LOGISTICS LLC",
+   "site": "MOUNT VERNON",
+   "state": "Indiana",
+   "padd": 2,
+   "operable": 36700,
+   "operating": 36700,
+   "idle": 0
+  },
+  {
+   "corporation": "BP PLC",
+   "company": "BP PRODUCTS NORTH AMERICA INC",
+   "site": "WHITING",
+   "state": "Indiana",
+   "padd": 2,
+   "operable": 435000,
+   "operating": 435000,
+   "idle": 0
+  },
+  {
+   "corporation": "CVR ENERGY",
+   "company": "CVR REFINING CVL LLC",
+   "site": "COFFEYVILLE",
+   "state": "Kansas",
+   "padd": 2,
+   "operable": 132000,
+   "operating": 132000,
+   "idle": 0
+  },
+  {
+   "corporation": "HF SINCLAIR CORP",
+   "company": "HF SINCLAIR EL DORADO REFINING LLC",
+   "site": "EL DORADO",
+   "state": "Kansas",
+   "padd": 2,
+   "operable": 162000,
+   "operating": 162000,
+   "idle": 0
+  },
+  {
+   "corporation": "CHS INC",
+   "company": "CHS MCPHERSON REFINERY INC",
+   "site": "MCPHERSON",
+   "state": "Kansas",
+   "padd": 2,
+   "operable": 119000,
+   "operating": 119000,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "MARATHON PETROLEUM CO LP",
+   "site": "CATLETTSBURG",
+   "state": "Kentucky",
+   "padd": 2,
+   "operable": 307000,
+   "operating": 307000,
+   "idle": 0
+  },
+  {
+   "corporation": "EXXON MOBIL CORP",
+   "company": "EXXONMOBIL REFINING & SUPPLY CO",
+   "site": "BATON ROUGE",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 523500,
+   "operating": 523500,
+   "idle": 0
+  },
+  {
+   "corporation": "PBF ENERGY CO LLC",
+   "company": "CHALMETTE REFINING LLC",
+   "site": "CHALMETTE",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 190000,
+   "operating": 190000,
+   "idle": 0
+  },
+  {
+   "corporation": "CALUMET SPECIALTY PRODUCTS PARTNERS, L.P.",
+   "company": "CALUMET COTTON VALLEY REFINING LLC",
+   "site": "COTTON VALLEY",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 13020,
+   "operating": 13020,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "MARATHON PETROLEUM CO LP",
+   "site": "GARYVILLE",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 617000,
+   "operating": 617000,
+   "idle": 0
+  },
+  {
+   "corporation": "DELEK GROUP LTD",
+   "company": "ALON REFINING KROTZ SPRINGS INC",
+   "site": "KROTZ SPRINGS",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 80000,
+   "operating": 80000,
+   "idle": 0
+  },
+  {
+   "corporation": "TRANSWORLD OIL USA INC",
+   "company": "CALCASIEU REFINING CO",
+   "site": "LAKE CHARLES",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 135500,
+   "operating": 135500,
+   "idle": 0
+  },
+  {
+   "corporation": "PDV AMERICA INC",
+   "company": "CITGO PETROLEUM CORP",
+   "site": "LAKE CHARLES",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 471200,
+   "operating": 471200,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "VALERO REFINING - MERAUX LLC",
+   "site": "MERAUX",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 125000,
+   "operating": 125000,
+   "idle": 0
+  },
+  {
+   "corporation": "SHELL PLC",
+   "company": "SHELL OIL PRODUCTS US",
+   "site": "NORCO",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 231153,
+   "operating": 231153,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "VALERO REFINING NEW ORLEANS LLC",
+   "site": "NORCO",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 215000,
+   "operating": 215000,
+   "idle": 0
+  },
+  {
+   "corporation": "PLACID OIL CO",
+   "company": "PLACID REFINING CO",
+   "site": "PORT ALLEN",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 75000,
+   "operating": 75000,
+   "idle": 0
+  },
+  {
+   "corporation": "CALUMET SPECIALTY PRODUCTS PARTNERS, L.P.",
+   "company": "CALUMET PRINCETON REFINING LLC",
+   "site": "PRINCETON",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 8300,
+   "operating": 8300,
+   "idle": 0
+  },
+  {
+   "corporation": "CALUMET SPECIALTY PRODUCTS PARTNERS, L.P.",
+   "company": "CALUMET SHREVEPORT REFINING LLC",
+   "site": "SHREVEPORT",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 57000,
+   "operating": 57000,
+   "idle": 0
+  },
+  {
+   "corporation": "PHILLIPS 66 COMPANY",
+   "company": "PHILLIPS 66 COMPANY",
+   "site": "WESTLAKE",
+   "state": "Louisiana",
+   "padd": 3,
+   "operable": 263700,
+   "operating": 263700,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "MARATHON PETROLEUM CO LP",
+   "site": "DETROIT",
+   "state": "Michigan",
+   "padd": 2,
+   "operable": 146000,
+   "operating": 146000,
+   "idle": 0
+  },
+  {
+   "corporation": "KOCH INDUSTRIES INC",
+   "company": "FLINT HILLS RESOURCES LP",
+   "site": "SAINT PAUL",
+   "state": "Minnesota",
+   "padd": 2,
+   "operable": 335000,
+   "operating": 335000,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "ST PAUL PARK REFINING CO LLC",
+   "site": "SAINT PAUL",
+   "state": "Minnesota",
+   "padd": 2,
+   "operable": 105000,
+   "operating": 105000,
+   "idle": 0
+  },
+  {
+   "corporation": "CHEVRON CORP",
+   "company": "CHEVRON USA INC",
+   "site": "PASCAGOULA",
+   "state": "Mississippi",
+   "padd": 3,
+   "operable": 356440,
+   "operating": 356440,
+   "idle": 0
+  },
+  {
+   "corporation": "HUNT CONSLD INC",
+   "company": "HUNT SOUTHLAND REFINING CO",
+   "site": "SANDERSVILLE",
+   "state": "Mississippi",
+   "padd": 3,
+   "operable": 11000,
+   "operating": 11000,
+   "idle": 0
+  },
+  {
+   "corporation": "ERGON INC",
+   "company": "ERGON REFINING INC",
+   "site": "VICKSBURG",
+   "state": "Mississippi",
+   "padd": 3,
+   "operable": 26500,
+   "operating": 26500,
+   "idle": 0
+  },
+  {
+   "corporation": "PAR PETROLEUM INC",
+   "company": "PAR MONTANA LLC",
+   "site": "BILLINGS",
+   "state": "Montana",
+   "padd": 4,
+   "operable": 61500,
+   "operating": 61500,
+   "idle": 0
+  },
+  {
+   "corporation": "PHILLIPS 66 COMPANY",
+   "company": "PHILLIPS 66 COMPANY",
+   "site": "BILLINGS",
+   "state": "Montana",
+   "padd": 4,
+   "operable": 71000,
+   "operating": 71000,
+   "idle": 0
+  },
+  {
+   "corporation": "CALUMET SPECIALTY PRODUCTS PARTNERS, L.P.",
+   "company": "CALUMET MONTANA REFINING LLC",
+   "site": "GREAT FALLS",
+   "state": "Montana",
+   "padd": 4,
+   "operable": 15000,
+   "operating": 15000,
+   "idle": 0
+  },
+  {
+   "corporation": "CHS INC",
+   "company": "CENEX HARVEST STATES COOP",
+   "site": "LAUREL",
+   "state": "Montana",
+   "padd": 4,
+   "operable": 62500,
+   "operating": 62500,
+   "idle": 0
+  },
+  {
+   "corporation": "FORELAND REFINING CORP",
+   "company": "FORELAND REFINING CORP",
+   "site": "ELY",
+   "state": "Nevada",
+   "padd": 5,
+   "operable": 2000,
+   "operating": 0,
+   "idle": 2000
+  },
+  {
+   "corporation": "PHILLIPS 66 COMPANY",
+   "company": "PHILLIPS 66 COMPANY",
+   "site": "LINDEN",
+   "state": "New Jersey",
+   "padd": 1,
+   "operable": 275000,
+   "operating": 275000,
+   "idle": 0
+  },
+  {
+   "corporation": "PBF ENERGY CO LLC",
+   "company": "CPI OPERATIONS LLC",
+   "site": "PAULSBORO",
+   "state": "New Jersey",
+   "padd": 1,
+   "operable": 32000,
+   "operating": 0,
+   "idle": 32000
+  },
+  {
+   "corporation": "PBF ENERGY CO LLC",
+   "company": "PAULSBORO REFINING CO LLC",
+   "site": "PAULSBORO",
+   "state": "New Jersey",
+   "padd": 1,
+   "operable": 160000,
+   "operating": 160000,
+   "idle": 0
+  },
+  {
+   "corporation": "HF SINCLAIR CORP",
+   "company": "HF SINCLAIR NAVAJO REFINING LLC",
+   "site": "ARTESIA",
+   "state": "New Mexico",
+   "padd": 3,
+   "operable": 110000,
+   "operating": 110000,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "TESORO REFINING & MARKETING CO",
+   "site": "MANDAN",
+   "state": "North Dakota",
+   "padd": 2,
+   "operable": 72000,
+   "operating": 72000,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "MARATHON PETROLEUM CO LP",
+   "site": "CANTON",
+   "state": "Ohio",
+   "padd": 2,
+   "operable": 100000,
+   "operating": 100000,
+   "idle": 0
+  },
+  {
+   "corporation": "CENOVUS MARKETING (USA) INC",
+   "company": "LIMA REFINING COMPANY",
+   "site": "LIMA",
+   "state": "Ohio",
+   "padd": 2,
+   "operable": 183000,
+   "operating": 183000,
+   "idle": 0
+  },
+  {
+   "corporation": "CENOVUS MARKETING (USA) INC",
+   "company": "OHIO REFINING COMPANY LLC",
+   "site": "TOLEDO",
+   "state": "Ohio",
+   "padd": 2,
+   "operable": 150800,
+   "operating": 150800,
+   "idle": 0
+  },
+  {
+   "corporation": "PBF ENERGY CO LLC",
+   "company": "TOLEDO REFINING CO LLC",
+   "site": "TOLEDO",
+   "state": "Ohio",
+   "padd": 2,
+   "operable": 172800,
+   "operating": 172800,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "VALERO REFINING CO OKLAHOMA",
+   "site": "ARDMORE",
+   "state": "Oklahoma",
+   "padd": 2,
+   "operable": 86000,
+   "operating": 86000,
+   "idle": 0
+  },
+  {
+   "corporation": "PHILLIPS 66 COMPANY",
+   "company": "PHILLIPS 66 COMPANY",
+   "site": "PONCA CITY",
+   "state": "Oklahoma",
+   "padd": 2,
+   "operable": 228000,
+   "operating": 228000,
+   "idle": 0
+  },
+  {
+   "corporation": "HF SINCLAIR CORP",
+   "company": "HF SINCLAIR TULSA REFINING LLC",
+   "site": "TULSA EAST",
+   "state": "Oklahoma",
+   "padd": 2,
+   "operable": 70300,
+   "operating": 70300,
+   "idle": 0
+  },
+  {
+   "corporation": "HF SINCLAIR CORP",
+   "company": "HF SINCLAIR TULSA REFINING LLC",
+   "site": "TULSA WEST",
+   "state": "Oklahoma",
+   "padd": 2,
+   "operable": 85000,
+   "operating": 85000,
+   "idle": 0
+  },
+  {
+   "corporation": "CVR ENERGY",
+   "company": "CVR REFINING WYN LLC",
+   "site": "WYNNEWOOD",
+   "state": "Oklahoma",
+   "padd": 2,
+   "operable": 74500,
+   "operating": 74500,
+   "idle": 0
+  },
+  {
+   "corporation": "AMERICAN REFINING GROUP INC",
+   "company": "AMERICAN REFINING GROUP INC",
+   "site": "BRADFORD",
+   "state": "Pennsylvania",
+   "padd": 1,
+   "operable": 11000,
+   "operating": 11000,
+   "idle": 0
+  },
+  {
+   "corporation": "DELTA AIR LINES INC",
+   "company": "MONROE ENERGY LLC",
+   "site": "TRAINER",
+   "state": "Pennsylvania",
+   "padd": 1,
+   "operable": 190000,
+   "operating": 190000,
+   "idle": 0
+  },
+  {
+   "corporation": "RED APPLE GROUP INC",
+   "company": "UNITED REFINING CO",
+   "site": "WARREN",
+   "state": "Pennsylvania",
+   "padd": 1,
+   "operable": 67000,
+   "operating": 67000,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "VALERO REF COMPANY TENNESSEE LLC",
+   "site": "MEMPHIS",
+   "state": "Tennessee",
+   "padd": 2,
+   "operable": 180000,
+   "operating": 180000,
+   "idle": 0
+  },
+  {
+   "corporation": "EXXON MOBIL CORP",
+   "company": "EXXONMOBIL REFINING & SUPPLY CO",
+   "site": "BAYTOWN",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 564500,
+   "operating": 564500,
+   "idle": 0
+  },
+  {
+   "corporation": "EXXON MOBIL CORP",
+   "company": "EXXONMOBIL REFINING & SUPPLY CO",
+   "site": "BEAUMONT",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 612000,
+   "operating": 612000,
+   "idle": 0
+  },
+  {
+   "corporation": "DELEK GROUP LTD",
+   "company": "ALON USA ENERGY INC",
+   "site": "BIG SPRING",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 73000,
+   "operating": 73000,
+   "idle": 0
+  },
+  {
+   "corporation": "WRB REFINING LP",
+   "company": "WRB REFINING LP",
+   "site": "BORGER",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 149000,
+   "operating": 149000,
+   "idle": 0
+  },
+  {
+   "corporation": "HARTREE PARTNERS LP",
+   "company": "HARTREE REFINING LLC",
+   "site": "CHANNELVIEW",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 45000,
+   "operating": 45000,
+   "idle": 0
+  },
+  {
+   "corporation": "BUCKEYE PARTNERS LP",
+   "company": "BUCKEYE TEXAS PROCESSING LLC",
+   "site": "CORPUS CHRISTI",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 60000,
+   "operating": 60000,
+   "idle": 0
+  },
+  {
+   "corporation": "PDV AMERICA INC",
+   "company": "CITGO REFINING & CHEMICAL INC",
+   "site": "CORPUS CHRISTI",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 165000,
+   "operating": 165000,
+   "idle": 0
+  },
+  {
+   "corporation": "ONEOK INC",
+   "company": "MAGELLAN PROCESSING LP",
+   "site": "CORPUS CHRISTI",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 50000,
+   "operating": 50000,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "VALERO REFINING CO TEXAS LP",
+   "site": "CORPUS CHRISTI",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 290000,
+   "operating": 290000,
+   "idle": 0
+  },
+  {
+   "corporation": "KOCH INDUSTRIES INC",
+   "company": "FLINT HILLS RESOURCES LP",
+   "site": "CORPUS CHRISTI EAST",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 87500,
+   "operating": 87500,
+   "idle": 0
+  },
+  {
+   "corporation": "KOCH INDUSTRIES INC",
+   "company": "FLINT HILLS RESOURCES LP",
+   "site": "CORPUS CHRISTI WEST",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 290000,
+   "operating": 290000,
+   "idle": 0
+  },
+  {
+   "corporation": "PEMEX",
+   "company": "DEER PARK REFINING LP",
+   "site": "DEER PARK",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 312500,
+   "operating": 312500,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "WESTERN REFINING COMPANY LP",
+   "site": "EL PASO",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 133000,
+   "operating": 133000,
+   "idle": 0
+  },
+  {
+   "corporation": "KINDER MORGAN ENERGY PTNRS LP",
+   "company": "KINDER MORGAN CRUDE & CONDENSATE",
+   "site": "GALENA PARK",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 105000,
+   "operating": 105000,
+   "idle": 0
+  },
+  {
+   "corporation": "TEXAS INTL TERMINALS",
+   "company": "TEXAS INTERNATIONAL TERMINALS",
+   "site": "GALVESTON",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 45000,
+   "operating": 45000,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "MARATHON PETROLEUM CO LP",
+   "site": "GALVESTON BAY",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 631000,
+   "operating": 631000,
+   "idle": 0
+  },
+  {
+   "corporation": "PETROMAX REFINING CO LLC",
+   "company": "PETROMAX REFINING CO LLC",
+   "site": "HOUSTON",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 25000,
+   "operating": 25000,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "VALERO REFINING CO TEXAS LP",
+   "site": "HOUSTON",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 205000,
+   "operating": 205000,
+   "idle": 0
+  },
+  {
+   "corporation": "BLUE DOLPHIN ENERGY CO",
+   "company": "LAZARUS ENERGY LLC",
+   "site": "NIXON",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 14000,
+   "operating": 14000,
+   "idle": 0
+  },
+  {
+   "corporation": "CHEVRON CORP",
+   "company": "PASADENA REFINING SYSTEMS INC",
+   "site": "PASADENA",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 118750,
+   "operating": 118750,
+   "idle": 0
+  },
+  {
+   "corporation": "SAUDI ARAMCO",
+   "company": "MOTIVA ENTERPRISES LLC",
+   "site": "PORT ARTHUR",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 656400,
+   "operating": 656400,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "PREMCOR REFINING GROUP INC",
+   "site": "PORT ARTHUR",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 385000,
+   "operating": 385000,
+   "idle": 0
+  },
+  {
+   "corporation": "TOTALENERGIES SE",
+   "company": "TOTALENERGIES PETROCHEM & REFG USA",
+   "site": "PORT ARTHUR",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 238000,
+   "operating": 238000,
+   "idle": 0
+  },
+  {
+   "corporation": "STARLIGHT RELATIVITY ACQUISITION CO",
+   "company": "THE SAN ANTONIO REFINERY LLC",
+   "site": "SAN ANTONIO",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 20000,
+   "operating": 20000,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "DIAMOND SHAMROCK REFINING CO LP",
+   "site": "SUNRAY",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 195000,
+   "operating": 195000,
+   "idle": 0
+  },
+  {
+   "corporation": "PHILLIPS 66 COMPANY",
+   "company": "PHILLIPS 66 COMPANY",
+   "site": "SWEENY",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 277000,
+   "operating": 277000,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "VALERO REFINING CO TEXAS LP",
+   "site": "TEXAS CITY",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 225000,
+   "operating": 225000,
+   "idle": 0
+  },
+  {
+   "corporation": "VALERO ENERGY CORP",
+   "company": "DIAMOND SHAMROCK REFINING CO LP",
+   "site": "THREE RIVERS",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 89000,
+   "operating": 89000,
+   "idle": 0
+  },
+  {
+   "corporation": "DELEK GROUP LTD",
+   "company": "DELEK REFINING LTD",
+   "site": "TYLER",
+   "state": "Texas",
+   "padd": 3,
+   "operable": 74000,
+   "operating": 74000,
+   "idle": 0
+  },
+  {
+   "corporation": "FJ MANAGEMENT INC",
+   "company": "BIG WEST OIL CO",
+   "site": "NORTH SALT LAKE",
+   "state": "Utah",
+   "padd": 4,
+   "operable": 31664,
+   "operating": 31664,
+   "idle": 0
+  },
+  {
+   "corporation": "CHEVRON CORP",
+   "company": "CHEVRON USA INC",
+   "site": "SALT LAKE CITY",
+   "state": "Utah",
+   "padd": 4,
+   "operable": 54720,
+   "operating": 54720,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "TESORO REFINING & MARKETING CO",
+   "site": "SALT LAKE CITY",
+   "state": "Utah",
+   "padd": 4,
+   "operable": 70000,
+   "operating": 70000,
+   "idle": 0
+  },
+  {
+   "corporation": "HF SINCLAIR CORP",
+   "company": "HF SINCLAIR WOODS CROSS REFINING LLC",
+   "site": "WOODS CROSS",
+   "state": "Utah",
+   "padd": 4,
+   "operable": 41705,
+   "operating": 41705,
+   "idle": 0
+  },
+  {
+   "corporation": "SILVER EAGLE REFINING INC",
+   "company": "SILVER EAGLE REFINING",
+   "site": "WOODS CROSS",
+   "state": "Utah",
+   "padd": 4,
+   "operable": 15000,
+   "operating": 15000,
+   "idle": 0
+  },
+  {
+   "corporation": "HF SINCLAIR CORP",
+   "company": "HF SINCLAIR PUGET SOUND REFG LLC",
+   "site": "ANACORTES",
+   "state": "Washington",
+   "padd": 5,
+   "operable": 145000,
+   "operating": 145000,
+   "idle": 0
+  },
+  {
+   "corporation": "MARATHON PETROLEUM CORP",
+   "company": "TESORO REFINING & MARKETING CO",
+   "site": "ANACORTES",
+   "state": "Washington",
+   "padd": 5,
+   "operable": 119000,
+   "operating": 119000,
+   "idle": 0
+  },
+  {
+   "corporation": "BP PLC",
+   "company": "BP PRODUCTS NORTH AMERICA INC",
+   "site": "FERNDALE",
+   "state": "Washington",
+   "padd": 5,
+   "operable": 238500,
+   "operating": 238500,
+   "idle": 0
+  },
+  {
+   "corporation": "PHILLIPS 66 COMPANY",
+   "company": "PHILLIPS 66 COMPANY",
+   "site": "FERNDALE",
+   "state": "Washington",
+   "padd": 5,
+   "operable": 105000,
+   "operating": 105000,
+   "idle": 0
+  },
+  {
+   "corporation": "PAR PETROLEUM INC",
+   "company": "US OIL & REFINING CO",
+   "site": "TACOMA",
+   "state": "Washington",
+   "padd": 5,
+   "operable": 40700,
+   "operating": 40700,
+   "idle": 0
+  },
+  {
+   "corporation": "ERGON INC",
+   "company": "ERGON WEST VIRGINIA INC",
+   "site": "NEWELL",
+   "state": "West Virginia",
+   "padd": 1,
+   "operable": 22300,
+   "operating": 22300,
+   "idle": 0
+  },
+  {
+   "corporation": "CENOVUS MARKETING (USA) INC",
+   "company": "SUPERIOR REFINING COMPANY LLC",
+   "site": "SUPERIOR",
+   "state": "Wisconsin",
+   "padd": 2,
+   "operable": 49547,
+   "operating": 49547,
+   "idle": 0
+  },
+  {
+   "corporation": "SILVER EAGLE REFINING INC",
+   "company": "SILVER EAGLE REFINING",
+   "site": "EVANSTON",
+   "state": "Wyoming",
+   "padd": 4,
+   "operable": 3000,
+   "operating": 3000,
+   "idle": 0
+  },
+  {
+   "corporation": "HF SINCLAIR CORP",
+   "company": "HF SINCLAIR CASPER REFINING COMPANY",
+   "site": "EVANSVILLE",
+   "state": "Wyoming",
+   "padd": 4,
+   "operable": 31000,
+   "operating": 31000,
+   "idle": 0
+  },
+  {
+   "corporation": "PAR PETROLEUM INC",
+   "company": "WYOMING REFINING CO",
+   "site": "NEWCASTLE",
+   "state": "Wyoming",
+   "padd": 4,
+   "operable": 18000,
+   "operating": 18000,
+   "idle": 0
+  },
+  {
+   "corporation": "HF SINCLAIR CORP",
+   "company": "HF SINCLAIR WYOMING REFINING CO",
+   "site": "SINCLAIR",
+   "state": "Wyoming",
+   "padd": 4,
+   "operable": 75000,
+   "operating": 75000,
+   "idle": 0
+  }
+ ]
+}

@@ -162,6 +162,26 @@ export const curatedLngEvidenceSchema = z.object({
 });
 
 /** A curated oil terminal. Its claims must link a source, and can't pose as dataset or measured. */
+export const refinerySchema = z.object({
+  id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
+  name: z.string().min(1),
+  aliases: z.array(z.string()),
+  country: z.string().regex(/^[A-Z]{2}$/),
+  point: lonLat,
+  pointApprox: z.boolean(),
+  pointSource: z.enum(['eia', 'hifld', 'eea', 'wikidata', 'osm']),
+  operator: z.string().min(1).optional(),
+  corporation: z.string().min(1).optional(),
+  // A capacity is shown only with its source and date (SPEC M11).
+  capacity: z
+    .object({ value: z.number().positive(), unit: z.enum(['b/cd', 'b/sd', 'b/d', 'Mt/yr']), asOf: isoDate, source: pageRefSchema })
+    .optional(),
+  padd: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).optional(),
+  state: z.string().min(1).optional(),
+  evidence: z.array(evidenceSchema),
+  pipelineIds: z.array(z.string().min(1)).optional(),
+});
+
 export const oilTerminalSchema = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
   name: z.string().min(1),
