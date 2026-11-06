@@ -3,9 +3,10 @@
 // exports at the ports in PORT_CALLS -> public/data/port-calls.json. Both fields come from one query.
 // Run: npm run fetch:portwatch
 
+import { join } from 'node:path';
 import { CHOKEPOINTS, FLOW_WINDOWS, PORT_CALLS, PORTWATCH, portCallsSeriesId, portExportsSeriesId, tankerCargoSeriesId } from '../src/lib/config';
 import { fetchJson } from './lib/http';
-import { eachWithFallback, publishDataset, readPublished, report } from './lib/output';
+import { eachWithFallback, publishDataset, readPublished, readState, report, writeState, type LastFetched } from './lib/output';
 import {
   addDays,
   dailyResponseSchema,
@@ -56,6 +57,11 @@ async function fetchRows(layer: Layer, portwatchId: string, since: string, until
   return rows;
 }
 
+// When each chokepoint and port was last fetched. The job runs out of time on slow PortWatch days;
+// fetching the stalest first means the ones it didn't reach go first next run.
+const STATE_PATH = join(import.meta.dirname, '../data/reports/portwatch-state.json');
+let lastFetched = await readState<LastFetched>(STATE_PATH, {});
+
 const today = new Date().toISOString().slice(0, 10);
 const startedAt = Date.now();
 const deadlineFor = (minutes: number) => startedAt + minutes * 60_000;
@@ -70,8 +76,9 @@ const transits = await publishDataset({
   produce: async () => {
     // A chokepoint PortWatch won't answer keeps its previous series, so one bad query doesn't cost all seven.
     const previous = await readPublished<ObservationSeries>('chokepoint-transits');
-    const { records: series, warning } = await eachWithFallback(CHOKEPOINTS, {
+    const { records: series, warning, lastFetched: fetched } = await eachWithFallback(CHOKEPOINTS, {
       name: (c) => c.portwatchId,
+      lastFetched,
       // Transits use the same `portwatch-<id>` form as port calls.
       previous: (c) => previous.filter((s) => [portCallsSeriesId(c.portwatchId), tankerCargoSeriesId(c.portwatchId)].includes(s.id)),
       fetch: async (chokepoint) => {
@@ -90,6 +97,8 @@ const transits = await publishDataset({
         ];
       },
     });
+    lastFetched = fetched;
+    await writeState(STATE_PATH, lastFetched);
     return {
       warning,
       records: series,
@@ -109,8 +118,9 @@ const portCalls = await publishDataset({
   schema: observationSeriesSchema,
   produce: async () => {
     const previous = await readPublished<ObservationSeries>('port-calls');
-    const { records: series, warning } = await eachWithFallback(PORT_CALLS.ports, {
+    const { records: series, warning, lastFetched: fetched } = await eachWithFallback(PORT_CALLS.ports, {
       name: (p) => p.portwatchId,
+      lastFetched,
       previous: (p) => previous.filter((s) => [portCallsSeriesId(p.portwatchId), portExportsSeriesId(p.portwatchId)].includes(s.id)),
       fetch: async (port) => {
         const rows = await fetchRows(PORT_LAYER, port.portwatchId, since, today, deadlineFor(PORTWATCH.budgetMinutes.portCalls));
@@ -128,6 +138,8 @@ const portCalls = await publishDataset({
         ];
       },
     });
+    lastFetched = fetched;
+    await writeState(STATE_PATH, lastFetched);
     return {
       warning,
       records: series,

@@ -1,0 +1,62 @@
+name: PortWatch
+
+# IMF PortWatch daily tanker transits at the chokepoints and port calls at the ports in PORT_CALLS,
+# into public/data. Its own workflow since 2026-11-06: PortWatch has failed queries at random since
+# October 2026, and in the Data workflow its partial failures turned every run red.
+# A failed chokepoint or port keeps its previous series and fails the run (see jobs/fetch-portwatch.ts);
+# the next run fetches it first (data/reports/portwatch-state.json).
+
+on:
+  schedule:
+    - cron: '47 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: portwatch
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      # Latest main, not the commit the run was queued at.
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: PortWatch chokepoint transits and port calls
+        id: portwatch
+        continue-on-error: true
+        # The job stops starting requests before this (PORTWATCH.budgetMinutes); raise both together.
+        timeout-minutes: 20
+        run: npm run fetch:portwatch
+
+      - name: Commit changed data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data data/reports/portwatch-state.json
+          if git diff --cached --quiet; then
+            echo "No data changes"
+          else
+            git commit -m "Update PortWatch data $(date -u +%Y-%m-%dT%H:%MZ)"
+            # Another job may push to main during the run; this one only touches its own files.
+            git pull --rebase origin main && git push || (sleep 10 && git pull --rebase origin main && git push)
+          fi
+
+      - name: Fail if the fetch failed
+        if: steps.portwatch.outcome == 'failure'
+        run: |
+          echo "::error::PortWatch failed for one or more chokepoints or ports; previous series were kept. See the fetch step's log."
+          exit 1
