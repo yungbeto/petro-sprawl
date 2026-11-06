@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { cardClass } from '../ui/Card';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
 import { formatIndexShare, formatMbd, formatNumber } from '../lib/format';
@@ -55,7 +56,7 @@ function ChokepointRow({ row, onSelect }: { row: ChokepointViewRow; onSelect: (s
   const index = transits?.indexFiveYear ?? null;
   const share = index !== null ? formatIndexShare(index) : null;
   return (
-    <button type="button" className="view-row stat-card chokepoint-row" onClick={() => onSelect(row.selection)}>
+    <button type="button" className={cardClass({ interactive: true, className: 'view-row stat-card chokepoint-row' })} onClick={() => onSelect(row.selection)}>
       <span className="stat-card__head">
         <span className="chokepoint-row__name">
           <span className="stat-card__name">{row.name}</span>

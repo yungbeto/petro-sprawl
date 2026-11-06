@@ -1,0 +1,29 @@
+/* Cards (src/ui/Card.tsx, docs/design-system.md): 16px inside, 8px corners, a hairline ring inside the box. */
+
+.card {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--ring);
+}
+
+.card > :last-child {
+  margin-bottom: 0;
+}
+
+/* A tinted fill, for cards that sit together on a page's own background (Home's latest updates). */
+.card--subtle {
+  background: var(--surface-subtle);
+}
+
+/* A card that is itself a button: the ring darkens on hover, and the fill shows under the pointer. */
+.card--interactive {
+  cursor: pointer;
+  transition-property: box-shadow, background-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.card--interactive:hover {
+  background: var(--surface-sunken);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { cardClass } from '../ui/Card';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
 import { formatCountry, formatShare, formatThousandfold } from '../lib/format';
@@ -54,7 +55,7 @@ function BasinRow({ basin, onSelect }: { basin: Basin; onSelect: (selection: Sel
   const gas = basin.volumes?.gas.remaining ?? null;
   const countries = basin.countries.length ? basin.countries.map(formatCountry).sort().join(', ') : 'Offshore';
   return (
-    <button type="button" className="view-row stat-card" onClick={() => onSelect({ kind: 'basin', id: basin.id })}>
+    <button type="button" className={cardClass({ interactive: true, className: 'view-row stat-card' })} onClick={() => onSelect({ kind: 'basin', id: basin.id })}>
       <span className="stat-card__head">
         <span className="stat-card__name">{basin.name}</span>
         <span className="stat-card__figure">

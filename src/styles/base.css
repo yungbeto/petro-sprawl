@@ -1090,27 +1090,14 @@ a:hover {
 }
 
 /* Line charts: the line and a soft fill under it in the chart's color (--chart-color), no axis rule. */
-/* A detail page's chart section (title, lede, chart, legend) as a card, outlined as the surfaces' list
-   cards are (.view-list--cards): a hairline drawn as a shadow, 8px corners, 16px inside. Charts that
-   follow each other sit 8px apart, as those cards do, so they read as one set. */
-.chart-card {
-  padding: var(--space-4);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--ring);
-}
-
-/* Beats .section + .section. */
-.chart-card + .chart-card.chart-card {
+/* Cards that follow each other in a page sit 8px apart, so they read as one set (beats .section + .section). */
+.section.card + .section.card {
   margin-top: var(--space-2);
-}
-
-.chart-card > :last-child {
-  margin-bottom: 0;
 }
 
 /* A chart's band sits at the end of its title, as a list card's does beside its name. A title too long
    to share the line keeps it whole, and the band drops under it, flush left. */
-.chart-card .title-row:has(> .band) {
+.card .title-row:has(> .band) {
   flex-wrap: wrap;
   justify-content: space-between;
   column-gap: var(--space-3);
@@ -1129,12 +1116,12 @@ a:hover {
   margin: 0;
 }
 
-.chart-card .title-row > .band {
+.card .title-row > .band {
   flex: none;
   font-size: var(--text-sm);
 }
 
-.chart-card .title-row > .band::before {
+.card .title-row > .band::before {
   width: 8px;
   height: 8px;
   border-width: 1.5px;
@@ -1248,7 +1235,7 @@ a:hover {
   align-items: flex-start;
 }
 
-.disruption.chart-card + .disruption.chart-card {
+.disruption.card + .disruption.card {
   margin-top: 0;
 }
 
@@ -1902,10 +1889,6 @@ a:hover {
 .hero-card {
   flex: 0 0 85%;
   min-width: 0;
-  padding: var(--space-3) var(--space-4);
-  background: var(--surface-subtle);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--ring);
   scroll-snap-align: start;
 }
 
@@ -2579,16 +2562,11 @@ a:hover {
   border-top: 0;
 }
 
-.view-list--cards .view-row {
+/* A list row that is a card: the card's padding and edge instead of the row's hover bleed. */
+.view-row.card {
   gap: var(--space-2);
   margin: 0;
   width: 100%;
-  padding: var(--space-4);
-  box-shadow: var(--ring);
-}
-
-.view-list--cards .view-row:hover {
-  box-shadow: 0 0 0 1px var(--border-strong);
 }
 
 /* The figures behind the headline, as one line: values in the text color, the words muted. */

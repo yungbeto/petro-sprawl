@@ -65,6 +65,7 @@ import { Info } from './Info';
 import { NewsList } from './NewsList';
 import { OilBar, OilKey } from './BasinsView';
 import { MeterBar, PartsBar, type BarTone } from '../ui/Bar';
+import { Card } from '../ui/Card';
 import { assetHeadlines } from '../lib/headlines';
 
 /** A region can open on a given fuel (M7); everything else ignores it. */
@@ -174,7 +175,7 @@ export function ChokepointDetail({ item, data, now, onSelect }: { item: Chokepoi
               )}
             </Row>
           </dl>
-          <section className="section chart-card">
+          <Card as="section" className="section">
             <h3 className="section__title">Daily tanker transits, last 90 days</h3>
             <Sparkline
               points={flow.sparkline}
@@ -186,7 +187,7 @@ export function ChokepointDetail({ item, data, now, onSelect }: { item: Chokepoi
                 ...(flow.trailing ? [{ value: flow.trailing.mean, label: 'Trailing year', style: 'dotted' as const }] : []),
               ]}
             />
-          </section>
+          </Card>
           {cargo && (
             <TonnesSection
               title="Estimated tanker cargo, last 90 days"
@@ -233,7 +234,7 @@ export function ChokepointDetail({ item, data, now, onSelect }: { item: Chokepoi
 function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: boolean }) {
   const { port, flow, exports } = calls;
   return (
-    <section className="section chart-card">
+    <Card as="section" className="section">
       <div className="title-row">
         <span className="title-row__main">
           <h3 className="section__title">Tanker calls at {port}, last 90 days</h3>
@@ -276,14 +277,14 @@ function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: bo
           .
         </p>
       )}
-    </section>
+    </Card>
   );
 }
 
 /** A PortWatch tonnage estimate: the 7-day level against the five-year average, and 90 days of it. */
 function TonnesSection({ title, flow, noun, label }: { title: string; flow: ChokepointFlow; noun: string; label: string }) {
   return (
-    <section className="section chart-card">
+    <Card as="section" className="section">
       <div className="title-row">
         <h3 className="section__title">{title}</h3>
         {flow.recent && <Band band={flow.band} />}
@@ -311,7 +312,7 @@ function TonnesSection({ title, flow, noun, label }: { title: string; flow: Chok
           ...(flow.trailing ? [{ value: flow.trailing.mean, label: 'Trailing year', style: 'dotted' as const }] : []),
         ]}
       />
-    </section>
+    </Card>
   );
 }
 
@@ -371,7 +372,7 @@ function DisruptionCard({ disruption: d, now }: { disruption: Disruption; now: D
   const long = d.summary.length > DISRUPTION_CARD.summaryClampChars;
   const when = d.endedAt ? `${formatLongDate(d.startedAt)} to ${formatLongDate(d.endedAt)}` : `Ongoing since ${formatLongDate(d.startedAt)}`;
   return (
-    <li className={`disruption chart-card${d.endedAt ? ' disruption--ended' : ''}`}>
+    <Card as="li" className={`disruption${d.endedAt ? ' disruption--ended' : ''}`}>
       <p className="disruption__head">
         <span className="disruption__when">{when}</span>
         <span className="disruption__cause">{capitalize(d.cause)}</span>
@@ -411,7 +412,7 @@ function DisruptionCard({ disruption: d, now }: { disruption: Disruption; now: D
         </button>
       )}
       {shown.some((s) => s.unreviewed) && <p className="disruption__note">{UNREVIEWED_NOTE}</p>}
-    </li>
+    </Card>
   );
 }
 
@@ -752,7 +753,7 @@ export function PipelineDetail({
       </dl>
       {/* With a 7-day mean the chart sits in the flow card above; without one it stands alone. */}
       {flow && flow.recentMean == null && flow.sparkline.length > 1 && (
-        <section className="section chart-card">
+        <Card as="section" className="section">
           <h3 className="section__title">Daily physical flow, last 90 days</h3>
           <Sparkline
             points={flow.sparkline.map((p) => ({ date: p.date, value: p.value / 1e6 }))}
@@ -762,7 +763,7 @@ export function PipelineDetail({
               flow.capacity ? [{ value: flow.capacity / 1e6, label: 'Technical capacity', style: 'dashed' as const }] : []
             }
           />
-        </section>
+        </Card>
       )}
       {portCalls.map((calls) => (
         <PortCallsSection key={calls.port} calls={calls} />
@@ -932,7 +933,7 @@ function LeadCard({
   children?: ReactNode;
 }) {
   return (
-    <dl className="lead-card chart-card">
+    <Card as="dl" className="lead-card">
       <dt className="lead-card__label">{label}</dt>
       <dd className="lead-card__body">
         <span className="lead-card__figure">
@@ -946,7 +947,7 @@ function LeadCard({
         {notes && <span className="stat-card__notes">{notes}</span>}
         {children && <div className="lead-card__more">{children}</div>}
       </dd>
-    </dl>
+    </Card>
   );
 }
 
@@ -1180,7 +1181,7 @@ function StorageFigures({ storage, name }: { storage: CountryStorage; name: stri
           )}
         </Row>
       </dl>
-      <section className="section chart-card">
+      <Card as="section" className="section">
         <h3 className="section__title">{storage.fill !== null ? 'Storage fill' : 'Gas in storage'}, last 12 months</h3>
         <Sparkline
           points={summary.year}
@@ -1189,7 +1190,7 @@ function StorageFigures({ storage, name }: { storage: CountryStorage; name: stri
           label={`${storage.fill !== null ? 'Gas storage fill' : 'Gas in storage'} in ${name}, ${summary.year[0]?.date} to ${summary.latest.date}`}
           references={summary.lastYear ? [{ value: summary.lastYear.value, label: span, style: 'dashed' as const }] : []}
         />
-      </section>
+      </Card>
       {storage.parts.length > 0 && (
         <section className="section" aria-labelledby="storage-parts">
           <h3 className="section__title" id="storage-parts">
@@ -1322,7 +1323,7 @@ export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; da
       )}
       {/* Send-out with too few days for a mean: the chart on its own. */}
       {sendOut && sendOut.recentMean == null && sendOut.sparkline.length > 1 && (
-        <section className="section chart-card">
+        <Card as="section" className="section">
           <h3 className="section__title">Daily send-out, last 90 days</h3>
           <Sparkline
             points={sendOut.sparkline.map((p) => ({ date: p.date, value: p.value / 1e6 }))}
@@ -1334,7 +1335,7 @@ export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; da
                 : []
             }
           />
-        </section>
+        </Card>
       )}
       <DisruptionList disruptions={disruptions} now={now} />
       <Reports evidence={item.evidence} />

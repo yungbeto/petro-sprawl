@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
+import { cardClass } from '../ui/Card';
 import { CaretLeftIcon, CaretRightIcon, NewspaperIcon } from '@phosphor-icons/react';
 import type { Selection } from '../app/urlState';
 import type { VisitChanges } from '../app/useVisitChanges';
@@ -249,7 +250,7 @@ function HeroCards({ cards, now, byline, onSelect }: HeroCardsProps) {
           const source = newestSource(o.disruption);
           const id = `hero-card-${i}`;
           return (
-            <li key={o.disruption.id} className="hero-card">
+            <li key={o.disruption.id} className={cardClass({ subtle: true, className: 'hero-card' })}>
               <article aria-labelledby={id}>
                 <p className="hero__kicker">
                   <NewspaperIcon size={16} aria-hidden="true" />

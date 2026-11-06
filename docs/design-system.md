@@ -5,8 +5,8 @@ the tokens, the text styles and the components, and the rules for using them. Th
 the end. Sentence case, no uppercase eyebrows, no em dashes, as everywhere in the app.
 
 Status (2026-11-05): tokens are done (`src/styles/tokens.css`, used throughout `base.css`); text styles are
-done (`src/styles/text.css`); of the shared components, `StatusBlock` and the bars (`MeterBar`, `PartsBar`) are built and the rest are
-proposed.
+done (`src/styles/text.css`); of the shared components, `StatusBlock`, the bars (`MeterBar`, `PartsBar`) and `Card` are built and the
+rest are proposed.
 
 ## Principles
 
@@ -90,7 +90,7 @@ component; the rest are class patterns repeated by hand.
 
 | Component | Replaces | Variants | Exists |
 | --- | --- | --- | --- |
-| `Card` | `.chart-card`, `.hero-card` (border, not ring), `.lead-card`, `.disruption` | static; interactive (list rows: `.view-row`, `.group-row`, `.tile` hover) | No |
+| `Card`, `cardClass()` (`src/ui/Card.tsx`) | `.chart-card`, `.hero-card`'s own edge and fill, the list cards' edge (`.view-list--cards .view-row`) | static (chart sections, lead cards, disruptions); `interactive` (a card that's a button: the surfaces' list cards); `subtle` (tinted: Home's updates) | Yes |
 | `LeadCard` | the figure cards | figure + against + bar + notes + chart | Yes (details.tsx) |
 | `StatusBlock` | the status card, written out 3 times (pipelines, LNG, oil terminals) | with measured claim, unverified, custom empty text | Yes (details.tsx) |
 | `FactRows` / `Row` | `.facts`, `.key-facts` | with aside | Yes (`Row`) |
@@ -156,6 +156,6 @@ Proposed home: `src/ui/` for the components, one file each, with their CSS in `s
    cards on the ring; figures out of mono.
 2. Done 2026-11-05. `.t-*` classes in `src/styles/text.css`; the title, figure, small and note classes take
    their type from there.
-3. Components, most repeated first: `StatusBlock` (done), bars (done), `Card`, `Tag`/`Chip`, `Button`,
+3. Components, most repeated first: `StatusBlock` (done), bars (done), `Card` (done), `Tag`/`Chip`, `Button`,
    `SectionTitle`, `Note`.
 4. Split `base.css` and `details.tsx` along the component lines.

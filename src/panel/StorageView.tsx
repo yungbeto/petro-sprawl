@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { cardClass } from '../ui/Card';
 import type { Selection } from '../app/urlState';
 import { STATCAN_STORAGE, STORAGE_NOT_COVERED, STORAGE_SOURCES, JODI_GAS, type StorageSourceId } from '../lib/config';
 import type { Datasets } from '../lib/data';
@@ -85,7 +86,7 @@ function StorageItem({ row, onSelect }: { row: StorageRow; onSelect: (selection:
   const figure = storageFigure(row);
   const flag = flagEmoji(row.country);
   return (
-    <button type="button" className="view-row stat-card" onClick={() => onSelect(row.selection)}>
+    <button type="button" className={cardClass({ interactive: true, className: 'view-row stat-card' })} onClick={() => onSelect(row.selection)}>
       <span className="stat-card__head">
         <span className="stat-card__name">
           {flag && <span aria-hidden="true">{flag} </span>}
