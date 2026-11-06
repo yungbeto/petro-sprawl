@@ -3,8 +3,24 @@
     "file": "favicons/aa.com.tr.ico",
     "checkedAt": "2026-11-06"
   },
+  "akipress.com": {
+    "file": "favicons/akipress.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "anews.com.tr": {
+    "file": "favicons/anews.com.tr.png",
+    "checkedAt": "2026-11-06"
+  },
+  "asiatimes.com": {
+    "file": "favicons/asiatimes.com.png",
+    "checkedAt": "2026-11-06"
+  },
   "bairdmaritime.com": {
     "file": "favicons/bairdmaritime.com.ico",
+    "checkedAt": "2026-11-06"
+  },
+  "bloomberg.com": {
+    "file": "favicons/bloomberg.com.ico",
     "checkedAt": "2026-11-06"
   },
   "bolnews.com": {
@@ -23,8 +39,20 @@
     "file": null,
     "checkedAt": "2026-11-06"
   },
+  "chosun.com": {
+    "file": "favicons/chosun.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "commodity-board.com": {
+    "file": "favicons/commodity-board.com.ico",
+    "checkedAt": "2026-11-06"
+  },
   "constructionreviewonline.com": {
     "file": "favicons/constructionreviewonline.com.jpg",
+    "checkedAt": "2026-11-06"
+  },
+  "ddnews.gov.in": {
+    "file": "favicons/ddnews.gov.in.png",
     "checkedAt": "2026-11-06"
   },
   "donga.com": {
@@ -33,6 +61,10 @@
   },
   "en.mehrnews.com": {
     "file": "favicons/en.mehrnews.com.ico",
+    "checkedAt": "2026-11-06"
+  },
+  "en.yenisafak.com": {
+    "file": "favicons/en.yenisafak.com.ico",
     "checkedAt": "2026-11-06"
   },
   "energyandcleanair.org": {
@@ -55,8 +87,24 @@
     "file": null,
     "checkedAt": "2026-11-06"
   },
+  "euronews.com": {
+    "file": "favicons/euronews.com.png",
+    "checkedAt": "2026-11-06"
+  },
   "factcheck.afp.com": {
     "file": "favicons/factcheck.afp.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "finance.biggo.com": {
+    "file": "favicons/finance.biggo.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "fxempire.com": {
+    "file": "favicons/fxempire.com.ico",
+    "checkedAt": "2026-11-06"
+  },
+  "gulfnews.com": {
+    "file": "favicons/gulfnews.com.png",
     "checkedAt": "2026-11-06"
   },
   "houseofsaud.com": {
@@ -75,7 +123,19 @@
     "file": "favicons/ieu-monitoring.com.png",
     "checkedAt": "2026-11-06"
   },
+  "intellinews.com": {
+    "file": null,
+    "checkedAt": "2026-11-06"
+  },
   "investing.com": {
+    "file": null,
+    "checkedAt": "2026-11-06"
+  },
+  "iranwire.com": {
+    "file": null,
+    "checkedAt": "2026-11-06"
+  },
+  "iraqinews.com": {
     "file": null,
     "checkedAt": "2026-11-06"
   },
@@ -99,6 +159,10 @@
     "file": "favicons/lloydslist.com.png",
     "checkedAt": "2026-11-06"
   },
+  "maritime-executive.com": {
+    "file": "favicons/maritime-executive.com.png",
+    "checkedAt": "2026-11-06"
+  },
   "maritimegateway.com": {
     "file": null,
     "checkedAt": "2026-11-06"
@@ -117,6 +181,62 @@
   },
   "mezha.net": {
     "file": "favicons/mezha.net.ico",
+    "checkedAt": "2026-11-06"
+  },
+  "middleeasteye.net": {
+    "file": "favicons/middleeasteye.net.png",
+    "checkedAt": "2026-11-06"
+  },
+  "mlex.com": {
+    "file": null,
+    "checkedAt": "2026-11-06"
+  },
+  "moderndiplomacy.eu": {
+    "file": "favicons/moderndiplomacy.eu.png",
+    "checkedAt": "2026-11-06"
+  },
+  "money.rediff.com": {
+    "file": "favicons/money.rediff.com.ico",
+    "checkedAt": "2026-11-06"
+  },
+  "montelnews.com": {
+    "file": "favicons/montelnews.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "nationthailand.com": {
+    "file": "favicons/nationthailand.com.png",
+    "checkedAt": "2026-11-06"
+  },
+  "news.az": {
+    "file": null,
+    "checkedAt": "2026-11-06"
+  },
+  "news.laodong.vn": {
+    "file": null,
+    "checkedAt": "2026-11-06"
+  },
+  "news.liga.net": {
+    "file": null,
+    "checkedAt": "2026-11-06"
+  },
+  "orfme.org": {
+    "file": "favicons/orfme.org.png",
+    "checkedAt": "2026-11-06"
+  },
+  "pgjonline.com": {
+    "file": "favicons/pgjonline.com.ico",
+    "checkedAt": "2026-11-06"
+  },
+  "radar.am": {
+    "file": "favicons/radar.am.png",
+    "checkedAt": "2026-11-06"
+  },
+  "reuters.com": {
+    "file": "favicons/reuters.com.ico",
+    "checkedAt": "2026-11-06"
+  },
+  "scmp.com": {
+    "file": "favicons/scmp.com.png",
     "checkedAt": "2026-11-06"
   }
 }

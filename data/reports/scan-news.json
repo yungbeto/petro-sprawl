@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-11-06T01:41:56.673Z",
+  "recordedAt": "2026-11-06T11:09:54.323Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
@@ -7,15 +7,15 @@
       "failed": 13,
       "articles": 0,
       "errors": [
+        "fetch failed",
         "answered 429",
-        "answered 429",
-        "fetch failed"
+        "answered 429"
       ]
     },
     "google-news": {
       "requests": 13,
       "failed": 0,
-      "articles": 312,
+      "articles": 300,
       "errors": []
     }
   },
@@ -24,46 +24,63 @@
     "lastOk": "2026-11-06"
   },
   "stories": 16,
-  "candidates": 3,
+  "candidates": 4,
   "usage": {
-    "input": 19622,
-    "output": 1393,
-    "searches": 1
+    "input": 46774,
+    "output": 2558,
+    "searches": 2
   },
-  "estimatedCostUsd": 0.013,
+  "estimatedCostUsd": 0.026,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "committed",
+      "outcome": "unreadable",
+      "detail": "page answered 403",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.nationthailand.com/news/world/40073163",
-        "publisher": "Nation Thailand",
-        "quote": "Iran's Revolutionary Guards reported that three tankers were damaged in the Strait of Hormuz on November 5.",
+        "url": "https://www.newsnationnow.com/world/oil-tankers-mines-strait-of-hormuz/",
+        "publisher": "NewsNation",
+        "quote": "Two oil tankers caught fire after being hit by mines while attempting unauthorized transport through the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": ""
       },
       "headlines": [
-        "- 2026-11-06 · Nation Thailand: Iran reports three tankers damaged in Hormuz on November 5",
-        "- 2026-11-06 · UA.NEWS: Iran says it neutralized two US drones over Qeshm — Anadolu Agency",
-        "- 2026-11-06 · 동아일보: Seoul treads carefully on Hormuz deployment",
-        "- 2026-11-05 · upi: South Korea plans to expand naval mission toward Strait of Hormuz",
-        "- 2026-11-05 · Riviera Maritime Media: Hormuz disruption could reshape global LNG trade and shipping patterns through 2031",
-        "- 2026-11-05 · Realnews Magazine: From the Strait of Hormuz to the Strait of Midterm, Trump Pays Heavy Price",
-        "- 2026-11-05 · Breakingthenews.net: Iran claims it downed US drone over Qeshm Island"
+        "- 2026-11-06 · Al Jazeera: Why is Iran exempting India, China, Qatar, Iraq from Hormuz restrictions?",
+        "- 2026-11-06 · IranWire: Oil Pollution Returns to Coasts of Qeshm and Hormuz Islands",
+        "- 2026-11-06 · South China Morning Post: Strait of Hormuz: Chinese ships get free pass, Iranian official says",
+        "- 2026-11-06 · Bloomberg.com: India’s HPCL Says Booking Tankers for Hormuz Still Complicated",
+        "- 2026-11-06 · Asia Times: Iran’s Hormuz toll regime to punish weakened Trump’s Asian allies",
+        "- 2026-11-06 · NewsNation: Two oil tankers struck by mines in Strait of Hormuz",
+        "- 2026-11-06 · The Maritime Executive: South Korea Plans to Deploy Naval Assets Closer to Hormuz",
+        "- 2026-11-06 · Modern Diplomacy: Is the Strait of Hormuz Really Safe After the Iran War?",
+        "- 2026-11-06 · Middle East Eye: IRGC says two oil tankers ablaze after collision with mines in Hormuz Strait",
+        "- 2026-11-06 · Informed Comment: Yes, Laura Loomer, Americans Should be learning Arabic amid Hormuz Crisis",
+        "- 2026-11-06 · Reuters: China's Q3 emissions post biggest drop since pandemic as Hormuz crisis curbs fossil fuel use",
+        "- 2026-11-06 · The SOFX Report: Iran Claims Sea Mines Hit Five Tankers Near Strait of Hormuz Following US Midterms",
+        "- 2026-11-06 · تسنیم: Two Tankers Hit Mines in Strait of Hormuz: IRGC",
+        "- 2026-11-06 · شفق نيوز: Shafaq News..IRGC reports two more tankers ablaze in Hormuz",
+        "- 2026-11-06 · Euronews: Hormuz standoff ‘not sustainable’, senior Iranian MP tells Euronews"
       ]
     },
     {
-      "ref": "pipeline/nord-stream-1",
+      "ref": "chokepoint/babelm",
+      "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-06 · Gulf News: Bab al-Mandab ship traffic shows signs of recovery: report"
+      ]
+    },
+    {
+      "ref": "pipeline/nord-stream-2",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-03 · Modern Ghana: Nord Stream may have been lawful target, argue lawyers for Ukrainian accused of bombing"
+        "- 2026-11-05 · MLex: Nord Stream 2 loses final EU court appeal over gas pipeline exemptions"
       ]
     },
     {
@@ -72,7 +89,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-05 · The Peninsula Qatar: Kazakhstan plans increased oil exports via Baku-Tbilisi-Ceyhan pipeline"
+        "- 2026-11-06 · AKIpress News Agency: Kazakhstan aims to export 2.2 mln tons of oil via Baku-Tbilisi-Ceyhan pipeline in 2027"
       ]
     }
   ]
