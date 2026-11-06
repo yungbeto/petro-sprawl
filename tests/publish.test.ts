@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
-import { eachWithFallback, failureMeta, publishDataset, validateRecords } from '../jobs/lib/output';
+import { eachWithFallback, failureMeta, publishDataset, stalestFirst, validateRecords } from '../jobs/lib/output';
 import { addDays, dailyResponseSchema, dataThrough, dateWindows, toTransitSeries } from '../jobs/lib/portwatch';
 
 const schema = z.object({ id: z.string(), value: z.number() });
@@ -250,6 +250,38 @@ describe('eachWithFallback', () => {
 
   it('throws when nothing could be fetched, so the whole previous file stays', async () => {
     await expect(eachWithFallback(['a', 'b'], { name, fetch: () => Promise.reject(new Error('down')), previous })).rejects.toThrow('down');
+  });
+
+  it('fetches the stalest first, keeps records in item order and records each success', async () => {
+    const order: string[] = [];
+    const fetch = async (item: string) => {
+      order.push(item);
+      if (item === 'b') throw new Error('down');
+      return [`new ${item}`];
+    };
+    const lastFetched = { a: '2026-11-05T20:00:00.000Z', b: '2026-11-01T00:00:00.000Z' };
+    const result = await eachWithFallback(['a', 'b', 'c'], { name, fetch, previous, lastFetched, now: clock('2026-11-06T00:00:00.000Z') });
+    // c was never fetched, b is older than a; b is tried again after the rest.
+    expect(order).toEqual(['c', 'b', 'a', 'b']);
+    expect(result.records).toEqual(['new a', 'old b', 'new c']);
+    expect(result.lastFetched).toEqual({ a: '2026-11-06T00:00:00.000Z', b: '2026-11-01T00:00:00.000Z', c: '2026-11-06T00:00:00.000Z' });
+  });
+
+  it('names failures in item order, whatever order they were fetched in', async () => {
+    const fetch = async (item: string) => (item === 'c' ? [`new ${item}`] : Promise.reject(new Error('down')));
+    const { warning } = await eachWithFallback(['a', 'b', 'c'], { name, fetch, previous, lastFetched: { a: '2026-11-05', b: '2026-11-01' } });
+    expect(warning).toBe('2 of 3 failed. a (missing): down; b (previous kept): down');
+  });
+});
+
+describe('stalestFirst', () => {
+  it('puts never fetched items first, then the oldest, and keeps ties in order', () => {
+    const lastFetched = { a: '2026-11-05T00:00:00Z', b: '2026-11-03T00:00:00Z', d: '2026-11-05T00:00:00Z' };
+    expect(stalestFirst(['a', 'b', 'c', 'd', 'e'], (x) => x, lastFetched)).toEqual(['c', 'e', 'b', 'a', 'd']);
+  });
+
+  it('keeps the given order with no state', () => {
+    expect(stalestFirst(['x', 'y', 'z'], (x) => x, {})).toEqual(['x', 'y', 'z']);
   });
 });
 

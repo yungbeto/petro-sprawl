@@ -44,33 +44,75 @@ export async function readPublished<T>(id: string, dataDir = DATA_DIR): Promise<
   return (await readJson<T[]>(join(dataDir, `${id}.json`))) ?? [];
 }
 
+/** When each item was last fetched, by name (ISO time). Kept between runs so the stalest go first. */
+export type LastFetched = Record<string, string>;
+
+/**
+ * Items in the order to fetch them: never fetched first, then the oldest success. Ties keep their order.
+ * A job that runs out of time before its last items then reaches them on the next run, instead of the
+ * same items starving every time.
+ */
+export function stalestFirst<I>(items: readonly I[], name: (item: I) => string, lastFetched: LastFetched): I[] {
+  const at = (item: I) => lastFetched[name(item)] ?? '';
+  return [...items].sort((a, b) => (at(a) < at(b) ? -1 : at(a) > at(b) ? 1 : 0));
+}
+
 /**
  * Fetches each item in turn, tries the failures once more after the rest, and for any still failing
  * keeps that item's records from the previous file. Throws when no item could be fetched, so the
  * whole previous file stays. The warning names what was carried over (or is missing).
+ * With `lastFetched`, items are fetched stalest first and the returned `lastFetched` has the time of
+ * each success; records stay in the order of `items` either way.
  */
 export async function eachWithFallback<I, R>(
   items: readonly I[],
-  { name, fetch, previous }: { name: (item: I) => string; fetch: (item: I) => Promise<R[]>; previous: (item: I) => R[] },
-): Promise<{ records: R[]; warning?: string }> {
+  {
+    name,
+    fetch,
+    previous,
+    lastFetched = {},
+    now = () => new Date(),
+  }: {
+    name: (item: I) => string;
+    fetch: (item: I) => Promise<R[]>;
+    previous: (item: I) => R[];
+    lastFetched?: LastFetched;
+    now?: () => Date;
+  },
+): Promise<{ records: R[]; warning?: string; lastFetched: LastFetched }> {
   const results = new Map<I, R[]>();
   const errors = new Map<I, string>();
+  const fetchedAt: LastFetched = { ...lastFetched };
   const attempt = async (item: I) => {
     try {
       results.set(item, await fetch(item));
       errors.delete(item);
+      fetchedAt[name(item)] = now().toISOString();
     } catch (err) {
       errors.set(item, err instanceof Error ? err.message : String(err));
     }
   };
-  for (const item of items) await attempt(item);
+  for (const item of stalestFirst(items, name, lastFetched)) await attempt(item);
   for (const item of [...errors.keys()]) await attempt(item);
   if (results.size === 0) throw new Error([...errors.values()][0] ?? 'nothing to fetch');
 
   const records = items.flatMap((item) => results.get(item) ?? previous(item));
-  if (errors.size === 0) return { records };
-  const failed = [...errors].map(([item, error]) => `${name(item)}${previous(item).length ? ' (previous kept)' : ' (missing)'}: ${error}`);
-  return { records, warning: `${errors.size} of ${items.length} failed. ${failed.join('; ')}` };
+  if (errors.size === 0) return { records, lastFetched: fetchedAt };
+  const failed = items
+    .filter((item) => errors.has(item))
+    .map((item) => `${name(item)}${previous(item).length ? ' (previous kept)' : ' (missing)'}: ${errors.get(item)}`);
+  return { records, warning: `${errors.size} of ${items.length} failed. ${failed.join('; ')}`, lastFetched: fetchedAt };
+}
+
+/** A small state file in data/reports/ (not published), or `fallback` when it's missing or unreadable. */
+export async function readState<T>(path: string, fallback: T): Promise<T> {
+  return (await readJson<T>(path)) ?? fallback;
+}
+
+export async function writeState(path: string, value: unknown): Promise<void> {
+  await mkdir(dirname(path), { recursive: true });
+  await writeFile(`${path}.tmp`, `${JSON.stringify(value, null, 2)}\n`);
+  await rename(`${path}.tmp`, path);
 }
 
 /**

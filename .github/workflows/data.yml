@@ -19,8 +19,8 @@ concurrency:
 jobs:
   fetch:
     runs-on: ubuntu-latest
-    # PortWatch alone takes about 7 minutes since its service slowed in October 2026.
-    timeout-minutes: 40
+    # PortWatch runs in its own workflow (portwatch.yml).
+    timeout-minutes: 20
     env:
       AGSI_API_KEY: ${{ secrets.AGSI_API_KEY }}
       EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
@@ -37,13 +37,6 @@ jobs:
           cache: npm
 
       - run: npm ci
-
-      - name: PortWatch chokepoint transits
-        id: portwatch
-        continue-on-error: true
-        # Its own cap, so a stuck PortWatch fails alone and the other fetches still run.
-        timeout-minutes: 20
-        run: npm run fetch:portwatch
 
       - name: ENTSOG gas flows
         id: entsog
@@ -102,7 +95,7 @@ jobs:
           fi
 
       - name: Fail if any fetch failed
-        if: steps.portwatch.outcome == 'failure' || steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure' || steps.alsi.outcome == 'failure' || steps.eia.outcome == 'failure' || steps.storage.outcome == 'failure' || steps.crude.outcome == 'failure'
+        if: steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure' || steps.alsi.outcome == 'failure' || steps.eia.outcome == 'failure' || steps.storage.outcome == 'failure' || steps.crude.outcome == 'failure'
         run: |
           echo "::error::One or more fetch jobs failed; previous data was kept. See the step logs above."
           exit 1
