@@ -34,6 +34,7 @@
     "build:curated": "tsx jobs/build-curated.ts",
     "refresh:claims": "tsx --env-file-if-exists=.env jobs/refresh-claims.ts",
     "apply:claim-drafts": "tsx jobs/apply-claim-drafts.ts",
+    "check:eia-refineries": "tsx jobs/check-eia-refineries.ts",
     "scan:news": "tsx --env-file-if-exists=.env jobs/scan-news.ts",
     "apply:disruption-drafts": "tsx jobs/apply-disruption-drafts.ts",
     "merge:review-drafts": "tsx jobs/merge-review-drafts.ts",

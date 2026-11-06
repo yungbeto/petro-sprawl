@@ -1,0 +1,45 @@
+name: EIA refinery release
+
+# Weekly check for EIA's yearly Refinery Capacity Report (released each June, capacity as of 1 January). When
+# EIA links a newer year than the US refineries were imported from, it opens one issue; the import stays manual
+# (npm run import:refineries-us, then build:curated). No data is committed.
+
+on:
+  schedule:
+    - cron: '17 7 * * 3'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - id: check
+        run: npm run check:eia-refineries
+      - name: Open an issue, once per release
+        if: steps.check.outputs.newer
+        env:
+          YEAR: ${{ steps.check.outputs.newer }}
+        run: |
+          title="EIA's ${YEAR} Refinery Capacity Report is out"
+          if [ -n "$(gh issue list --state all --search "in:title \"${title}\"" --json number --jq '.[].number')" ]; then
+            echo "already opened: ${title}"; exit 0
+          fi
+          gh issue create --title "${title}" --body "EIA's page (https://www.eia.gov/petroleum/refinerycapacity/) links the ${YEAR} report, newer than the one in \`data/derived/meta/refineries-us.json\`.
+
+          1. Download the year's individual refinery spreadsheet to \`data/raw/eia/\`.
+          2. Point \`SOURCE\`, \`SHEET\` and \`AS_OF\` in \`jobs/import-refineries-us.py\` at it.
+          3. \`npm run import:refineries-us\`, then \`npm run build:curated\`; check \`data/reports/import-refineries-us*.json\` for refineries left unplaced.
+          4. Update the dates the refinery pages name (\`REFINERIES.eiaTitle\`, the list's 1 January)."
