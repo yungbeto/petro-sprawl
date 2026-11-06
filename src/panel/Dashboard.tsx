@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { PartsBar, type BarSize, type BarTone } from '../ui/Bar';
 import { FEATURES } from '../lib/config';
 import { formatIndexShare, formatSignedPct, formatThousandfold } from '../lib/format';
 import type { ViewId } from '../lib/views';
@@ -178,19 +179,20 @@ const GROUP_CLASS: Record<StatusGroupId, string> = {
 };
 
 /** Share of pipelines in each status group; the stopped group carries the tile's number. */
-export function StatusBar({ groups }: { groups: ReturnType<typeof statusGroups> }) {
-  const shown = groups.filter((g) => g.count > 0);
+export function StatusBar({ groups, size = 'lg' }: { groups: ReturnType<typeof statusGroups>; size?: BarSize }) {
   return (
-    <span className="status-bar">
-      {shown.map((g) => (
-        <span
-          key={g.id}
-          className={`status-bar__part status-bar__part--${GROUP_CLASS[g.id]}${g.id === 'unbuilt' ? ' status-bar__part--faint' : ''}`}
-          style={{ flexGrow: g.count, minWidth: 3 }}
-          title={`${g.label}: ${g.count.toLocaleString('en-US')}`}
-        />
-      ))}
-    </span>
+    <PartsBar
+      size={size}
+      parts={groups
+        .filter((g) => g.count > 0)
+        .map((g) => ({
+          key: g.id,
+          value: g.count,
+          tone: GROUP_CLASS[g.id] as BarTone,
+          faint: g.id === 'unbuilt',
+          title: `${g.label}: ${g.count.toLocaleString('en-US')}`,
+        }))}
+    />
   );
 }
 

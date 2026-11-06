@@ -7,6 +7,7 @@ import { flagEmoji, formatCountry, formatNumber, formatSignedPct } from '../lib/
 import { median, storageRows, type StorageRow } from '../lib/summary';
 import { SourceLink } from './details';
 import { Info } from './Info';
+import { MeterBar } from '../ui/Bar';
 
 export const CADENCE_LABEL: Record<Cadence, string> = { daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly' };
 
@@ -138,24 +139,23 @@ function StorageItem({ row, onSelect }: { row: StorageRow; onSelect: (selection:
 
 /** Fill as a bar from empty to full, with a tick where it stood on the same date last year, named on hover. */
 function FillBar({ fill, lastYear, label }: { fill: number; lastYear: { date: string; value: number } | null; label: string }) {
-  const clamp = (v: number) => Math.max(0, Math.min(100, v));
-  const year = lastYear && clamp(lastYear.value);
   return (
-    <span
-      className="fill-bar"
-      role="img"
-      aria-label={`${label}: ${formatNumber(fill, 1)}% full${lastYear ? `, ${formatNumber(lastYear.value, 1)}% a year ago` : ''}`}
-    >
-      <span className="fill-bar__fill" style={{ width: `${clamp(fill)}%` }} />
-      {lastYear && year !== null && (
-        <span className="fill-bar__tick" style={{ left: `${year}%` }}>
-          {/* Slid along by the tick's own position, so it never runs past either end of the bar. */}
-          <span className="fill-bar__tip" style={{ translate: `-${year}% 0` }} aria-hidden="true">
-            {formatNumber(lastYear.value, 1)}% a year ago <span className="fill-bar__tip-date mono">{lastYear.date}</span>
-          </span>
-        </span>
-      )}
-    </span>
+    <MeterBar
+      value={fill / 100}
+      label={`${label}: ${formatNumber(fill, 1)}% full${lastYear ? `, ${formatNumber(lastYear.value, 1)}% a year ago` : ''}`}
+      tick={
+        lastYear
+          ? {
+              value: lastYear.value / 100,
+              tip: (
+                <>
+                  {formatNumber(lastYear.value, 1)}% a year ago <span className="bar__tip-detail mono">{lastYear.date}</span>
+                </>
+              ),
+            }
+          : undefined
+      }
+    />
   );
 }
 

@@ -786,32 +786,6 @@ kbd {
   margin-top: 0;
 }
 
-/* Parts of a total in one bar: LNG capacity operating, then building or proposed (an outline, not yet built). */
-.part-bar {
-  display: flex;
-  gap: var(--space-half);
-  height: 8px;
-}
-
-.part-bar__part {
-  min-width: 2px;
-  border-radius: var(--radius-sm);
-}
-
-.part-bar__part--operating {
-  background: var(--flow-near);
-}
-
-.part-bar__part--planned {
-  background: var(--surface-sunken);
-  box-shadow: inset 0 0 0 1px var(--border-strong);
-}
-
-.lead-card .fill-bar {
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-
 /* The figures under the status, label beside value: they never wrap mid-unit, whatever the panel's width. */
 .key-facts {
   border-block: 1px solid var(--border);
@@ -2354,29 +2328,6 @@ a:hover {
   stroke: var(--flow-above);
 }
 
-.status-bar {
-  display: flex;
-  gap: var(--space-half);
-  height: 8px;
-}
-
-.status-bar__part {
-  border-radius: var(--radius-sm);
-  background: var(--status-unknown);
-}
-
-.status-bar__part--operating {
-  background: var(--status-operating);
-}
-
-.status-bar__part--offline {
-  background: var(--status-offline);
-}
-
-.status-bar__part--faint {
-  opacity: 0.4;
-}
-
 .gap-strip {
   display: block;
   max-width: 100%;
@@ -2487,27 +2438,6 @@ a:hover {
 
 .origins__bar {
   display: block;
-  height: 4px;
-  background: var(--surface-sunken);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-
-.origins__fill {
-  display: block;
-  height: 100%;
-  border-radius: var(--radius-sm);
-  background: var(--border-strong);
-}
-
-/* The same two tones as the map's arcs. */
-.origins__fill--country {
-  background: var(--map-selection);
-}
-
-.origins__fill--region,
-.origins__fill--ethanol {
-  background: var(--text-muted);
 }
 
 /* The region view's fuel switch: the map chips, flat, wrapping in the panel. */
@@ -2738,46 +2668,6 @@ a:hover {
   white-space: normal;
 }
 
-/* A basin's oil as assessed in 2000: produced, remaining, undiscovered, darkest for the card's figure. */
-.oil-bar {
-  position: relative;
-  display: flex;
-  gap: var(--space-half);
-  height: 8px;
-}
-
-.oil-bar__slot {
-  display: flex;
-  min-width: 2px;
-}
-
-.oil-bar__part {
-  flex: 1;
-}
-
-.oil-bar__part--produced {
-  background: color-mix(in srgb, var(--flow-near) 40%, var(--surface-sunken));
-}
-
-.oil-bar__part--remaining {
-  background: var(--flow-near);
-}
-
-.oil-bar__part--undiscovered {
-  background: var(--surface-sunken);
-  /* Not yet found: an outline, not a fill. */
-  box-shadow: inset 0 0 0 1px var(--border-strong);
-}
-
-/* Placed against the whole bar, not its part, so it can be kept inside the card. */
-.oil-bar__tip {
-  bottom: calc(100% + 8px);
-}
-
-.oil-bar__slot:hover .oil-bar__tip {
-  opacity: 1;
-}
-
 .oil-key {
   display: flex;
   flex-wrap: wrap;
@@ -2793,11 +2683,6 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.oil-key__swatch {
-  width: 12px;
-  height: 8px;
 }
 
 /* A chokepoint card (a .stat-card): the name with its band to the right, both muted to the name's
@@ -2952,10 +2837,6 @@ a:hover {
   grid-area: bar;
 }
 
-.group-row__bar .status-bar {
-  height: 4px;
-}
-
 .group-list__item .view-list {
   margin-left: 22px;
 }
@@ -2980,65 +2861,6 @@ a:hover {
 .view-headline {
   margin-top: var(--space-1);
   font-variant-numeric: tabular-nums;
-}
-
-.fill-bar {
-  position: relative;
-  display: block;
-  height: 8px;
-  background: var(--surface-sunken);
-}
-
-.fill-bar__fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  /* Neutral: the map's colours say against last year, not how full. */
-  background: var(--flow-near);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-}
-
-.fill-bar__tick {
-  position: absolute;
-  top: -4px;
-  bottom: -4px;
-  width: 2px;
-  margin-left: -1px;
-  background: var(--text);
-  border-radius: 1px;
-}
-
-/* A wider target than the 2px tick, for the hover. */
-.fill-bar__tick::before {
-  content: '';
-  position: absolute;
-  inset: -4px -6px;
-}
-
-.fill-bar__tip {
-  position: absolute;
-  bottom: calc(100% + 6px);
-  left: 0;
-  z-index: var(--z-tooltip);
-  padding: 4px 8px;
-  font-size: var(--text-sm);
-  font-weight: 500;
-  white-space: nowrap;
-  color: var(--surface);
-  background: var(--text);
-  border-radius: var(--radius);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity var(--duration-fast) var(--ease-out);
-}
-
-.fill-bar__tip-date {
-  margin-left: 4px;
-  font-weight: 400;
-  opacity: 0.7;
-}
-
-.fill-bar__tick:hover .fill-bar__tip {
-  opacity: 1;
 }
 
 /* Phones: the More tab's list, one row per section. */
@@ -3113,17 +2935,6 @@ a:hover {
 
 .origin-tops__bar {
   display: block;
-  height: 6px;
-  background: var(--surface-sunken);
-  border-radius: var(--radius-sm);
-}
-
-/* Scaled to the card's largest share, so the bars compare the rows rather than all read as slivers. */
-.origin-tops__bar > span {
-  display: block;
-  height: 100%;
-  background: var(--text-muted);
-  border-radius: var(--radius-sm);
 }
 
 .origin-tops__share {

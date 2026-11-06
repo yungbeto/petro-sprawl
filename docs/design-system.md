@@ -5,7 +5,8 @@ the tokens, the text styles and the components, and the rules for using them. Th
 the end. Sentence case, no uppercase eyebrows, no em dashes, as everywhere in the app.
 
 Status (2026-11-05): tokens are done (`src/styles/tokens.css`, used throughout `base.css`); text styles are
-done (`src/styles/text.css`); of the shared components, `StatusBlock` is built and the rest are proposed.
+done (`src/styles/text.css`); of the shared components, `StatusBlock` and the bars (`MeterBar`, `PartsBar`) are built and the rest are
+proposed.
 
 ## Principles
 
@@ -93,7 +94,7 @@ component; the rest are class patterns repeated by hand.
 | `LeadCard` | the figure cards | figure + against + bar + notes + chart | Yes (details.tsx) |
 | `StatusBlock` | the status card, written out 3 times (pipelines, LNG, oil terminals) | with measured claim, unverified, custom empty text | Yes (details.tsx) |
 | `FactRows` / `Row` | `.facts`, `.key-facts` | with aside | Yes (`Row`) |
-| `Bar` | `.fill-bar`, `.oil-bar`, `.part-bar`, the origins and group bars, `FillBar` | one value; parts; with tick | Partly (`FillBar`, `OilBar`) |
+| `MeterBar`, `PartsBar` (`src/ui/Bar.tsx`) | `.fill-bar`, `.oil-bar`, `.part-bar`, `.status-bar`, the origins and top-origins bars | one value with an optional tick; parts with tips or titles; sizes sm 4px, md 6px, lg 8px; tones below | Yes |
 | `Status` | `.status status--*` | dot + label | No (class only) |
 | `Band` | `.band` | below, near, above | Yes |
 | `Tag` | `.tag`, `.disruption__cause` | neutral | No |
@@ -103,6 +104,10 @@ component; the rest are class patterns repeated by hand.
 | `SectionTitle` | `.section__title`, `.title-row` + `Info` | with count, with info, with a control | No |
 | `Sparkline` | the 90-day and 12-month charts | references, band tone | Yes |
 | `Note` | `.source`, `.note`, `.report__unreviewed`, `.disruption__note` | source, unreviewed | No |
+
+Bar tones (`BarTone`): `neutral` (how full, how much: the default), `soft` (what's spent: produced oil),
+`outline` (not there yet: planned, undiscovered), `strong` and `muted` (lesser rows), `ink` (countries, as on
+the map's arcs), and `operating`, `offline`, `unknown` for status mixes only.
 
 Proposed home: `src/ui/` for the components, one file each, with their CSS in `src/styles/components/`.
 `base.css` (4,053 lines) keeps resets and layout; `details.tsx` (1,898 lines) keeps the pages.
@@ -151,6 +156,6 @@ Proposed home: `src/ui/` for the components, one file each, with their CSS in `s
    cards on the ring; figures out of mono.
 2. Done 2026-11-05. `.t-*` classes in `src/styles/text.css`; the title, figure, small and note classes take
    their type from there.
-3. Components, most repeated first: `StatusBlock` (done), `Bar`, `Card`, `Tag`/`Chip`, `Button`,
+3. Components, most repeated first: `StatusBlock` (done), bars (done), `Card`, `Tag`/`Chip`, `Button`,
    `SectionTitle`, `Note`.
 4. Split `base.css` and `details.tsx` along the component lines.

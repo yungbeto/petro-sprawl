@@ -64,6 +64,7 @@ import type { ChokepointExposure, OriginRow } from '../lib/oilOrigins';
 import { Info } from './Info';
 import { NewsList } from './NewsList';
 import { OilBar, OilKey } from './BasinsView';
+import { MeterBar, PartsBar, type BarTone } from '../ui/Bar';
 import { assetHeadlines } from '../lib/headlines';
 
 /** A region can open on a given fuel (M7); everything else ignores it. */
@@ -971,9 +972,7 @@ function FlowMeter({ label, flow, recentMean, capacity, chartLabel }: { label: s
       }
       bar={
         share !== null && (
-          <span className="fill-bar" role="img" aria-label={`Running at ${formatIndexShare(share)} of ${capacity}`}>
-            <span className="fill-bar__fill" style={{ width: `${Math.max(0, Math.min(100, share * 100))}%` }} />
-          </span>
+          <MeterBar value={share} label={`Running at ${formatIndexShare(share)} of ${capacity}`} />
         )
       }
       notes={
@@ -1260,14 +1259,13 @@ function LngCapacity({ item }: { item: LngTerminal }) {
       }
       bar={
         both && (
-          <span
-            className="part-bar"
-            role="img"
-            aria-label={`${formatNumber(operating, 1)} mtpa operating, ${formatNumber(planned, 1)} mtpa building or proposed`}
-          >
-            <span className="part-bar__part part-bar__part--operating" style={{ flexBasis: `${(operating / total) * 100}%` }} />
-            <span className="part-bar__part part-bar__part--planned" style={{ flexBasis: `${(planned / total) * 100}%` }} />
-          </span>
+          <PartsBar
+            label={`${formatNumber(operating, 1)} mtpa operating, ${formatNumber(planned, 1)} mtpa building or proposed`}
+            parts={[
+              { key: 'operating', value: operating, tone: 'neutral' },
+              { key: 'planned', value: planned, tone: 'outline' },
+            ]}
+          />
         )
       }
       notes={`${lngUnitsLine(item)} · GEM`}
@@ -1703,6 +1701,9 @@ function OnTheWay({ origins, data, onSelect }: { origins: { exposure: Chokepoint
   );
 }
 
+/** Origins bars in the map's arc tones: countries in ink, regions and ethanol muted, the rest quieter. */
+const ORIGIN_TONE: Record<string, BarTone | undefined> = { country: 'ink', region: 'muted', ethanol: 'muted', own: 'strong', other: 'strong' };
+
 /** Ranked origins with share bars. Another region's row opens that region on crude. */
 function OriginList({ rows, onRegion }: { rows: (Pick<OriginRow, 'key' | 'label' | 'share' | 'detail'> & { kind: string; padd?: string })[]; onRegion: (id: string) => void }) {
   return (
@@ -1714,8 +1715,8 @@ function OriginList({ rows, onRegion }: { rows: (Pick<OriginRow, 'key' | 'label'
               <span className="origins__label">{row.label}</span>
               <span className="origins__share num-inline">{formatShare(row.share)}</span>
             </span>
-            <span className="origins__bar" aria-hidden="true">
-              <span className={`origins__fill origins__fill--${row.kind}`} style={{ width: `${Math.max(row.share * 100, 0.5)}%` }} />
+            <span className="origins__bar">
+              <MeterBar value={row.share} tone={ORIGIN_TONE[row.kind] ?? 'neutral'} size="sm" minVisible={0.005} />
             </span>
             {row.detail && <span className="origins__detail">{row.detail}</span>}
           </>
@@ -1749,9 +1750,7 @@ function FuelUsedCard({ supplied, inflow }: { supplied: number; inflow: number }
       unit="million b/d"
       against={<>{pct}% from other regions or abroad</>}
       bar={
-        <span className="fill-bar" role="img" aria-label={`${pct}% came in from other regions or abroad`}>
-          <span className="fill-bar__fill" style={{ width: `${Math.max(0, Math.min(100, pct))}%` }} />
-        </span>
+        <MeterBar value={pct / 100} label={`${pct}% came in from other regions or abroad`} />
       }
       notes="EIA product supplied"
     />

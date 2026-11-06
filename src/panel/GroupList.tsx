@@ -97,7 +97,7 @@ export function GroupItem<T>({
         <span className="group-row__label">{label}</span>
         <span className="group-row__count">{items.length.toLocaleString('en-US')}</span>
         <span className="group-row__bar">
-          <StatusBar groups={status} />
+          <StatusBar groups={status} size="sm" />
         </span>
       </button>
       {open && (

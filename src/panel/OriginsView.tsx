@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { MeterBar } from '../ui/Bar';
 import { MagnifyingGlassIcon } from '@phosphor-icons/react';
 import type { Selection } from '../app/urlState';
 import { CRUDE_IMPORTS, REGION_FUEL_LABELS, type RegionFuel } from '../lib/config';
@@ -21,7 +22,8 @@ export interface OriginsViewProps {
 const TOP = 3;
 
 /** A share's bar, against the card's largest, so the top rows compare at a glance. */
-const barWidth = (share: number, top: number) => `${top > 0 ? Math.min(100, (share / top) * 100) : 0}%`;
+/** A row's bar, scaled to the card's largest share so the bars compare the rows. */
+const barShare = (share: number, top: number) => (top > 0 ? share / top : 0);
 const SOURCE_NAME = { eurostat: 'Eurostat', comtrade: 'UN Comtrade', eia: 'EIA' } as const;
 
 /**
@@ -61,8 +63,8 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
                     {rows.slice(0, TOP).map((row) => (
                       <span key={row.key} className="origin-tops__row">
                         <span className="origin-tops__label">{row.label}</span>
-                        <span className="origin-tops__bar" aria-hidden="true">
-                          <span style={{ width: barWidth(row.share, rows[0]!.share) }} />
+                        <span className="origin-tops__bar">
+                          <MeterBar value={barShare(row.share, rows[0]!.share)} tone="muted" size="md" />
                         </span>
                         <span className="origin-tops__share">{formatShare(row.share)}</span>
                       </span>
@@ -105,9 +107,9 @@ export function OriginsView({ data, fuel, onFuel, onFind, onSelect }: OriginsVie
                         {rows.slice(0, TOP).map((row) => (
                           <span key={row.key} className="origin-tops__row">
                             <span className="origin-tops__label">{row.label}</span>
-                            <span className="origin-tops__bar" aria-hidden="true">
-                              <span style={{ width: barWidth(row.share, rows[0]!.share) }} />
-                            </span>
+                            <span className="origin-tops__bar">
+                          <MeterBar value={barShare(row.share, rows[0]!.share)} tone="muted" size="md" />
+                        </span>
                             <span className="origin-tops__share">{formatShare(row.share)}</span>
                           </span>
                         ))}

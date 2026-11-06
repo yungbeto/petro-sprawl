@@ -1,0 +1,144 @@
+/* Bars (src/ui/Bar.tsx, docs/design-system.md): a track with one fill, or parts side by side. */
+
+.bar {
+  position: relative;
+  display: flex;
+  height: 8px;
+  background: var(--surface-sunken);
+  border-radius: var(--radius-sm);
+}
+
+.bar--sm {
+  height: 4px;
+}
+
+.bar--md {
+  height: 6px;
+}
+
+.bar--lg {
+  height: 8px;
+}
+
+.bar__fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+}
+
+/* Parts: no track, a hairline gap between them. */
+.bar--parts {
+  gap: var(--space-half);
+  background: none;
+}
+
+.bar__slot {
+  display: flex;
+  flex-basis: 0;
+  min-width: 2px;
+}
+
+.bar__part {
+  flex: 1;
+  border-radius: var(--radius-sm);
+}
+
+.bar__part--faint {
+  opacity: 0.4;
+}
+
+/* Tones. Neutral says how full or how much, never better or worse. */
+.bar__tone--neutral {
+  background: var(--flow-near);
+}
+
+.bar__tone--soft {
+  background: color-mix(in srgb, var(--flow-near) 40%, var(--surface-sunken));
+}
+
+.bar__tone--strong {
+  background: var(--border-strong);
+}
+
+.bar__tone--muted {
+  background: var(--text-muted);
+}
+
+.bar__tone--ink {
+  background: var(--map-selection);
+}
+
+/* Not there yet (planned, undiscovered): an outline, not a fill. */
+.bar__tone--outline {
+  background: var(--surface-sunken);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+.bar__tone--operating {
+  background: var(--status-operating);
+}
+
+.bar__tone--offline {
+  background: var(--status-offline);
+}
+
+.bar__tone--unknown {
+  background: var(--status-unknown);
+}
+
+/* A reference on a meter (last year), taller than the bar. */
+.bar__tick {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--text);
+  border-radius: 1px;
+}
+
+/* A wider target than the 2px tick, for the hover. */
+.bar__tick::before {
+  content: '';
+  position: absolute;
+  inset: -4px -6px;
+}
+
+.bar__tip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  z-index: var(--z-tooltip);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--surface);
+  background: var(--text);
+  border-radius: var(--radius);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+/* A part's tip is placed against the whole bar, so it can be kept inside the card. */
+.bar__tip--part {
+  bottom: calc(100% + 8px);
+}
+
+.bar__tip-detail {
+  margin-left: var(--space-1);
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.bar__tick:hover .bar__tip,
+.bar__slot:hover .bar__tip {
+  opacity: 1;
+}
+
+.bar-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 8px;
+  border-radius: var(--radius-sm);
+}

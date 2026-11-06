@@ -6,6 +6,7 @@ import { basinOilParts, basinsSummary, basinViewRows, type BasinOilPart } from '
 import type { Basin } from '../types';
 import { SourceLink } from './details';
 import { Info } from './Info';
+import { BarSwatch, PartsBar, type BarTone } from '../ui/Bar';
 
 /** The basins view: every mapped oil and gas province, the most oil remaining (as of 2000) first. */
 export function BasinsView({ data, onSelect }: { data: Datasets; onSelect: (selection: Selection) => void }) {
@@ -93,13 +94,16 @@ export function OilKey() {
     <ul className="oil-key" aria-label="Oil bar key">
       {(Object.keys(OIL_PART_KEY) as BasinOilPart[]).map((part) => (
         <li key={part}>
-          <span className={`oil-key__swatch oil-bar__part--${part}`} aria-hidden="true" />
+          <BarSwatch tone={OIL_PART_TONE[part]} />
           {OIL_PART_KEY[part]}
         </li>
       ))}
     </ul>
   );
 }
+
+/** Each part of a basin's oil in the bars' tones: produced faded, remaining full, undiscovered an outline. */
+const OIL_PART_TONE: Record<BasinOilPart, BarTone> = { produced: 'soft', remaining: 'neutral', undiscovered: 'outline' };
 
 /**
  * A basin's oil as assessed in 2000, produced, remaining and undiscovered, as one bar, each part named with
@@ -108,27 +112,19 @@ export function OilKey() {
 export function OilBar({ basin }: { basin: Basin }) {
   const parts = basinOilParts(basin);
   if (!parts) return <span className="stat-card__rule" aria-hidden="true" />;
-  let start = 0;
   return (
-    <span
-      className="oil-bar"
-      role="img"
-      aria-label={`Oil, as assessed in 2000: ${parts.map((p) => `${formatThousandfold(p.value)} billion barrels ${p.part}`).join(', ')}`}
-    >
-      {parts.map((p) => {
-        // The tip is centred on its part, slid along so it never runs past either end of the bar.
-        const centre = start + p.share / 2;
-        start += p.share;
-        if (p.share === 0) return null;
-        return (
-          <span key={p.part} className="oil-bar__slot" style={{ flexBasis: `${p.share}%` }}>
-            <span className={`oil-bar__part oil-bar__part--${p.part}`} />
-            <span className="fill-bar__tip oil-bar__tip" style={{ left: `${centre}%`, translate: `-${centre}% 0` }} aria-hidden="true">
-              {OIL_PART_LABEL[p.part]} <span className="fill-bar__tip-date">{formatThousandfold(p.value)} bn bbl</span>
-            </span>
-          </span>
-        );
-      })}
-    </span>
+    <PartsBar
+      label={`Oil, as assessed in 2000: ${parts.map((p) => `${formatThousandfold(p.value)} billion barrels ${p.part}`).join(', ')}`}
+      parts={parts.map((p) => ({
+        key: p.part,
+        value: p.value,
+        tone: OIL_PART_TONE[p.part],
+        tip: (
+          <>
+            {OIL_PART_LABEL[p.part]} <span className="bar__tip-detail">{formatThousandfold(p.value)} bn bbl</span>
+          </>
+        ),
+      }))}
+    />
   );
 }
