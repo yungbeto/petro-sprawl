@@ -1,7 +1,7 @@
 // A heading and what sits beside it (docs/design-system.md): a count, an ⓘ (children, usually one
 // <Info>), and an aside at the end of the row (a chart's band). The ⓘ sits beside the heading, not in it,
 // so the heading's name stays its text. Three levels: `page` (a page's own name), `section` (a card or
-// block on it) and `part` (a part of a country's page). Type in src/styles/text.css, the row in base.css.
+// block on it) and `part` (a part of a country's page). Type in src/styles/text.css, the row in pages/detail.css.
 
 import type { ReactNode } from 'react';
 

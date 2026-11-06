@@ -1,0 +1,578 @@
+/* The surfaces' lists: rows, list cards, grouped lists, fuel tabs. */
+
+/* Row icon: what kind of thing a row opens. Neutral; color is for status and flow. */
+.asset-icon {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: var(--text-muted);
+  background: var(--surface-sunken);
+  border-radius: 50%;
+}
+
+.asset-icon--large {
+  width: 40px;
+  height: 40px;
+  color: var(--text);
+}
+
+.change__text,
+.search-results__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.change:hover .asset-icon,
+.search-results__item[aria-selected='true'] .asset-icon {
+  color: var(--text);
+}
+
+.search-results__item[aria-selected='true'] .asset-icon {
+  background: var(--surface);
+}
+
+.search-clear {
+  flex-shrink: 0;
+}
+
+/* "Where is my oil from?": ranked origins with a share bar under each name. */
+.origins {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.origins__row {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: var(--space-2) 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.origins li:first-child .origins__row {
+  border-top: 0;
+}
+
+.origins__row--link {
+  cursor: pointer;
+}
+
+.origins__row--link:hover .origins__label {
+  text-decoration: underline;
+}
+
+.origins__head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.origins__label {
+  font-weight: 500;
+}
+
+.origins__share {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.origins__bar {
+  display: block;
+}
+
+/* The region view's fuel switch: the map chips, flat, wrapping in the panel. */
+/* Fuel tabs: one line under a rule, scrolling sideways when the labels don't fit. */
+.fuel-tabs {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  box-shadow: inset 0 -1px var(--border);
+}
+
+.fuel-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.fuel-tabs__tab {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0;
+  font-size: var(--text-ui);
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--text-muted);
+  background: none;
+  border: 0;
+  /* The selected tab's underline sits on the row's rule. */
+  box-shadow: inset 0 -2px transparent;
+  cursor: pointer;
+  transition-property: color, box-shadow;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.fuel-tabs__tab:hover {
+  color: var(--text);
+}
+
+.fuel-tabs__tab[aria-selected='true'] {
+  color: var(--text);
+  box-shadow: inset 0 -2px var(--text);
+}
+
+.fuel-tabs__tab:focus-visible {
+  outline-offset: -2px;
+}
+
+@media (forced-colors: active) {
+  .fuel-tabs__tab[aria-selected='true'] {
+    border-bottom: 2px solid Highlight;
+  }
+}
+
+.origins__detail {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.region__routes {
+  margin: 0;
+  padding-left: var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.region__routes li + li {
+  margin-top: var(--space-2);
+}
+
+/* A view's list: one row per item, each opening its detail. */
+.view-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.view-list > li + li {
+  border-top: 1px solid var(--border);
+}
+
+.view-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  /* Room for the hover fill without moving the text off the panel's edge. */
+  margin: 0 calc(-1 * var(--space-2));
+  width: calc(100% + 2 * var(--space-2));
+  padding: var(--space-3) var(--space-2);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+}
+
+.view-row:hover {
+  background: var(--surface-sunken);
+}
+
+.view-row__name {
+  font-weight: 500;
+}
+
+.view-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.mini-sparkline {
+  display: block;
+  width: 100%;
+  height: 36px;
+  overflow: visible;
+  color: var(--text);
+}
+
+.mini-sparkline__line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* The surfaces' lists (chokepoints, gas storage, basins, oil origins) as cards rather than ruled rows:
+   8px apart, each with a hairline outline drawn as a shadow, so the hover fill stays inside it. */
+.view-list--cards {
+  gap: var(--space-2);
+}
+
+.view-list--cards > li + li {
+  border-top: 0;
+}
+
+/* A list row that is a card: the card's padding and edge instead of the row's hover bleed. */
+.view-row.card {
+  gap: var(--space-2);
+  margin: 0;
+  width: 100%;
+}
+
+/* The figures behind the headline, as one line: values in the text color, the words muted. */
+.view-row__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.view-row__facts strong {
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* Each fact stays whole, and its separator trails it, so a wrapped line never starts with a dot. */
+.view-row__facts > span {
+  white-space: nowrap;
+}
+
+.view-row__facts > span:not(:last-child)::after {
+  content: '·';
+  padding: 0 6px;
+}
+
+/* A card led by one figure (gas storage, basins): the name over the figure, a bar or a rule, then the
+   facts and, in smaller type, the notes (period, source, countries). */
+.view-list--cards .stat-card {
+  gap: var(--space-4);
+}
+
+.stat-card__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.stat-card__name {
+  font-size: var(--text-md);
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--text);
+}
+
+.stat-card__figure {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+
+.stat-card__percent {
+  font-size: var(--text-lg);
+}
+
+.stat-card__unit {
+  font-size: var(--text-xs);
+  line-height: 16px;
+  color: var(--text-muted);
+}
+
+.stat-card__rule {
+  display: block;
+  border-top: 1px solid var(--border);
+}
+
+.stat-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* A notes part can be long (a basin's countries), so it may wrap, unlike the facts above it. */
+.stat-card__notes > span {
+  white-space: normal;
+}
+
+.oil-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.oil-key li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* A chokepoint card (a .stat-card): the name with its band to the right, both muted to the name's
+   size, the band in its own color. */
+.chokepoint-row__name {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.chokepoint-row__name .band {
+  flex: none;
+  font-size: var(--text-sm);
+}
+
+.chokepoint-row__name .band::before {
+  width: 8px;
+  height: 8px;
+  border-width: 1.5px;
+}
+
+/* The trend takes its band's color, so the line, the fill and the status read as one. */
+.mini-sparkline.band--below {
+  color: var(--flow-below);
+}
+
+.mini-sparkline.band--above {
+  color: var(--flow-above);
+}
+
+.mini-sparkline.band--near {
+  color: var(--flow-near);
+}
+
+.status-summary {
+  margin-top: var(--space-4);
+}
+
+.status-groups {
+  margin-top: var(--space-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Terminals' kind switch, at the end of the title row, above the summary line it changes. The switch
+   (34px) is taller than the title's line (25px), so it overhangs the row by half the difference on each
+   side instead of growing it: the title then sits where every other surface's does. */
+.title-row > .group-by {
+  margin-left: auto;
+  margin-block: calc((20px * 1.25 - 34px) / 2);
+}
+
+.group-by + .group-by__note {
+  margin-top: var(--space-2);
+}
+
+.num-inline {
+  font-variant-numeric: tabular-nums;
+}
+
+.status-groups td {
+  padding: 4px 0;
+}
+
+.status-groups td + td {
+  padding-left: var(--space-3);
+}
+
+/* Grouped lists: a row per group that opens its items, as on the pipelines surface. */
+.group-by {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.group-by__label {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.group-by + .note {
+  margin-top: var(--space-2);
+}
+
+/* Rows reach 8px past the text on each side, and so do the rules between them, so a row's hover fill
+   lines up with the rules rather than overhanging them. */
+.group-list {
+  margin: var(--space-4) calc(-1 * var(--space-2)) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.group-list__item + .group-list__item {
+  border-top: 1px solid var(--border);
+}
+
+.group-row {
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  grid-template-areas:
+    'caret label count'
+    '. bar bar';
+  align-items: center;
+  column-gap: var(--space-2);
+  row-gap: 6px;
+  width: 100%;
+  padding: var(--space-3) var(--space-2);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+}
+
+.group-row:hover {
+  background: var(--surface-sunken);
+}
+
+.group-row > svg {
+  grid-area: caret;
+  color: var(--text-muted);
+}
+
+.group-row__label {
+  grid-area: label;
+  min-width: 0;
+  font-weight: 500;
+}
+
+.group-row__count {
+  grid-area: count;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* An open group's items sit under its label: indented past the caret, rules and hover fill alike. */
+.group-list .view-list {
+  margin-left: 22px;
+}
+
+.group-list .view-row {
+  gap: var(--space-half);
+  margin: 0;
+  width: 100%;
+  padding: var(--space-2);
+}
+
+.group-row__bar {
+  grid-area: bar;
+}
+
+.group-list__item .view-list {
+  margin-left: 22px;
+}
+
+.group-list__more {
+  margin: var(--space-1) 0 var(--space-3) 30px;
+  font-size: var(--text-sm);
+}
+
+/* Gas storage surface: fill from empty to full, a tick at last year's level. */
+/* A surface's one-line summary under its title, muted like Home's intro. */
+.view-headline {
+  margin-top: var(--space-1);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Phones: the More tab's list, one row per section. */
+.more-row {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.more-row[aria-current='page'] .view-row__name {
+  font-weight: 600;
+}
+
+.more-row__caret {
+  margin-left: auto;
+  color: var(--text-muted);
+}
+
+/* Countries named as not covered, each with why. */
+.plain-list {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.plain-list__name {
+  font-weight: 600;
+}
+
+/* Fuel origins surface. */
+.find-region {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  height: 40px;
+  margin-top: var(--space-4);
+  padding: 0 var(--space-3);
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--text);
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.find-region:hover {
+  border-color: var(--border-strong);
+}
+
+.origin-tops {
+  display: grid;
+  gap: 4px;
+  font-size: var(--text-sm);
+}
+
+.origin-tops__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px 36px;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.origin-tops__label {
+  color: var(--text-muted);
+}
+
+.origin-tops__bar {
+  display: block;
+}
+
+.origin-tops__share {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

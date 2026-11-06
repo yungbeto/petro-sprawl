@@ -1,0 +1,88 @@
+/* Transitions, press feedback, entrances, forced colors. */
+
+/* Interaction details: quick, interruptible state changes; press feedback on compact controls;
+   40px hit areas on small icon buttons; one-shot entrances for the search dialog and the menu. */
+
+.chip,
+.icon-button,
+.segmented__option,
+.layer-control__toggle,
+.panel__tab,
+.find-region,
+.tile,
+.view-row,
+.group-row,
+.change,
+.link-button,
+.search-results__item,
+.layer-control__item {
+  transition-property:
+    color, background-color, border-color, box-shadow, text-decoration-color,
+    scale;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.chip:active,
+.icon-button:active,
+.segmented__option:active,
+.layer-control__toggle:active,
+.find-region:active {
+  scale: 0.96;
+}
+
+/* Segmented options sit side by side, so only their height grows. */
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    translate: 0 -6px;
+    scale: 0.98;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.search-dialog {
+  animation: dialog-in 160ms var(--ease-out);
+}
+
+.menu {
+  animation: menu-in 220ms var(--ease-out);
+}
+
+.search-scrim {
+  animation: fade-in 160ms var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-dialog,
+  .menu,
+  .search-scrim {
+    animation: none;
+  }
+
+  .chip:active,
+  .icon-button:active,
+  .segmented__option:active,
+  .layer-control__toggle:active,
+  .find-region:active,
+  .rail__item:active {
+    scale: none;
+  }
+}
+
+/* Forced colors drop box-shadow; surfaces that rely on it get a border back. */
+@media (forced-colors: active) {
+  .chip,
+  .layer-control__toggle,
+  .layer-control__list,
+  .map-tooltip,
+  .search-dialog,
+  .panel__tab {
+    border: 1px solid CanvasText;
+  }
+}

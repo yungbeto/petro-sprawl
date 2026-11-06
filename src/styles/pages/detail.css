@@ -1,0 +1,742 @@
+/* Detail pages and their sections: titles, lede, facts, reports, charts, disruptions. */
+
+.section + .section,
+.section + .view-list,
+.view-headline + .view-list {
+  margin-top: var(--space-5);
+}
+
+.section__title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.section__lede {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+/* A country's page (M10): gas storage and crude imports, each a section with its own source. */
+.country-section + .country-section {
+  margin-top: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+}
+
+.country-section__title {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.country-section__lede {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+/* A second reading under a chart, such as estimated exports below port calls. */
+.sparkline + .section__lede {
+  margin-top: var(--space-3);
+}
+
+.section__lede .band {
+  margin-left: var(--space-1);
+}
+
+.section__count {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.detail__title {
+  margin: var(--space-1) 0 var(--space-3);
+}
+
+/* An ⓘ beside a title opens the explanation that used to sit under it (Info.tsx). It sits beside the
+   heading, not inside it, so the heading's name stays its text. The row takes the title's margins. */
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.title-row:has(> .detail__title, > .title-row__main > .detail__title) {
+  margin: var(--space-1) 0 var(--space-3);
+}
+
+.title-row > :is(.section__title, .detail__title) {
+  margin: 0;
+}
+
+.info {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  vertical-align: middle;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition-property: color, background-color, scale;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.info::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+}
+
+.info:hover,
+.info:focus-visible {
+  color: var(--text);
+  background: var(--surface-sunken);
+}
+
+.info:active {
+  scale: 0.96;
+}
+
+.info-popover {
+  position: fixed;
+  inset: auto;
+  width: max-content;
+  max-width: min(320px, calc(100vw - 16px));
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-float);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  text-wrap: pretty;
+  opacity: 0;
+  translate: 0 -2px;
+  transition-property: opacity, translate;
+  transition-duration: 140ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.info-popover[data-placed] {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.info-popover p + p {
+  margin-top: var(--space-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .info-popover {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .info-popover {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* Detail views: header, then the headline number or status, then stats, then everything else. */
+
+.detail__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+/* As tall as the icon at least: a short heading centres on it, a long one starts level with it. */
+.detail__heading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 40px;
+}
+
+.detail__header .detail__title {
+  margin: 0;
+}
+
+.detail__lede {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.status-card {
+  margin: 0;
+}
+
+/* A page's lead figure as a card (LeadCard): label, figure with what it's read against to the right, a
+   bar, small notes, then a chart or a key (2026-11-05). */
+.lead-card {
+  margin: 0;
+}
+
+.lead-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: var(--space-1) 0 0;
+}
+
+.lead-card__figure {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  column-gap: var(--space-3);
+}
+
+.lead-card__against {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.lead-card__more {
+  display: block;
+  margin-top: var(--space-3);
+}
+
+.lead-card__more > :last-child {
+  margin-bottom: 0;
+}
+
+.lead-card__more > .oil-key {
+  margin-top: 0;
+}
+
+/* The figures under the status, label beside value: they never wrap mid-unit, whatever the panel's width. */
+.key-facts {
+  border-block: 1px solid var(--border);
+}
+
+.key-facts__value {
+  white-space: nowrap;
+}
+
+.status-card + .lead-card,
+.status-card + .key-facts,
+.flow-headline + .key-facts {
+  margin-top: var(--space-5);
+}
+
+.lead-card + .key-facts,
+.lead-card + .section {
+  margin-top: var(--space-4);
+}
+
+.key-facts + .section {
+  margin-top: var(--space-5);
+}
+
+
+.status-card dd {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.status-card__status {
+  margin-bottom: var(--space-1);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--text);
+}
+
+.status-card__status::before {
+  width: 10px;
+  height: 10px;
+}
+
+.facts {
+  margin: 0;
+}
+
+.facts__row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.facts__row + .facts__row {
+  border-top: 1px solid var(--border);
+}
+
+.facts dt {
+  color: var(--text-muted);
+}
+
+.facts dd {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-half);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.facts__line {
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+.show-all {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 0;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.show-all:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 2px;
+}
+
+/* Reports: each dated claim an item of its own, newest first. Meta, then the words, then a link out. */
+.reports {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.report {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+
+.report:last-child {
+  padding-bottom: 0;
+}
+
+/* The status it supports on top, then what kind of source, who and when. */
+.report__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-half);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.report__meta .status {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.report__text {
+  margin-top: var(--space-2);
+  font-size: var(--text-md);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.report__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-half);
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-underline-offset: 2px;
+}
+
+.report__link:hover {
+  color: var(--text);
+}
+
+/* Dates and figures in running text never break across lines. */
+.status-card .mono,
+.facts__aside .mono {
+  white-space: nowrap;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-unknown);
+}
+
+.status--operating::before {
+  background: var(--status-operating);
+}
+
+.status--reduced::before {
+  background: var(--status-reduced);
+}
+
+.status--offline::before,
+.status--idle::before {
+  background: var(--status-offline);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.table td {
+  padding: 4px 0;
+  border-top: 1px solid var(--border);
+}
+
+.table tr:last-child td {
+  border-bottom: 1px solid var(--border);
+}
+
+.table th {
+  padding: 0 0 4px;
+  font-weight: 400;
+  color: var(--text-muted);
+  text-align: left;
+}
+
+.table th.num {
+  text-align: right;
+}
+
+.table .num {
+  padding-left: var(--space-3);
+}
+
+.freshness__flag,
+.freshness--warn {
+  color: var(--data-stale);
+}
+
+.num {
+  text-align: right;
+  padding-left: var(--space-3);
+}
+
+/* Flow */
+
+.flow-headline {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+}
+
+.flow-headline__text {
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.band {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.band::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.band--below {
+  color: var(--flow-below);
+}
+
+.band--near {
+  color: var(--flow-near);
+}
+
+.band--above {
+  color: var(--flow-above);
+}
+
+/* Line charts: the line and a soft fill under it in the chart's color (--chart-color), no axis rule. */
+/* Cards that follow each other in a page sit 8px apart, so they read as one set (beats .section + .section). */
+.section.card + .section.card {
+  margin-top: var(--space-2);
+}
+
+/* A chart's band sits at the end of its title, as a list card's does beside its name. A title too long
+   to share the line keeps it whole, and the band drops under it, flush left. */
+.card .title-row:has(> .band) {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  column-gap: var(--space-3);
+  row-gap: var(--space-1);
+}
+
+/* A title with its ⓘ, kept together on the band's row. */
+.title-row__main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.title-row__main > :is(.section__title, .detail__title) {
+  margin: 0;
+}
+
+.card .title-row > .band {
+  flex: none;
+  font-size: var(--text-sm);
+}
+
+.card .title-row > .band::before {
+  width: 8px;
+  height: 8px;
+  border-width: 1.5px;
+}
+
+.sparkline {
+  --chart-color: var(--text);
+  margin: 0;
+}
+
+.sparkline--below {
+  --chart-color: var(--flow-below);
+}
+
+.sparkline--near {
+  --chart-color: var(--flow-near);
+}
+
+.sparkline--above {
+  --chart-color: var(--flow-above);
+}
+
+.sparkline svg {
+  display: block;
+  width: 100%;
+  height: 72px;
+  overflow: visible;
+  color: var(--chart-color);
+}
+
+.sparkline__line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.sparkline__ref {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.sparkline__ref--dashed {
+  stroke-dasharray: 5 3;
+}
+
+.sparkline__ref--dotted {
+  stroke-dasharray: 1 3;
+}
+
+.sparkline__scale {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.sparkline__caption {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: 4px;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.sparkline__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.sparkline__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sparkline__key {
+  width: 16px;
+  border-top: 1.5px solid var(--chart-color);
+}
+
+.sparkline__key--dashed {
+  border-top: 1px dashed var(--text-muted);
+}
+
+.sparkline__key--dotted {
+  border-top: 1px dotted var(--text-muted);
+}
+
+.disruptions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A disruption as a card (2026-11-05): when and why, the summary, then its sources. */
+.disruption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.disruption.card + .disruption.card {
+  margin-top: 0;
+}
+
+.disruption__head {
+  display: flex;
+  align-self: stretch;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-2);
+}
+
+.disruption__when {
+  font-weight: 500;
+}
+
+.disruption__cause {
+  flex-shrink: 0;
+}
+
+.disruption__summary {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.disruption__summary--clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+.disruption__toggle {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+}
+
+.disruption__sources-head {
+  display: flex;
+  align-self: stretch;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.disruption__label {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+.disruption__count {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.disruption__sources {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: var(--space-3);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.disruption__source {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-half);
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.disruption__source-meta {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.disruption__unreviewed {
+  color: var(--text);
+}

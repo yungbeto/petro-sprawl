@@ -4,9 +4,8 @@ Started 2026-11-05 from a UI audit of `src/styles/` and `src/panel/`. This file 
 the tokens, the text styles and the components, and the rules for using them. The audit that started it is at
 the end. Sentence case, no uppercase eyebrows, no em dashes, as everywhere in the app.
 
-Status (2026-11-05): tokens are done (`src/styles/tokens.css`, used throughout `base.css`); text styles are
-done (`src/styles/text.css`); of the shared components, `StatusBlock`, the bars, `Card`, `Tag`, `Chip` and `SegmentedOptions` are built
-and the rest are proposed.
+Status (2026-11-06): tokens, text styles and the shared components in the table below are built, and the
+big files are split (plan step 4). What's left marked "No" is a class pattern without a component yet.
 
 ## Principles
 
@@ -65,9 +64,9 @@ Weights: 400, 500 (labels, figures, emphasis), 600 (titles). Line heights: 1.25 
 ## Text styles
 
 Classes that set size, weight, line height and colour together, so a title is a title everywhere. They live
-in `src/styles/text.css`, loaded after `base.css`. New code uses the `.t-*` class. Older component classes
+in `src/styles/text.css`, loaded after every other stylesheet. New code uses the `.t-*` class. Older component classes
 are listed in the same rule (`.t-title, .detail__title, .hero__title`), so they take the style from there and
-their own rules in `base.css` hold only layout; don't set type on them again.
+their own rules elsewhere hold only layout; don't set type on them again.
 
 | Class | Style | Today written as |
 | --- | --- | --- |
@@ -111,7 +110,11 @@ Bar tones (`BarTone`): `neutral` (how full, how much: the default), `soft` (what
 the map's arcs), and `operating`, `offline`, `unknown` for status mixes only.
 
 Proposed home: `src/ui/` for the components, one file each, with their CSS in `src/styles/components/`.
-`base.css` (3,567 lines) keeps resets and layout; `details.tsx` (1,864 lines) keeps the pages.
+Stylesheets (all imported by `src/main.tsx`, in cascade order): `tokens.css`; `base.css` (resets); `layout/`
+(`shell.css` the frame, `map-search.css` what floats over the map, `phone.css`); `pages/` (`detail.css`,
+`home.css`, `lists.css`, `menu.css`); `interaction.css`; `loading.css`; `components/`; `text.css` last. A new
+file goes where its rules belong in that order. Detail pages are one file each in `src/panel/detail/`, with
+what they share in `parts.tsx` and `status.tsx`; `src/panel/details.tsx` only re-exports them.
 
 ## Audit, 2026-11-05
 
@@ -145,7 +148,7 @@ Proposed home: `src/ui/` for the components, one file each, with their CSS in `s
 
 ### Holding up
 
-- Colour is almost entirely tokens: no raw colours in `base.css` beyond scrims and shadows.
+- Colour is almost entirely tokens: no raw colours in the stylesheets beyond scrims and shadows.
 - Hit areas: small controls (`.icon-button`, `.segmented__option`) extend to 40px with a pseudo-element.
 - Focus: one `:focus-visible` style app-wide.
 - Status, flow band and data age have their own semantic tokens and aren't reused for decoration.
@@ -159,4 +162,5 @@ Proposed home: `src/ui/` for the components, one file each, with their CSS in `s
    their type from there.
 3. Done 2026-11-06. Components, most repeated first: `StatusBlock`, bars, `Card`, `Tag`/`Chip`/`SegmentedOptions`,
    `IconButton`/`TextButton`, `SectionTitle`, `Note`.
-4. Split `base.css` and `details.tsx` along the component lines.
+4. Done 2026-11-06. `base.css` split into the stylesheets above, in its original order, so the cascade is
+   unchanged; `details.tsx` split into one file per page.

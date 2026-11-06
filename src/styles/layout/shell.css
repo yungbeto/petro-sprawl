@@ -1,0 +1,450 @@
+/* The app's frame: header, rail, map and panel. */
+
+/* Layout */
+
+.app {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--rail-width) var(--panel-width) 1fr;
+  grid-template-rows: var(--header-height) minmax(0, 1fr);
+  grid-template-areas:
+    'header header header'
+    'rail panel map';
+  column-gap: var(--space-2);
+  height: 100%;
+  padding: 0 var(--space-4) var(--space-4) 0;
+  overflow: hidden;
+  background: var(--app-grain), var(--app-glow), var(--surface);
+}
+
+@media (forced-colors: active) {
+  .app {
+    background: Canvas;
+  }
+}
+
+.app[data-panel-collapsed='true'] {
+  grid-template-columns: var(--rail-width) 1fr;
+  grid-template-areas:
+    'header header'
+    'rail map';
+}
+
+/* Header: the name over the rail and panel, then search over the map, then help and the menu. */
+.app-header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+/* Fixed to the rail and panel's width, so the search bar lines up with the map and never moves. */
+.app-header__brand {
+  display: flex;
+  flex: 0 0 calc(var(--rail-width) + var(--panel-width) + 2 * var(--space-2));
+  align-items: center;
+  gap: 20px;
+  padding-left: 20px;
+}
+
+.brand-mark {
+  display: block;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  color: var(--surface);
+  background: var(--text);
+  border-radius: 50%;
+}
+
+.app-header__title {
+  font-size: var(--text-xl);
+  font-weight: 500;
+  line-height: 32px;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.app-header__actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: 30px;
+}
+
+/* The rail: views at the top, settings at the bottom. */
+.rail {
+  grid-area: rail;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-left: var(--space-3);
+}
+
+.rail__item {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: var(--text-muted);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition-property: color, background-color, box-shadow, scale;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.rail__item:hover {
+  color: var(--text);
+  background: var(--surface-sunken);
+}
+
+.rail__item:active {
+  scale: 0.96;
+}
+
+/* The surface you're on: a raised tile with a filled icon, so it reads apart from hover. */
+.rail__item[aria-current='page'] {
+  color: var(--text);
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px var(--border),
+    0 1px 2px rgb(0 0 0 / 0.06);
+}
+
+@media (forced-colors: active) {
+  .rail__item[aria-current='page'] {
+    outline: 2px solid Highlight;
+  }
+}
+
+.rail__item--end {
+  margin-top: auto;
+}
+
+/* The rail's names show to the right on hover or keyboard focus; the button's label carries them for screen readers. */
+.rail__item {
+  position: relative;
+}
+
+.rail__tooltip {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + var(--space-2));
+  z-index: var(--z-tooltip);
+  padding: 4px 8px;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--surface);
+  background: var(--text);
+  border-radius: var(--radius);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-4px, -50%);
+  transition-property: opacity, transform;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.rail__item:hover .rail__tooltip,
+.rail__item:focus-visible .rail__tooltip {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+
+.map {
+  position: relative;
+  grid-area: map;
+  /* Its own stacking context: the deck.gl canvas sits in a MapLibre control container at z-index 2,
+     and would otherwise draw over the chips and buttons floating on the map. */
+  isolation: isolate;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.map__canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.map-tooltip {
+  position: absolute;
+  z-index: var(--z-map-controls);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-width: 280px;
+  padding: 6px 10px;
+  margin: 14px 0 0 14px;
+  font-size: var(--text-sm);
+  pointer-events: none;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-float);
+}
+
+.map-tooltip__name {
+  font-weight: 500;
+}
+
+.map-tooltip__figure {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.layer-control {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  z-index: var(--z-map-controls);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.layer-control__toggle {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: var(--surface);
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-float);
+  cursor: pointer;
+}
+
+.layer-control__toggle:hover,
+.layer-control__toggle[aria-expanded='true'] {
+  box-shadow: var(--shadow-float-hover);
+}
+
+.layer-control__list {
+  min-width: 200px;
+  margin: 0;
+  padding: 6px 0;
+  list-style: none;
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
+}
+
+.layer-control__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.layer-control__item input {
+  margin: 0;
+  accent-color: var(--text);
+}
+
+.layer-control__count {
+  margin-left: auto;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* Credits keep to the right half of the bottom edge, clear of the layers button. */
+.maplibregl-ctrl-bottom-right .maplibregl-ctrl-attrib {
+  max-width: min(640px, 60vw);
+}
+
+/* Panel */
+
+.panel {
+  position: relative;
+  z-index: var(--z-panel);
+  grid-area: panel;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+/* A tab on the panel's edge, halfway down, over the map. */
+.panel__tab {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 48px;
+  padding: 0;
+  margin-top: -24px;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 0;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  box-shadow: var(--shadow-float);
+  /* Keep the ring off the panel side, where the tab meets the panel's own border. */
+  clip-path: inset(-12px -12px -12px 0);
+  cursor: pointer;
+}
+
+/* A thin tab: its hit area reaches 40px wide onto the map. */
+.panel__tab::after {
+  content: '';
+  position: absolute;
+  inset: 0 -18px 0 0;
+}
+
+.panel__tab:hover {
+  color: var(--text);
+}
+
+/* Minimized, the tab sits on the map's left edge instead. */
+.panel__tab--expand {
+  z-index: 2;
+  left: 0;
+}
+
+/* The search bar sits in the header, over the map: a button that opens the search dialog. */
+.search-bar {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+  height: 40px;
+  padding-right: var(--space-2);
+  background: var(--surface-sunken);
+  border-radius: var(--radius);
+}
+
+.search-bar__trigger {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  height: 100%;
+  padding: 0 0 0 var(--space-4);
+  font-size: var(--text-lg);
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--radius);
+  cursor: text;
+}
+
+.search-bar__trigger:focus-visible {
+  outline-offset: -2px;
+}
+
+.search-bar__icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.search-bar__context,
+.search-bar__placeholder {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-bar__placeholder {
+  color: var(--text-muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.search-hint {
+  flex-shrink: 0;
+  margin-right: var(--space-1);
+  min-width: 18px;
+  padding: 0 4px;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  text-align: center;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+/* The panel's top bar on an item or a list: Back (when there's somewhere to go back to) and Close. */
+.panel__nav {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-2);
+  height: 48px;
+  padding: 0 var(--space-3) 0 var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.panel__back {
+  flex-shrink: 0;
+  margin-left: calc(-1 * var(--space-2));
+}
+
+/* What kind of thing is open: the detail below leads with its name. */
+.panel__title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-ui);
+  font-weight: 500;
+  color: var(--text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel__close {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.panel__body {
+  flex: 1;
+  overflow-y: auto;
+  /* 16px sides, the same as the top bar, so a 360px panel gives its content 328px. */
+  padding: var(--space-5) var(--space-4) var(--space-4);
+}
+
+.panel__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  border-top: 1px solid var(--border);
+}
+
+.panel__footer p {
+  min-width: 0;
+  font-size: var(--text-xs);
+}
+
+.panel__footer .segmented {
+  flex-shrink: 0;
+}

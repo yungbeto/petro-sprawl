@@ -1,0 +1,337 @@
+/* Over the map: its controls, the search bar and dialog, the summary, filter chips. */
+
+/* MapLibre controls, quieted to match the panel */
+
+.maplibregl-ctrl-scale {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  border-color: var(--border-strong);
+}
+
+.maplibregl-ctrl-attrib {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+}
+
+.maplibregl-ctrl.maplibregl-ctrl-attrib {
+  color: var(--text-muted);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+}
+
+.maplibregl-ctrl-attrib a {
+  color: inherit;
+}
+
+.unverified {
+  color: var(--data-stale);
+}
+
+/* Search */
+
+.search-results__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 5px var(--space-3);
+  cursor: pointer;
+}
+
+.search-results__item[aria-selected='true'] {
+  background: var(--surface-sunken);
+}
+
+.search-results__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-results__detail {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.search-results__item {
+  /* The same corners as the panel's list rows. */
+  border-radius: var(--radius-lg);
+}
+
+/* The search dialog: one box over the app, results grouped by kind. */
+.search-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-scrim);
+  background: rgb(0 0 0 / 0.32);
+}
+
+.search-dialog {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  z-index: var(--z-dialog);
+  display: flex;
+  flex-direction: column;
+  width: min(640px, calc(100vw - 2 * var(--space-4)));
+  max-height: calc(100vh - 72px - var(--space-6));
+  overflow: hidden;
+  transform: translateX(-50%);
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    var(--shadow-float),
+    0 16px 48px rgb(0 0 0 / 0.24);
+}
+
+.search-dialog__field {
+  /* Only the results scroll; the box, the scopes and the footer keep their size. */
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 56px;
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.search-dialog__input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  font-size: var(--text-lg);
+  background: none;
+  border: 0;
+}
+
+.search-dialog__input:focus-visible {
+  outline: none;
+}
+
+.search-dialog__input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-dialog__close {
+  flex-shrink: 0;
+  margin-right: calc(-1 * var(--space-1));
+}
+
+.search-dialog__footer kbd {
+  padding: 0 4px;
+  font-size: var(--text-xs);
+  line-height: 18px;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+/* One row that scrolls sideways when the scopes don't fit, rather than wrapping. */
+.search-dialog__scopes {
+  flex-shrink: 0;
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-dialog__scopes::-webkit-scrollbar {
+  display: none;
+}
+
+.search-dialog__results {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: var(--space-1) var(--space-2) var(--space-2);
+  overflow-y: auto;
+  list-style: none;
+}
+
+.search-dialog__group {
+  padding: var(--space-2) var(--space-2) var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.search-dialog__group-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.search-dialog__results .search-results__item {
+  padding: 6px var(--space-2);
+}
+
+.search-dialog__empty {
+  flex-shrink: 0;
+  padding: var(--space-5) var(--space-4);
+}
+
+.search-dialog__footer {
+  flex-shrink: 0;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+/* Summary */
+
+.notice {
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  border: 1px solid var(--data-stale);
+  border-radius: var(--radius);
+}
+
+.section__lede {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.rows__row {
+  cursor: pointer;
+}
+
+.rows__row:hover td {
+  background: var(--surface-sunken);
+}
+
+.rows .link-button {
+  text-decoration: none;
+}
+
+.rows__row:hover .link-button {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+}
+
+.rows__meta {
+  padding-left: var(--space-3);
+  white-space: nowrap;
+  color: var(--text-muted);
+}
+
+.changes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.changes li {
+  border-bottom: 1px solid var(--border);
+}
+
+.change {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-2) 0;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.change:hover .change__name {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 2px;
+}
+
+.change__what {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.sources {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+
+.sources li + li {
+  margin-top: var(--space-2);
+}
+
+.sources__license {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.freshness td.num {
+  white-space: nowrap;
+}
+
+/* Quick filter chips: a row along the top of the map. */
+.chips {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 2;
+  display: flex;
+  gap: var(--space-2);
+  padding: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+/* The app menu (AppMenu) is a full screen page; its rules are with the page styles further down. */
+.app__content {
+  display: contents;
+}
+
+.shortcuts {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.shortcuts__row {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: var(--space-3);
+  padding: 4px 0;
+  border-top: 1px solid var(--border);
+}
+
+.shortcuts__row:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.shortcuts dd {
+  margin: 0;
+}
+
+.shortcuts kbd {
+  padding: 0 5px;
+  font-size: var(--text-xs);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.footer-freshness {
+  min-width: 0;
+  padding: 0;
+  font-size: var(--text-xs);
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.footer-freshness:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

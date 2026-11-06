@@ -1,5 +1,5 @@
 /* Buttons (src/ui/Button.tsx, docs/design-system.md). Press feedback and transitions are with the other
-   controls' in base.css. */
+   controls' in interaction.css. */
 
 /* An icon alone: draws at 28px (32px medium, 40px large), hits at 40px at any size. */
 .icon-button {

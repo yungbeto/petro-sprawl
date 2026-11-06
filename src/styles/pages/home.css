@@ -1,0 +1,542 @@
+/* Home: the hero, the news, the dashboard. */
+
+/* Home's hero, after "what's happening" feeds: the section and date, what the site is in a line, the
+   lead story (when, what, who reported it), then the rest in effect. It leads; the figures follow. */
+.hero {
+  padding-bottom: var(--space-5);
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border);
+}
+
+.hero__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  /* The other surfaces' title row spacing (.title-row with a .detail__title), so the intro sits as their subheaders do. */
+  margin-bottom: var(--space-3);
+}
+
+/* The same title as every other surface (.detail__title). */
+.hero__title {
+  margin-top: var(--space-1);
+}
+
+.hero__date {
+  flex: none;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.hero__intro {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+.hero__visit {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.hero__visit .link-button {
+  color: inherit;
+}
+
+/* Latest updates: one card per disruption, newest report first, in a row that scrolls sideways. Each card
+   is narrower than the row so the next peeks in. */
+/* No rule under the intro: like the other surfaces, the title and its line lead straight into the content. */
+.hero__cards {
+  margin-top: var(--space-5);
+}
+
+.hero__cards-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.hero__cards-top .section__title {
+  margin-bottom: 0;
+}
+
+.hero__cards-nav {
+  display: flex;
+  gap: var(--space-1);
+}
+
+/* Touch screens swipe; the buttons are for a mouse. */
+@media (hover: none) {
+  .hero__cards-nav {
+    display: none;
+  }
+}
+
+.hero__cards-row {
+  display: flex;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0 0 var(--space-2);
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.hero__cards-row:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+  border-radius: var(--radius-lg);
+}
+
+.hero-card {
+  flex: 0 0 85%;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.hero-card:only-child {
+  flex-basis: 100%;
+}
+
+.hero-card__name {
+  margin: 0;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.hero-card__report {
+  display: -webkit-box;
+  margin-top: var(--space-1);
+  overflow: hidden;
+  font-size: var(--text-md);
+  text-wrap: pretty;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.hero__kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-bottom: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.hero__kicker svg {
+  flex: none;
+  color: var(--text);
+}
+
+.hero__headline-link {
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.hero__headline-link:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.hero__headline {
+  font-size: var(--text-figure);
+  font-weight: 600;
+  line-height: 30px;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.hero__byline {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.hero__byline a {
+  color: inherit;
+}
+
+.hero__rest {
+  margin-top: var(--space-5);
+}
+
+/* A list that ends the hero leaves its last rule to the hero's own border, not a second one below it. */
+.hero > :last-child > .changes:last-child > li:last-child {
+  border-bottom: 0;
+}
+
+.hero__rest .section__title {
+  margin-bottom: 0;
+}
+
+.news {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.news__item {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--border);
+}
+
+.news__item:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+/* The outlet and age, like a news site's section line: the outlet in the text color, the age muted. */
+.news__kicker {
+  margin-bottom: 2px;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.news__publisher {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.news__title {
+  margin: 0;
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+.news__item--lead .news__title {
+  font-size: var(--text-lg);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.news__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.news__title a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 3px;
+}
+
+/* A headline with its map thumbnail to the right of the text, top-aligned (src/lib/thumbnail.ts). */
+.news__story {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--space-3);
+}
+
+.news__story > :not(.news__thumb) {
+  grid-column: 1;
+}
+
+.news__thumb {
+  position: relative;
+  display: block;
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  /* Water tinted and land light, as the basemap draws them (OpenFreeMap's Positron and Dark). */
+  background: var(--surface-sunken);
+  border: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* The image outline, drawn over the picture so the focus ring keeps outline: pure black or white at low opacity. */
+.news__thumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--image-outline);
+  pointer-events: none;
+}
+
+.news__thumb-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.news__item--lead .news__thumb {
+  width: 88px;
+  height: 88px;
+}
+
+/* In the app the thumbnail moves the map to what it shows (src/app/showOnMap.ts), so it presses like a button. */
+.news__thumb--button {
+  cursor: pointer;
+  transition-property: scale;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.news__thumb--button:hover::after {
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+.news__thumb--button:active {
+  scale: 0.96;
+}
+
+.news__thumb-land {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 0.75;
+  vector-effect: non-scaling-stroke;
+}
+
+.news__thumb-mark {
+  color: var(--status-unknown);
+}
+
+.news__thumb-halo,
+.news__thumb-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.news__thumb-halo {
+  stroke: var(--surface);
+  stroke-width: 4;
+}
+
+.news__thumb-line {
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.news__thumb-point {
+  fill: currentColor;
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+
+/* A strait as the map draws it: a ring in its flow band's color. */
+.news__thumb-ring {
+  fill: color-mix(in srgb, currentColor 18%, transparent);
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.news__thumb-mark--status-operating {
+  color: var(--status-operating);
+}
+
+.news__thumb-mark--status-reduced {
+  color: var(--status-reduced);
+}
+
+.news__thumb-mark--status-offline,
+.news__thumb-mark--status-idle {
+  color: var(--status-offline);
+}
+
+.news__thumb-mark--flow-below {
+  color: var(--flow-below);
+}
+
+.news__thumb-mark--flow-near {
+  color: var(--flow-near);
+}
+
+.news__thumb-mark--flow-above {
+  color: var(--flow-above);
+}
+
+.news__thumb-mark--ink {
+  color: var(--text);
+}
+
+/* The publisher's icon before its name, at the kicker's cap height; served from this site (jobs/lib/favicons.ts). */
+.news__icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  vertical-align: -2px;
+  border-radius: var(--radius-sm);
+  object-fit: contain;
+}
+
+/* The places it names, as small chips, so they read as tags on the story rather than more links. */
+.news__assets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.news__asset {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 26px;
+  padding: 0 var(--space-2) 0 3px;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  background: var(--surface-sunken);
+  border: 0;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition-property: color, background-color, scale;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.news__asset:hover {
+  color: var(--text);
+}
+
+.news__asset:active {
+  scale: 0.96;
+}
+
+.news__asset .asset-icon {
+  width: 20px;
+  height: 20px;
+  background: var(--surface);
+}
+
+.news__asset .asset-icon svg {
+  width: 12px;
+  height: 12px;
+}
+
+.hero__tally {
+  margin: var(--space-1) 0 var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.hero__more {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+/* Home dashboard: four figures, two by two, one number each. */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-4);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  /* Room for the hover fill without moving the text off the panel's edge. */
+  padding: var(--space-2);
+  margin: calc(-1 * var(--space-2));
+  font-size: var(--text-ui);
+  font-weight: 500;
+  line-height: 16px;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+}
+
+.tile:hover {
+  background: var(--surface-sunken);
+}
+
+.tile__label {
+  color: var(--text-muted);
+}
+
+.tile__value {
+  margin-top: var(--space-1);
+}
+
+.tile__unit {
+  color: var(--text-muted);
+}
+
+.tile__unit--empty {
+  margin-top: var(--space-1);
+  font-size: var(--text-lg);
+}
+
+.tile__status {
+  color: var(--status-offline);
+}
+
+.tile__viz {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.tile__note {
+  padding-top: var(--space-2);
+  color: var(--text-muted);
+}
+
+.tile__ring {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 3;
+}
+
+.tile__ring--below {
+  stroke: var(--flow-below);
+}
+
+.tile__ring--near {
+  stroke: var(--flow-near);
+}
+
+.tile__ring--above {
+  stroke: var(--flow-above);
+}
+
+.gap-strip {
+  display: block;
+  max-width: 100%;
+}
+
+.gap-strip__axis {
+  stroke: var(--border);
+}
+
+.gap-strip__zero {
+  stroke: var(--text-muted);
+}
+
+.gap-strip__tick {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+}
+
+.gap-strip__tick--below {
+  stroke: var(--text);
+}
