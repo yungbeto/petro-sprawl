@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatCapacity, formatLonLat, formatMbd, formatThousandfold } from '../src/lib/format';
+import { formatCapacity, formatLonLat, formatMbd, formatThousandfold, formatLongDate, formatShortDate } from '../src/lib/format';
 
 describe('formatThousandfold', () => {
   it('shows millions as billions, with a floor for tiny values', () => {
@@ -69,5 +69,20 @@ describe('flagEmoji', () => {
   it('returns nothing for codes that are not two letters', () => {
     expect(flagEmoji('EU27')).toBe('');
     expect(flagEmoji('')).toBe('');
+  });
+});
+
+describe('formatLongDate and formatShortDate', () => {
+  it('say a date only as precisely as the source gives it', () => {
+    expect(formatLongDate('2026')).toBe('2026');
+    expect(formatLongDate('2026-03')).toBe('March 2026');
+    expect(formatLongDate('2026-06-01')).toBe('1 June 2026');
+  });
+
+  it('leave out the year when it is this year', () => {
+    const now = new Date('2026-11-05T12:00:00Z');
+    expect(formatShortDate('2026-11-06', now)).toBe('6 Nov');
+    expect(formatShortDate('2025-02-28', now)).toBe('28 Feb 2025');
+    expect(formatShortDate('2026-03', now)).toBe('Mar');
   });
 });

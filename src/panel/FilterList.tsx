@@ -21,7 +21,7 @@ export function FilterList({ filter, matches, data, onSelect, within }: FilterLi
     <section className="section">
       <h2 className="detail__title">{FILTER_LABELS[filter]}</h2>
       <p className="muted section__lede">
-        <span className="mono">{rows.length.toLocaleString('en-US')}</span> {rows.length === 1 ? 'match' : 'matches'}.{' '}
+        <span className="num-inline">{rows.length.toLocaleString('en-US')}</span> {rows.length === 1 ? 'match' : 'matches'}.{' '}
         {FILTER_DESCRIPTIONS[filter]}
         {within && ` Only ${within.toLowerCase()} show here.`}
       </p>
@@ -32,7 +32,7 @@ export function FilterList({ filter, matches, data, onSelect, within }: FilterLi
       )}
       {rows.length > shown.length && (
         <p className="note">
-          Showing the first <span className="mono">{shown.length}</span>; the map shows all of them.
+          Showing the first <span className="num-inline">{shown.length}</span>; the map shows all of them.
         </p>
       )}
     </section>

@@ -8,6 +8,7 @@ import {
   EIA_CHOKEPOINTS_SOURCE,
   EIA_REFERENCE_YEAR,
   FILTERS,
+  DISRUPTION_CARD,
   MEASURED_FLOW,
   NEWS,
   FUELS,
@@ -47,13 +48,13 @@ import {
   type Datasets,
 } from '../lib/data';
 import { chokepointFlow, type ChokepointFlow, type FlowBand } from '../lib/flow';
-import { formatIndex, formatIndexShare, formatNumber, formatShare, formatSignedPct, formatStorageVolume, formatThousandfold, formatTonnes } from '../lib/format';
+import { formatIndexShare, formatLongDate, formatNumber, formatShortDate, formatShare, formatSignedPct, formatStorageVolume, formatThousandfold, formatTonnes } from '../lib/format';
 import type { Disruption } from '../types';
 import { Sparkline } from './Sparkline';
-import { formatCapacity, formatCountry, formatEnergyPerDay, formatLonLat, formatMbd } from '../lib/format';
+import { formatCapacity, formatCountry, formatLonLat, formatMbd } from '../lib/format';
 import { lngStatus, pipelineAge, pipelineStatus, shareCoverage, terminalStatus } from '../lib/encoding';
 import { filterRows, type FilterRow } from '../lib/filters';
-import { chokepointRows } from '../lib/summary';
+import { basinOilParts, chokepointRows } from '../lib/summary';
 import { AssetIcon } from './AssetIcon';
 import { capitalize, COMMODITY_PIPELINE, LNG_FACILITY, OIL_ROLE, statusLabel } from '../lib/labels';
 
@@ -62,6 +63,7 @@ import { FuelTabs } from './FuelTabs';
 import type { ChokepointExposure, OriginRow } from '../lib/oilOrigins';
 import { Info } from './Info';
 import { NewsList } from './NewsList';
+import { OilBar, OilKey } from './BasinsView';
 import { assetHeadlines } from '../lib/headlines';
 
 /** A region can open on a given fuel (M7); everything else ignores it. */
@@ -90,26 +92,6 @@ function Header({ name, icon, lede }: { name: string; icon: ReactNode; lede?: Re
         {lede && <p className="detail__lede">{lede}</p>}
       </div>
     </header>
-  );
-}
-
-/** The few numbers an asset is about, side by side, before the details. */
-function Stats({ children }: { children: ReactNode }) {
-  return <dl className="stats">{children}</dl>;
-}
-
-function Stat({ label, value, unit, aside }: { label: string; value: ReactNode; unit?: string; aside?: ReactNode }) {
-  return (
-    <div className="stats__item">
-      <dt>{label}</dt>
-      <dd>
-        <span className="stats__value">
-          {value}
-          {unit && <span className="stats__unit"> {unit}</span>}
-        </span>
-        {aside && <span className="stats__aside">{aside}</span>}
-      </dd>
-    </div>
   );
 }
 
@@ -169,26 +151,28 @@ export function ChokepointDetail({ item, data, now, onSelect }: { item: Chokepoi
             </p>
             <Band band={flow.band} />
           </section>
-          <Stats>
-            <Stat
-              label="Last 7 days"
-              value={perDay(flow.recent?.mean)}
-              unit="per day"
-              aside={<>to <span className="mono">{flow.latestDate}</span></>}
-            />
-            <Stat
-              label="Trailing year"
-              value={perDay(flow.trailing?.mean)}
-              unit="per day"
-              aside={<>index <span className="mono">{flow.indexTrailing !== null ? formatIndex(flow.indexTrailing) : 'n/a'}</span></>}
-            />
-            <Stat
-              label="Five years"
-              value={perDay(flow.fiveYear?.mean)}
-              unit="per day"
-              aside={flow.fiveYear && <span className="mono">{flow.fiveYear.from.slice(0, 4)} to {flow.fiveYear.to.slice(0, 4)}</span>}
-            />
-          </Stats>
+          <dl className="facts key-facts">
+            <Row label="Last 7 days">
+              <span className="key-facts__value">{perDay(flow.recent?.mean)} per day</span>
+              <span className="facts__aside">
+                to <span className="mono">{flow.latestDate}</span>
+              </span>
+            </Row>
+            <Row label="Trailing year">
+              <span className="key-facts__value">{perDay(flow.trailing?.mean)} per day</span>
+              {flow.indexTrailing !== null && (
+                <span className="facts__aside">the last 7 days ran at {formatIndexShare(flow.indexTrailing)} of it</span>
+              )}
+            </Row>
+            <Row label="Five years">
+              <span className="key-facts__value">{perDay(flow.fiveYear?.mean)} per day</span>
+              {flow.fiveYear && (
+                <span className="facts__aside">
+                  average, {flow.fiveYear.from.slice(0, 4)} to {flow.fiveYear.to.slice(0, 4)}
+                </span>
+              )}
+            </Row>
+          </dl>
           <section className="section chart-card">
             <h3 className="section__title">Daily tanker transits, last 90 days</h3>
             <Sparkline
@@ -214,14 +198,14 @@ export function ChokepointDetail({ item, data, now, onSelect }: { item: Chokepoi
       ) : (
         <p className="muted">Tanker transits not loaded yet.</p>
       )}
-      <DisruptionList disruptions={disruptions} />
+      <DisruptionList disruptions={disruptions} now={now} />
       <AssetNews selection={{ kind: 'chokepoint', id: item.id }} data={data} now={now} onSelect={onSelect} />
       {terminals.length > 0 && (
         <RelatedList title="Oil terminals that ship through it" empty="" rows={terminals} data={data} onSelect={onSelect} />
       )}
       <Facts>
         <Row label="EIA reference volume">
-          <span className="mono">{formatMbd(item.eiaReferenceMbd)}</span>
+          <span className="num-inline">{formatMbd(item.eiaReferenceMbd)}</span>
           <span className="facts__aside">
             {EIA_REFERENCE_YEAR}, crude oil and petroleum liquids,{' '}
             <SourceLink href={EIA_CHOKEPOINTS_SOURCE}>EIA</SourceLink>
@@ -261,11 +245,11 @@ function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: bo
         <Band band={flow.band} />
       </div>
       <p className="section__lede">
-        <span className="mono">{perDay(flow.recent?.mean)}</span> per day over the 7 days to{' '}
+        <span className="num-inline">{perDay(flow.recent?.mean)}</span> per day over the 7 days to{' '}
         <span className="mono">{flow.latestDate}</span>
         {flow.indexFiveYear !== null && (
           <>
-            , <span className="mono">{formatIndexShare(flow.indexFiveYear)}</span> of the five-year average
+            , <span className="num-inline">{formatIndexShare(flow.indexFiveYear)}</span> of the five-year average
           </>
         )}
         .
@@ -282,10 +266,10 @@ function PortCallsSection({ calls, terminal }: { calls: PortCalls; terminal?: bo
       />
       {exports?.recent && (
         <p className="section__lede">
-          Estimated exports by tanker: <span className="mono">{formatTonnes(exports.recent.mean)}</span> per day
+          Estimated exports by tanker: <span className="num-inline">{formatTonnes(exports.recent.mean)}</span> per day
           {exports.indexFiveYear !== null && (
             <>
-              , <span className="mono">{formatIndexShare(exports.indexFiveYear)}</span> of the five-year average
+              , <span className="num-inline">{formatIndexShare(exports.indexFiveYear)}</span> of the five-year average
             </>
           )}
           .
@@ -305,11 +289,11 @@ function TonnesSection({ title, flow, noun, label }: { title: string; flow: Chok
       </div>
       {flow.recent && (
         <p className="section__lede">
-          <span className="mono">{formatTonnes(flow.recent.mean)}</span> {noun} per day over the 7 days to{' '}
+          <span className="num-inline">{formatTonnes(flow.recent.mean)}</span> {noun} per day over the 7 days to{' '}
           <span className="mono">{flow.latestDate}</span>
           {flow.indexFiveYear !== null && (
             <>
-              , <span className="mono">{formatIndexShare(flow.indexFiveYear)}</span> of the five-year average
+              , <span className="num-inline">{formatIndexShare(flow.indexFiveYear)}</span> of the five-year average
             </>
           )}
           .
@@ -330,19 +314,6 @@ function TonnesSection({ title, flow, noun, label }: { title: string; flow: Chok
   );
 }
 
-/**
- * A source the news scan added without a person checking it (SPEC M9): its headline, and a note saying
- * so. The link beside it is the way to check.
- */
-export function Unreviewed({ title }: { title: string }) {
-  return (
-    <span className="unreviewed">
-      {': '}
-      {title}
-      <span className="unreviewed__note"> · Not yet reviewed: added automatically from the news. Read the source to check it.</span>
-    </span>
-  );
-}
 
 /**
  * The headlines naming this asset (added 2026-11-04), after its disruptions and reports: as the feeds list
@@ -368,31 +339,78 @@ function AssetNews({ selection, data, now, onSelect }: { selection: Selection; d
   );
 }
 
-function DisruptionList({ disruptions }: { disruptions: Disruption[] }) {
+function DisruptionList({ disruptions, now }: { disruptions: Disruption[]; now: Date }) {
   if (disruptions.length === 0) return null;
   return (
     <section className="section">
       <h3 className="section__title">Disruptions</h3>
       <ul className="disruptions">
         {disruptions.map((d) => (
-          <li key={d.id} className="disruption">
-            <p className="disruption__meta mono">
-              {d.startedAt}
-              {d.endedAt ? ` to ${d.endedAt}` : ', ongoing'} · {d.cause}
-            </p>
-            <p>{d.summary}</p>
-            <ul className="disruption__sources">
-              {d.sources.map((s) => (
-                <li key={s.url}>
-                  <SourceLink href={s.url}>{s.publisher}</SourceLink>, <span className="mono">{s.publishedAt}</span>
-                  {s.unreviewed && <Unreviewed title={s.title} />}
-                </li>
-              ))}
-            </ul>
-          </li>
+          <DisruptionCard key={d.id} disruption={d} now={now} />
         ))}
       </ul>
     </section>
+  );
+}
+
+const UNREVIEWED_NOTE = 'Not yet reviewed: added automatically from the news. Read the source to check it.';
+
+/**
+ * One disruption as a card (2026-11-05): when and why in the header, the summary cut to a few lines, then the
+ * sources newest first, each by its headline, the rest behind Show more. What "not yet reviewed" means is
+ * said once, under the list, not after every source.
+ */
+function DisruptionCard({ disruption: d, now }: { disruption: Disruption; now: Date }) {
+  const [summaryOpen, setSummaryOpen] = useState(false);
+  const [sourcesOpen, setSourcesOpen] = useState(false);
+  const summaryId = useId();
+  const sources = [...d.sources].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  const shown = sourcesOpen ? sources : sources.slice(0, DISRUPTION_CARD.sourcesShown);
+  const hidden = sources.length - shown.length;
+  const long = d.summary.length > DISRUPTION_CARD.summaryClampChars;
+  const when = d.endedAt ? `${formatLongDate(d.startedAt)} to ${formatLongDate(d.endedAt)}` : `Ongoing since ${formatLongDate(d.startedAt)}`;
+  return (
+    <li className={`disruption chart-card${d.endedAt ? ' disruption--ended' : ''}`}>
+      <p className="disruption__head">
+        <span className="disruption__when">{when}</span>
+        <span className="disruption__cause">{capitalize(d.cause)}</span>
+      </p>
+      <p id={summaryId} className={`disruption__summary${long && !summaryOpen ? ' disruption__summary--clamped' : ''}`}>
+        {d.summary}
+      </p>
+      {long && (
+        <button type="button" className="link-button disruption__toggle" aria-expanded={summaryOpen} aria-controls={summaryId} onClick={() => setSummaryOpen((v) => !v)}>
+          {summaryOpen ? 'Show less' : 'Read more'}
+        </button>
+      )}
+      <div className="disruption__sources-head">
+        <h4 className="disruption__label">Sources</h4>
+        <span className="disruption__count">
+          {sources.length}
+          {sources.length > 1 && ' · newest first'}
+        </span>
+      </div>
+      <ul className="disruption__sources">
+        {shown.map((s) => (
+          <li key={s.url} className="disruption__source">
+            <SourceLink href={s.url}>{s.title || s.publisher}</SourceLink>
+            <span className="disruption__source-meta">
+              {s.title ? `${s.publisher} · ` : ''}
+              <time dateTime={s.publishedAt} title={s.publishedAt}>
+                {formatShortDate(s.publishedAt, now)}
+              </time>
+              {s.unreviewed && <span className="disruption__unreviewed"> · Not yet reviewed</span>}
+            </span>
+          </li>
+        ))}
+      </ul>
+      {sources.length > DISRUPTION_CARD.sourcesShown && (
+        <button type="button" className="link-button disruption__toggle" aria-expanded={sourcesOpen} onClick={() => setSourcesOpen((v) => !v)}>
+          {sourcesOpen ? 'Show fewer' : `Show ${hidden} more`}
+        </button>
+      )}
+      {shown.some((s) => s.unreviewed) && <p className="disruption__note">{UNREVIEWED_NOTE}</p>}
+    </li>
   );
 }
 
@@ -410,15 +428,26 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
   return (
     <>
       <Header name={item.name} icon={<AssetIcon kind="basin" large />} />
-      <Stats>
-        <Stat label="Pipelines" value={data.pipelines.length ? pipelines.length.toLocaleString('en-US') : notAvailable} aside="crossing it" />
-        <Stat label="Chokepoints" value={String(chokepoints.length)} aside="inside it" />
-        <Stat
-          label="Dominant"
-          value={item.dominant ? capitalize(item.dominant) : <span className="muted">Not given</span>}
-          aside="petroleum type"
-        />
-      </Stats>
+      <BasinOilCard basin={item} />
+      <dl className="facts key-facts">
+        <Row label="Petroleum type">{item.dominant ? capitalize(item.dominant) : <span className="muted">Not given</span>}</Row>
+        <Row label="Pipelines">
+          {data.pipelines.length ? (
+            <span>
+              {pipelines.length.toLocaleString('en-US')} <span className="facts__aside">crossing it</span>
+            </span>
+          ) : (
+            notAvailable
+          )}
+        </Row>
+        {chokepoints.length > 0 && (
+          <Row label="Chokepoints">
+            <span>
+              {chokepoints.length} <span className="facts__aside">inside it</span>
+            </span>
+          </Row>
+        )}
+      </dl>
       <BasinVolumesSection basin={item} />
       <RelatedList
         title="Pipelines crossing it"
@@ -452,6 +481,23 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
         ; countries from <SourceLink href="https://www.naturalearthdata.com/">Natural Earth</SourceLink>
       </p>
     </>
+  );
+}
+
+/** The basin's oil remaining as its lead card, with the basin list's bar of produced, remaining and undiscovered. */
+function BasinOilCard({ basin }: { basin: Basin }) {
+  const oil = basin.volumes?.oil.remaining;
+  if (oil == null) return null;
+  return (
+    <LeadCard
+      label="Oil remaining, as assessed in 2000"
+      value={formatThousandfold(oil)}
+      unit="billion barrels"
+      bar={<OilBar basin={basin} />}
+      notes="In fields found by 1996 · USGS"
+    >
+      {basinOilParts(basin) && <OilKey />}
+    </LeadCard>
   );
 }
 
@@ -491,9 +537,9 @@ function BasinVolumesSection({ basin }: { basin: Basin }) {
             ).map(([label, v]) => (
               <tr key={label}>
                 <td>{label}</td>
-                <td className="num mono">{cell(v.produced)}</td>
-                <td className="num mono">{cell(v.remaining)}</td>
-                <td className="num mono">{cell(v.undiscovered)}</td>
+                <td className="num num-inline">{cell(v.produced)}</td>
+                <td className="num num-inline">{cell(v.remaining)}</td>
+                <td className="num num-inline">{cell(v.undiscovered)}</td>
               </tr>
             ))}
           </tbody>
@@ -649,51 +695,40 @@ export function PipelineDetail({
           )}
         </dd>
       </dl>
-      <Stats>
-        <Stat
-          label="Capacity"
-          value={item.capacity ? formatCapacity(item.capacity) : <span className="muted">Unknown</span>}
-          aside={
-            item.capacitySource && (
-              <>
-                <SourceLink href={item.capacitySource.url}>{item.capacitySource.publisher}</SourceLink>,{' '}
-                {'accessedAt' in item.capacitySource ? (
-                  <>
-                    read <span className="mono">{item.capacitySource.accessedAt}</span>
-                  </>
-                ) : (
-                  <span className="mono">{item.capacitySource.publishedAt}</span>
-                )}
-              </>
-            )
-          }
-        />
-        <ServiceStat history={item.history} now={now} />
-        <Stat
+      {flow?.recentMean != null && (
+        <FlowMeter
           label="Measured flow"
-          value={
-            flow?.recentMean != null ? (
-              formatEnergyPerDay(flow.recentMean)
-            ) : (
-              <span className="muted">{item.flowSeriesId ? 'Not loaded yet' : 'Not measured'}</span>
-            )
-          }
-          aside={
-            flow?.recentMean != null && (
-              // Where and when it was metered is on the status line above; this says how full it runs.
-              <>
-                {MEASURED_FLOW.windowDays}-day mean
-                {flow.share !== null && (
-                  <>
-                    , <span className="mono">{formatIndexShare(flow.share)}</span> of technical capacity
-                  </>
-                )}
-              </>
-            )
-          }
+          flow={flow}
+          recentMean={flow.recentMean}
+          capacity="technical capacity"
+          chartLabel={`Daily physical gas flow for ${item.name}`}
         />
-      </Stats>
-      {flow && flow.sparkline.length > 1 && (
+      )}
+      <dl className="facts key-facts">
+        <Row label="Capacity">
+          {item.capacity ? <span className="key-facts__value">{formatCapacity(item.capacity)}</span> : <span className="muted">Unknown</span>}
+          {item.capacitySource && (
+            <span className="facts__aside">
+              <SourceLink href={item.capacitySource.url}>{item.capacitySource.publisher}</SourceLink>,{' '}
+              {'accessedAt' in item.capacitySource ? (
+                <>
+                  read <span className="mono">{item.capacitySource.accessedAt}</span>
+                </>
+              ) : (
+                <span className="mono">{item.capacitySource.publishedAt}</span>
+              )}
+            </span>
+          )}
+        </Row>
+        <ServiceFact history={item.history} now={now} />
+        {flow?.recentMean == null && (
+          <Row label="Measured flow">
+            <span className="muted">{item.flowSeriesId ? 'Not loaded yet' : 'Not measured'}</span>
+          </Row>
+        )}
+      </dl>
+      {/* With a 7-day mean the chart sits in the flow card above; without one it stands alone. */}
+      {flow && flow.recentMean == null && flow.sparkline.length > 1 && (
         <section className="section chart-card">
           <h3 className="section__title">Daily physical flow, last 90 days</h3>
           <Sparkline
@@ -712,7 +747,7 @@ export function PipelineDetail({
       {endTerminals.length > 0 && (
         <RelatedList title="Ends at" empty="" rows={endTerminals} data={data} onSelect={onSelect} />
       )}
-      <DisruptionList disruptions={disruptions} />
+      <DisruptionList disruptions={disruptions} now={now} />
       <Reports evidence={item.evidence} />
       <AssetNews selection={{ kind: 'pipeline', id: item.id }} data={data} now={now} onSelect={onSelect} />
       {hasPipelineFacts(item, route) && (
@@ -731,33 +766,33 @@ export function PipelineDetail({
           )}
           {item.lengthKm && (
             <Row label="Length">
-              <span className="mono">{formatNumber(item.lengthKm.value, 0)} km</span>
+              <span className="num-inline">{formatNumber(item.lengthKm.value, 0)} km</span>
               {item.lengthKm.estimated && <span className="muted"> (estimated from the route)</span>}
             </Row>
           )}
           {item.diameter && (
             <Row label="Diameter">
-              <span className="mono">{item.diameter}</span>
+              <span className="num-inline">{item.diameter}</span>
             </Row>
           )}
           {item.history?.proposalYear !== undefined && (
             <Row label="Proposed">
-              <span className="mono">{item.history.proposalYear}</span>
+              <span className="num-inline">{item.history.proposalYear}</span>
             </Row>
           )}
           {item.history?.constructionYear !== undefined && (
             <Row label="Construction began">
-              <span className="mono">{item.history.constructionYear}</span>
+              <span className="num-inline">{item.history.constructionYear}</span>
             </Row>
           )}
           {item.history && item.history.startYears.length > 1 && (
             <Row label={item.history.expected ? 'Sections expected' : 'Sections opened'}>
-              <span className="mono">{item.history.startYears.join(', ')}</span>
+              <span className="num-inline">{item.history.startYears.join(', ')}</span>
             </Row>
           )}
           {item.history?.stopYear !== undefined && (
             <Row label="Stopped running">
-              <span className="mono">{item.history.stopYear}</span>
+              <span className="num-inline">{item.history.stopYear}</span>
             </Row>
           )}
           {item.operator && <Row label="Operator">{item.operator}</Row>}
@@ -837,37 +872,138 @@ function CompanyList({ companies }: { companies: Company[] }) {
       {companies.map((c) => (
         <span key={c.name} className="facts__line">
           {c.url ? <SourceLink href={c.url}>{c.name}</SourceLink> : c.name}
-          {c.sharePct !== undefined && <span className="mono muted"> {c.sharePct}%</span>}
+          {c.sharePct !== undefined && <span className="num-inline muted"> {c.sharePct}%</span>}
         </span>
       ))}
       {covered !== null && (
         <span className="facts__line muted">
-          Listed shares cover <span className="mono">{formatNumber(covered, 1)}%</span>
+          Listed shares cover <span className="num-inline">{formatNumber(covered, 1)}%</span>
         </span>
       )}
     </>
   );
 }
 
+type Flow = NonNullable<ReturnType<typeof pipelineFlow>>;
+
+/**
+ * A page's lead figure as a card (2026-11-05): a label, the figure with what it's measured against on the
+ * right, then a bar, small notes and, below, a chart or a key. Used where one figure has a whole to be
+ * read against (a share of capacity, parts of a total); the page's other figures go in rows (`.key-facts`).
+ */
+function LeadCard({
+  label,
+  value,
+  unit,
+  against,
+  bar,
+  notes,
+  children,
+}: {
+  label: string;
+  value: ReactNode;
+  unit?: string;
+  against?: ReactNode;
+  bar?: ReactNode;
+  notes?: ReactNode;
+  children?: ReactNode;
+}) {
+  return (
+    <dl className="lead-card chart-card">
+      <dt className="lead-card__label">{label}</dt>
+      <dd className="lead-card__body">
+        <span className="lead-card__figure">
+          <span className="stat-card__figure">
+            <span className="stat-card__value">{value}</span>
+            {unit && <span className="stat-card__unit">{unit}</span>}
+          </span>
+          {against && <span className="lead-card__against">{against}</span>}
+        </span>
+        {bar}
+        {notes && <span className="stat-card__notes">{notes}</span>}
+        {children && <div className="lead-card__more">{children}</div>}
+      </dd>
+    </dl>
+  );
+}
+
+/**
+ * Measured flow or send-out as the lead card: the 7-day mean, a bar of how full it runs when the meter gives
+ * a capacity, and the last 90 days. The bar uses the meter's own capacity, never the asset's capacity
+ * figure, which is in other units and from another source.
+ */
+function FlowMeter({ label, flow, recentMean, capacity, chartLabel }: { label: string; flow: Flow; recentMean: number; capacity: string; chartLabel: string }) {
+  const share = flow.share;
+  const chart = flow.sparkline.length > 1;
+  return (
+    <LeadCard
+      label={label}
+      value={formatNumber(recentMean / 1e6, 1)}
+      unit="GWh/d"
+      against={
+        share !== null && (
+          <>
+            <span className="num-inline">{formatIndexShare(share)}</span> of {capacity}
+          </>
+        )
+      }
+      bar={
+        share !== null && (
+          <span className="fill-bar" role="img" aria-label={`Running at ${formatIndexShare(share)} of ${capacity}`}>
+            <span className="fill-bar__fill" style={{ width: `${Math.max(0, Math.min(100, share * 100))}%` }} />
+          </span>
+        )
+      }
+      notes={
+        // Where it was metered is on the status line above; the chart's dates say when.
+        <>
+          {MEASURED_FLOW.windowDays}-day mean
+          {chart ? (
+            ' · chart: daily, last 90 days'
+          ) : (
+            <>
+              , to <span className="mono">{flow.latestDate}</span>
+            </>
+          )}
+        </>
+      }
+    >
+      {chart && (
+        <Sparkline
+          points={flow.sparkline.map((p) => ({ date: p.date, value: p.value / 1e6 }))}
+          unit=" GWh/d"
+          label={`${chartLabel}, ${flow.sparkline[0]?.date} to ${flow.latestDate}`}
+          references={flow.capacity ? [{ value: flow.capacity / 1e6, label: capitalize(capacity), style: 'dashed' as const }] : []}
+        />
+      )}
+    </LeadCard>
+  );
+}
+
 /** The year the line first ran, and its age; or the year it's meant to. */
-function ServiceStat({ history, now }: { history: Pipeline['history']; now: Date }) {
+function ServiceFact({ history, now }: { history: Pipeline['history']; now: Date }) {
   const first = history?.startYears[0];
-  if (first === undefined) return <Stat label="In service since" value={<span className="muted">Unknown</span>} />;
-  if (history!.expected) return <Stat label="Expected start" value={String(first)} aside="target year, per GEM" />;
+  if (first === undefined)
+    return (
+      <Row label="In service since">
+        <span className="muted">Unknown</span>
+      </Row>
+    );
+  const fact = (label: string, value: string, aside: string) => (
+    <Row label={label}>
+      <span className="key-facts__value">
+        {value}
+        <span className="facts__aside"> · {aside}</span>
+      </span>
+    </Row>
+  );
+  if (history!.expected) return fact('Expected start', String(first), 'target year, per GEM');
   const age = pipelineAge(history!, now);
   const years = (n: number) => `${n} ${n === 1 ? 'year' : 'years'}`;
-  return (
-    <Stat
-      label="In service since"
-      value={String(first)}
-      aside={
-        history!.stopYear !== undefined
-          ? `ran ${years(age)}, to ${history!.stopYear}`
-          : age === 0
-            ? 'opened this year'
-            : years(age)
-      }
-    />
+  return fact(
+    'In service since',
+    String(first),
+    history!.stopYear !== undefined ? `ran ${years(age)}, to ${history!.stopYear}` : age === 0 ? 'opened this year' : years(age),
   );
 }
 
@@ -989,6 +1125,13 @@ export function CrudeImportsSource({ record }: { record: Pick<CountryCrudeImport
 }
 
 
+/** "now 46% lower", "now 12% higher", "about the same": a change on last year in words, not signs. */
+function vsLastYearWords(pct: number): string {
+  const rounded = Math.round(pct);
+  if (rounded === 0) return 'about the same';
+  return `now ${formatNumber(Math.abs(rounded), 0)}% ${rounded < 0 ? 'lower' : 'higher'}`;
+}
+
 function StorageFigures({ storage, name }: { storage: CountryStorage; name: string }) {
   const { summary, series } = storage;
   const change = storageChange(storage, true);
@@ -1003,20 +1146,19 @@ function StorageFigures({ storage, name }: { storage: CountryStorage; name: stri
           {storage.caution && <>. JODI marks this value to use with caution</>}
         </p>
       </section>
-      <Stats>
-        <Stat label={CHANGE_LABEL[storage.cadence]} value={change ?? notAvailable} />
-        <Stat
-          label={span}
-          value={summary.lastYear ? value(summary.lastYear.value) : notAvailable}
-          aside={
-            storage.vsLastYearPct !== null && (
-              <>
-                now <span className="mono">{formatSignedPct(storage.vsLastYearPct)}</span>
-              </>
-            )
-          }
-        />
-      </Stats>
+      <dl className="facts key-facts">
+        <Row label={CHANGE_LABEL[storage.cadence]}>{change ?? notAvailable}</Row>
+        <Row label="A year earlier">
+          {summary.lastYear ? (
+            <span>
+              {value(summary.lastYear.value)}
+              {storage.vsLastYearPct !== null && <span className="facts__aside"> · {vsLastYearWords(storage.vsLastYearPct)}</span>}
+            </span>
+          ) : (
+            notAvailable
+          )}
+        </Row>
+      </dl>
       <section className="section chart-card">
         <h3 className="section__title">{storage.fill !== null ? 'Storage fill' : 'Gas in storage'}, last 12 months</h3>
         <Sparkline
@@ -1038,8 +1180,8 @@ function StorageFigures({ storage, name }: { storage: CountryStorage; name: stri
               return (
                 <li key={p.id}>
                   <span className="plain-list__name">{p.name}</span>{' '}
-                  <span className="mono">{formatStorageVolume(p.summary.latest.value, p.series.unit)}</span>
-                  {vs !== null && <span className="muted mono"> · {formatSignedPct(vs)} vs last year</span>}
+                  <span className="num-inline">{formatStorageVolume(p.summary.latest.value, p.series.unit)}</span>
+                  {vs !== null && <span className="muted num-inline"> · {formatSignedPct(vs)} vs last year</span>}
                 </li>
               );
             })}
@@ -1056,6 +1198,81 @@ function unitCapacity(units: LngUnit[], states: AssetStatus[], total: number): {
   if (matching.length === 0) return { value: <span className="muted">None</span> };
   if (total === 0) return { value: <span className="muted">Unknown</span> };
   return { value: formatNumber(total, 1), unit: 'mtpa' };
+}
+
+const RUNNING: AssetStatus[] = ['operating', 'reduced'];
+const COMING: AssetStatus[] = ['under_construction', 'planned'];
+
+/** "2 trains: 1 operating, 1 building or proposed", leaving out a part with no units. */
+function lngUnitsLine(item: LngTerminal): string {
+  const noun = (n: number) => (item.facility === 'export' ? (n === 1 ? 'train' : 'trains') : n === 1 ? 'regas unit' : 'regas units');
+  const running = item.units.filter((u) => RUNNING.includes(u.status)).length;
+  const coming = item.units.filter((u) => COMING.includes(u.status)).length;
+  const parts = [running && `${running} operating`, coming && `${coming} building or proposed`].filter(Boolean);
+  return `${item.units.length} ${noun(item.units.length)}${parts.length ? `: ${parts.join(', ')}` : ''}`;
+}
+
+/**
+ * Capacity as the lead card (2026-11-05): what runs now and, when more is coming, a bar of operating against
+ * the total once built. Rows instead when GEM gives no capacity for the units that run.
+ */
+function LngCapacity({ item }: { item: LngTerminal }) {
+  const { operating, planned } = item.capacityMtpa;
+  const running = item.units.some((u) => RUNNING.includes(u.status));
+  const coming = item.units.some((u) => COMING.includes(u.status));
+  // A unit running with no capacity given would make the figure an undercount: say it in rows instead.
+  if ((running && operating === 0) || (coming && planned === 0) || operating + planned === 0) return <LngCapacityRows item={item} units />;
+  const total = operating + planned;
+  const both = operating > 0 && planned > 0;
+  return (
+    <LeadCard
+      label="Capacity"
+      value={formatNumber(operating > 0 ? operating : planned, 1)}
+      unit={operating > 0 ? 'mtpa operating' : 'mtpa planned'}
+      against={
+        both && (
+          <>
+            {formatNumber(total, 1)} mtpa when built
+          </>
+        )
+      }
+      bar={
+        both && (
+          <span
+            className="part-bar"
+            role="img"
+            aria-label={`${formatNumber(operating, 1)} mtpa operating, ${formatNumber(planned, 1)} mtpa building or proposed`}
+          >
+            <span className="part-bar__part part-bar__part--operating" style={{ flexBasis: `${(operating / total) * 100}%` }} />
+            <span className="part-bar__part part-bar__part--planned" style={{ flexBasis: `${(planned / total) * 100}%` }} />
+          </span>
+        )
+      }
+      notes={`${lngUnitsLine(item)} · GEM`}
+    />
+  );
+}
+
+/** Operating and planned capacity as rows, and the unit count when no card says it. */
+function LngCapacityRows({ item, units = false }: { item: LngTerminal; units?: boolean }) {
+  const row = (label: string, states: AssetStatus[], total: number) => {
+    const { value, unit } = unitCapacity(item.units, states, total);
+    return (
+      <Row label={label}>
+        <span className="key-facts__value">
+          {value}
+          {unit && <span className="facts__aside"> {unit}</span>}
+        </span>
+      </Row>
+    );
+  };
+  return (
+    <dl className="facts key-facts">
+      {row('Operating', RUNNING, item.capacityMtpa.operating)}
+      {item.units.some((u) => COMING.includes(u.status)) && row('Planned', COMING, item.capacityMtpa.planned)}
+      {units && <Row label="Units">{lngUnitsLine(item)}</Row>}
+    </dl>
+  );
 }
 
 export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; data: Datasets; now: Date; onSelect: OnSelect }) {
@@ -1085,43 +1302,22 @@ export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; da
           )}
         </dd>
       </dl>
-      <Stats>
-        {sendOut && (
-          <Stat
+      {sendOut?.recentMean != null ? (
+        <>
+          <FlowMeter
             label="Send-out"
-            value={
-              sendOut.recentMean != null ? formatEnergyPerDay(sendOut.recentMean) : <span className="muted">Not reported</span>
-            }
-            aside={
-              sendOut.recentMean != null && (
-                <>
-                  {MEASURED_FLOW.windowDays}-day mean
-                  {sendOut.share !== null && (
-                    <>
-                      , <span className="mono">{formatIndexShare(sendOut.share)}</span> of declared capacity
-                    </>
-                  )}
-                </>
-              )
-            }
+            flow={sendOut}
+            recentMean={sendOut.recentMean}
+            capacity="declared send-out capacity"
+            chartLabel={`Daily LNG send-out for ${item.name}`}
           />
-        )}
-        <Stat
-          label="Operating"
-          {...unitCapacity(item.units, ['operating', 'reduced'], item.capacityMtpa.operating)}
-          aside="units GEM lists as running"
-        />
-        <Stat
-          label="Planned"
-          {...unitCapacity(item.units, ['under_construction', 'planned'], item.capacityMtpa.planned)}
-          aside="building or proposed"
-        />
-        {/* With send-out shown, the unit count makes way; the table below lists the units. */}
-        {!sendOut && (
-          <Stat label="Units" value={String(item.units.length)} aside={item.facility === 'export' ? 'trains' : 'regas units'} />
-        )}
-      </Stats>
-      {sendOut && sendOut.sparkline.length > 1 && (
+          <LngCapacityRows item={item} />
+        </>
+      ) : (
+        <LngCapacity item={item} />
+      )}
+      {/* Send-out with too few days for a mean: the chart on its own. */}
+      {sendOut && sendOut.recentMean == null && sendOut.sparkline.length > 1 && (
         <section className="section chart-card">
           <h3 className="section__title">Daily send-out, last 90 days</h3>
           <Sparkline
@@ -1136,7 +1332,7 @@ export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; da
           />
         </section>
       )}
-      <DisruptionList disruptions={disruptions} />
+      <DisruptionList disruptions={disruptions} now={now} />
       <Reports evidence={item.evidence} />
       <AssetNews selection={{ kind: 'lng', id: item.id }} data={data} now={now} onSelect={onSelect} />
       <section className="section">
@@ -1168,8 +1364,8 @@ export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; da
                 <td>
                   <span className={`status status--${u.status}`}>{statusLabel(u.status)}</span>
                 </td>
-                <td className="num mono">{u.capacityMtpa !== undefined ? formatNumber(u.capacityMtpa, 1) : '–'}</td>
-                <td className="num mono">{u.startYear ?? '–'}</td>
+                <td className="num num-inline">{u.capacityMtpa !== undefined ? formatNumber(u.capacityMtpa, 1) : '–'}</td>
+                <td className="num num-inline">{u.startYear ?? '–'}</td>
               </tr>
             ))}
           </tbody>
@@ -1243,28 +1439,41 @@ export function OilTerminalDetail({ item, data, now, onSelect }: { item: OilTerm
           </span>
         </dd>
       </dl>
-      <Stats>
-        <Stat
-          label="Loadings"
-          value={item.throughput ? formatThroughput(item.throughput.value) : <span className="muted">Not sourced</span>}
-          aside={
-            item.throughput && (
-              <>
-                {item.throughput.period},{' '}
-                <SourceLink href={item.throughput.source.url}>{item.throughput.source.publisher}</SourceLink>
-              </>
-            )
-          }
-        />
-        <Stat
-          label="Route to sea"
-          value={chokepointNames.length ? chokepointNames.join(' or ') : 'Open sea'}
-          aside={chokepointNames.length ? (chokepointNames.length > 1 ? 'chokepoints, either way' : 'chokepoint') : 'no chokepoint'}
-        />
-        <Stat label="Pipelines" value={String(item.pipelineIds.length)} aside="ending here" />
-      </Stats>
+      <dl className="facts key-facts">
+        <Row label="Loadings">
+          {item.throughput ? (
+            <>
+              <span className="key-facts__value">{formatThroughput(item.throughput.value)}</span>
+              <span className="facts__aside">
+                {item.throughput.period}, <SourceLink href={item.throughput.source.url}>{item.throughput.source.publisher}</SourceLink>
+              </span>
+            </>
+          ) : (
+            <span className="muted">Not sourced</span>
+          )}
+        </Row>
+        <Row label="Route to sea">
+          {chokepointNames.length ? (
+            <span>
+              {chokepointNames.join(' or ')}
+              {chokepointNames.length > 1 && <span className="facts__aside"> · either way</span>}
+            </span>
+          ) : (
+            <span>
+              Open sea <span className="facts__aside">· no chokepoint</span>
+            </span>
+          )}
+        </Row>
+        {item.pipelineIds.length > 0 && (
+          <Row label="Pipelines">
+            <span>
+              {item.pipelineIds.length} <span className="facts__aside">ending here</span>
+            </span>
+          </Row>
+        )}
+      </dl>
       {calls && <PortCallsSection calls={calls} terminal />}
-      <DisruptionList disruptions={disruptions} />
+      <DisruptionList disruptions={disruptions} now={now} />
       <Reports evidence={item.evidence} />
       <AssetNews selection={{ kind: 'terminal', id: item.id }} data={data} now={now} onSelect={onSelect} />
       {pipelineRows.length > 0 && (
@@ -1374,7 +1583,7 @@ function RelatedList({
           )}
           {expanded && rows.length > shown.length && (
             <p className="note">
-              Showing the first <span className="mono">{shown.length}</span>; the map shows all of them.
+              Showing the first <span className="num-inline">{shown.length}</span>; the map shows all of them.
             </p>
           )}
         </>
@@ -1458,7 +1667,7 @@ function OnTheWay({ origins, data, onSelect }: { origins: { exposure: Chokepoint
                 <button type="button" className="origins__row origins__row--link" onClick={() => onSelect({ kind: 'chokepoint', id: e.chokepoint })}>
                   <span className="origins__head">
                     <span className="origins__label">{chokepoint?.name ?? e.chokepoint}</span>
-                    <span className="origins__share mono">
+                    <span className="origins__share num-inline">
                       {e.certain ? '' : 'up to '}
                       {formatShare(e.share)}
                     </span>
@@ -1468,7 +1677,7 @@ function OnTheWay({ origins, data, onSelect }: { origins: { exposure: Chokepoint
                     {flow?.indexFiveYear != null && (
                       <>
                         {' '}
-                        · tanker traffic now <span className="mono">{formatIndexShare(flow.indexFiveYear)}</span> of its five-year average
+                        · tanker traffic now <span className="num-inline">{formatIndexShare(flow.indexFiveYear)}</span> of its five-year average
                       </>
                     )}
                   </span>
@@ -1510,7 +1719,7 @@ function OriginList({ rows, onRegion }: { rows: (Pick<OriginRow, 'key' | 'label'
           <>
             <span className="origins__head">
               <span className="origins__label">{row.label}</span>
-              <span className="origins__share mono">{formatShare(row.share)}</span>
+              <span className="origins__share num-inline">{formatShare(row.share)}</span>
             </span>
             <span className="origins__bar" aria-hidden="true">
               <span className={`origins__fill origins__fill--${row.kind}`} style={{ width: `${Math.max(row.share * 100, 0.5)}%` }} />
@@ -1534,6 +1743,28 @@ function OriginList({ rows, onRegion }: { rows: (Pick<OriginRow, 'key' | 'label'
   );
 }
 
+/**
+ * What the region used as the lead card, with the share that came in from other regions or abroad as a bar
+ * (2026-11-05). More can flow in than is used, when the region passes some on: the bar then fills.
+ */
+function FuelUsedCard({ supplied, inflow }: { supplied: number; inflow: number }) {
+  const pct = Math.round((inflow / supplied) * 100);
+  return (
+    <LeadCard
+      label="Used"
+      value={millionsPerDay(supplied)}
+      unit="million b/d"
+      against={<>{pct}% from other regions or abroad</>}
+      bar={
+        <span className="fill-bar" role="img" aria-label={`${pct}% came in from other regions or abroad`}>
+          <span className="fill-bar__fill" style={{ width: `${Math.max(0, Math.min(100, pct))}%` }} />
+        </span>
+      }
+      notes="EIA product supplied"
+    />
+  );
+}
+
 /** M7: where the gasoline, diesel or jet fuel the region used came from. */
 function FuelOriginsView({ item, fuel, data, onSelect }: { item: OilOriginRegion; fuel: FuelId; data: Datasets; onSelect: OnSelect }) {
   const origins = fuelOriginsFor(data, item.id, fuel);
@@ -1545,14 +1776,7 @@ function FuelOriginsView({ item, fuel, data, onSelect }: { item: OilOriginRegion
       <p className="section__lede">
         Over the 12 months to <span className="mono">{monthLabel(origins.to)}</span>.
       </p>
-      <Stats>
-        <Stat label="Used" value={millionsPerDay(origins.suppliedPerDay)} unit="million b/d" aside="EIA product supplied" />
-        <Stat
-          label="Came in"
-          value={`${Math.round((origins.inflowPerDay / origins.suppliedPerDay) * 100)}%`}
-          aside="of that, from other regions or abroad"
-        />
-      </Stats>
+      <FuelUsedCard supplied={origins.suppliedPerDay} inflow={origins.inflowPerDay} />
       <section className="section">
         <div className="title-row">
           <h3 className="section__title">Where it comes from</h3>
@@ -1620,25 +1844,28 @@ function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: D
           <p className="section__lede">
             Over the 12 months to <span className="mono">{monthLabel(origins.to)}</span>.
           </p>
-          <Stats>
-            <Stat label="Crude in" value={millionsPerDay(origins.barrelsPerDay)} unit="million b/d" aside="imported, received or pumped" />
-            <Stat label="Refineries run" value={millionsPerDay(origins.refineryInputPerDay)} unit="million b/d" aside={
-                origins.refineryInputPerDay < origins.barrelsPerDay ? 'the rest moves on or is stored' : 'the difference comes from stocks and other inputs'
-              }
-            />
+          <dl className="facts key-facts">
+            <Row label="Crude in">
+              <span className="key-facts__value">{millionsPerDay(origins.barrelsPerDay)} million b/d</span>
+              <span className="facts__aside">imported, received or pumped</span>
+            </Row>
+            <Row label="Refineries run">
+              <span className="key-facts__value">{millionsPerDay(origins.refineryInputPerDay)} million b/d</span>
+              <span className="facts__aside">
+                {origins.refineryInputPerDay < origins.barrelsPerDay
+                  ? 'the rest moves on or is stored'
+                  : 'the difference comes from stocks and other inputs'}
+              </span>
+            </Row>
             {item.capacity && (
-              <Stat
-                label="Refineries"
-                value={item.capacity.refineries.toLocaleString('en-US')}
-                aside={
-                  <>
-                    <span className="mono">{millionsPerDay(item.capacity.barrelsPerCalendarDay)}</span> million b/d capacity, 1 January{' '}
-                    {item.capacity.asOf}
-                  </>
-                }
-              />
+              <Row label="Refineries">
+                <span className="key-facts__value">{item.capacity.refineries.toLocaleString('en-US')}</span>
+                <span className="facts__aside">
+                  {millionsPerDay(item.capacity.barrelsPerCalendarDay)} million b/d capacity, 1 January {item.capacity.asOf}
+                </span>
+              </Row>
             )}
-          </Stats>
+          </dl>
           <section className="section">
             <div className="title-row">
               <h3 className="section__title">Where it comes from</h3>

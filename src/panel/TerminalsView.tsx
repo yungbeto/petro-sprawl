@@ -59,12 +59,12 @@ export function TerminalsView({ data, listing, onKind, grouping, onGrouping, ope
           <Info label="About this list">
             {kind === 'lng' ? (
               <>
-                All <span className="mono">{total.toLocaleString('en-US')}</span> LNG terminals Global Energy Monitor tracks,
+                All <span className="num-inline">{total.toLocaleString('en-US')}</span> LNG terminals Global Energy Monitor tracks,
                 built or not. Terminals with measured send-out or cited claims come first in each group, then the largest.
               </>
             ) : (
               <>
-                <span className="mono">{total.toLocaleString('en-US')}</span> crude oil terminals, researched one by one:
+                <span className="num-inline">{total.toLocaleString('en-US')}</span> crude oil terminals, researched one by one:
                 where a pipeline meets the sea, or a major export port. Without a cited claim the status stays unknown.
               </>
             )}

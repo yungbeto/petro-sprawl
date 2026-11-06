@@ -96,3 +96,22 @@ export function formatSignedPct(value: number, digits = 0): string {
 export function formatShare(share: number): string {
   return share < 0.005 ? '<1%' : `${Math.round(share * 100)}%`;
 }
+
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+/** "2026", "March 2026" or "2 March 2026", from an ISO year, month or date: as precise as the source is. */
+export function formatLongDate(iso: string): string {
+  const [year, month, day] = iso.split('-');
+  const name = month ? MONTHS[Number(month) - 1] : undefined;
+  if (!name) return year ?? iso;
+  return day ? `${Number(day)} ${name} ${year}` : `${name} ${year}`;
+}
+
+/** "6 Nov", with the year when it isn't the year of `now`: "28 Feb 2025". */
+export function formatShortDate(iso: string, now: Date): string {
+  const [year, month, day] = iso.split('-');
+  const name = month ? MONTHS[Number(month) - 1]?.slice(0, 3) : undefined;
+  if (!name) return year ?? iso;
+  const parts = [day && String(Number(day)), name, Number(year) !== now.getUTCFullYear() && year].filter(Boolean);
+  return parts.join(' ');
+}

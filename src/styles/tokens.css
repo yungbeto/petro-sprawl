@@ -6,11 +6,17 @@
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
+  /* Type scale (docs/design-system.md): eight steps. */
   --text-xs: 11px;
   --text-sm: 12px;
+  --text-ui: 13px;
   --text-md: 14px;
-  --text-lg: 17px;
+  --text-lg: 16px;
+  --text-xl: 20px;
+  --text-figure: 24px;
+  --text-display: 36px;
 
+  --space-half: 2px;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -21,13 +27,31 @@
   --panel-width: 360px;
   --rail-width: 56px;
   --header-height: 64px;
+  --radius-sm: 2px;
   --radius: 4px;
   --radius-lg: 8px;
+  --radius-xl: 16px;
+  --radius-full: 999px;
+  /* A card's edge: a hairline ring inside the box, so it never shifts layout and a scrolling parent
+     (Home's card strip) can't clip it, as an outside ring was on 2026-11-05. */
+  --ring: inset 0 0 0 1px var(--border);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
   /* Controls floating on the map: a hairline ring and two soft layers, so the edge holds on any basemap. */
   --shadow-float: 0 0 0 1px rgb(0 0 0 / 0.08), 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 8px -2px rgb(0 0 0 / 0.1);
   --shadow-float-hover: 0 0 0 1px rgb(0 0 0 / 0.14), 0 2px 4px rgb(0 0 0 / 0.08), 0 6px 14px -4px rgb(0 0 0 / 0.16);
   --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration-sheet: 260ms;
+
+  /* Layers, lowest first. Stacking inside one component keeps its own small numbers. */
+  --z-map-controls: 2;
+  --z-panel: 3;
+  --z-header: 4;
+  --z-sheet: 5;
+  --z-rail: 6;
+  --z-tooltip: 10;
+  --z-scrim: 20;
+  --z-dialog: 21;
 
   /* Neutrals */
   --bg: #f4f4f2;
@@ -36,6 +60,8 @@
   --surface-subtle: #f9f9f7;
   --text: #17191c;
   --text-muted: #5f646b;
+  /* Notes and captions: quieter than muted, still 4.5:1 on --surface and --surface-subtle. */
+  --text-subtle: #6c7178;
   --border: #dddcd7;
   /* Outlines on images and thumbnails: pure black or white at low opacity, never a tinted neutral. */
   --image-outline: rgba(0, 0, 0, 0.1);
@@ -86,28 +112,27 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
+    --shadow-float: 0 0 0 1px rgb(255 255 255 / 0.1), 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 8px -2px rgb(0 0 0 / 0.4);
+    --shadow-float-hover: 0 0 0 1px rgb(255 255 255 / 0.16), 0 2px 4px rgb(0 0 0 / 0.35), 0 6px 14px -4px rgb(0 0 0 / 0.5);
     --bg: #111315;
     --surface: #181a1d;
     --surface-sunken: #1f2225;
     --surface-subtle: #15171a;
     --text: #e6e7e8;
     --text-muted: #9a9fa6;
+    --text-subtle: #868b92;
     --border: #2c2f33;
-  --image-outline: rgba(255, 255, 255, 0.1);
+    --image-outline: rgba(255, 255, 255, 0.1);
     --border-strong: #464a50;
     --focus: #7aa2ff;
-
     --status-operating: #4cc38a;
     --status-reduced: #e0a33a;
     --status-offline: #f0766d;
     --status-unknown: #8d939a;
-
     --flow-below: #f272b8;
     --flow-near: #9298a0;
     --flow-above: #6fa2ff;
-
     --data-stale: #d6a838;
-
     --map-ink: #e6e7e8;
     --map-halo: #111315cc;
     --map-selection: #e6e7e8;
@@ -119,7 +144,44 @@
     --map-storage-line: #9298a059;
     --map-importer: #c3c8d026;
     --map-importer-open: #c3c8d04d;
-    --map-pipeline-operating: #2e8a5c;
+    --map-basin-line: #c4bfa866;
+    --map-basin-fill-hover: #c4bfa81f;
+    --map-basin-line-focus: #c4bfa8a6;
+    --map-basin-fill-focus: #c4bfa814;
+    --map-basin-label: #a8a490;
+    --app-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.075 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    --app-glow: radial-gradient(120% 80% at 0% 0%, #1e2125 0%, #15171a 100%);
+  }
+}
+
+/* The same values as above, for a manual choice of dark. tests/theme.test.ts checks the two stay identical. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --shadow-float: 0 0 0 1px rgb(255 255 255 / 0.1), 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 8px -2px rgb(0 0 0 / 0.4);
+  --shadow-float-hover: 0 0 0 1px rgb(255 255 255 / 0.16), 0 2px 4px rgb(0 0 0 / 0.35), 0 6px 14px -4px rgb(0 0 0 / 0.5);
+  --bg: #111315;
+  --surface: #181a1d;
+  --surface-sunken: #1f2225;
+  --surface-subtle: #15171a;
+  --text: #e6e7e8;
+  --text-muted: #9a9fa6;
+  --text-subtle: #868b92;
+  --border: #2c2f33;
+  --image-outline: rgba(255, 255, 255, 0.1);
+  --border-strong: #464a50;
+  --focus: #7aa2ff;
+  --status-operating: #4cc38a;
+  --status-reduced: #e0a33a;
+  --status-offline: #f0766d;
+  --status-unknown: #8d939a;
+  --flow-below: #f272b8;
+  --flow-near: #9298a0;
+  --flow-above: #6fa2ff;
+  --data-stale: #d6a838;
+  --map-ink: #e6e7e8;
+  --map-halo: #111315cc;
+  --map-selection: #e6e7e8;
+  --map-pipeline-operating: #2e8a5c;
   --map-storage-less: #f272b899;
   --map-storage-even: #2a2d3366;
   --map-storage-more: #6fa2ff99;
@@ -128,51 +190,9 @@
   --map-importer: #c3c8d026;
   --map-importer-open: #c3c8d04d;
   --map-basin-line: #c4bfa866;
-    --map-basin-fill-hover: #c4bfa81f;
+  --map-basin-fill-hover: #c4bfa81f;
   --map-basin-line-focus: #c4bfa8a6;
   --map-basin-fill-focus: #c4bfa814;
-    --map-basin-line-focus: #c4bfa8a6;
-    --map-basin-fill-focus: #c4bfa814;
-    --map-basin-label: #a8a490;
-    --app-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.075 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-    --app-glow: radial-gradient(120% 80% at 0% 0%, #1e2125 0%, #15171a 100%);
-  --shadow-float: 0 0 0 1px rgb(255 255 255 / 0.1), 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 8px -2px rgb(0 0 0 / 0.4);
-  --shadow-float-hover: 0 0 0 1px rgb(255 255 255 / 0.16), 0 2px 4px rgb(0 0 0 / 0.35), 0 6px 14px -4px rgb(0 0 0 / 0.5);
-    --shadow-float: 0 0 0 1px rgb(255 255 255 / 0.1), 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 8px -2px rgb(0 0 0 / 0.4);
-    --shadow-float-hover: 0 0 0 1px rgb(255 255 255 / 0.16), 0 2px 4px rgb(0 0 0 / 0.35), 0 6px 14px -4px rgb(0 0 0 / 0.5);
-  }
-}
-
-:root[data-theme='dark'] {
-  color-scheme: dark;
-  --bg: #111315;
-  --surface: #181a1d;
-  --surface-sunken: #1f2225;
-  --surface-subtle: #15171a;
-  --text: #e6e7e8;
-  --text-muted: #9a9fa6;
-  --border: #2c2f33;
-  --image-outline: rgba(255, 255, 255, 0.1);
-  --border-strong: #464a50;
-  --focus: #7aa2ff;
-
-  --status-operating: #4cc38a;
-  --status-reduced: #e0a33a;
-  --status-offline: #f0766d;
-  --status-unknown: #8d939a;
-
-  --flow-below: #f272b8;
-  --flow-near: #9298a0;
-  --flow-above: #6fa2ff;
-
-  --data-stale: #d6a838;
-
-  --map-ink: #e6e7e8;
-  --map-halo: #111315cc;
-  --map-selection: #e6e7e8;
-  --map-pipeline-operating: #2e8a5c;
-  --map-basin-line: #c4bfa866;
-  --map-basin-fill-hover: #c4bfa81f;
   --map-basin-label: #a8a490;
   --app-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.075 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   --app-glow: radial-gradient(120% 80% at 0% 0%, #1e2125 0%, #15171a 100%);

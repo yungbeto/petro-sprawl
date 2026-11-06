@@ -131,7 +131,7 @@ test('an LNG terminal link shows its units, and search and the layer list know t
   const panel = page.getByLabel('Panel', { exact: true });
   await expect(panel.getByRole('heading', { name: 'QatarEnergy LNG (N)', exact: true })).toBeVisible();
   await expect(panel.getByText('LNG export terminal')).toBeVisible();
-  await expect(panel.locator('dt', { hasText: 'Operating' }).locator('xpath=following-sibling::dd[1]')).toContainText('40.8 mtpa');
+  await expect(panel.locator('dt', { hasText: 'Capacity' }).locator('xpath=following-sibling::dd[1]')).toContainText('40.8');
   // Cited reports set the status over GEM's; GEM's own claim stays in the history.
   const status = panel.locator('dt', { hasText: 'Status' }).locator('xpath=following-sibling::dd[1]');
   await expect(status).toContainText('Reduced');
@@ -168,7 +168,7 @@ test('an EU import terminal takes its status from measured send-out, with a char
   await expect(status.getByRole('link', { name: /of declared send-out capacity \(GIE ALSI\)/ })).toHaveAttribute('href', /alsi\.gie\.eu/);
   await expect(status).toContainText('Latest claim, operating');
   await expect(panel.locator('dt', { hasText: 'Send-out' }).locator('xpath=following-sibling::dd[1]')).toContainText('GWh/d');
-  await expect(panel.getByRole('heading', { name: 'Daily send-out, last 90 days', exact: true })).toBeVisible();
+  await expect(panel.getByRole('img', { name: /^Daily LNG send-out for Gate LNG Terminal/ })).toBeVisible();
   await panel.getByRole('button', { name: 'About the units' }).click();
   await expect(page.getByRole('note', { name: 'About the units' })).toContainText('The status above comes from measured send-out.');
   await page.keyboard.press('Escape');
@@ -309,7 +309,13 @@ test('Hormuz lists its sourced disruption', async ({ page }) => {
   await page.goto('/?sel=chokepoint/hormuz');
   const panel = page.getByLabel('Panel');
   await expect(panel.getByRole('heading', { name: 'Disruptions', exact: true })).toBeVisible();
-  await expect(panel.getByRole('link', { name: 'News On AIR (All India Radio)' })).toBeVisible();
+  // Sources newest first, by headline, three shown; the rest behind Show more.
+  const disruption = panel.locator('.disruption').first();
+  await expect(disruption).toContainText('Ongoing since March 2026');
+  await expect(disruption.locator('.disruption__source')).toHaveCount(3);
+  await disruption.getByRole('button', { name: /^Show \d+ more$/ }).click();
+  await expect(disruption.getByRole('link', { name: /Maritime traffic through Strait of Hormuz/ })).toHaveAttribute('href', /newsonair/);
+  await expect(disruption).toContainText('News On AIR (All India Radio)');
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/hormuz-flow.png` });
 });
 
@@ -319,7 +325,9 @@ test('Nord Stream 1 shows offline with its cited evidence and the sabotage', asy
   const status = panel.locator('dt', { hasText: 'Status' }).locator('xpath=following-sibling::dd[1]');
   await expect(status).toContainText('Offline');
   await expect(status).toContainText('2026-10-14');
-  await expect(panel.getByText(/2022-09-26, ongoing · sabotage/)).toBeVisible();
+  const disruption = panel.locator('.disruption').first();
+  await expect(disruption).toContainText('Ongoing since 26 September 2022');
+  await expect(disruption.locator('.disruption__cause')).toHaveText('Sabotage');
   const report = panel.getByRole('region', { name: /^Reports/ }).getByRole('listitem').filter({ hasText: /Hamburg sabotage trial/ });
   await expect(report.getByRole('link', { name: /^Read on / })).toHaveAttribute('href', /aljazeera\.com/);
 });
@@ -412,14 +420,14 @@ test('storage fills a country and opens its detail', async ({ page }) => {
   await page.goto('/?sel=storage/de');
   await expect(page.getByRole('heading', { name: 'Germany', exact: true })).toBeVisible();
   const panel = page.getByLabel('Panel', { exact: true });
-  await expect(panel.locator('dt', { hasText: 'Same date last year' })).toBeVisible();
+  await expect(panel.locator('dt', { hasText: 'A year earlier' })).toBeVisible();
   await expect(panel.getByRole('img', { name: /Gas storage fill in Germany/ })).toBeVisible();
   await expect(panel).toContainText('GIE AGSI+');
 
   // Outside AGSI+, a country shows gas in storage from its own source, with that source's attribution.
   await page.goto('/?sel=country/ca');
   await expect(page.getByRole('heading', { name: 'Canada', exact: true })).toBeVisible();
-  await expect(panel.locator('dt', { hasText: 'Same month last year' })).toBeVisible();
+  await expect(panel.locator('dt', { hasText: 'A year earlier' })).toBeVisible();
   await expect(panel.getByRole('region', { name: 'By province' })).toContainText('Alberta');
   await expect(panel).toContainText('This does not constitute an endorsement by Statistics Canada of this product.');
   // A country with storage but no regular series says so.

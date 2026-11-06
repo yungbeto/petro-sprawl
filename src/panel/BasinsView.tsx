@@ -88,7 +88,7 @@ const OIL_PART_LABEL: Record<BasinOilPart, string> = {
 const OIL_PART_KEY: Record<BasinOilPart, string> = { produced: 'Produced', remaining: 'Remaining', undiscovered: 'Undiscovered' };
 
 /** What each shade of the cards' bars is, once above the list. */
-function OilKey() {
+export function OilKey() {
   return (
     <ul className="oil-key" aria-label="Oil bar key">
       {(Object.keys(OIL_PART_KEY) as BasinOilPart[]).map((part) => (
@@ -105,7 +105,7 @@ function OilKey() {
  * A basin's oil as assessed in 2000, produced, remaining and undiscovered, as one bar, each part named with
  * its figure on hover. A rule where any of the three is missing.
  */
-function OilBar({ basin }: { basin: Basin }) {
+export function OilBar({ basin }: { basin: Basin }) {
   const parts = basinOilParts(basin);
   if (!parts) return <span className="stat-card__rule" aria-hidden="true" />;
   let start = 0;
