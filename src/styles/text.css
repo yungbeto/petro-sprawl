@@ -1,0 +1,74 @@
+/*
+ * Text styles (docs/design-system.md): size, weight, line height and colour together, defined once.
+ * New code uses the .t-* classes; the component classes listed beside them predate the system and take
+ * the same style from here, so their own rules hold only layout.
+ */
+
+/* A page's headline figure: 2% of the five-year average, 46 million m³. */
+.t-display,
+.flow-headline__figure,
+.tile__value {
+  font-size: var(--text-display);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  /* A standalone figure reads tighter with proportional digits. */
+  font-variant-numeric: proportional-nums;
+}
+
+/* A page's title: an asset's name, What's happening. */
+.t-title,
+.detail__title,
+.hero__title {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+/* A section's title inside a page. */
+.t-section,
+.section__title {
+  font-size: var(--text-md);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+/* A card's figure, beside its unit. */
+.t-figure,
+.stat-card__value {
+  font-size: var(--text-figure);
+  font-weight: 500;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Running text: summaries, statements. */
+.t-body {
+  font-size: var(--text-md);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+/* Secondary text: a figure's label, an aside, a list's lede, a source line. */
+.t-small,
+.facts__aside,
+.view-headline,
+.lead-card__label,
+.note,
+.source {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+/* Notes and captions under a figure or a list: the period, the source, what a mark means. */
+.t-note,
+.stat-card__notes,
+.disruption__note {
+  font-size: var(--text-xs);
+  line-height: 16px;
+  color: var(--text-subtle);
+  text-wrap: pretty;
+}

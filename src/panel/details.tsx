@@ -589,6 +589,44 @@ const REPORT_KIND: Record<Evidence['sourceType'], string> = {
  * The status card's line for the current evidence. A report is named, credited and dated here, and read
  * in full under Reports; datasets and meters keep their one-line statement.
  */
+/**
+ * An asset's status at the top of its page (docs/design-system.md): the status, a warning when the claim
+ * behind it is old, its source, and the latest claim when measured data set the status over it.
+ */
+function StatusBlock({
+  status,
+  current,
+  claim,
+  now,
+  empty = 'No sourced claim yet',
+}: {
+  status: AssetStatus;
+  current: Evidence | undefined;
+  claim?: Evidence;
+  now: Date;
+  empty?: string;
+}) {
+  return (
+    <dl className="status-card">
+      <dt className="visually-hidden">Status</dt>
+      <dd>
+        <span className={`status status--${status} status-card__status`}>{statusLabel(status)}</span>
+        {current && isUnverified(current, now) && (
+          <span className="unverified status-card__line">
+            Unverified since <span className="mono">{current.observedAt}</span>
+          </span>
+        )}
+        <span className="status-card__line">{current ? <StatusSource evidence={current} /> : empty}</span>
+        {claim && (
+          <span className="status-card__line">
+            Latest claim, {statusLabel(claim.status).toLowerCase()}: <StatusSource evidence={claim} />
+          </span>
+        )}
+      </dd>
+    </dl>
+  );
+}
+
 function StatusSource({ evidence }: { evidence: Evidence }) {
   if (!isReport(evidence)) return <EvidenceLine evidence={evidence} />;
   const { publisher, host } = reportParts(evidence);
@@ -678,23 +716,7 @@ export function PipelineDetail({
         icon={<AssetIcon kind="pipeline" commodity={item.commodity} large />}
         lede={route ? <span className="mono">{route}</span> : undefined}
       />
-      <dl className="status-card">
-        <dt className="visually-hidden">Status</dt>
-        <dd>
-          <span className={`status status--${status} status-card__status`}>{statusLabel(status)}</span>
-          {isUnverified(current, now) && (
-            <span className="unverified status-card__line">
-              Unverified since <span className="mono">{current!.observedAt}</span>
-            </span>
-          )}
-          <span className="status-card__line">{current ? <StatusSource evidence={current} /> : 'No sourced claim yet'}</span>
-          {claim && (
-            <span className="status-card__line">
-              Latest claim, {statusLabel(claim.status).toLowerCase()}: <StatusSource evidence={claim} />
-            </span>
-          )}
-        </dd>
-      </dl>
+      <StatusBlock status={status} current={current} claim={claim} now={now} />
       {flow?.recentMean != null && (
         <FlowMeter
           label="Measured flow"
@@ -1285,23 +1307,7 @@ export function LngDetail({ item, data, now, onSelect }: { item: LngTerminal; da
   return (
     <>
       <Header name={item.name} icon={<AssetIcon kind="lng" large />} lede={place || undefined} />
-      <dl className="status-card">
-        <dt className="visually-hidden">Status</dt>
-        <dd>
-          <span className={`status status--${status} status-card__status`}>{statusLabel(status)}</span>
-          {isUnverified(current, now) && (
-            <span className="unverified status-card__line">
-              Unverified since <span className="mono">{current!.observedAt}</span>
-            </span>
-          )}
-          <span className="status-card__line">{current ? <StatusSource evidence={current} /> : 'No sourced claim yet'}</span>
-          {claim && (
-            <span className="status-card__line">
-              Latest claim, {statusLabel(claim.status).toLowerCase()}: <StatusSource evidence={claim} />
-            </span>
-          )}
-        </dd>
-      </dl>
+      <StatusBlock status={status} current={current} claim={claim} now={now} />
       {sendOut?.recentMean != null ? (
         <>
           <FlowMeter
@@ -1425,20 +1431,7 @@ export function OilTerminalDetail({ item, data, now, onSelect }: { item: OilTerm
         icon={<AssetIcon kind="terminal" large />}
         lede={[formatCountry(item.country), item.pointApprox && 'location approximate'].filter(Boolean).join(' · ')}
       />
-      <dl className="status-card">
-        <dt className="visually-hidden">Status</dt>
-        <dd>
-          <span className={`status status--${status} status-card__status`}>{statusLabel(status)}</span>
-          {isUnverified(current, now) && (
-            <span className="unverified status-card__line">
-              Unverified since <span className="mono">{current!.observedAt}</span>
-            </span>
-          )}
-          <span className="status-card__line">
-            {current ? <StatusSource evidence={current} /> : 'No dated source on its current status yet'}
-          </span>
-        </dd>
-      </dl>
+      <StatusBlock status={status} current={current} now={now} empty="No dated source on its current status yet" />
       <dl className="facts key-facts">
         <Row label="Loadings">
           {item.throughput ? (

@@ -4,8 +4,8 @@ Started 2026-11-05 from a UI audit of `src/styles/` and `src/panel/`. This file 
 the tokens, the text styles and the components, and the rules for using them. The audit that started it is at
 the end. Sentence case, no uppercase eyebrows, no em dashes, as everywhere in the app.
 
-Status: step 1 of the plan is done (2026-11-05): every token below exists in `src/styles/tokens.css` and
-`base.css` uses them. Text styles and shared components are proposed and not built yet.
+Status (2026-11-05): tokens are done (`src/styles/tokens.css`, used throughout `base.css`); text styles are
+done (`src/styles/text.css`); of the shared components, `StatusBlock` is built and the rest are proposed.
 
 ## Principles
 
@@ -61,20 +61,26 @@ Weights: 400, 500 (labels, figures, emphasis), 600 (titles). Line heights: 1.25 
 | Motion | `--ease-out`, `--duration-fast` (120ms), `--duration-sheet` (260ms) |
 | Layers | `--z-map-controls` 2, `--z-panel` 3, `--z-header` 4, `--z-sheet` 5, `--z-rail` 6, `--z-tooltip` 10, `--z-scrim` 20, `--z-dialog` 21. Stacking inside one component keeps small raw numbers |
 
-## Text styles (proposed)
+## Text styles
 
-Classes that set size, weight, line height and colour together, so a title is a title everywhere.
+Classes that set size, weight, line height and colour together, so a title is a title everywhere. They live
+in `src/styles/text.css`, loaded after `base.css`. New code uses the `.t-*` class. Older component classes
+are listed in the same rule (`.t-title, .detail__title, .hero__title`), so they take the style from there and
+their own rules in `base.css` hold only layout; don't set type on them again.
 
 | Class | Style | Today written as |
 | --- | --- | --- |
-| `.t-display` | 36/1.1, 500, proportional digits | `.flow-headline__figure`, `.tile__value`, `.hero__headline` |
-| `.t-title` | 20/1.25, 600, balanced | `.detail__title`, `.hero__title`, `.app-header__title` |
-| `.t-section` | 14, 600, balanced | `.section__title`, `.disruption__label` (14 vs 12 today) |
-| `.t-figure` | 24/28, 500, tabular, -0.02em | `.stat-card__value` |
-| `.t-body` | 14/1.5, pretty | summaries, report statements |
-| `.t-small` | 12, muted | `.facts__aside`, `.stats__aside`, `.view-headline`, meta lines |
-| `.t-note` | 11, subtle | `.stat-card__notes`, `.disruption__note`, `.source` |
-| `.t-label` | 12, muted | a figure's label: `.lead-card__label`, `.flow-meter` |
+| `.t-display` | 36/1.1, 500, -0.02em, proportional digits | `.flow-headline__figure`, `.tile__value` |
+| `.t-title` | 20/1.25, 600, balanced | `.detail__title`, `.hero__title` |
+| `.t-section` | 14, 600, balanced | `.section__title` |
+| `.t-figure` | 24/28, 500, -0.02em, tabular digits | `.stat-card__value` (also the lead cards' figure) |
+| `.t-body` | 14/1.5, pretty | new running text |
+| `.t-small` | 12, muted, pretty | `.facts__aside`, `.view-headline`, `.lead-card__label`, `.note`, `.source` |
+| `.t-note` | 11/16, subtle, pretty | `.stat-card__notes`, `.disruption__note` |
+
+Left as they are, each the one of its kind: the header's wordmark (`.app-header__title`), Home's headline
+sentence (`.hero__headline`, 24/600), the menu's tagline and count, and the card-internal labels
+(`.disruption__label`).
 
 ## Components
 
@@ -85,7 +91,7 @@ component; the rest are class patterns repeated by hand.
 | --- | --- | --- | --- |
 | `Card` | `.chart-card`, `.hero-card` (border, not ring), `.lead-card`, `.disruption` | static; interactive (list rows: `.view-row`, `.group-row`, `.tile` hover) | No |
 | `LeadCard` | the figure cards | figure + against + bar + notes + chart | Yes (details.tsx) |
-| `StatusBlock` | the status card, written out 3 times (pipelines, LNG, oil terminals) | with measured claim, unverified | No |
+| `StatusBlock` | the status card, written out 3 times (pipelines, LNG, oil terminals) | with measured claim, unverified, custom empty text | Yes (details.tsx) |
 | `FactRows` / `Row` | `.facts`, `.key-facts` | with aside | Yes (`Row`) |
 | `Bar` | `.fill-bar`, `.oil-bar`, `.part-bar`, the origins and group bars, `FillBar` | one value; parts; with tick | Partly (`FillBar`, `OilBar`) |
 | `Status` | `.status status--*` | dot + label | No (class only) |
@@ -143,7 +149,8 @@ Proposed home: `src/ui/` for the components, one file each, with their CSS in `s
 1. Done 2026-11-05. Tokens for type, radius, ring, motion and layers, and `base.css` moved onto them;
    near sizes merged (10 to 11px, 17 to 16px, 22 to 20px, 32 to 36px); notes on `--text-subtle`; Home's
    cards on the ring; figures out of mono.
-2. Text styles: the `.t-*` classes, and the title, figure and note classes moved onto them.
-3. Components, most repeated first: `StatusBlock`, `Bar`, `Card`, `Tag`/`Chip`, `Button`, `SectionTitle`,
-   `Note`.
+2. Done 2026-11-05. `.t-*` classes in `src/styles/text.css`; the title, figure, small and note classes take
+   their type from there.
+3. Components, most repeated first: `StatusBlock` (done), `Bar`, `Card`, `Tag`/`Chip`, `Button`,
+   `SectionTitle`, `Note`.
 4. Split `base.css` and `details.tsx` along the component lines.

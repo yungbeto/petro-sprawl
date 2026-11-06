@@ -569,9 +569,6 @@ kbd {
   align-items: baseline;
   gap: var(--space-2);
   margin-bottom: var(--space-2);
-  font-size: var(--text-md);
-  font-weight: 600;
-  text-wrap: balance;
 }
 
 .section__lede {
@@ -619,10 +616,6 @@ kbd {
 
 .detail__title {
   margin: var(--space-1) 0 var(--space-3);
-  font-size: var(--text-xl);
-  font-weight: 600;
-  line-height: 1.25;
-  text-wrap: balance;
 }
 
 /* An ⓘ beside a title opens the explanation that used to sit under it (Info.tsx). It sits beside the
@@ -760,11 +753,6 @@ kbd {
   margin: 0;
 }
 
-.lead-card__label {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-}
-
 .lead-card__body {
   display: flex;
   flex-direction: column;
@@ -898,11 +886,6 @@ kbd {
   text-wrap: pretty;
 }
 
-.facts__aside {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-}
-
 .facts__line {
   display: block;
 }
@@ -910,9 +893,6 @@ kbd {
 .note,
 .source {
   margin-top: var(--space-4);
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-  text-wrap: pretty;
 }
 
 /* The sources close the view, set off from it. */
@@ -1101,14 +1081,6 @@ a:hover {
   align-items: flex-start;
   gap: var(--space-1);
   margin-bottom: var(--space-4);
-}
-
-.flow-headline__figure {
-  font-size: var(--text-display);
-  font-weight: 500;
-  line-height: 1.1;
-  /* A standalone figure reads tighter with proportional digits. */
-  font-variant-numeric: proportional-nums;
 }
 
 .flow-headline__text {
@@ -1401,9 +1373,6 @@ a:hover {
 
 .disruption__note {
   margin: var(--space-3) 0 0;
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-  text-wrap: pretty;
 }
 
 /* A claim the claims refresh committed without review, under its statement. */
@@ -1876,10 +1845,6 @@ a:hover {
 /* The same title as every other surface (.detail__title). */
 .hero__title {
   margin-top: var(--space-1);
-  font-size: var(--text-xl);
-  font-weight: 600;
-  line-height: 1.25;
-  text-wrap: balance;
 }
 
 .hero__date {
@@ -2344,12 +2309,7 @@ a:hover {
 }
 
 .tile__value {
-  font-size: var(--text-display);
-  line-height: 40px;
   margin-top: var(--space-1);
-  letter-spacing: -0.02em;
-  /* A standalone figure reads tighter with proportional digits. */
-  font-variant-numeric: proportional-nums;
 }
 
 .tile__unit {
@@ -2752,14 +2712,6 @@ a:hover {
   white-space: nowrap;
 }
 
-.stat-card__value {
-  font-size: var(--text-figure);
-  font-weight: 500;
-  line-height: 28px;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-}
-
 .stat-card__percent {
   font-size: var(--text-lg);
 }
@@ -2779,12 +2731,6 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-}
-
-.stat-card__notes {
-  font-size: var(--text-xs);
-  line-height: 16px;
-  color: var(--text-subtle);
 }
 
 /* A notes part can be long (a basin's countries), so it may wrap, unlike the facts above it. */
@@ -3033,10 +2979,7 @@ a:hover {
 /* A surface's one-line summary under its title, muted like Home's intro. */
 .view-headline {
   margin-top: var(--space-1);
-  font-size: var(--text-sm);
-  color: var(--text-muted);
   font-variant-numeric: tabular-nums;
-  text-wrap: pretty;
 }
 
 .fill-bar {
