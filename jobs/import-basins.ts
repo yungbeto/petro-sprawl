@@ -9,7 +9,7 @@ import mapshaper from 'mapshaper';
 import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
 import { BASIN_COUNTRY_OVERLAP, IMPORT_BOUNDS } from '../src/lib/config';
 import type { Basin } from '../src/types';
-import { mergeBasinCountries, toBasin, USGS_VOLUME_FIELDS, type BasinCountryMatch, type UsgsProvinceProps } from './lib/basins';
+import { mergeBasinCountries, mergeProvinceParts, toBasin, USGS_VOLUME_FIELDS, type BasinCountryMatch, type UsgsProvinceProps } from './lib/basins';
 import { publishDataset, report, sha256File } from './lib/output';
 import { basinSchema } from './lib/schemas';
 
@@ -74,7 +74,7 @@ const result = await publishDataset({
       UsgsProvinceProps
     >;
     const { countries, skipped } = mergeBasinCountries(await countryMatches());
-    const basins = collection.features
+    const basins = mergeProvinceParts(collection.features)
       .map((f) => toBasin(f.properties, f.geometry, countries.get(f.properties.CODE)))
       .filter((b): b is Basin => b !== null)
       .sort((a, b) => a.code - b.code);

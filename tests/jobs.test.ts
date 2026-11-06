@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { basinVolumes, mergeBasinCountries, toBasin } from '../jobs/lib/basins';
+import { basinVolumes, mergeBasinCountries, mergeProvinceParts, toBasin } from '../jobs/lib/basins';
 import { buildChokepoints } from '../jobs/lib/chokepoints';
 
 const square = { type: 'Polygon' as const, coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]]] };
@@ -46,6 +46,35 @@ describe('basinVolumes', () => {
   it('gives an undiscovered estimate only where the province was assessed', () => {
     const carnarvon = basinVolumes({ ...props, STUDIED: '', CUM_OIL: 16, REM_OIL: 19, UNDS_OIL: 0, CUM_GAS: 32, REM_GAS: 70, UNDS_GAS: 0 });
     expect(carnarvon?.oil).toEqual({ produced: 16, remaining: 19, undiscovered: null });
+  });
+});
+
+describe('mergeProvinceParts', () => {
+  const square = (x: number, size: number) => ({
+    type: 'Polygon' as const,
+    coordinates: [[[x, 0], [x + size, 0], [x + size, size], [x, size], [x, 0]]],
+  });
+  const part = (code: number, x: number, size: number, extra: Record<string, unknown> = {}) => ({
+    properties: { CODE: code, NAME: 'Belt', TYPE: 'b', O_G: 'Oil', lx: x + size / 2, ly: size / 2, CUM_OIL: 8, ...extra },
+    geometry: square(x, size),
+  });
+
+  it('joins parts with one code into a MultiPolygon labelled at the largest', () => {
+    const merged = mergeProvinceParts([part(6107, 0, 1), part(6107, 10, 3), part(6108, 20, 1)]);
+    expect(merged).toHaveLength(2);
+    const belt = merged.find((f) => f.properties.CODE === 6107)!;
+    expect(belt.geometry.type).toBe('MultiPolygon');
+    expect(belt.geometry.coordinates).toHaveLength(2);
+    expect([belt.properties.lx, belt.properties.ly]).toEqual([11.5, 1.5]);
+  });
+
+  it('keeps a single-part province as it is', () => {
+    const one = part(6108, 0, 1);
+    expect(mergeProvinceParts([one])[0]).toBe(one);
+  });
+
+  it('throws when parts disagree on more than their label', () => {
+    expect(() => mergeProvinceParts([part(6107, 0, 1), part(6107, 10, 1, { CUM_OIL: 9 })])).toThrow(/6107/);
   });
 });
 

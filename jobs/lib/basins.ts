@@ -96,3 +96,37 @@ export function toBasin(
     geometry,
   };
 }
+
+type ProvinceFeature = { properties: UsgsProvinceProps; geometry: Polygon | MultiPolygon };
+
+/** Planar area of a polygon's outer ring, in square degrees: only to tell a province's parts apart by size. */
+function ringArea(ring: number[][]): number {
+  let sum = 0;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) sum += (ring[j]![0]! + ring[i]![0]!) * (ring[j]![1]! - ring[i]![1]!);
+  return Math.abs(sum / 2);
+}
+
+const polygonsOf = (g: Polygon | MultiPolygon): number[][][][] => (g.type === 'Polygon' ? [g.coordinates] : g.coordinates);
+const area = (g: Polygon | MultiPolygon) => polygonsOf(g).reduce((sum, p) => sum + ringArea(p[0] ?? []), 0);
+
+/**
+ * One feature per province. The USGS file stores some provinces as separate shapes with the same code
+ * (Lesser Antilles Deformed Belt, 6107, is two), each carrying the province's whole volumes. They become one
+ * MultiPolygon, labelled at the largest part. Parts that disagree on anything but their label point throw:
+ * that would be two provinces, not one, and needs a look.
+ */
+export function mergeProvinceParts<F extends ProvinceFeature>(features: F[]): F[] {
+  const byCode = new Map<number, F[]>();
+  for (const f of features) byCode.set(f.properties.CODE, [...(byCode.get(f.properties.CODE) ?? []), f]);
+  return [...byCode.values()].map((parts) => {
+    if (parts.length === 1) return parts[0]!;
+    const { lx: _x, ly: _y, ...first } = parts[0]!.properties;
+    for (const p of parts.slice(1)) {
+      const { lx: _px, ly: _py, ...rest } = p.properties;
+      if (JSON.stringify(rest) !== JSON.stringify(first)) throw new Error(`USGS province ${first.CODE} has parts with different fields`);
+    }
+    const largest = parts.reduce((a, b) => (area(b.geometry) > area(a.geometry) ? b : a));
+    const geometry: MultiPolygon = { type: 'MultiPolygon', coordinates: parts.flatMap((p) => polygonsOf(p.geometry)) };
+    return { ...largest, geometry };
+  });
+}
