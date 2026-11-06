@@ -102,6 +102,7 @@ component; the rest are class patterns repeated by hand.
 | `Tabs` | `.fuel-tabs` | underline | Yes (`FuelTabs`) |
 | `IconButton`, `TextButton` (`src/ui/Button.tsx`) | `.icon-button`, `.link-button` (the bordered `.button` had no uses left and is gone) | icon alone, named by `label`: `sm` 28px in a row of controls, `md` 32px in a bar (panel back and close, search close), `lg` 40px in the header, 40px hit area at every size; text, underlined like a link (show more, read more) | Yes |
 | `SectionTitle` (`src/ui/SectionTitle.tsx`) | every hand-written heading and `.title-row`: `.detail__title`, `.section__title`, `.country-section__title` | `level` page (h2), section (h3), part (h3, a part of a country's page); `count`; an `Info` as children, beside the heading so its name stays its text; `aside` at the row's end (a chart's band, the terminals' kind switch) | Yes |
+| Disruption timeline (`.timeline`, in `DisruptionCard`) | the sources list | date column, a rail with a filled dot for an event (our words, its source under it) and an open dot for a headline | Yes (status.tsx) |
 | `Sparkline` | the 90-day and 12-month charts | references, band tone | Yes |
 | `Note` (`src/ui/Note.tsx`) | `.source`, `.note`, `.report__unreviewed`, `.hero__unreviewed`, `.disruption__note` | `note` (an aside under a list), `source` (closes a page under a rule), `unreviewed` (under a claim or source nobody has checked), `caption` (the finest print, under a card) | Yes |
 

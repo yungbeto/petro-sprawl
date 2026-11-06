@@ -13,6 +13,7 @@ import { TextButton } from '../../ui/Button';
 import { SectionTitle } from '../../ui/SectionTitle';
 import { Note } from '../../ui/Note';
 import { SourceLink } from './parts';
+import { disruptionTimeline } from '../../lib/disruptionTimeline';
 
 export function DisruptionList({ disruptions, now }: { disruptions: Disruption[]; now: Date }) {
   if (disruptions.length === 0) return null;
@@ -32,16 +33,17 @@ const UNREVIEWED_NOTE = 'Not yet reviewed: added automatically from the news. Re
 
 /**
  * One disruption as a card (2026-11-05): when and why in the header, the summary cut to a few lines, then the
- * sources newest first, each by its headline, the rest behind Show more. What "not yet reviewed" means is
- * said once, under the list, not after every source.
+ * timeline newest first (src/lib/disruptionTimeline.ts): events in our words with the source each comes from,
+ * and the sources no event cites by their headline, the rest behind Show more. What "not yet reviewed" means
+ * is said once, under the list, not after every source.
  */
 function DisruptionCard({ disruption: d, now }: { disruption: Disruption; now: Date }) {
   const [summaryOpen, setSummaryOpen] = useState(false);
   const [sourcesOpen, setSourcesOpen] = useState(false);
   const summaryId = useId();
-  const sources = [...d.sources].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
-  const shown = sourcesOpen ? sources : sources.slice(0, DISRUPTION_CARD.sourcesShown);
-  const hidden = sources.length - shown.length;
+  const entries = disruptionTimeline(d);
+  const shown = sourcesOpen ? entries : entries.slice(0, DISRUPTION_CARD.entriesShown);
+  const hidden = entries.length - shown.length;
   const long = d.summary.length > DISRUPTION_CARD.summaryClampChars;
   const when = d.endedAt ? `${formatLongDate(d.startedAt)} to ${formatLongDate(d.endedAt)}` : `Ongoing since ${formatLongDate(d.startedAt)}`;
   return (
@@ -59,32 +61,46 @@ function DisruptionCard({ disruption: d, now }: { disruption: Disruption; now: D
         </TextButton>
       )}
       <div className="disruption__sources-head">
-        <h4 className="disruption__label">Sources</h4>
+        <h4 className="disruption__label">{d.events?.length ? 'Timeline' : 'Sources'}</h4>
         <span className="disruption__count">
-          {sources.length}
-          {sources.length > 1 && ' · newest first'}
+          {entries.length}
+          {entries.length > 1 && ' · newest first'}
         </span>
       </div>
-      <ul className="disruption__sources">
-        {shown.map((s) => (
-          <li key={s.url} className="disruption__source">
-            <SourceLink href={s.url}>{s.title || s.publisher}</SourceLink>
-            <span className="disruption__source-meta">
-              {s.title ? `${s.publisher} · ` : ''}
-              <time dateTime={s.publishedAt} title={s.publishedAt}>
-                {formatShortDate(s.publishedAt, now)}
-              </time>
-              {s.unreviewed && <span className="disruption__unreviewed"> · Not yet reviewed</span>}
+      <ol className="timeline">
+        {shown.map((e) => (
+          <li key={e.kind === 'event' ? `${e.at} ${e.text}` : e.source.url} className={`timeline__entry timeline__entry--${e.kind}`}>
+            <time className="timeline__date" dateTime={e.at} title={e.at}>
+              {formatShortDate(e.at, now)}
+            </time>
+            <span className="timeline__body">
+              {e.kind === 'event' ? (
+                <>
+                  <span className="timeline__text">{e.text}</span>
+                  <span className="disruption__source-meta">
+                    <SourceLink href={e.source.url}>{e.source.publisher}</SourceLink>
+                    {e.source.unreviewed && <span className="disruption__unreviewed"> · Not yet reviewed</span>}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <SourceLink href={e.source.url}>{e.source.title || e.source.publisher}</SourceLink>
+                  <span className="disruption__source-meta">
+                    {e.source.title && e.source.publisher}
+                    {e.source.unreviewed && <span className="disruption__unreviewed"> · Not yet reviewed</span>}
+                  </span>
+                </>
+              )}
             </span>
           </li>
         ))}
-      </ul>
-      {sources.length > DISRUPTION_CARD.sourcesShown && (
+      </ol>
+      {entries.length > DISRUPTION_CARD.entriesShown && (
         <TextButton className="disruption__toggle" aria-expanded={sourcesOpen} onClick={() => setSourcesOpen((v) => !v)}>
           {sourcesOpen ? 'Show fewer' : `Show ${hidden} more`}
         </TextButton>
       )}
-      {shown.some((s) => s.unreviewed) && <Note kind="caption">{UNREVIEWED_NOTE}</Note>}
+      {shown.some((e) => e.source.unreviewed) && <Note kind="caption">{UNREVIEWED_NOTE}</Note>}
     </Card>
   );
 }

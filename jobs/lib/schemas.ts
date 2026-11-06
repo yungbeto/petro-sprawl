@@ -196,7 +196,14 @@ export const disruptionSchema = z.object({
   cause: z.enum(['sabotage', 'sanction', 'maintenance', 'commercial', 'conflict', 'accident', 'other']),
   summary: z.string().min(1),
   sources: z.array(sourceRefSchema).min(1),
+  events: z.array(z.object({ at: isoDate, text: z.string().min(1), source: z.string().url() })).optional(),
   recordedAt: isoDate,
+}).superRefine((d, ctx) => {
+  // An event is only as good as its source, so it must cite one the disruption lists.
+  const urls = new Set(d.sources.map((s) => s.url));
+  d.events?.forEach((e, i) => {
+    if (!urls.has(e.source)) ctx.addIssue({ code: 'custom', path: ['events', i, 'source'], message: `not one of the disruption's sources: ${e.source}` });
+  });
 });
 
 /** A curated corridor pipeline. Its claims must link a source, and can't pose as dataset or measured. */

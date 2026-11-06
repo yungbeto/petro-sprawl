@@ -282,7 +282,21 @@ export interface Disruption {
   /** Our own words, paraphrasing the sources. Attributes contested claims to whoever made them. */
   summary: string;
   sources: SourceRef[];
+  /**
+   * Dated steps in our own words (added 2026-11-06), each from one of `sources`: what the summary would
+   * otherwise pack into a paragraph. The card shows them with the sources no event cites, as one timeline.
+   */
+  events?: DisruptionEvent[];
   recordedAt: string;
+}
+
+export interface DisruptionEvent {
+  /** ISO date or month. */
+  at: string;
+  /** One sentence, paraphrasing the source. */
+  text: string;
+  /** The url of one of the disruption's sources. */
+  source: string;
 }
 
 export interface DatasetMeta {

@@ -5,7 +5,7 @@
     "assetId": "hormuz",
     "startedAt": "2026-03",
     "cause": "conflict",
-    "summary": "Days after US and Israeli strikes on Iran began on 2026-02-28, Iran declared the strait closed and traffic largely halted. Ships from states Iran calls non-hostile may pass through Iranian waters, reportedly for a toll, and in May Iran set up a Persian Gulf Strait Authority to run transits. The Commons Library cites WTO estimates of a 95% drop in crude carriers and 99% in LNG carriers from 28 February to 1 June. CRS reports a US blockade of Iranian ports from 13 April, a US-Iran memorandum on 17 June that briefly lifted crossings, and renewed attacks in July after which the US said the memorandum no longer applied. Start month is when PortWatch tanker transits fell, from 43.5 a day in February to 0.9 in March.",
+    "summary": "Days after US and Israeli strikes on Iran began on 2026-02-28, Iran declared the strait closed and traffic largely halted. Ships from states Iran calls non-hostile may pass through Iranian waters, reportedly for a toll, and in May Iran set up a Persian Gulf Strait Authority to run transits. Start month is when PortWatch tanker transits fell, from 43.5 a day in February to 0.9 in March.",
     "sources": [
       {
         "publisher": "Nation Thailand",
@@ -90,6 +90,58 @@
         "title": "Maritime traffic through Strait of Hormuz remains restricted despite two-week ceasefire between Tehran & Washington",
         "url": "https://www.newsonair.gov.in/maritime-traffic-through-strait-of-hormuz-remains-restricted-despite-two-week-ceasefire-between-tehran-washington",
         "publishedAt": "2026-04-10"
+      }
+    ],
+    "events": [
+      {
+        "at": "2026-02-28",
+        "text": "US and Israeli strikes on Iran begin.",
+        "source": "https://www.congress.gov/crs-product/R45281"
+      },
+      {
+        "at": "2026-03",
+        "text": "Lloyd's List reports Iran running a \"toll booth\" system: ships pass after IRGC vetting unless their government has an agreement with Iran.",
+        "source": "https://researchbriefings.files.parliament.uk/documents/CBP-10636/CBP-10636.pdf"
+      },
+      {
+        "at": "2026-04-07",
+        "text": "A US-Iran ceasefire halts major combat, but Iran keeps routing ships through its own waters and attacking those that don't comply.",
+        "source": "https://www.congress.gov/crs-product/R45281"
+      },
+      {
+        "at": "2026-04-13",
+        "text": "The US begins a blockade of ships seeking to reach Iranian ports.",
+        "source": "https://researchbriefings.files.parliament.uk/documents/CBP-10636/CBP-10636.pdf"
+      },
+      {
+        "at": "2026-05-03",
+        "text": "The US announces Project Freedom, a southern route that avoids Iranian waters.",
+        "source": "https://www.congress.gov/crs-product/R45281"
+      },
+      {
+        "at": "2026-05-05",
+        "text": "With little done, Project Freedom is paused at Pakistan's request, to let ceasefire talks continue.",
+        "source": "https://researchbriefings.files.parliament.uk/documents/CBP-10636/CBP-10636.pdf"
+      },
+      {
+        "at": "2026-06-01",
+        "text": "WTO data: since 28 February, crude carriers through the strait are down 95% and LNG carriers 99%.",
+        "source": "https://researchbriefings.files.parliament.uk/documents/CBP-10636/CBP-10636.pdf"
+      },
+      {
+        "at": "2026-06-17",
+        "text": "The US and Iran sign a memorandum lifting the blockade, with safe passage for 60 days. Crossings rise for a while, not to pre-war levels.",
+        "source": "https://www.congress.gov/crs-product/R45281"
+      },
+      {
+        "at": "2026-07-07",
+        "text": "Iranian attacks on ships off Oman on 7 and 8 July draw US airstrikes; Trump says the memorandum is no longer in force.",
+        "source": "https://www.congress.gov/crs-product/R45281"
+      },
+      {
+        "at": "2026-08",
+        "text": "By early August the US has reimposed its naval blockade, after renewed Iranian attacks on shipping and Arab states.",
+        "source": "https://www.congress.gov/crs-product/R45281"
       }
     ],
     "recordedAt": "2026-10-28"

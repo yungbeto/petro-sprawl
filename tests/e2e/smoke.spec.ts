@@ -309,13 +309,17 @@ test('Hormuz lists its sourced disruption', async ({ page }) => {
   await page.goto('/?sel=chokepoint/hormuz');
   const panel = page.getByLabel('Panel');
   await expect(panel.getByRole('heading', { name: 'Disruptions', exact: true })).toBeVisible();
-  // Sources newest first, by headline, three shown; the rest behind Show more.
+  // One timeline newest first: headlines and dated events, three shown; the rest behind Show more.
   const disruption = panel.locator('.disruption').first();
   await expect(disruption).toContainText('Ongoing since March 2026');
-  await expect(disruption.locator('.disruption__source')).toHaveCount(3);
+  await expect(disruption.locator('.timeline__entry')).toHaveCount(3);
   await disruption.getByRole('button', { name: /^Show \d+ more$/ }).click();
   await expect(disruption.getByRole('link', { name: /Maritime traffic through Strait of Hormuz/ })).toHaveAttribute('href', /newsonair/);
   await expect(disruption).toContainText('News On AIR (All India Radio)');
+  // An event in our words, with the report it comes from.
+  const blockade = disruption.locator('.timeline__entry--event').filter({ hasText: 'The US begins a blockade of ships seeking to reach Iranian ports.' });
+  await expect(blockade.getByRole('link', { name: 'House of Commons Library' })).toHaveAttribute('href', /CBP-10636/);
+  await expect(blockade.locator('time')).toHaveAttribute('datetime', '2026-04-13');
   if (SHOTS) await page.waitForTimeout(2500), await page.screenshot({ path: `${SHOTS}/hormuz-flow.png` });
 });
 

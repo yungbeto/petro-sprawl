@@ -646,7 +646,8 @@ export const TERMINAL_GROUPS = { listLimit: 50 } as const;
  * A disruption's card on an asset's page (2026-11-05): the summary cut to `summaryLines` lines with Read more
  * when longer than `summaryClampChars`, and the newest `sourcesShown` sources with the rest behind Show more.
  */
-export const DISRUPTION_CARD = { summaryLines: 3, summaryClampChars: 260, sourcesShown: 3 } as const;
+/** The disruption card: the summary cut to a few lines, then the timeline's newest entries, the rest behind Show more. */
+export const DISRUPTION_CARD = { summaryLines: 3, summaryClampChars: 260, entriesShown: 3 } as const;
 
 export const HOME_HERO = { cards: 5, disruptionsShown: 3, changesShown: 3, recentDays: 14 } as const;
 
