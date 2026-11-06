@@ -787,6 +787,9 @@ test('where is my oil from: a ZIP code opens its region on gasoline, with crude 
   // Crude shows the chokepoints on cited routes; one opens the chokepoint.
   await panel.getByRole('tab', { name: 'Crude' }).click();
   await expect(page).toHaveURL(/fuel=crude/);
+  // EIA's own utilization figure, with the month it's for.
+  const use = panel.locator('dt', { hasText: 'Refinery use' }).locator('xpath=following-sibling::dd[1]');
+  await expect(use).toContainText(/^\d+(\.\d)?%of operable capacity in \w+ \d{4}/);
   await panel.getByRole('button', { name: /^Strait of Hormuz/ }).click();
   await expect(page).toHaveURL(/sel=chokepoint\/hormuz/);
   expect(page.url()).not.toContain('fuel=');

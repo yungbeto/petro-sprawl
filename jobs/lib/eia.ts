@@ -121,6 +121,17 @@ export function refineryInputByPadd(rows: EiaRow[]): ByPeriod<number> {
   return out;
 }
 
+/** EIA's refinery utilization by PADD (pnp/unc, process YUP), in percent. Withheld values are left out. */
+export function utilizationByPadd(rows: EiaRow[]): ByPeriod<number> {
+  const out: ByPeriod<number> = new Map();
+  for (const r of rows) {
+    const padd = PADD_BY_EIA.get(r.duoarea);
+    const pct = r.value === null || r.value === '' ? NaN : Number(r.value);
+    if (padd && r.units === '%' && Number.isFinite(pct)) put(out, padd, r.period, () => pct);
+  }
+  return out;
+}
+
 /** "Federal Offshore--Gulf of America" -> "Federal offshore, Gulf of America"; "Texas" stays. */
 export function areaName(description: string): string {
   const name = description.replace(/ Field Production of Crude Oil.*$/, '').trim();
@@ -150,6 +161,8 @@ export function toRegions(
     receipts: ByPeriod<CrudeMonth['receipts']>;
     input: ByPeriod<number>;
     production: ByPeriod<CrudeMonth['production']>;
+    /** Optional: a month without it simply has no utilization. */
+    utilization?: ByPeriod<number>;
   },
   { months, capacity }: { months: number; capacity?: Map<PaddId, OilOriginRegion['capacity']> },
 ): OilOriginRegion[] {
@@ -164,13 +177,17 @@ export function toRegions(
     const region: OilOriginRegion = {
       id: padd.id,
       name: padd.name,
-      months: complete.map((period) => ({
-        period,
-        refineryInput: parts.input.get(padd.id)!.get(period)!,
-        imports: parts.imports.get(padd.id)?.get(period) ?? [],
-        receipts: parts.receipts.get(padd.id)?.get(period) ?? [],
-        production: parts.production.get(padd.id)?.get(period) ?? [],
-      })),
+      months: complete.map((period) => {
+        const pct = parts.utilization?.get(padd.id)?.get(period);
+        return {
+          period,
+          refineryInput: parts.input.get(padd.id)!.get(period)!,
+          imports: parts.imports.get(padd.id)?.get(period) ?? [],
+          receipts: parts.receipts.get(padd.id)?.get(period) ?? [],
+          production: parts.production.get(padd.id)?.get(period) ?? [],
+          ...(pct !== undefined ? { refineryUtilizationPct: pct } : {}),
+        };
+      }),
     };
     const cap = capacity?.get(padd.id);
     return cap ? { ...region, capacity: cap } : region;

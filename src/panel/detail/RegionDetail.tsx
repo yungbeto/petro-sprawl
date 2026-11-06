@@ -20,7 +20,10 @@ const eiaSeries = (eia: string) =>
     ['Imports by country of origin', `https://www.eia.gov/dnav/pet/pet_move_impcp_a2_${eia.toLowerCase()}_epc0_ip0_mbbl_m.htm`],
     ['Movements between regions', 'https://www.eia.gov/dnav/pet/pet_move_ptb_a_epc0_tnr_mbbl_m.htm'],
     ['Production by state', 'https://www.eia.gov/dnav/pet/pet_crd_crpdn_adc_mbbl_m.htm'],
+    ['Refinery utilization', 'https://www.eia.gov/dnav/pet/pet_pnp_unc_dcu_nus_m.htm'],
   ] as const;
+
+const pct = (value: number) => `${value.toLocaleString('en-US', { maximumFractionDigits: 1 })}%`;
 
 function millionsPerDay(barrels: number): string {
   return formatNumber(barrels / 1e6, 2);
@@ -272,6 +275,16 @@ function CrudeOrigins({ item, data, onSelect }: { item: OilOriginRegion; data: D
                   : 'the difference comes from stocks and other inputs'}
               </span>
             </Row>
+            {origins.utilization && (
+              <Row label="Refinery use">
+                <span className="key-facts__value">{pct(origins.utilization.latest.pct)}</span>
+                <span className="facts__aside">
+                  of operable capacity in {monthLabel(origins.utilization.latest.period)}
+                  {origins.utilization.average !== null && `, ${pct(origins.utilization.average)} over the 12 months`}
+                  {origins.utilization.latest.pct > 100 && '; past 100% means running above rated capacity'}
+                </span>
+              </Row>
+            )}
             {item.capacity && (
               <Row label="Refineries">
                 <span className="key-facts__value">{item.capacity.refineries.toLocaleString('en-US')}</span>

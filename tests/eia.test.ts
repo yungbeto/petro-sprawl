@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { areaName, importsByPadd, importsOf, partnerName, productionByPadd, receiptsByPadd, refineryInputByPadd, toFuelRegions, toRegions, type EiaRow } from '../jobs/lib/eia';
+import { areaName, importsByPadd, importsOf, partnerName, productionByPadd, receiptsByPadd, refineryInputByPadd, toFuelRegions, toRegions, utilizationByPadd, type EiaRow } from '../jobs/lib/eia';
 import { largestCities, paddHubs, placeName, zctaStates, zipRanges } from '../jobs/lib/us-lookup';
 import { PADDS } from '../src/lib/config';
 
@@ -69,6 +69,22 @@ describe('EIA crude rows', () => {
     expect(regions.map((r) => r.id)).toEqual(['padd-1', 'padd-2', 'padd-3', 'padd-4', 'padd-5']);
     expect(regions[0]!.months.map((m) => m.period)).toEqual(['2026-06', '2026-07']);
     expect(regions[2]!.months[1]).toMatchObject({ refineryInput: 100, imports: [], receipts: [{ from: 'padd-2', kbbl: 5 }] });
+    expect(regions[2]!.months[1]).not.toHaveProperty('refineryUtilizationPct');
+  });
+
+  it("adds EIA's refinery utilization to the months it reports, leaving withheld ones out", () => {
+    const pct = (duoarea: string, value: number | string | null, period = '2026-07') => row(duoarea, value, 'Percent Utilization', { units: '%', period });
+    const utilization = utilizationByPadd([pct('R20', 101.6), pct('R10', '88.5'), pct('R30', null), pct('R2A', 102.1), row('R40', 70, 'not a percent')]);
+    expect(utilization.get('padd-2')?.get('2026-07')).toBe(101.6);
+    expect(utilization.get('padd-1')?.get('2026-07')).toBe(88.5);
+    expect(utilization.has('padd-3')).toBe(false);
+    expect(utilization.has('padd-4')).toBe(false);
+    const input = refineryInputByPadd(PADDS.map((p) => row(p.eia, 100, 'input')));
+    const imports = importsByPadd(PADDS.map((p) => row(`${p.eia}-Z00`, 0, 'total')));
+    const receipts = receiptsByPadd({ total: [row('R30-R20', 5, 'r')], pipeline: [], tankerBarge: [], rail: [] });
+    const regions = toRegions({ imports, receipts, input, production: new Map(), utilization }, { months: 12 });
+    expect(regions[1]!.months[0]!.refineryUtilizationPct).toBe(101.6);
+    expect(regions[2]!.months[0]).not.toHaveProperty('refineryUtilizationPct');
   });
 });
 

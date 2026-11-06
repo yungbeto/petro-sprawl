@@ -279,6 +279,7 @@ export const oilOriginRegionSchema = z.object({
         imports: importsList,
         receipts: z.array(z.object({ from: paddRef, kbbl, pipeline: kbbl, tankerBarge: kbbl, rail: kbbl })),
         production: z.array(z.object({ area: z.string().min(1), kbbl })),
+        refineryUtilizationPct: z.number().min(0).max(150).optional(),
       }),
     )
     .min(12),

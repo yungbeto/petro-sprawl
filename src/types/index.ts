@@ -324,6 +324,11 @@ export interface CrudeMonth {
   receipts: { from: PaddRef; kbbl: number; pipeline: number; tankerBarge: number; rail: number }[];
   /** Crude pumped in the region, by state or federal offshore area. */
   production: { area: string; kbbl: number }[];
+  /**
+   * EIA's "Percent Utilization of Refinery Operable Capacity" (pnp/unc, YUP): gross input to distillation
+   * units against operable capacity. It can pass 100 when refineries run above their rated capacity.
+   */
+  refineryUtilizationPct?: number;
 }
 
 export type PaddRef = 'padd-1' | 'padd-2' | 'padd-3' | 'padd-4' | 'padd-5';

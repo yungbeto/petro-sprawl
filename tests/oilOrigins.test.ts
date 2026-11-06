@@ -108,3 +108,18 @@ describe('places', () => {
     expect(paddForState('Ontario')).toBeNull();
   });
 });
+
+describe('refinery utilization', () => {
+  it("gives EIA's latest month and the year's average weighted by days", () => {
+    const months = year().map((m, i) => ({ ...m, refineryUtilizationPct: i === 11 ? 101.6 : 90 }));
+    const u = regionOrigins(region(months))!.utilization!;
+    expect(u.latest).toEqual({ period: '2026-07', pct: 101.6 });
+    expect(u.average).toBeCloseTo((90 * (365 - 31) + 101.6 * 31) / 365, 6);
+  });
+
+  it('leaves the average out when a month lacks it, and is null when EIA gives none', () => {
+    const months = year().map((m, i) => (i === 3 ? m : { ...m, refineryUtilizationPct: 95 }));
+    expect(regionOrigins(region(months))!.utilization).toEqual({ latest: { period: '2026-07', pct: 95 }, average: null });
+    expect(regionOrigins(region())!.utilization).toBeNull();
+  });
+});

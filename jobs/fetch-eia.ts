@@ -16,6 +16,7 @@ import {
   refineryInputByPadd,
   toFuelRegions,
   toRegions,
+  utilizationByPadd,
   type EiaRow,
 } from './lib/eia';
 import { fetchJson } from './lib/http';
@@ -53,7 +54,7 @@ const result = await publishDataset({
   id: 'oil-origins',
   schema: oilOriginRegionSchema,
   produce: async () => {
-    const [imports, total, pipeline, tankerBarge, rail, input, production, capacityRows] = await Promise.all([
+    const [imports, total, pipeline, tankerBarge, rail, input, production, capacityRows, utilization] = await Promise.all([
       rows('petroleum/move/impcp', { ...crude, process: ['IP0'] }, 'monthly', start),
       rows('petroleum/move/ptb', crude, 'monthly', start),
       rows('petroleum/move/pipe', crude, 'monthly', start),
@@ -63,6 +64,8 @@ const result = await publishDataset({
       rows('petroleum/crd/crpdn', crude, 'monthly', start),
       // Operable refineries (8O0) and atmospheric crude distillation capacity (8D0), as of 1 January.
       rows('petroleum/pnp/cap1', { process: ['8O0', '8D0'], duoarea: PADDS.map((p) => p.eia) }, 'annual', String(now.getUTCFullYear() - 2)),
+      // EIA's own percent utilization of operable capacity, monthly by PADD.
+      rows('petroleum/pnp/unc', { process: ['YUP'], duoarea: PADDS.map((p) => p.eia) }, 'monthly', start),
     ]);
     const capacity = new Map<PaddId, OilOriginRegion['capacity']>();
     for (const padd of PADDS) {
@@ -78,6 +81,7 @@ const result = await publishDataset({
         receipts: receiptsByPadd({ total, pipeline, tankerBarge, rail }),
         input: refineryInputByPadd(input),
         production: productionByPadd(production),
+        utilization: utilizationByPadd(utilization),
       },
       { months: EIA.months, capacity },
     );
@@ -86,7 +90,7 @@ const result = await publishDataset({
       records: regions,
       meta: {
         sourceUrl: 'https://www.eia.gov/opendata/',
-        sourceVersion: `EIA API v2: petroleum/move/impcp (IP0), move/ptb, pipe, tb, rail, pnp/inpt, crd/crpdn (crude oil, MBBL), pnp/cap1; ${periods[0]} to ${periods.at(-1)}`,
+        sourceVersion: `EIA API v2: petroleum/move/impcp (IP0), move/ptb, pipe, tb, rail, pnp/inpt, crd/crpdn (crude oil, MBBL), pnp/cap1, pnp/unc (YUP); ${periods[0]} to ${periods.at(-1)}`,
         license: 'Public domain (U.S. Energy Information Administration)',
         dataThrough: periods.at(-1),
       },

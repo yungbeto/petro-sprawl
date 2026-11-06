@@ -35,6 +35,11 @@ export interface RegionOrigins {
   /** Barrels a day flowing in or pumped, over the window. */
   barrelsPerDay: number;
   refineryInputPerDay: number;
+  /**
+   * EIA's refinery utilization: its latest month in the window, and the average over the window weighted by
+   * days (only when every month has it). Null when EIA gives none.
+   */
+  utilization: { latest: { period: string; pct: number }; average: number | null } | null;
   rows: OriginRow[];
   exposure: ChokepointExposure[];
   routes: OilRoute[];
@@ -164,10 +169,20 @@ export function regionOrigins(
     months: months.length,
     barrelsPerDay: (total * 1000) / days,
     refineryInputPerDay: (months.reduce((a, m) => a + m.refineryInput, 0) * 1000) / days,
+    utilization: utilizationOf(months, days),
     rows,
     exposure: exposure(rows),
     routes: routes.filter((r) => rows.some((row) => row.code === r.country)),
   };
+}
+
+function utilizationOf(months: OilOriginRegion['months'], days: number): RegionOrigins['utilization'] {
+  const reported = months.filter((m) => m.refineryUtilizationPct !== undefined);
+  const last = reported.at(-1);
+  if (!last) return null;
+  const average =
+    reported.length === months.length ? reported.reduce((a, m) => a + m.refineryUtilizationPct! * daysInMonth(m.period), 0) / days : null;
+  return { latest: { period: last.period, pct: last.refineryUtilizationPct! }, average };
 }
 
 function listOr(names: string[]): string {
