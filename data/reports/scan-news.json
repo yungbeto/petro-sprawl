@@ -1,21 +1,21 @@
 {
-  "recordedAt": "2026-11-07T01:03:36.294Z",
+  "recordedAt": "2026-11-07T10:30:56.939Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
       "requests": 8,
       "failed": 18,
-      "articles": 148,
+      "articles": 205,
       "errors": [
-        "fetch failed",
-        "fetch failed",
-        "fetch failed"
+        "answered 429",
+        "answered 429",
+        "answered 429"
       ]
     },
     "google-news": {
       "requests": 19,
       "failed": 0,
-      "articles": 381,
+      "articles": 364,
       "errors": []
     }
   },
@@ -23,128 +23,50 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-07"
   },
-  "stories": 20,
-  "candidates": 3,
+  "stories": 19,
+  "candidates": 5,
   "usage": {
-    "input": 140910,
-    "output": 7243,
-    "searches": 9
+    "input": 0,
+    "output": 0,
+    "searches": 0
   },
-  "estimatedCostUsd": 0.108,
+  "estimatedCostUsd": 0,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "committed",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.themarysue.com/pentagon-says-thousands-of-us-troops-are-poised-to-strike-iran-then-reports-emerge-of-what-happened-to-five-tankers-in-the-strait-of-hormuz/",
-        "publisher": "The Mary Sue",
-        "quote": "The situation in the Strait of Hormuz has been escalating as Iranian forces report that five oil tankers and a tugboat caught fire in a series of incidents.",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-05",
-        "eventText": "Iranian forces say five oil tankers and a tugboat caught fire in the Strait of Hormuz after mine strikes."
-      },
-      "headlines": [
-        "- 2026-11-07 · arabnews.com: Arab News | Iran says it downed US MQ - 1 drone over Qeshm Island <https://www.arabnews.com/middle-east/iran-says-it-downed-us-mq-1-drone-over-qeshm-island-3010264>",
-        "- 2026-11-07 · themarysue.com: Pentagon says US troops are poised to strike Iran . Then 5 tankers are hit in the Strait of Hormuz <https://www.themarysue.com/pentagon-says-thousands-of-us-troops-are-poised-to-strike-iran-then-reports-emerge-of-what-happened-to-five-tankers-in-the-strait-of-hormuz/>",
-        "- 2026-11-07 · aol.com: Two missiles strike Iran Qeshm Island , Tasnim news agency says <https://www.aol.com/articles/two-missiles-strike-irans-qeshm-225643000.html>",
-        "- 2026-11-07 · Middle East Eye: Iranian air defence destroys MQ-9 drone over Qeshm Island, report says",
-        "- 2026-11-07 · Anadolu Ajansı: Iran says air defense downed US MQ-9 drone above Qeshm Island",
-        "- 2026-11-07 · Beinsure: Strait of Hormuz Attacks Increase Marine War-Risk Insurance Concerns",
-        "- 2026-11-07 · UA.NEWS: Iran says it downed US MQ-9 over Qeshm Island — Anadolu Agency",
-        "- 2026-11-07 · Breakingthenews.net: Iran says drone intercepted over Qeshm",
-        "- 2026-11-07 · NDTV: 2 Missiles Hit Iran's Qeshm Island: Report",
-        "- 2026-11-06 · euronews.com: Hormuz standoff not sustainable , senior Iranian lawmaker tells Euronews <https://www.euronews.com/2026/11/06/hormuz-standoff-not-sustainable-senior-iranian-lawmaker-tells-euronews>",
-        "- 2026-11-06 · oilprice.com: India HPCL Struggles to Secure Oil Tankers as Hormuz Risks Persist <https://oilprice.com/Latest-Energy-News/World-News/Indias-HPCL-Struggles-to-Secure-Oil-Tankers-as-Hormuz-Risks-Persist.html>",
-        "- 2026-11-06 · middleeasteye.net: IRGC says two oil tankers ablaze after collision with mines in Hormuz Strait <https://www.middleeasteye.net/live-blog/live-blog-update/irgc-says-two-oil-tankers-ablaze-after-collision-mines-hormuz-strait>",
-        "- 2026-11-06 · juancole.com: Yes , Laura Loomer , Americans Should be learning Arabic amid Hormuz Crisis <https://www.juancole.com/2026/11/loomer-americans-learning.html>",
-        "- 2026-11-06 · arabnews.com: Arab News | Iran Guards say two tankers caught fire in Hormuz <https://www.arabnews.com/middle-east/iran-guards-say-two-tankers-caught-fire-in-hormuz-3010129>",
-        "- 2026-11-06 · thehindubusinessline.com: Crude oil price gain amid fresh tanker attacks in Strait of Hormuz <https://www.thehindubusinessline.com/markets/commodities/brent-crude-tops-100-wti-nears-92-amid-fresh-strait-of-hormuz-attacks/article71672815.ece>"
-      ]
+      "outcome": "error",
+      "detail": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CgoQvXxzzzw5rb78vW9Gk\"}"
     },
     {
-      "ref": "chokepoint/hormuz",
+      "ref": "chokepoint/babelm",
       "kind": "story",
-      "outcome": "review",
-      "detail": "event 2026-11-05",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.themarysue.com/pentagon-says-thousands-of-us-troops-are-poised-to-strike-iran-then-reports-emerge-of-what-happened-to-five-tankers-in-the-strait-of-hormuz/",
-        "publisher": "The Mary Sue",
-        "quote": "The situation in the Strait of Hormuz has been escalating as Iranian forces report that five oil tankers and a tugboat caught fire in a series of incidents.",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-05",
-        "eventText": "Iranian forces say five oil tankers and a tugboat caught fire in the Strait of Hormuz after mine strikes."
-      }
+      "outcome": "error",
+      "detail": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CgoQvYzmU6avwpNSkyMkf\"}"
     },
     {
-      "ref": "refinery/ng-dangote",
+      "ref": "pipeline/btc",
       "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-06 · Modern Ghana: Dangote refinery extends IPO: Plant has reshaped Nigeria's fuel market"
-      ]
+      "outcome": "error",
+      "detail": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CgoQvZcySbmnxHMciAMzK\"}"
     },
     {
-      "ref": "lng/gem-t100000130594-export",
+      "ref": "pipeline/nord-stream-1",
       "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-05 · TradingView: ConocoPhillips Says Qatar LNG Production Remained Constrained Through Q3",
-        "- 2026-11-05 · Telegraph India: Tehran-nodded second Qatar LNG tanker clears Hormuz, continues toward Pakistan, data shows"
-      ]
+      "outcome": "error",
+      "detail": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CgoQvaERx2MVzQV4ZwipF\"}"
     },
     {
-      "ref": "terminal/primorsk",
-      "kind": "end check",
-      "outcome": "rejected",
-      "detail": "page is older than 14 days",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "bps-1-2026-primorsk-strikes",
-        "url": "https://www.france24.com/en/europe/20260503-ukrainian-drones-strike-russia-baltic-sea-port-primorsk",
-        "publisher": "France 24",
-        "quote": "Ukrainian drones struck Russia's Primorsk port and a number of vessels in the Baltic Sea on Sunday",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-05-03",
-        "eventText": "Ukrainian drones strike the Primorsk port and several vessels in the Baltic Sea."
-      }
+      "ref": "terminal/kharg",
+      "kind": "story",
+      "outcome": "error",
+      "detail": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CgoQvaq9iJX8eykBDGucF\"}"
     },
     {
-      "ref": "lng/gem-t100000130601-export",
+      "ref": "terminal/sheskharis",
       "kind": "end check",
-      "outcome": "nothing"
-    },
-    {
-      "ref": "pipeline/druzhba-north",
-      "kind": "end check",
-      "outcome": "committed",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "druzhba-north-2026-kazakh-halt",
-        "url": "https://timesca.com/kazakhstan-asks-russia-to-reopen-druzhba-oil-route-to-germany-after-six-month-halt/",
-        "publisher": "Times of Central Asia",
-        "quote": "Kazakhstan has formally asked Russia to restore oil shipments to Germany through the Druzhba pipeline",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
-      }
+      "outcome": "error",
+      "detail": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CgoQvbWpzBwgwTqJGbeKE\"}"
     }
   ]
 }
