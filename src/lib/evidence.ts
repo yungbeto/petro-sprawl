@@ -119,6 +119,19 @@ export interface ReportParts {
   host?: string;
 }
 
+/**
+ * What an asset's status rests on, from its current evidence: a meter, a dated report, or only a dataset's
+ * listing (GEM's tracker status, EIA's 1 January split), which says how an asset is recorded, not that a
+ * source has seen it in that state. `none` when there is no evidence at all. Pure.
+ */
+export type StatusBasis = 'measured' | 'reported' | 'listed' | 'none';
+
+export function statusBasis(current: Pick<Evidence, 'sourceType'> | undefined): StatusBasis {
+  if (!current) return 'none';
+  if (current.sourceType === 'measured') return 'measured';
+  return current.sourceType === 'dataset' ? 'listed' : 'reported';
+}
+
 /** Claims from people and publications, as opposed to datasets and meters. */
 export function isReport(evidence: Evidence): boolean {
   return evidence.sourceType !== 'dataset' && evidence.sourceType !== 'measured';

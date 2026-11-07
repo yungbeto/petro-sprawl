@@ -783,3 +783,17 @@ a:hover {
 .disruption__unreviewed {
   color: var(--text);
 }
+
+/* Cite this page (src/panel/detail/Cite.tsx): the citation, selectable whole, and its copy link. Room above,
+   since it follows the page's closing source note. */
+.cite {
+  margin-top: var(--space-6);
+}
+
+.cite__text {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  user-select: all;
+}

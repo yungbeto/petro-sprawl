@@ -10,6 +10,7 @@ import {
   withMeasuredLngEvidence,
   isReport,
   reportParts,
+  statusBasis,
 } from '../src/lib/evidence';
 import { toSendOutSeries } from '../jobs/lib/alsi';
 import { flowLineWidthPx } from '../src/lib/encoding';
@@ -195,5 +196,15 @@ describe('isReport', () => {
     expect(isReport({ ...e, sourceType: 'operator' })).toBe(true);
     expect(isReport({ ...e, sourceType: 'dataset' })).toBe(false);
     expect(isReport({ ...e, sourceType: 'measured' })).toBe(false);
+  });
+});
+
+describe('statusBasis', () => {
+  it('tells a meter, a dated report and a dataset listing apart', () => {
+    expect(statusBasis({ sourceType: 'measured' })).toBe('measured');
+    expect(statusBasis({ sourceType: 'press' })).toBe('reported');
+    expect(statusBasis({ sourceType: 'government' })).toBe('reported');
+    expect(statusBasis({ sourceType: 'dataset' })).toBe('listed');
+    expect(statusBasis(undefined)).toBe('none');
   });
 });

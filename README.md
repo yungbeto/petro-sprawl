@@ -1,6 +1,6 @@
 # Petro Sprawl
 
-A map-first terminal for reading world events through the movement of oil and gas.
+The energy context behind the headline: where oil and gas flow, where they've stopped, and the source for each.
 
 **[petrosprawl.fyi](https://petrosprawl.fyi)**
 
@@ -9,7 +9,7 @@ A map-first terminal for reading world events through the movement of oil and ga
 Energy flows explain a lot about why governments decide what they decide, why alliances form and why they break. News strips that structure away. Petro Sprawl puts it back on the map: every pipeline, terminal, refinery and chokepoint is a real place, and each one shows three things kept apart on purpose:
 
 - **Capacity:** what it could carry.
-- **Status:** what state it's in, as a dated claim with its source.
+- **Status:** what state it's in, as a dated claim with its source. A status that rests only on a dataset's listing says so.
 - **Flow:** what it actually carries, where a measured series exists.
 
 ## What you can do with it
@@ -21,6 +21,7 @@ Energy flows explain a lot about why governments decide what they decide, why al
 | **Open any pipeline** | Status with its evidence, capacity, owners, the disruption timeline and, for EU entry points, metered gas flow against technical capacity. |
 | **Look up your fuel** | Type a US ZIP code, city or state to see where your region's gasoline, diesel, jet fuel and crude come from, and which chokepoints sit on the way. The location never leaves your browser. |
 | **Compare countries** | Gas in storage against a year earlier, and crude imports by partner country. |
+| **Cite what you use** | Every page has its own link and a citation to copy. |
 | **Explore the ground** | USGS petroleum provinces and EIA's shale plays, with monthly production by formation. |
 
 <table>

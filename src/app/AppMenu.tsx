@@ -119,8 +119,8 @@ export function AppMenu({ onClose, section, data, freshness, now, theme, themePr
                 {SITE.tagline}
               </h2>
               <p className="menu__lede">
-                Pipelines, terminals, chokepoints and basins on one map, with what is moving through them now. Every
-                status carries a dated source, and anything that can't be sourced says unknown.
+                The world's oil and gas on one map: where it flows, where it has stopped, and the source for each.
+                Every status says what it rests on, and anything that can't be sourced says unknown.
               </p>
               {loaded && (
                 <ul className="menu__counts" aria-label="On the map">
@@ -218,16 +218,16 @@ export function AppMenu({ onClose, section, data, freshness, now, theme, themePr
 
 const PRINCIPLES: [string, string][] = [
   [
-    'Capacity, status and flow, kept apart',
-    'What a line could carry, whether it is running and what is measured going through it are three facts, each with its own source.',
-  ],
-  [
     'Every status has a source',
-    'A status links to a dated report or to a measured flow. With neither, it shows as unknown rather than a guess.',
+    "A dated report or a measured flow, linked. A status that rests only on a dataset's listing says so, and one with no source reads unknown.",
   ],
   [
-    'Updated through the day',
-    'Flows, tanker transits and storage are fetched every 6 hours. A news scan every 3 hours adds sources and new disruptions, marked unreviewed until someone checks them, and lists the latest headlines on Home.',
+    'Dated, not real time',
+    'Each figure runs to the day or month its source has published: daily for gas flows and storage, monthly for trade and US fuel. A news scan every 3 hours adds sources, marked unreviewed until someone checks them.',
+  ],
+  [
+    'Made to be cited',
+    'Every pipeline, strait, terminal and region has its own link and a citation to copy. Free to use, with each dataset credited under Data.',
   ],
 ];
 
@@ -237,9 +237,9 @@ function AboutTab() {
       <section className="section menu__why">
         <SectionTitle title="Why" as="h2" />
         <p>
-          The movement of energy explains a lot about why international decisions get made, alliances form and ruptures
-          happen. {SITE.name} puts that structure on a map, so a headline lands on the pipeline, the strait or the basin
-          it touches, and stays a real happening in a real place.
+          Energy flows explain much of why governments act, why alliances form and why they break. When a headline breaks,{' '}
+          {SITE.name} shows the energy behind it: where oil and gas flow, where they've stopped, and the source for each. It's
+          built for anyone who has to explain or cite that context, from reporters and analysts to students and curious readers.
         </p>
       </section>
       <ul className="menu__principles">
@@ -317,6 +317,11 @@ function FreshnessSection({ freshness, now }: { freshness: Freshness[]; now: Dat
   return (
     <section className="section" id="menu-freshness">
       <SectionTitle title="Data freshness" as="h2" />
+      <p className="muted section__lede">
+        Each source publishes on its own schedule, and every figure says the day or month it runs to. Updated is when{' '}
+        {SITE.name} last fetched it; data through is the newest period the source has published. Stale means a fetch is late,
+        not the source.
+      </p>
       {freshness.length === 0 ? (
         <p className="muted">No datasets loaded.</p>
       ) : (
@@ -324,6 +329,7 @@ function FreshnessSection({ freshness, now }: { freshness: Freshness[]; now: Dat
           <thead>
             <tr>
               <th>Dataset</th>
+              <th>Published</th>
               <th className="num">Updated</th>
               <th className="num">Data through</th>
             </tr>
@@ -341,6 +347,7 @@ function FreshnessSection({ freshness, now }: { freshness: Freshness[]; now: Dat
                     </span>
                   )}
                 </td>
+                <td className="muted">{f.cadence ?? (f.scheduled ? '' : 'By hand')}</td>
                 <td className={`mono num${f.stale ? ' freshness--warn' : ''}`} title={f.fetchedAt}>
                   {f.scheduled ? formatAge(f.fetchedAt, now) : formatDate(f.fetchedAt)}
                 </td>

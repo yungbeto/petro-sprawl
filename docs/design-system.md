@@ -92,7 +92,7 @@ component; the rest are class patterns repeated by hand.
 | --- | --- | --- | --- |
 | `Card`, `cardClass()` (`src/ui/Card.tsx`) | `.chart-card`, `.hero-card`'s own edge and fill, the list cards' edge (`.view-list--cards .view-row`) | static (chart sections, lead cards, disruptions); `interactive` (a card that's a button: the surfaces' list cards); `subtle` (tinted: Home's updates) | Yes |
 | `LeadCard` | the figure cards | figure + against + bar + notes + chart | Yes (details.tsx) |
-| `StatusBlock` | the status card, written out 3 times (pipelines, LNG, oil terminals) | with measured claim, unverified, custom empty text | Yes (details.tsx) |
+| `StatusBlock` | the status card, written out 3 times (pipelines, LNG, oil terminals) | with measured claim, unverified, custom empty text; a muted line when the status rests only on a dataset's listing (`statusBasis`) | Yes (details.tsx) |
 | `FactRows` / `Row` | `.facts`, `.key-facts` | with aside | Yes (`Row`) |
 | `MeterBar`, `PartsBar` (`src/ui/Bar.tsx`) | `.fill-bar`, `.oil-bar`, `.part-bar`, `.status-bar`, the origins and top-origins bars | one value with an optional tick; parts with tips or titles; sizes sm 4px, md 6px, lg 8px; tones below | Yes |
 | `Status` | `.status status--*` | dot + label | No (class only) |
@@ -106,6 +106,7 @@ component; the rest are class patterns repeated by hand.
 | Disruption timeline (`.timeline`, in `DisruptionCard`) | the sources list | date column, a rail with a filled dot for an event (our words, its source under it) and an open dot for a headline | Yes (status.tsx) |
 | `Sparkline` | the 90-day and 12-month charts | references, band tone | Yes |
 | `Note` (`src/ui/Note.tsx`) | `.source`, `.note`, `.report__unreviewed`, `.hero__unreviewed`, `.disruption__note` | `note` (an aside under a list), `source` (closes a page under a rule), `unreviewed` (under a claim or source nobody has checked), `caption` (the finest print, under a card) | Yes |
+| `CiteThisPage` (`src/panel/detail/Cite.tsx`) | none: new 2026-11-07 | the last block of every detail page, after its source note: a `section` title, the citation in a `subtle` card (`.cite__text`, selectable whole) with a `TextButton` to copy it, and a `Note` | Yes |
 | 404 page (`src/app/NotFound.tsx`, `404.html`) | Vercel's own not-found page | one screen: brand home link, a mono `404` with the path asked for, a `.t-display` title, `.t-body` text, a link back to the map styled as the menu footer's, and the oil across the foot with a `.t-note` hint just above it (hidden under reduced motion). Its own entry (`src/notFound.tsx`), without the map | Yes |
 
 Bar tones (`BarTone`): `neutral` (how full, how much: the default), `soft` (what's spent: produced oil),

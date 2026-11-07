@@ -5,7 +5,7 @@ import { Tag } from '../../ui/Tag';
 import { ArrowUpRightIcon } from '@phosphor-icons/react';
 import type { AssetStatus, Evidence, Disruption } from '../../types';
 import { DISRUPTION_CARD } from '../../lib/config';
-import { isReport, isUnverified, reportParts } from '../../lib/evidence';
+import { isReport, isUnverified, reportParts, statusBasis } from '../../lib/evidence';
 import { formatLongDate, formatShortDate } from '../../lib/format';
 import { capitalize, statusLabel } from '../../lib/labels';
 import { Card } from '../../ui/Card';
@@ -168,6 +168,9 @@ export function StatusBlock({
           </span>
         )}
         <span className="status-card__line">{current ? <StatusSource evidence={current} /> : empty}</span>
+        {statusBasis(current) === 'listed' && status !== 'unknown' && (
+          <span className="status-card__line muted">A dataset's listing, not a report: no dated source confirms it yet.</span>
+        )}
         {claim && (
           <span className="status-card__line">
             Latest claim, {statusLabel(claim.status).toLowerCase()}: <StatusSource evidence={claim} />

@@ -25,6 +25,8 @@ export interface Freshness {
   scheduled: boolean;
   fetchedAt: string;
   dataThrough?: string;
+  /** How often the source publishes, when known. */
+  cadence?: string;
   /** Scheduled and older than its expected cadence allows. */
   stale: boolean;
   /** The most recent run failed; fetchedAt still describes the file in use. */
@@ -40,6 +42,7 @@ export function datasetFreshness(meta: DatasetMeta, now: Date): Freshness {
     scheduled: config.scheduled,
     fetchedAt: meta.fetchedAt,
     dataThrough: meta.dataThrough,
+    ...(config.cadence ? { cadence: config.cadence } : {}),
     stale: config.scheduled && config.staleAfterHours !== undefined && ageHours > config.staleAfterHours,
     ...(meta.lastAttempt && !meta.lastAttempt.ok ? { failedAt: meta.lastAttempt.at } : {}),
   };

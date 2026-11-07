@@ -495,16 +495,17 @@ export const REGION_FUEL_LABELS: Record<RegionFuel, string> = {
 
 export const DATASET_FRESHNESS: Record<
   string,
-  { label: string; scheduled: boolean; staleAfterHours?: number; publisher?: string }
+  /** `cadence`: how often the source publishes new data (SPEC section 7), shown on the Data tab beside "Data through". */
+  { label: string; scheduled: boolean; staleAfterHours?: number; publisher?: string; cadence?: string }
 > = {
-  'chokepoint-transits': { label: 'Chokepoint transits', scheduled: true, staleAfterHours: 18, publisher: 'IMF PortWatch' },
-  'port-calls': { label: 'Port calls', scheduled: true, staleAfterHours: 18, publisher: 'IMF PortWatch' },
-  'gas-flows': { label: 'Gas flows', scheduled: true, staleAfterHours: 36, publisher: 'ENTSOG Transparency Platform' },
-  'gas-storage': { label: 'Gas storage', scheduled: true, staleAfterHours: 36, publisher: 'GIE AGSI+' },
-  'gas-storage-us': { label: 'US gas storage', scheduled: true, staleAfterHours: 36, publisher: 'EIA' },
-  'gas-storage-ca': { label: 'Canada gas storage', scheduled: true, staleAfterHours: 36, publisher: 'Statistics Canada' },
-  'gas-storage-jodi': { label: 'Gas storage, other countries', scheduled: true, staleAfterHours: 36, publisher: 'JODI-Gas' },
-  'lng-sendout': { label: 'LNG send-out', scheduled: true, staleAfterHours: 36, publisher: 'GIE ALSI' },
+  'chokepoint-transits': { label: 'Chokepoint transits', scheduled: true, staleAfterHours: 18, publisher: 'IMF PortWatch', cadence: 'Daily' },
+  'port-calls': { label: 'Port calls', scheduled: true, staleAfterHours: 18, publisher: 'IMF PortWatch', cadence: 'Daily' },
+  'gas-flows': { label: 'Gas flows', scheduled: true, staleAfterHours: 36, publisher: 'ENTSOG Transparency Platform', cadence: 'Daily' },
+  'gas-storage': { label: 'Gas storage', scheduled: true, staleAfterHours: 36, publisher: 'GIE AGSI+', cadence: 'Daily' },
+  'gas-storage-us': { label: 'US gas storage', scheduled: true, staleAfterHours: 36, publisher: 'EIA', cadence: 'Weekly' },
+  'gas-storage-ca': { label: 'Canada gas storage', scheduled: true, staleAfterHours: 36, publisher: 'Statistics Canada', cadence: 'Monthly' },
+  'gas-storage-jodi': { label: 'Gas storage, other countries', scheduled: true, staleAfterHours: 36, publisher: 'JODI-Gas', cadence: 'Monthly' },
+  'lng-sendout': { label: 'LNG send-out', scheduled: true, staleAfterHours: 36, publisher: 'GIE ALSI', cadence: 'Daily' },
   countries: { label: 'Countries', scheduled: false, publisher: 'Natural Earth' },
   'country-regions': { label: 'Country regions', scheduled: false, publisher: 'Natural Earth' },
   pipelines: { label: 'Pipelines', scheduled: false, publisher: 'Global Energy Monitor' },
@@ -513,13 +514,16 @@ export const DATASET_FRESHNESS: Record<
   chokepoints: { label: 'Chokepoints', scheduled: false, publisher: 'IMF PortWatch and EIA' },
   basins: { label: 'Basins', scheduled: false, publisher: 'USGS' },
   disruptions: { label: 'Disruptions', scheduled: false },
-  'news-headlines': { label: 'News headlines', scheduled: true, staleAfterHours: 12, publisher: 'GDELT and Google News' },
-  'oil-origins': { label: 'US crude origins', scheduled: true, staleAfterHours: 72, publisher: 'EIA' },
-  'fuel-origins': { label: 'US fuel origins', scheduled: true, staleAfterHours: 72, publisher: 'EIA' },
+  'news-headlines': { label: 'News headlines', scheduled: true, staleAfterHours: 12, publisher: 'GDELT and Google News', cadence: 'Continuously' },
+  'oil-origins': { label: 'US crude origins', scheduled: true, staleAfterHours: 72, publisher: 'EIA', cadence: 'Monthly' },
+  'fuel-origins': { label: 'US fuel origins', scheduled: true, staleAfterHours: 72, publisher: 'EIA', cadence: 'Monthly' },
   'oil-routes': { label: 'Oil export routes', scheduled: false },
-  'crude-imports': { label: 'Crude imports by country', scheduled: true, staleAfterHours: 36, publisher: 'Eurostat, UN Comtrade and EIA' },
+  'crude-imports': { label: 'Crude imports by country', scheduled: true, staleAfterHours: 36, publisher: 'Eurostat, UN Comtrade and EIA', cadence: 'Monthly, yearly' },
   'us-lookup': { label: 'US places', scheduled: false, publisher: 'U.S. Census Bureau, EIA and Natural Earth' },
   'us-regions': { label: 'US fuel regions', scheduled: false, publisher: 'U.S. Census Bureau and EIA' },
+  refineries: { label: 'Refineries', scheduled: false, publisher: 'EIA, the European Environment Agency and Wikidata' },
+  'shale-plays': { label: 'Shale plays', scheduled: false, publisher: 'EIA' },
+  'shale-production': { label: 'Shale production', scheduled: true, staleAfterHours: 72, publisher: 'EIA', cadence: 'Monthly' },
 };
 
 /**
@@ -1049,6 +1053,8 @@ export const GLOBE = {
 /** Who runs the site, for the menu's footer. Corrections and takedown requests come to `contactEmail`. */
 export const SITE = {
   name: 'Petro Sprawl',
+  /** Production, for citations: a copied link names the site, not a preview deploy or localhost. */
+  url: 'https://petrosprawl.fyi',
   tagline: 'The sprawling empire of the petro-state',
   contactEmail: 'hello@petrosprawl.fyi',
   maker: { name: 'Roby Saavedra', url: 'https://robysaavedra.com' },

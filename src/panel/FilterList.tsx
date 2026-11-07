@@ -1,7 +1,7 @@
 import type { Selection } from '../app/urlState';
 import { FILTERS } from '../lib/config';
 import type { Datasets } from '../lib/data';
-import { FILTER_DESCRIPTIONS, FILTER_LABELS, filterRows, type FilterId, type FilterMatches } from '../lib/filters';
+import { FILTER_DESCRIPTIONS, FILTER_LABELS, filterRows, groupByBasis, type FilterId, type FilterMatches } from '../lib/filters';
 import { AssetList } from './details';
 import { SectionTitle } from '../ui/SectionTitle';
 import { Note } from '../ui/Note';
@@ -30,7 +30,17 @@ export function FilterList({ filter, matches, data, onSelect, within }: FilterLi
       {rows.length === 0 ? (
         <p className="muted">Nothing matches right now.</p>
       ) : (
-        <AssetList rows={shown} data={data} onSelect={onSelect} />
+        // Offline or idle: cited stops apart from a dataset's listings (src/lib/filters.ts, groupByBasis).
+        (filter === 'offline' ? groupByBasis(shown) : [{ title: '', rows: shown }]).map((g) =>
+          g.title ? (
+            <section key={g.title} className="section">
+              <SectionTitle title={g.title} count={g.rows.length} />
+              <AssetList rows={g.rows} data={data} onSelect={onSelect} />
+            </section>
+          ) : (
+            <AssetList key="all" rows={g.rows} data={data} onSelect={onSelect} />
+          ),
+        )
       )}
       {rows.length > shown.length && (
         <Note>

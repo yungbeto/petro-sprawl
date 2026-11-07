@@ -21,6 +21,7 @@ import { RefineriesView, type RefineriesViewProps } from './RefineriesView';
 import { MoreView } from './MoreView';
 import { DetailSkeleton, HomeSkeleton, ListSkeleton } from './Skeleton';
 import { OriginsView, type OriginsViewProps } from './OriginsView';
+import { CiteThisPage } from './detail/Cite';
 import { BasinDetail, ShaleDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RefineryDetail, RegionDetail, CountryDetail } from './details';
 import { IconButton } from '../ui/Button';
 import { SectionTitle } from '../ui/SectionTitle';
@@ -275,6 +276,9 @@ function Detail({
       {resolved?.kind === 'terminal' && <OilTerminalDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'refinery' && <RefineryDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'region' && <RegionDetail item={resolved.item} data={data} onSelect={onSelect} fuel={fuel} onFuel={onFuel} />}
+      {resolved && (
+        <CiteThisPage title={(resolved.item as { name?: string }).name ?? selection.id} kind={detailKind(resolved)} />
+      )}
       {!resolved && (
         <section className="section">
           <p className="muted">{KIND_LABELS[selection.kind]}</p>

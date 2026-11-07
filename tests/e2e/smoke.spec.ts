@@ -130,7 +130,7 @@ test('an LNG terminal link shows its units, and search and the layer list know t
   await page.goto('/?sel=lng/gem-t100000130594-export');
   const panel = page.getByLabel('Panel', { exact: true });
   await expect(panel.getByRole('heading', { name: 'QatarEnergy LNG (N)', exact: true })).toBeVisible();
-  await expect(panel.getByText('LNG export terminal')).toBeVisible();
+  await expect(panel.getByText('LNG export terminal', { exact: true })).toBeVisible();
   await expect(panel.locator('dt', { hasText: 'Capacity' }).locator('xpath=following-sibling::dd[1]')).toContainText('40.8');
   // Cited reports set the status over GEM's; GEM's own claim stays in the history.
   const status = panel.locator('dt', { hasText: 'Status' }).locator('xpath=following-sibling::dd[1]');
@@ -396,7 +396,7 @@ test('an oil terminal opens with its claim, disruptions and route to sea', async
   await page.goto('/?sel=terminal/kharg');
   const panel = page.getByLabel('Panel');
   await expect(panel.getByRole('heading', { name: 'Kharg Island', exact: true })).toBeVisible();
-  await expect(panel.getByText('Oil export terminal')).toBeVisible();
+  await expect(panel.getByText('Oil export terminal', { exact: true })).toBeVisible();
   await expect(panel.getByText(/resumed crude loading at Kharg Island/).first()).toBeVisible();
   await expect(panel.getByRole('heading', { name: 'Disruptions', exact: true })).toBeVisible();
   await panel.getByRole('button', { name: /Strait of Hormuz/ }).click();
@@ -1219,4 +1219,21 @@ test('the 404 page names the path asked for and leads back to the map', async ({
   await expect(page.locator('.not-found__oil')).toBeVisible();
   await page.getByRole('link', { name: 'Back to the map' }).click();
   await expect(page.getByRole('search')).toBeVisible();
+});
+
+test('a detail page ends with a citation naming its production link', async ({ page }) => {
+  await page.goto('/?view=chokepoints&sel=chokepoint/hormuz&at=56,26,6');
+  const panel = page.getByLabel('Panel', { exact: true });
+  await expect(panel.getByRole('heading', { name: 'Cite this page' })).toBeVisible();
+  await expect(panel.locator('.cite__text')).toHaveText(
+    /^Petro Sprawl, "Strait of Hormuz" \(chokepoint\), https:\/\/petrosprawl\.fyi\/\?view=chokepoints&sel=chokepoint\/hormuz\.$/,
+  );
+});
+
+test('the offline list puts measured or reported stops before dataset listings', async ({ page }) => {
+  await page.goto('/?f=offline');
+  const panel = page.getByLabel('Panel', { exact: true });
+  const groups = panel.getByRole('heading', { name: /^(Measured or reported|Listed in a dataset only)/ });
+  await expect(groups).toHaveCount(2);
+  await expect(groups.first()).toContainText('Measured or reported');
 });

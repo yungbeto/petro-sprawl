@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
-import { filterMatches, filterRows, matchCount, parseFilter } from '../src/lib/filters';
+import { filterMatches, filterRows, groupByBasis, matchCount, parseFilter } from '../src/lib/filters';
 import type { Evidence } from '../src/types';
 import { chokepoint, lngTerminal, pipeline } from './fixtures';
 
@@ -78,5 +78,18 @@ describe('quick filters', () => {
     );
     expect(rows.map((r) => r.selection.id)).toEqual(['suez', 'ns1', 'gem-a', 'ras-laffan']);
     expect(rows.at(-1)?.selection.kind).toBe('lng');
+  });
+
+  it('splits the offline list into cited stops and dataset listings', () => {
+    const rows = filterRows(filterMatches('offline', data, now), data);
+    const groups = groupByBasis(rows);
+    expect(groups.map((g) => g.title)).toEqual(['Measured or reported', 'Listed in a dataset only']);
+    expect(groups[0]!.rows.map((r) => r.selection.id)).toEqual(['ns1']);
+    expect(groups[1]!.rows.map((r) => r.selection.id)).toEqual(['gem-a', 'mothballed']);
+  });
+
+  it('keeps one untitled group when every status rests on the same kind of source', () => {
+    const rows = filterRows(filterMatches('offline', data, now), data).filter((r) => r.basis === 'listed');
+    expect(groupByBasis(rows)).toEqual([{ title: '', rows }]);
   });
 });
