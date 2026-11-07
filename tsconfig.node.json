@@ -21,6 +21,7 @@
     "vite.config.ts",
     "playwright.config.ts",
     "tests/e2e",
-    "vite.functions.config.ts"
+    "vite.functions.config.ts",
+    "vite.notfound.config.ts"
   ]
 }

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && vite build -c vite.functions.config.ts && tsx jobs/build-share-index.ts",
+    "build": "tsc -b && vite build && vite build -c vite.notfound.config.ts && vite build -c vite.functions.config.ts && tsx jobs/build-share-index.ts",
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "test": "vitest run",
