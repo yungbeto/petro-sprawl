@@ -119,6 +119,10 @@
     "file": "favicons/egyptian-gazette.com.png",
     "checkedAt": "2026-11-07"
   },
+  "en.abna24.com": {
+    "file": "favicons/en.abna24.com.ico",
+    "checkedAt": "2026-11-07"
+  },
   "en.ilsole24ore.com": {
     "file": "favicons/en.ilsole24ore.com.ico",
     "checkedAt": "2026-11-07"
@@ -199,6 +203,10 @@
     "file": "favicons/gulfnews.com.png",
     "checkedAt": "2026-11-06"
   },
+  "haaretz.com": {
+    "file": "favicons/haaretz.com.ico",
+    "checkedAt": "2026-11-07"
+  },
   "hiiraan.com": {
     "file": "favicons/hiiraan.com.jpg",
     "checkedAt": "2026-11-07"
@@ -230,6 +238,10 @@
   "intellinews.com": {
     "file": null,
     "checkedAt": "2026-11-06"
+  },
+  "internazionale.it": {
+    "file": "favicons/internazionale.it.ico",
+    "checkedAt": "2026-11-07"
   },
   "investing.com": {
     "file": null,
@@ -419,6 +431,10 @@
     "file": "favicons/rudaw.net.png",
     "checkedAt": "2026-11-07"
   },
+  "sabq.org": {
+    "file": "favicons/sabq.org.ico",
+    "checkedAt": "2026-11-07"
+  },
   "scmp.com": {
     "file": "favicons/scmp.com.png",
     "checkedAt": "2026-11-06"
@@ -529,6 +545,14 @@
   },
   "wsj.com": {
     "file": "favicons/wsj.com.ico",
+    "checkedAt": "2026-11-07"
+  },
+  "yahoo.com": {
+    "file": "favicons/yahoo.com.png",
+    "checkedAt": "2026-11-07"
+  },
+  "yemenonline.info": {
+    "file": "favicons/yemenonline.info.png",
     "checkedAt": "2026-11-07"
   }
 }
