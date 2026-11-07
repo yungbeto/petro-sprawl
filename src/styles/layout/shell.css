@@ -426,8 +426,14 @@
 .panel__body {
   flex: 1;
   overflow-y: auto;
-  /* 16px sides, the same as the top bar, so a 360px panel gives its content 328px. */
-  padding: var(--space-5) var(--space-4) var(--space-4);
+  /* No side padding on the body itself: each block in it keeps 16px sides (the same as the top bar, so a
+     360px panel gives its content 328px), and a row that scrolls sideways can run to the panel's edges. */
+  padding: var(--space-5) 0 var(--space-4);
+}
+
+/* Two classes, so it outlasts a block's own `margin: 0` (.facts, .status-card, .view-list). */
+.panel .panel__body > * {
+  margin-inline: var(--space-4);
 }
 
 .panel__footer {
