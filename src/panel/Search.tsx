@@ -85,6 +85,27 @@ export function SearchDialog({ data, onSelect, onView, onClose, initialScope = '
 
   useEffect(() => inputRef.current?.focus(), []);
 
+  // On a phone the keyboard covers the screen's lower part without shrinking 100dvh, so the list would run
+  // on under it with nothing to scroll, and a drag would pan the page instead. Fit the dialog to what the
+  // keyboard leaves visible (phone.css reads these).
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const vv = window.visualViewport;
+    const el = dialogRef.current;
+    if (!vv || !el) return;
+    const fit = () => {
+      el.style.setProperty('--search-vh', `${vv.height}px`);
+      el.style.setProperty('--search-top', `${vv.offsetTop}px`);
+    };
+    fit();
+    vv.addEventListener('resize', fit);
+    vv.addEventListener('scroll', fit);
+    return () => {
+      vv.removeEventListener('resize', fit);
+      vv.removeEventListener('scroll', fit);
+    };
+  }, []);
+
   const groups = useMemo((): ItemGroup[] => {
     const q = normalize(query);
     const entryItem = (e: SearchEntry): Item => ({
@@ -174,7 +195,7 @@ export function SearchDialog({ data, onSelect, onView, onClose, initialScope = '
   return (
     <>
       <div className="search-scrim" onClick={onClose} aria-hidden="true" />
-      <div className="search-dialog" role="dialog" aria-modal="true" aria-label="Search" onKeyDown={onKeyDown}>
+      <div ref={dialogRef} className="search-dialog" role="dialog" aria-modal="true" aria-label="Search" onKeyDown={onKeyDown}>
         <div className="search-dialog__field">
           <MagnifyingGlassIcon size={24} className="search-bar__icon" aria-hidden="true" />
           <input

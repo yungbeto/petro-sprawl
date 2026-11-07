@@ -251,11 +251,12 @@
   }
 
   /* Search takes the whole screen, as the menu does everywhere. */
+  /* Fitted to the visual viewport (SearchDialog), so with the keyboard up the list ends above it and scrolls. */
   .search-dialog {
-    top: 0;
+    top: var(--search-top, 0);
     left: 0;
     width: 100vw;
-    height: 100dvh;
+    height: var(--search-vh, 100dvh);
     max-height: none;
     padding-top: env(safe-area-inset-top);
     transform: none;
