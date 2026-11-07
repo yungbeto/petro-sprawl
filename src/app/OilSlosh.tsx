@@ -1,10 +1,18 @@
-// The menu footer's easter egg: crude sloshing at the bottom of the page, as if the footer held it. The
+// The menu footer's easter egg, and the 404 page's tank: crude sloshing at the bottom of the page, as if the footer held it. The
 // surface moves by src/lib/slosh.ts; this draws it and feeds it the pointer and the scroll. It runs only
 // while on screen and the tab is visible, and lies still, gently tilted, under reduced motion.
 
 import { useEffect, useRef, type RefObject } from 'react';
 import { OIL_SLOSH } from '../lib/config';
-import { createSurface, lurch, resizeSurface, stepSurface, stir, type Surface } from '../lib/slosh';
+import { createSurface, lurch, resizeSurface, stepSurface, stir, type SloshParams, type Surface } from '../lib/slosh';
+
+/** A tank's settings: the physics, plus the band it's drawn in and how it starts. `OIL_SLOSH` is the menu's. */
+export interface OilTank extends SloshParams {
+  canvasPx: number;
+  warmUpS: number;
+  maxFrameS: number;
+  lurch: { gain: number; maxImpulse: number };
+}
 
 interface OilSloshProps {
   /** The element whose pointer movement stirs the oil: the footer. */
@@ -13,21 +21,24 @@ interface OilSloshProps {
   scrollTarget?: RefObject<HTMLElement | null>;
   /** Redraws in the new colours when it changes. */
   theme: string;
+  /** The tank: the menu footer's puddle unless given (the 404 page's is deeper). */
+  tank?: OilTank;
+  className?: string;
 }
 
 const token = (el: Element, name: string) => getComputedStyle(el).getPropertyValue(name).trim() || '#000';
 
-export function OilSlosh({ stirTarget, scrollTarget, theme }: OilSloshProps) {
+export function OilSlosh({ stirTarget, scrollTarget, theme, tank = OIL_SLOSH, className = 'menu__oil' }: OilSloshProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext('2d');
     if (!canvas || !context) return;
-    const height = OIL_SLOSH.canvasPx;
+    const height = tank.canvasPx;
     let width = 0;
     let ratio = 1;
-    let surface: Surface = createSurface(1);
+    let surface: Surface = createSurface(1, tank);
     let clock = 0;
     const colours = {
       oil: token(canvas, '--oil'),
@@ -86,11 +97,11 @@ export function OilSlosh({ stirTarget, scrollTarget, theme }: OilSloshProps) {
       ratio = window.devicePixelRatio || 1;
       canvas.width = Math.round(next * ratio);
       canvas.height = Math.round(height * ratio);
-      if (width) surface = resizeSurface(surface, next);
+      if (width) surface = resizeSurface(surface, next, tank);
       else {
         // Opened mid-swing, not flat: run the first seconds before the first frame.
-        surface = createSurface(next);
-        for (; clock < OIL_SLOSH.warmUpS; clock += 1 / 60) stepSurface(surface, clock, 1 / 60);
+        surface = createSurface(next, tank);
+        for (; clock < tank.warmUpS; clock += 1 / 60) stepSurface(surface, clock, 1 / 60, tank);
       }
       width = next;
       draw();
@@ -101,10 +112,10 @@ export function OilSlosh({ stirTarget, scrollTarget, theme }: OilSloshProps) {
     let visible = false;
     let last = 0;
     const tick = (now: number) => {
-      const dt = last ? Math.min(OIL_SLOSH.maxFrameS, (now - last) / 1000) : 0;
+      const dt = last ? Math.min(tank.maxFrameS, (now - last) / 1000) : 0;
       last = now;
       clock += dt;
-      stepSurface(surface, clock, dt);
+      stepSurface(surface, clock, dt, tank);
       draw();
       raf = requestAnimationFrame(tick);
     };
@@ -116,8 +127,8 @@ export function OilSlosh({ stirTarget, scrollTarget, theme }: OilSloshProps) {
       if (running()) raf = requestAnimationFrame(tick);
       else if (reduce.matches) {
         // Still, with the oil settled a little to one side, as it would after the last rock.
-        surface = createSurface(width || 1);
-        surface.h.forEach((_, i) => (surface.h[i] = OIL_SLOSH.depthPx + (i / (surface.h.length - 1) - 0.5) * 8));
+        surface = createSurface(width || 1, tank);
+        surface.h.forEach((_, i) => (surface.h[i] = tank.depthPx + (i / (surface.h.length - 1) - 0.5) * 8));
         draw();
       }
     };
@@ -128,7 +139,7 @@ export function OilSlosh({ stirTarget, scrollTarget, theme }: OilSloshProps) {
     const onPointerMove = (e: PointerEvent) => {
       const x = e.clientX - canvas.getBoundingClientRect().left;
       if (lastX !== null && e.timeStamp > lastT && running()) {
-        stir(surface, x, ((x - lastX) / (e.timeStamp - lastT)) * 1000);
+        stir(surface, x, ((x - lastX) / (e.timeStamp - lastT)) * 1000, tank);
       }
       lastX = x;
       lastT = e.timeStamp;
@@ -146,7 +157,7 @@ export function OilSlosh({ stirTarget, scrollTarget, theme }: OilSloshProps) {
       lastTop = scroller.scrollTop;
       lastScrollT = e.timeStamp;
       if (!running() || dt <= 0 || dt > 200) return;
-      const { gain, maxImpulse } = OIL_SLOSH.lurch;
+      const { gain, maxImpulse } = tank.lurch;
       lurch(surface, Math.max(-maxImpulse, Math.min(maxImpulse, (dy / dt) * 1000 * gain)));
     };
 
@@ -174,7 +185,7 @@ export function OilSlosh({ stirTarget, scrollTarget, theme }: OilSloshProps) {
       reduce.removeEventListener('change', update);
       document.removeEventListener('visibilitychange', update);
     };
-  }, [stirTarget, scrollTarget, theme]);
+  }, [stirTarget, scrollTarget, theme, tank]);
 
-  return <canvas ref={canvasRef} className="menu__oil" style={{ height: OIL_SLOSH.canvasPx }} aria-hidden="true" />;
+  return <canvas ref={canvasRef} className={className} style={{ height: tank.canvasPx }} aria-hidden="true" />;
 }

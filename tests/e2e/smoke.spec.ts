@@ -1211,3 +1211,12 @@ test('closing an item opened from a link frames its surface', async ({ page }) =
   // Every strait in view: zoomed well out from the one.
   await expect.poll(async () => (await restingCamera(page)).zoom, { timeout: 10_000 }).toBeLessThan(strait.zoom - 1);
 });
+
+test('the 404 page names the path asked for and leads back to the map', async ({ page }) => {
+  // Vercel serves 404.html for any path the build doesn't have; in dev it's opened by name.
+  await page.goto('/404.html');
+  await expect(page.getByRole('heading', { name: 'Nothing flows here' })).toBeVisible();
+  await expect(page.locator('.not-found__oil')).toBeVisible();
+  await page.getByRole('link', { name: 'Back to the map' }).click();
+  await expect(page.getByRole('search')).toBeVisible();
+});

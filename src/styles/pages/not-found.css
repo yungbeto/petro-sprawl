@@ -1,0 +1,138 @@
+/* The 404 page (404.html, src/app/NotFound.tsx): one screen, no scrolling, with the oil across its foot.
+   Its own entry imports tokens, base, shell (for .brand-mark) and text, then this. */
+
+html,
+body {
+  overflow: hidden;
+  /* Dark under the oil, so an overscroll on a phone doesn't show a light strip below it. */
+  background: var(--oil-deep);
+}
+
+.not-found {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  background: linear-gradient(to top, var(--oil-deep) env(safe-area-inset-bottom, 0px), var(--bg) env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom);
+  /* A drag on a phone stirs the oil instead of panning the page. */
+  touch-action: none;
+  user-select: none;
+}
+
+.not-found__bar {
+  padding: calc(env(safe-area-inset-top) + var(--space-5)) var(--space-6) 0;
+}
+
+.not-found__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.not-found__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+
+.not-found__code {
+  display: flex;
+  gap: var(--space-2);
+  max-width: 100%;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.not-found__path {
+  overflow: hidden;
+  color: var(--text-subtle);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.not-found__title {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.not-found__main .t-body {
+  margin: 0;
+}
+
+/* The way home: a link, as the menu footer's are, with the arrow it leads by. */
+.not-found__home {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.not-found__home:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.not-found__tank {
+  position: relative;
+  flex: none;
+}
+
+.not-found__hint {
+  position: absolute;
+  right: 0;
+  left: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.not-found__hint-touch {
+  display: none;
+}
+
+@media (hover: none) {
+  .not-found__hint-pointer {
+    display: none;
+  }
+
+  .not-found__hint-touch {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .not-found__hint {
+    visibility: hidden;
+  }
+}
+
+.not-found__oil {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+@media (max-width: 720px) {
+  .not-found__bar {
+    padding-right: var(--space-4);
+    padding-left: var(--space-4);
+  }
+
+  .not-found__main {
+    padding: var(--space-4);
+  }
+}

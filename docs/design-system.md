@@ -28,7 +28,7 @@ big files are split (plan step 4). What's left marked "No" is a class pattern wi
 | Flow band | `--flow-below`, `--flow-near`, `--flow-above` | Measured against a baseline; `--flow-near` doubles as the neutral bar fill |
 | Data age | `--data-stale` | Stale data, unverified claims |
 | Map | `--map-*` | Map layers only (read by the map code as hex) |
-| Oil | `--oil`, `--oil-deep`, `--oil-sheen`, `--oil-slick-1` to `--oil-slick-3` | The menu footer's sloshing crude (`OilSlosh`, motion in `src/lib/slosh.ts`, `OIL_SLOSH`), nothing else; still under reduced motion |
+| Oil | `--oil`, `--oil-deep`, `--oil-sheen`, `--oil-slick-1` to `--oil-slick-3` | The sloshing crude (`OilSlosh`, motion in `src/lib/slosh.ts`) in two places only: the menu footer (`OIL_SLOSH`) and the 404 page's deeper tank (`NOT_FOUND_OIL`); still under reduced motion |
 
 `--text-subtle` is for notes and captions: quieter than `--text-muted`, still 4.5:1 on `--surface` and
 `--surface-subtle` in both themes (light #6c7178, 4.9:1; dark #868b92, 5.1:1).
@@ -106,6 +106,7 @@ component; the rest are class patterns repeated by hand.
 | Disruption timeline (`.timeline`, in `DisruptionCard`) | the sources list | date column, a rail with a filled dot for an event (our words, its source under it) and an open dot for a headline | Yes (status.tsx) |
 | `Sparkline` | the 90-day and 12-month charts | references, band tone | Yes |
 | `Note` (`src/ui/Note.tsx`) | `.source`, `.note`, `.report__unreviewed`, `.hero__unreviewed`, `.disruption__note` | `note` (an aside under a list), `source` (closes a page under a rule), `unreviewed` (under a claim or source nobody has checked), `caption` (the finest print, under a card) | Yes |
+| 404 page (`src/app/NotFound.tsx`, `404.html`) | Vercel's own not-found page | one screen: brand home link, a mono `404` with the path asked for, a `.t-display` title, `.t-body` text, a link back to the map styled as the menu footer's, and the oil across the foot with a `.t-note` hint just above it (hidden under reduced motion). Its own entry (`src/notFound.tsx`), without the map | Yes |
 
 Bar tones (`BarTone`): `neutral` (how full, how much: the default), `soft` (what's spent: produced oil),
 `outline` (not there yet: planned, undiscovered), `strong` and `muted` (lesser rows), `ink` (countries, as on
