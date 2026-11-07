@@ -1,4 +1,4 @@
-# Energy Terminal: Product Brief
+# Petro Sprawl: Product Brief
 
 Snapshot of the living product doc as of 2026-10-28. The living version is at https://claude.ai/artifact/ST7c3oPER2WRix9pCS2Qkn. For build details, see [`SPEC.md`](../SPEC.md).
 

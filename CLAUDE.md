@@ -1,6 +1,6 @@
 # Working notes for Claude Code
 
-The app is Petro Sprawl (renamed from Energy terminal on 2026-11-01). The repository, folder, Vercel project and production URL keep the old `energy-terminal` name.
+The app is Petro Sprawl (renamed from Energy terminal on 2026-11-01). The GitHub repo is `yungbeto/petro-sprawl` (renamed 2026-11-07; GitHub redirects the old `energy-terminal` URL). The Vercel project and the `energy-terminal-omega.vercel.app` URL keep the old name on purpose: that URL was sent to UN Comtrade and JODI.
 
 Read `SPEC.md` fully before starting any work. `docs/product-brief.md` explains the why.
 

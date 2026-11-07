@@ -345,7 +345,7 @@ Minimal Swiss and Japanese design meets the Bloomberg terminal. Legibility and s
 ## 10. Repo structure
 
 ```
-energy-terminal/
+petro-sprawl/
   SPEC.md                      this file
   CLAUDE.md                    working notes for Claude Code
   README.md
