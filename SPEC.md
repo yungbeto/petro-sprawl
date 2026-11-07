@@ -126,7 +126,7 @@ Rules:
 - Use real pipeline route geometry where the source provides it. Where only endpoints exist, draw a great-circle line and mark the feature `geometryApprox: true`; render it visibly differently (for example, thinner and lighter). Routes the source itself flags as low accuracy (GEM `RouteAccuracy: low`) are also `geometryApprox` (decided 2026-10-28).
 - Flow index bands: below baseline (index < 0.85), near (0.85 to 1.15), above (> 1.15). Keep thresholds in one config file.
 - Color is reserved for meaning (status, flow, data age). The basemap is neutral and quiet.
-- Flow and status use separate hue families, so a chokepoint below baseline never reads as an offline pipeline. Operating pipelines are drawn faded so chokepoints and status problems stand out; chokepoints sit on a halo above the pipelines.
+- Flow and status use separate hue families, so a chokepoint below baseline never reads as an offline pipeline. Operating pipelines are drawn faded so chokepoints and status problems stand out; chokepoints sit on a halo above the pipelines. A stop (offline or idle) that rests only on a dataset's listing is drawn faded too (`LISTED_STOP_ALPHA`, 2026-11-07), so the stops a meter or a dated report backs read first; the offline list splits them the same way.
 
 ## 6. Data model
 

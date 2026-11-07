@@ -1,7 +1,8 @@
 // Visual encodings that depend only on the data: line widths, ring sizes, current status.
 
-import type { AssetStatus, Chokepoint, LngTerminal, OilTerminal, Pipeline, PipelineHistory, Refinery } from '../types';
-import { CHOKEPOINT_RADIUS, LNG_RADIUS, PIPELINE_WIDTH, REFINERY_RADIUS } from './config';
+import type { AssetStatus, Chokepoint, Evidence, LngTerminal, OilTerminal, Pipeline, PipelineHistory, Refinery } from '../types';
+import { CHOKEPOINT_RADIUS, LISTED_STOP_ALPHA, LNG_RADIUS, PIPELINE_WIDTH, REFINERY_RADIUS } from './config';
+import { statusBasis } from './evidence';
 
 export function pipelineStatus(pipeline: Pipeline): AssetStatus {
   return pipeline.evidence[0]?.status ?? 'unknown';
@@ -94,4 +95,15 @@ export function shareCoverage(companies: { sharePct?: number }[]): number | null
   if (!companies.length || companies.some((c) => c.sharePct === undefined)) return null;
   const total = companies.reduce((sum, c) => sum + c.sharePct!, 0);
   return total < 99.5 ? Math.round(total * 10) / 10 : null;
+}
+
+/**
+ * How strongly an asset's status colour is drawn, from what the status rests on: a stop that only a
+ * dataset lists (GEM's idle or retired) recedes; one a meter or a dated report backs, and every other
+ * status, keeps full strength. Pure.
+ */
+export function statusAlpha(asset: { evidence: Evidence[] }): number {
+  const current = asset.evidence[0];
+  const stopped = current?.status === 'offline' || current?.status === 'idle';
+  return stopped && statusBasis(current) === 'listed' ? LISTED_STOP_ALPHA : 1;
 }

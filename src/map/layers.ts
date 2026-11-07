@@ -19,6 +19,7 @@ import {
   refineryRadiusPx,
   refineryStatus,
   terminalStatus,
+  statusAlpha,
 } from '../lib/encoding';
 import type { ChokepointFlow, FlowBand } from '../lib/flow';
 import { withAlpha } from '../lib/color';
@@ -373,6 +374,7 @@ export function buildLayers({
         const alpha =
           (status === 'operating' ? PIPELINE_WIDTH.operatingAlpha : 1) *
           (p.pipeline.geometryApprox ? PIPELINE_WIDTH.approxAlpha : 1) *
+          statusAlpha(p.pipeline) *
           pipelineFade(p.pipeline.id);
         return withAlpha(statusColor(status, colors), alpha);
       },
@@ -483,7 +485,7 @@ export function buildLayers({
       radiusUnits: 'pixels',
       stroked: true,
       filled: true,
-      getFillColor: (t) => withAlpha(statusColor(lngStatus(t), colors), lngFade(t.id)),
+      getFillColor: (t) => withAlpha(statusColor(lngStatus(t), colors), statusAlpha(t) * lngFade(t.id)),
       getLineColor: (t) => withAlpha(colors.halo, lngFade(t.id)),
       getLineWidth: 1,
       lineWidthUnits: 'pixels',
@@ -536,7 +538,7 @@ export function buildLayers({
       getIcon: () => SQUARE,
       getSize: (r) => refineryRadiusPx(r) * 2,
       sizeUnits: 'pixels',
-      getColor: (r) => withAlpha(statusColor(refineryStatus(r), colors), refineryFade(r.id)),
+      getColor: (r) => withAlpha(statusColor(refineryStatus(r), colors), statusAlpha(r) * refineryFade(r.id)),
       autoHighlight: true,
       highlightColor: withAlpha(colors.selection, 0.5),
       updateTriggers: { getColor: [colors, highlight, selection] },
@@ -576,7 +578,7 @@ export function buildLayers({
       getIcon: () => DIAMOND,
       getSize: TERMINAL_MARKER.sizePx,
       sizeUnits: 'pixels',
-      getColor: (t) => withAlpha(statusColor(terminalStatus(t), colors), terminalFade(t.id)),
+      getColor: (t) => withAlpha(statusColor(terminalStatus(t), colors), statusAlpha(t) * terminalFade(t.id)),
       autoHighlight: true,
       highlightColor: withAlpha(colors.selection, 0.5),
       updateTriggers: { getColor: [colors, highlight, selection] },

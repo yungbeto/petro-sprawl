@@ -100,3 +100,22 @@ describe('shareCoverage', () => {
     expect(shareCoverage([{ sharePct: 50 }, {}])).toBeNull();
   });
 });
+
+import { statusAlpha } from '../src/lib/encoding';
+import { LISTED_STOP_ALPHA } from '../src/lib/config';
+
+describe('statusAlpha', () => {
+  const at = (status: 'offline' | 'idle' | 'operating', sourceType: 'dataset' | 'press' | 'measured') => ({
+    evidence: [{ status, sourceType, observedAt: '2026-01-01', recordedAt: '2026-01-01' }],
+  });
+  it('fades a stop only a dataset lists', () => {
+    expect(statusAlpha(at('idle', 'dataset'))).toBe(LISTED_STOP_ALPHA);
+    expect(statusAlpha(at('offline', 'dataset'))).toBe(LISTED_STOP_ALPHA);
+  });
+  it('keeps reported and measured stops, and every other status, at full strength', () => {
+    expect(statusAlpha(at('offline', 'press'))).toBe(1);
+    expect(statusAlpha(at('idle', 'measured'))).toBe(1);
+    expect(statusAlpha(at('operating', 'dataset'))).toBe(1);
+    expect(statusAlpha({ evidence: [] })).toBe(1);
+  });
+});

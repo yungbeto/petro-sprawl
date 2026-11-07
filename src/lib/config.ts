@@ -93,6 +93,13 @@ export const CHOKEPOINT_NOTES: Partial<Record<string, string>> = {
  * Pipeline line width. Oil capacity is converted to a gas equivalent for sizing only:
  * 1 mb/d of oil carries roughly the energy of 60 bcm/yr of gas. Never shown as a figure.
  */
+/**
+ * A stop (offline or idle) that rests only on a dataset's listing, GEM's idle, mothballed and retired lines
+ * above all, is drawn at this alpha on the map, so the stops a meter or a dated report backs stand out
+ * (2026-11-07). Applies to pipelines, LNG terminals, oil terminals and refineries.
+ */
+export const LISTED_STOP_ALPHA = 0.35;
+
 export const PIPELINE_WIDTH = {
   minPx: 1,
   maxPx: 7,
