@@ -1017,6 +1017,19 @@ export const OIL_SLOSH = {
   maxFrameS: 0.05,
 } as const;
 
+/**
+ * The 404 page (404.html, src/notFound.tsx): the menu's oil in a deeper tank across the bottom of the
+ * screen, rocked harder at the walls, and stirred harder, since stirring it is the page's one thing to do.
+ */
+export const NOT_FOUND_OIL = {
+  ...OIL_SLOSH,
+  canvasPx: 260,
+  depthPx: 120,
+  maxPx: 250,
+  rock: { accel: 45, periodS: 8, wallPx: 160 },
+  stir: { radiusPx: 110, gain: 0.12, maxImpulse: 160 },
+} as const;
+
 export const GLOBE = {
   size: 24,
   dots: 16,
@@ -1039,6 +1052,7 @@ export const SITE = {
   tagline: 'The sprawling empire of the petro-state',
   contactEmail: 'hello@petrosprawl.fyi',
   maker: { name: 'Roby Saavedra', url: 'https://robysaavedra.com' },
+  repo: { label: 'GitHub', url: 'https://github.com/yungbeto/petro-sprawl' },
 } as const;
 
 /**

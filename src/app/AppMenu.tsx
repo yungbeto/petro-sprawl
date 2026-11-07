@@ -47,7 +47,7 @@ const SHORTCUTS: [string, string][] = [
 
 /**
  * The app menu: a full screen page over everything, like a product page. A hero with the globe and what the
- * app is, tabs for About, Data and Settings, and a footer with the contact address and the credits.
+ * app is, tabs for About, Data and Settings, and a footer with the contact address, the credits and the maker, with the source code.
  */
 export function AppMenu({ onClose, section, data, freshness, now, theme, themePreference, onThemePreferenceChange }: AppMenuProps) {
   const phone = useIsPhone();
@@ -302,6 +302,10 @@ function MenuFooter({
           <a href={SITE.maker.url} target="_blank" rel="noreferrer">
             {SITE.maker.name}
           </a>
+          <a href={SITE.repo.url} target="_blank" rel="noreferrer">
+            {SITE.repo.label}
+          </a>
+          <p className="muted">Open source, MIT license</p>
         </div>
       </div>
       <OilSlosh stirTarget={footerRef} scrollTarget={scrollRef} theme={theme} />
