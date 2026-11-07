@@ -54,6 +54,29 @@ export const basinSchema = z.object({
   geometry: z.object({ type: z.enum(['Polygon', 'MultiPolygon']), coordinates: z.array(z.any()).min(1) }),
 });
 
+export const shalePlaySchema = z.object({
+  id: z.string().regex(/^eia-[a-z0-9]+$/),
+  name: z.string().min(1),
+  basin: z.string().min(1),
+  provinceId: z.string().regex(/^usgs-\d+$/).optional(),
+  lithology: z.string().min(1),
+  age: z.string().min(1),
+  areaKm2: z.number().positive(),
+  formation: z.string().min(1).optional(),
+  reference: z.string().min(1),
+  labelPoint: lonLat,
+  geometry: z.object({ type: z.enum(['Polygon', 'MultiPolygon']), coordinates: z.array(z.any()).min(1) }),
+});
+
+export const shaleSeriesSchema = z.object({
+  id: z.string().regex(/^[A-Z0-9]+$/),
+  kind: z.enum(['oil', 'gas', 'rigs', 'wellsDrilled', 'wellsCompleted', 'uncompleted']),
+  name: z.string().min(1),
+  unit: z.string().min(1).nullable(),
+  release: isoDate,
+  points: z.array(z.object({ period: z.string().regex(/^\d{4}-\d{2}$/), value: z.number().finite() })).min(1),
+});
+
 export const newsHeadlineSchema = z.object({
   title: z.string().min(1),
   publisher: z.string().min(1),

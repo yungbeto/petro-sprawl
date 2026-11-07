@@ -8,7 +8,7 @@ import { DETAIL, FILTERS, MEASURED_FLOW, NEWS, type RegionFuel } from '../../lib
 import { pipelineFlow } from '../../lib/evidence';
 import type { PortCalls, Datasets } from '../../lib/data';
 import type { FlowBand } from '../../lib/flow';
-import { formatIndexShare, formatNumber, formatRefineryCapacity, formatTonnes } from '../../lib/format';
+import { formatIndexShare, formatMonth, formatNumber, formatRefineryCapacity, formatTonnes } from '../../lib/format';
 import { Sparkline } from '../Sparkline';
 import { lngStatus, pipelineStatus, refineryStatus, shareCoverage, terminalStatus } from '../../lib/encoding';
 import type { FilterRow } from '../../lib/filters';
@@ -381,7 +381,4 @@ export function RelatedList({
 }
 
 /** "2026-07" -> "July 2026". */
-export function monthLabel(period: string): string {
-  const [y, m] = period.split('-').map(Number);
-  return new Date(Date.UTC(y!, m! - 1, 1)).toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
-}
+export const monthLabel = formatMonth;

@@ -214,6 +214,47 @@ export interface Basin {
 }
 
 /**
+ * A shale or tight play (SPEC M12): an area where companies drill one rock layer, as EIA outlines it
+ * (`ShalePlays_US_EIA_Dec2021`). EIA's "general areas", approximate by its own account. No status: a play is
+ * an area, like a basin.
+ */
+export interface ShalePlay {
+  /** 'eia-bak001', from the shapefile's ID. */
+  id: string;
+  /** EIA's play name, as given ("Haynesville-Bossier"). */
+  name: string;
+  /** EIA's basin name, as given (it has typos: "Pardox"). */
+  basin: string;
+  /** The USGS province (basins.json) it overlaps most, when it overlaps one by SHALE.minProvinceOverlap. */
+  provinceId?: string;
+  lithology: string;
+  /** Geological age of the rock, as EIA gives it ("Devonian-Mississipp."). */
+  age: string;
+  areaKm2: number;
+  /** SHALE.formations id, when EIA reports production for the formation this outline is named for. */
+  formation?: string;
+  /** Where EIA drew the outline from, as its record says. */
+  reference: string;
+  labelPoint: [number, number];
+  geometry: Polygon | MultiPolygon;
+}
+
+/** One monthly STEO series (M12): history only, never a forecast month. */
+export interface ShaleSeries {
+  /** EIA series id, "TOPRPM". */
+  id: string;
+  kind: 'oil' | 'gas' | 'rigs' | 'wellsDrilled' | 'wellsCompleted' | 'uncompleted';
+  /** EIA's own description. */
+  name: string;
+  /** As EIA gives it ("million barrels per day"); null for counts. */
+  unit: string | null;
+  /** The STEO release it comes from (YYYY-MM-DD), as EIA's STEO page dates it. */
+  release: string;
+  /** Oldest first, YYYY-MM, every month before the release month. */
+  points: { period: string; value: number }[];
+}
+
+/**
  * One commodity's volumes in a USGS province. Produced and remaining are for discovered fields, from a 1996
  * industry database; undiscovered is the assessment's mean estimate. Null where USGS gives no value or an
  * inconsistent (negative) one.

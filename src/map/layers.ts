@@ -1,10 +1,10 @@
 import { ArcLayer, GeoJsonLayer, IconLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
 import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon, Position } from 'geojson';
 import type { Layer } from '@deck.gl/core';
-import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, OilTerminal, Pipeline, Refinery, UsRegion } from '../types';
+import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, OilTerminal, Pipeline, Refinery, ShalePlay, UsRegion } from '../types';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, ORIGIN_ARC, PIPELINE_WIDTH, REFINERY_RADIUS, REGION_OUTLINE, STORAGE_NOT_COVERED, TERMINAL_MARKER } from '../lib/config';
+import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, ORIGIN_ARC, PIPELINE_WIDTH, REFINERY_RADIUS, REGION_OUTLINE, SHALE, STORAGE_NOT_COVERED, TERMINAL_MARKER } from '../lib/config';
 import { storageColor, type CountryStorage } from '../lib/gasStorage';
 import type { OriginArc } from '../lib/oilOrigins';
 import type { FilterMatches } from '../lib/filters';
@@ -29,6 +29,7 @@ export type { LayerId, LayerVisibility };
 
 export type PickedObject =
   | { kind: 'basin'; item: Basin }
+  | { kind: 'shale'; item: ShalePlay }
   | { kind: 'pipeline'; item: Pipeline }
   | { kind: 'chokepoint'; item: Chokepoint }
   | { kind: 'country'; item: Country }
@@ -94,6 +95,13 @@ const basinCollection = memoLast(
   (basins: Basin[]): FeatureCollection<Polygon | MultiPolygon, Basin> => ({
     type: 'FeatureCollection',
     features: basins.map((basin) => ({ type: 'Feature', geometry: basin.geometry, properties: basin })),
+  }),
+);
+
+const shaleCollection = memoLast(
+  (plays: ShalePlay[]): FeatureCollection<Polygon | MultiPolygon, ShalePlay> => ({
+    type: 'FeatureCollection',
+    features: plays.map((play) => ({ type: 'Feature', geometry: play.geometry, properties: play })),
   }),
 );
 
@@ -211,7 +219,7 @@ export function buildLayers({
   basinLabelMinZoom,
   fontFamily,
 }: BuildLayersInput): Layer[] {
-  if (regionsOnly) visibility = { storage: false, basins: false, pipelines: false, lng: false, terminals: false, refineries: false, chokepoints: false };
+  if (regionsOnly) visibility = { storage: false, basins: false, shale: false, pipelines: false, lng: false, terminals: false, refineries: false, chokepoints: false };
   const isSelected = (kind: Selection['kind'], id: string) => selection?.kind === kind && selection.id === id;
   // A quick filter fades whatever it doesn't match; the selection always stays at full strength.
   const pipelineFade = (id: string) =>
@@ -226,6 +234,7 @@ export function buildLayers({
   const importTerminals = data.lngTerminals.filter((t) => t.facility === 'import');
 
   const basinFeatures = basinCollection(data.basins);
+  const shaleFormation = selection?.kind === 'shale' ? data.shalePlays.find((p) => p.id === selection.id)?.formation : undefined;
   const paths = pipelinePaths(onlyPipelines ? data.pipelines.filter((p) => onlyPipelines.has(p.id)) : data.pipelines);
   const selectedPaths = paths.filter((p) => isSelected('pipeline', p.pipeline.id));
   const hoveredPaths = paths.filter((p) => p.pipeline.id === hoveredPipelineId);
@@ -286,6 +295,38 @@ export function buildLayers({
       getText: (b) => b.name,
       getSize: 11,
       getColor: colors.basinLabel,
+      fontFamily,
+      characterSet: 'auto',
+      outlineWidth: 2,
+      outlineColor: colors.halo,
+      fontSettings: { sdf: true },
+      updateTriggers: { getColor: [colors] },
+    }),
+    // Shale plays (SPEC M12) over the provinces: EIA's outlines, filled, since a play is an area of rock
+    // that is drilled. The open play and the others of its formation draw stronger.
+    new GeoJsonLayer<ShalePlay>({
+      id: 'shale',
+      data: shaleCollection(data.shalePlays),
+      visible: visibility.shale,
+      pickable: true,
+      stroked: true,
+      filled: true,
+      getFillColor: (f: Feature<Geometry, ShalePlay>) => (shaleFormation && f.properties.formation === shaleFormation ? colors.shaleFillHover : colors.shaleFill),
+      getLineColor: (f: Feature<Geometry, ShalePlay>) => (isSelected('shale', f.properties.id) ? colors.selection : colors.shaleLine),
+      getLineWidth: (f: Feature<Geometry, ShalePlay>) => (isSelected('shale', f.properties.id) ? 2 : 1),
+      lineWidthUnits: 'pixels',
+      autoHighlight: true,
+      highlightColor: colors.shaleFillHover,
+      updateTriggers: { getFillColor: [shaleFormation, colors], getLineColor: [selection, colors], getLineWidth: [selection] },
+    }),
+    new TextLayer<ShalePlay>({
+      id: 'shale-labels',
+      data: data.shalePlays,
+      visible: visibility.shale && zoom >= basinLabelMinZoom + SHALE.labelZoomOffset,
+      getPosition: (p) => p.labelPoint,
+      getText: (p) => p.name,
+      getSize: 10,
+      getColor: colors.shaleLabel,
       fontFamily,
       characterSet: 'auto',
       outlineWidth: 2,
@@ -606,6 +647,8 @@ export function toPicked(layerId: string | undefined, object: unknown): PickedOb
   switch (layerId) {
     case 'basins':
       return { kind: 'basin', item: (object as Feature<Polygon | MultiPolygon, Basin>).properties };
+    case 'shale':
+      return { kind: 'shale', item: (object as Feature<Polygon | MultiPolygon, ShalePlay>).properties };
     case 'pipeline-hits':
       return { kind: 'pipeline', item: (object as PipelinePath).pipeline };
     case 'chokepoints':

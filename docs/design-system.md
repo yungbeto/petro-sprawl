@@ -131,6 +131,11 @@ halo that lifts it off the lines below, and a selection ring when open (`src/map
 | Oil terminal | Diamond | One size (`TERMINAL_MARKER`) |
 | Refinery (M11) | Rounded square | Crude distillation capacity, the smallest when unknown (`REFINERY_RADIUS`) |
 
+Areas are outlines, not markers. USGS provinces are a hairline in `--map-basin-*`, filled faintly only on the
+basins surface. Shale plays (M12) draw over them in `--map-shale-*`, a warm umber, always filled because a play
+is the ground that is drilled. The open play's formation fills stronger (`--map-shale-fill-hover`), since its
+outlines share one EIA figure, and its names show `SHALE.labelZoomOffset` zoom levels after the provinces'.
+
 ## Audit, 2026-11-05
 
 ### Fixed

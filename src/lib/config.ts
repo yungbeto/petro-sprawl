@@ -593,7 +593,58 @@ export const FEATURES = {
   fuelOrigins: true,
   /** Refineries (SPEC M11), off until phase 1 (the US) is done. */
   refineries: true,
+  /** Shale plays (SPEC M12): EIA's outlines and monthly production, on the basins surface. */
+  shale: true,
 } as const;
+
+/**
+ * Shale plays (SPEC M12). EIA reports production by geologic formation, not by area, so each formation lists
+ * the outlines (the shapefile's IDs) named for it: only where the name matches, never by guess. Three Forks
+ * and the Niobrara outlines outside the Denver Basin stay without a figure until EIA's coverage is confirmed
+ * (TODO-research.md). `oil` and `gas` are STEO series ids (table 10b); `region` is the Drilling Productivity
+ * Report region whose rigs and wells its outlines sit in.
+ */
+export const SHALE = {
+  sourcePage: 'https://www.eia.gov/maps/oil-naturalgas.php',
+  sourceTitle: 'Tight oil and shale gas plays in the U.S.',
+  steoPage: 'https://www.eia.gov/outlooks/steo/data/browser/',
+  steoTitle: 'Short-Term Energy Outlook, table 10b',
+  /** Months of history kept, and shown on a play's chart. */
+  months: 25,
+  formations: [
+    { id: 'permian', label: 'Permian', oil: 'TOPRPM', gas: 'SNGPRPM', region: 'permian', plays: ['ABO001', 'BON001', 'DEL001', 'GLO001', 'SPR001', 'WOL001', 'WOL002'] },
+    { id: 'bakken', label: 'Bakken', oil: 'TOPRBK', gas: 'SNGPRBK', region: 'bakken', plays: ['BAK001'] },
+    { id: 'eagle-ford', label: 'Eagle Ford', oil: 'TOPREF', gas: 'SNGPREF', region: 'eagle-ford', plays: ['EAG001'] },
+    { id: 'niobrara-codell', label: 'Niobrara Codell', oil: 'TOPRNI', gas: 'SNGPRNI', plays: ['NIO001'] },
+    { id: 'woodford', label: 'Woodford', oil: 'TOPRWF', gas: 'SNGPRWF', plays: ['WOO001', 'WOO002', 'WOO003'] },
+    { id: 'marcellus', label: 'Marcellus', gas: 'SNGPRMC', region: 'appalachia', plays: ['MARP01'] },
+    { id: 'utica', label: 'Utica', gas: 'SNGPRUA', region: 'appalachia', plays: ['UTI001'] },
+    { id: 'haynesville', label: 'Haynesville', gas: 'SNGPRHA', region: 'haynesville', plays: ['HAY001'] },
+    { id: 'barnett', label: 'Barnett', gas: 'SNGPRBN', plays: ['BAR001'] },
+    { id: 'fayetteville', label: 'Fayetteville', gas: 'SNGPRFY', plays: ['FAY001'] },
+    /** EIA reports these, but the shapefile has no outline for them. */
+    { id: 'mississippian', label: 'Mississippian', oil: 'TOPRMP', gas: 'SNGPRMP', plays: [] },
+    { id: 'austin-chalk', label: 'Austin Chalk', oil: 'TOPRAC', plays: [] },
+  ],
+  /** The Lower 48's totals, for the summary line. */
+  totals: { oil: 'TOPRL48', gas: 'SNGPRL48' },
+  /** EIA's shale regions (the old Drilling Productivity Report's): active rigs, new wells drilled and completed, drilled but uncompleted. */
+  regions: [
+    { id: 'permian', label: 'Permian region', code: 'PM' },
+    { id: 'bakken', label: 'Bakken region', code: 'BK' },
+    { id: 'eagle-ford', label: 'Eagle Ford region', code: 'EF' },
+    { id: 'appalachia', label: 'Appalachia region', code: 'AP' },
+    { id: 'haynesville', label: 'Haynesville region', code: 'HA' },
+  ],
+  /** Series prefixes for a region's activity, joined to its code ('RIGS' + 'PM'). */
+  activity: { rigs: 'RIGS', wellsDrilled: 'NWD', wellsCompleted: 'NWC', uncompleted: 'DUCS' },
+  /** Share of a play that must lie inside a USGS province for the province to be named as its own. */
+  minProvinceOverlap: 0.2,
+  /** Play names show this many zoom levels after the province names: they're smaller and many sit inside one province. */
+  labelZoomOffset: 1,
+} as const;
+export type ShaleFormationId = (typeof SHALE.formations)[number]['id'];
+export type ShaleRegionId = (typeof SHALE.regions)[number]['id'];
 
 /**
  * Refineries (SPEC M11). The US import's source page, and how far a GEM pipeline's end may be from a refinery

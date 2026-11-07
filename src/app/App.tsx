@@ -8,6 +8,7 @@ import { pipelineGroups, type PipelineGrouping } from '../lib/pipelineGroups';
 import { lngGroups, oilGroups, type TerminalGrouping, type TerminalKind } from '../lib/terminalGroups';
 import { refineryGroups, type RefineryGrouping } from '../lib/refineries';
 import type { TerminalListing } from '../panel/TerminalsView';
+import type { BasinsMode } from '../panel/BasinsView';
 import type { Pipeline } from '../types';
 import { Panel } from '../panel/Panel';
 import { SearchBar, SearchDialog } from '../panel/Search';
@@ -59,6 +60,7 @@ export function App() {
   const [visibility, setVisibility] = useState<LayerVisibility>(() => ({
     storage: false,
     basins: true,
+    shale: true,
     pipelines: true,
     lng: true,
     terminals: true,
@@ -139,6 +141,8 @@ export function App() {
   const [originsFuel, setOriginsFuel] = useState<RegionFuel>(DEFAULT_REGION_FUEL);
 
   // The terminals surface's kind, a grouping per kind, and the open group, kept the same way.
+  // The basins surface shows USGS provinces or EIA's shale plays (M12).
+  const [basinsMode, setBasinsMode] = useState<BasinsMode>('provinces');
   const [terminalKind, setTerminalKind] = useState<TerminalKind>('lng');
   const [terminalGrouping, setTerminalGrouping] = useState<Record<TerminalKind, TerminalGrouping>>({ lng: 'facility', oil: 'route' });
   const [openTerminalGroup, setOpenTerminalGroup] = useState<string | null>(null);
@@ -194,11 +198,18 @@ export function App() {
   const viewMatches = useMemo(() => (view ? viewHighlight(view, data) : null), [view, data]);
   // An open basin brings the pipelines that touch it (decided 2026-11-01). On the basins surface the
   // basin stays in focus while you open its pipelines, until you go back to the list or leave.
-  const [basinTrail, setBasinTrail] = useState<string | null>(null);
-  const nextBasinTrail = view === 'basins' && selection ? (selection.kind === 'basin' ? selection.id : basinTrail) : null;
-  if (nextBasinTrail !== basinTrail) setBasinTrail(nextBasinTrail);
-  const focusedBasinId = selection?.kind === 'basin' ? selection.id : nextBasinTrail;
-  const basin = focusedBasinId ? data.basins.find((b) => b.id === focusedBasinId) : undefined;
+  // A shale play (M12) is an outline too, and works the same way.
+  const [basinTrail, setBasinTrail] = useState<Selection | null>(null);
+  const outlineOpen = selection?.kind === 'basin' || selection?.kind === 'shale';
+  const nextBasinTrail = view === 'basins' && selection ? (outlineOpen ? selection : basinTrail) : null;
+  if (nextBasinTrail?.kind !== basinTrail?.kind || nextBasinTrail?.id !== basinTrail?.id) setBasinTrail(nextBasinTrail);
+  const focusedOutline = outlineOpen ? selection : nextBasinTrail;
+  const basin =
+    focusedOutline?.kind === 'basin'
+      ? data.basins.find((b) => b.id === focusedOutline.id)
+      : focusedOutline?.kind === 'shale'
+        ? data.shalePlays.find((p) => p.id === focusedOutline.id)
+        : undefined;
   const basinPipelines = useMemo(
     () => (basin ? new Set(pipelinesTouchingBasin(basin, data.pipelines).map((p) => p.id)) : null),
     [basin, data.pipelines],
@@ -269,6 +280,15 @@ export function App() {
     [openRefineryGroup, refineryGroupList],
   );
 
+  // Switching to shale plays frames them: they're all in the Lower 48.
+  const changeBasinsMode = useCallback(
+    (next: BasinsMode) => {
+      setBasinsMode(next);
+      const points = next === 'shale' ? data.shalePlays.map((p) => p.labelPoint) : viewPoints('basins', data);
+      if (points.length) setFocus((prev) => ({ points, nonce: (prev?.nonce ?? 0) + 1 }));
+    },
+    [data],
+  );
   const changeTerminalKind = useCallback((next: TerminalKind) => {
     setTerminalKind(next);
     setOpenTerminalGroup(null);
@@ -491,6 +511,7 @@ export function App() {
               openGroup: openTerminalGroup,
               onToggleGroup: toggleTerminalGroup,
             }}
+            basins={{ mode: basinsMode, onMode: changeBasinsMode }}
             refineries={{
               groups: refineryGroupList,
               grouping: refineryGrouping,
@@ -569,6 +590,7 @@ export function App() {
               counts={{
                 storage: data.series.filter((s) => s.metric === 'storage_fill_pct').length,
                 basins: data.basins.length,
+                shale: data.shalePlays.length,
                 pipelines: data.pipelines.length,
                 lng: data.lngTerminals.length,
                 terminals: data.oilTerminals.length,

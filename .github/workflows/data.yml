@@ -64,6 +64,14 @@ jobs:
         continue-on-error: true
         run: npm run fetch:eia
 
+      # EIA's Short-Term Energy Outlook, monthly (SPEC M12): shale production by formation and rigs and wells
+      # by region, history only. The run fails rather than publish a forecast month.
+      - name: EIA shale plays
+        id: shale
+        if: env.EIA_API_KEY != ''
+        continue-on-error: true
+        run: npm run fetch:shale
+
       # EIA weekly by region (needs the EIA key), Statistics Canada and JODI monthly (no key). Each dataset
       # keeps its previous file on its own failure.
       - name: Gas storage beyond AGSI+
@@ -95,7 +103,7 @@ jobs:
           fi
 
       - name: Fail if any fetch failed
-        if: steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure' || steps.alsi.outcome == 'failure' || steps.eia.outcome == 'failure' || steps.storage.outcome == 'failure' || steps.crude.outcome == 'failure'
+        if: steps.entsog.outcome == 'failure' || steps.agsi.outcome == 'failure' || steps.alsi.outcome == 'failure' || steps.eia.outcome == 'failure' || steps.shale.outcome == 'failure' || steps.storage.outcome == 'failure' || steps.crude.outcome == 'failure'
         run: |
           echo "::error::One or more fetch jobs failed; previous data was kept. See the step logs above."
           exit 1

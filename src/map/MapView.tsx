@@ -23,7 +23,8 @@ import { pipelineFlow } from '../lib/evidence';
 import { storageByCountry, type CountryStorage } from '../lib/gasStorage';
 import type { ChokepointFlow } from '../lib/flow';
 import { boundsOf } from '../lib/geo';
-import { formatCapacity, formatIndexShare, formatMbd, formatNumber, formatRefineryCapacity, formatShare, formatSignedPct } from '../lib/format';
+import { formatShaleValue, formationById, latestMonth, shaleSeries } from '../lib/shale';
+import { formatCapacity, formatIndexShare, formatMbd, formatMonth, formatNumber, formatRefineryCapacity, formatShare, formatSignedPct } from '../lib/format';
 import type { FilterMatches } from '../lib/filters';
 import { refineryStatus, terminalStatus } from '../lib/encoding';
 import { statusLabel } from '../panel/details';
@@ -95,6 +96,14 @@ function tooltipFigure(
       ]
         .filter(Boolean)
         .join(' · ');
+    case 'shale': {
+      // EIA's figure is the formation's, shared by its outlines: say so by naming it.
+      const formation = formationById(picked.item.formation);
+      const series = formation && 'oil' in formation ? shaleSeries(data, formation.oil) : formation && 'gas' in formation ? shaleSeries(data, formation.gas) : undefined;
+      const latest = latestMonth(series);
+      if (!formation || !series || !latest) return `${picked.item.basin} basin · no EIA formation figure`;
+      return `${formation.label}: ${formatShaleValue(series, latest.value)} ${series.kind === 'oil' ? 'mb/d' : 'billion ft³/d'} · ${formatMonth(latest.period)}`;
+    }
     case 'pipeline':
       return picked.item.capacity ? formatCapacity(picked.item.capacity) : 'Capacity unknown';
     case 'lng': {

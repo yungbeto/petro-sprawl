@@ -26,6 +26,8 @@ export function detailKind(resolved: Resolved): string {
       return 'Chokepoint';
     case 'basin':
       return `Basin · ${resolved.item.provinceType === 'priority' ? 'priority' : 'boutique'} province`;
+    case 'shale':
+      return 'Shale play';
     case 'pipeline':
       return `${COMMODITY_PIPELINE[resolved.item.commodity]}${resolved.item.sources.includes('curated') ? ' · corridor' : ''}`;
     case 'country':

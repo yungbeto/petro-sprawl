@@ -993,6 +993,43 @@ test('the basins surface lists basins by oil remaining and shows only their outl
   await expect(page.getByRole('button', { name: 'Layers' })).toBeVisible();
 });
 
+test("the basins surface switches to shale plays, and a play opens with its formation's EIA figure", async ({ page }) => {
+  test.skip(!FEATURES.shale, 'FEATURES.shale is off');
+  await page.goto('/?view=basins');
+  const panel = page.getByLabel('Panel', { exact: true });
+  await panel.getByRole('radio', { name: 'Shale plays' }).click();
+  const list = panel.getByRole('list', { name: 'Shale formations' });
+  // The most tight oil first: Permian formations are most of it.
+  await expect(list.getByRole('button').first()).toContainText(/Permian.*million barrels of oil a day/);
+  await expect(panel.getByText(/the Lower 48 produced .* million barrels a day/)).toBeVisible();
+  await page.waitForTimeout(500);
+  await page.waitForFunction(() => !(window as unknown as { __etMap: { isMoving(): boolean } }).__etMap.isMoving());
+  // Midland, Texas sits in the Wolfcamp outline EIA draws for the Midland Basin.
+  const midland = await screenPoint(page, [-102.08, 32.0]);
+  await page.mouse.move(midland.x, midland.y);
+  await expect(page.getByRole('tooltip')).toContainText(/Permian: [\d.]+ mb\/d/);
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/shale-surface.png` });
+  await list.getByRole('button').first().click();
+  await expect(page).toHaveURL(/sel=shale\/eia-/);
+  await expect(panel.getByText(/^Permian tight oil, /)).toBeVisible();
+  await expect(panel.getByText(/EIA's estimate for the whole formation, shared with \d+ other outlines/)).toBeVisible();
+  await expect(panel.getByRole('heading', { name: /Drilling in EIA's Permian region/ })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: /Pipelines crossing it/ })).toBeVisible();
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/shale-detail.png` });
+  await panel.getByRole('button', { name: 'Permian Basin', exact: true }).click();
+  await expect(page).toHaveURL(/sel=basin\/usgs-5044/);
+  await expect(panel.getByRole('heading', { name: /Shale plays in it/ })).toBeVisible();
+});
+
+test('search finds a shale play by "fracking"', async ({ page }) => {
+  test.skip(!FEATURES.shale, 'FEATURES.shale is off');
+  await page.goto('/');
+  const search = await openSearch(page);
+  await search.fill('fracking');
+  await page.getByRole('option', { name: /Bakken.*Shale play/ }).click();
+  await expect(page).toHaveURL(/sel=shale\/eia-bak001/);
+});
+
 test('the oil origins surface finds a US region through search and opens it on the chosen fuel', async ({ page }) => {
   test.skip(!FEATURES.fuelOrigins, 'FEATURES.fuelOrigins is off');
   await page.goto('/?view=origins');

@@ -6,6 +6,9 @@ import { chokepointsInBasin, lngTerminalsInBasin, pipelinesTouchingBasin, type D
 import { formatThousandfold, formatCountry } from '../../lib/format';
 import { filterRows } from '../../lib/filters';
 import { basinOilParts } from '../../lib/summary';
+import { formationById, formatShaleValue, latestMonth, leadSeries, playsInProvince } from '../../lib/shale';
+import { formatMonth } from '../../lib/format';
+import type { ShalePlay } from '../../types';
 import { AssetIcon } from '../AssetIcon';
 import { capitalize } from '../../lib/labels';
 import { Info } from '../Info';
@@ -18,6 +21,8 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
   const chokepoints = chokepointsInBasin(item, data.chokepoints);
   const pipelines = pipelinesTouchingBasin(item, data.pipelines);
   const terminals = lngTerminalsInBasin(item, data.lngTerminals);
+  // Empty while FEATURES.shale is off.
+  const plays = playsInProvince(item.id, data.shalePlays);
   const none = new Set<string>();
   const pipelineRows = filterRows({ pipelines: new Set(pipelines.map((p) => p.id)), chokepoints: none, lng: none, terminals: none, refineries: none }, data);
   const chokepointRowsInside = filterRows(
@@ -49,6 +54,7 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
         )}
       </dl>
       <BasinVolumesSection basin={item} />
+      {plays.length > 0 && <ShalePlaysInBasin plays={plays} data={data} onSelect={onSelect} />}
       <RelatedList
         title="Pipelines crossing it"
         empty={data.pipelines.length ? 'None in the loaded data.' : 'Pipelines not loaded yet.'}
@@ -147,6 +153,46 @@ function BasinVolumesSection({ basin }: { basin: Basin }) {
           {basin.countries.includes('US') && ' The 2000 assessment left out the United States, which USGS assesses on its own.'}
         </p>
       )}
+    </section>
+  );
+}
+
+/**
+ * EIA's shale plays inside a US province (M12), each with its formation's newest month. The figure is the
+ * formation's, which can reach past this province, so it is named as such.
+ */
+function ShalePlaysInBasin({ plays, data, onSelect }: { plays: ShalePlay[]; data: Datasets; onSelect: OnSelect }) {
+  const titleId = useId();
+  return (
+    <section className="section" aria-labelledby={titleId}>
+      <SectionTitle title="Shale plays in it" id={titleId} count={plays.length}>
+        <Info label="About these plays">
+          EIA's outlines of tight oil and shale gas plays that lie mostly in this province. The figure beside each is
+          EIA's monthly estimate for the whole formation the play is named for, which can reach into other provinces.
+        </Info>
+      </SectionTitle>
+      <ul className="changes">
+        {plays.map((p) => {
+          const formation = formationById(p.formation);
+          const series = leadSeries(data, formation);
+          const latest = latestMonth(series);
+          return (
+            <li key={p.id}>
+              <button type="button" className="change" onClick={() => onSelect({ kind: 'shale', id: p.id })}>
+                <AssetIcon kind="shale" />
+                <span className="change__text">
+                  <span className="change__name">{p.name}</span>
+                  <span className="change__what">
+                    {series && latest
+                      ? `${formation!.label} ${series.kind === 'oil' ? 'tight oil' : 'shale gas'}: ${formatShaleValue(series, latest.value)} ${series.kind === 'oil' ? 'mb/d' : 'billion ft³/d'}, ${formatMonth(latest.period)}`
+                      : `${p.areaKm2.toLocaleString('en-US')} km² · no EIA figure`}
+                  </span>
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </section>
   );
 }

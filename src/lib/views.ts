@@ -8,7 +8,7 @@ import { importsSurfaceHighlight } from './crudeImports';
 import type { Datasets } from './data';
 
 /** The map's switchable layers. */
-export type LayerId = 'storage' | 'basins' | 'pipelines' | 'lng' | 'terminals' | 'refineries' | 'chokepoints';
+export type LayerId = 'storage' | 'basins' | 'shale' | 'pipelines' | 'lng' | 'terminals' | 'refineries' | 'chokepoints';
 export type LayerVisibility = Record<LayerId, boolean>;
 
 export const VIEW_IDS = ['chokepoints', 'pipelines', 'terminals', 'refineries', 'basins', 'storage', 'origins'] as const;
@@ -40,6 +40,7 @@ export function selectionEnabled(kind: SelectionKind): boolean {
   if (kind === 'country') return viewEnabled('storage') || viewEnabled('origins');
   if (kind === 'region') return viewEnabled('origins');
   if (kind === 'refinery') return viewEnabled('refineries');
+  if (kind === 'shale') return FEATURES.shale;
   return true;
 }
 
@@ -58,7 +59,8 @@ export const VIEW_LAYERS: Record<ViewId, LayerId[]> = {
   pipelines: ['pipelines'],
   terminals: ['lng', 'terminals'],
   refineries: ['refineries'],
-  basins: ['basins'],
+  // Shale plays (M12) draw over the provinces; off with FEATURES.shale (visibleLayers).
+  basins: ['basins', 'shale'],
   storage: ['storage'],
   origins: ['storage', 'chokepoints', 'terminals'],
 };
@@ -68,6 +70,7 @@ const SELECTION_LAYERS: Record<SelectionKind, LayerId[]> = {
   pipeline: ['pipelines'],
   chokepoint: ['chokepoints'],
   basin: ['basins', 'pipelines'],
+  shale: ['basins', 'shale', 'pipelines'],
   country: ['storage'],
   lng: ['lng'],
   terminal: ['terminals'],
@@ -84,12 +87,14 @@ export function visibleLayers(view: ViewId | null, selection: { kind: SelectionK
   const shown = (id: LayerId) => {
     if (id === 'storage' && !FEATURES.gasStorage) return false;
     if (id === 'refineries' && !FEATURES.refineries) return false;
+    if (id === 'shale' && !FEATURES.shale) return false;
     if (selected.includes(id)) return true;
     return view ? VIEW_LAYERS[view].includes(id) : chosen[id];
   };
   return {
     storage: shown('storage'),
     basins: shown('basins'),
+    shale: shown('shale'),
     pipelines: shown('pipelines'),
     lng: shown('lng'),
     terminals: shown('terminals'),

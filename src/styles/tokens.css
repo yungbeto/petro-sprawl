@@ -101,6 +101,10 @@
   --map-basin-line-focus: #6d6a5cb3;
   --map-basin-fill-focus: #6d6a5c14;
   --map-basin-label: #5c5a4e;
+  --map-shale-line: #8a5a2bb3;
+  --map-shale-fill: #8a5a2b29;
+  --map-shale-fill-hover: #8a5a2b4d;
+  --map-shale-label: #6e4720;
   /* The menu footer's crude (OilSlosh): the body from its surface down, the highlight on its surface, and
      the slick of colour a film of oil throws, at low opacity so it stays a sheen. */
   --oil: #2a2219;
@@ -157,6 +161,10 @@
     --map-basin-line-focus: #c4bfa8a6;
     --map-basin-fill-focus: #c4bfa814;
     --map-basin-label: #a8a490;
+    --map-shale-line: #d9a066b3;
+    --map-shale-fill: #d9a06629;
+    --map-shale-fill-hover: #d9a0664d;
+    --map-shale-label: #d9a066;
     /* The menu footer's crude: darker than the dark surface, so it reads as a pool; the sheen finds its edge. */
     --oil: #0b0907;
     --oil-deep: #030202;
@@ -209,6 +217,10 @@
   --map-basin-line-focus: #c4bfa8a6;
   --map-basin-fill-focus: #c4bfa814;
   --map-basin-label: #a8a490;
+  --map-shale-line: #d9a066b3;
+  --map-shale-fill: #d9a06629;
+  --map-shale-fill-hover: #d9a0664d;
+  --map-shale-label: #d9a066;
   /* The menu footer's crude: darker than the dark surface, so it reads as a pool; the sheen finds its edge. */
   --oil: #0b0907;
   --oil-deep: #030202;

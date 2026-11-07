@@ -12,7 +12,7 @@ import { Summary } from './Summary';
 import { FilterList } from './FilterList';
 import type { FilterId, FilterMatches } from '../lib/filters';
 import { VIEW_LABELS, type ViewId } from '../lib/views';
-import { BasinsView } from './BasinsView';
+import { BasinsView, type BasinsViewProps } from './BasinsView';
 import { ChokepointsView } from './ChokepointsView';
 import { PipelinesView, type PipelinesViewProps } from './PipelinesView';
 import { TerminalsView, type TerminalsViewProps } from './TerminalsView';
@@ -21,7 +21,7 @@ import { RefineriesView, type RefineriesViewProps } from './RefineriesView';
 import { MoreView } from './MoreView';
 import { DetailSkeleton, HomeSkeleton, ListSkeleton } from './Skeleton';
 import { OriginsView, type OriginsViewProps } from './OriginsView';
-import { BasinDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RefineryDetail, RegionDetail, CountryDetail } from './details';
+import { BasinDetail, ShaleDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RefineryDetail, RegionDetail, CountryDetail } from './details';
 import { IconButton } from '../ui/Button';
 import { SectionTitle } from '../ui/SectionTitle';
 
@@ -32,6 +32,8 @@ interface PanelProps {
   pipelines: Pick<PipelinesViewProps, 'groups' | 'grouping' | 'onGrouping' | 'openGroup' | 'onToggleGroup'>;
   /** The terminals surface's kind, groups and grouping, held by the app. */
   terminals: Omit<TerminalsViewProps, 'data' | 'onSelect'>;
+  /** The basins surface's switch between provinces and shale plays, held by the app. */
+  basins: Pick<BasinsViewProps, 'mode' | 'onMode'>;
   /** The refineries surface's groups and grouping, held by the app. */
   refineries: Omit<RefineriesViewProps, 'data' | 'onSelect'>;
   /** The fuel origins surface's fuel, held by the app, and its way into search. */
@@ -70,6 +72,7 @@ const KIND_LABELS: Record<SelectionKind, string> = {
   pipeline: 'Pipeline',
   chokepoint: 'Chokepoint',
   basin: 'Basin',
+  shale: 'Shale play',
   country: 'Country',
   lng: 'LNG terminal',
   terminal: 'Oil terminal',
@@ -193,7 +196,7 @@ export function Panel(props: PanelProps) {
         ) : props.view === 'refineries' ? (
           <RefineriesView data={props.data} {...props.refineries} onSelect={props.onSelect} />
         ) : props.view === 'basins' ? (
-          <BasinsView data={props.data} onSelect={props.onSelect} />
+          <BasinsView data={props.data} {...props.basins} onSelect={props.onSelect} />
         ) : props.view === 'storage' ? (
           <StorageView data={props.data} onSelect={props.onSelect} />
         ) : props.view === 'origins' ? (
@@ -265,6 +268,7 @@ function Detail({
     <>
       {resolved?.kind === 'chokepoint' && <ChokepointDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'basin' && <BasinDetail item={resolved.item} data={data} onSelect={onSelect} />}
+      {resolved?.kind === 'shale' && <ShaleDetail item={resolved.item} data={data} onSelect={onSelect} />}
       {resolved?.kind === 'pipeline' && <PipelineDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'country' && <CountryDetail item={resolved.item} data={data} view={view} onSelect={onSelect} />}
       {resolved?.kind === 'lng' && <LngDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}

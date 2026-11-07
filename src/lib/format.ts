@@ -121,3 +121,9 @@ export function formatShortDate(iso: string, now: Date): string {
   const parts = [day && String(Number(day)), name, Number(year) !== now.getUTCFullYear() && year].filter(Boolean);
   return parts.join(' ');
 }
+
+/** "2026-07" -> "July 2026". */
+export function formatMonth(period: string): string {
+  const [y, m] = period.split('-').map(Number);
+  return new Date(Date.UTC(y!, m! - 1, 1)).toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+}

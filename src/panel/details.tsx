@@ -4,6 +4,7 @@ export { detailKind, statusLabel } from '../lib/labels';
 export { SourceLink, Band, AssetList } from './detail/parts';
 export { ChokepointDetail } from './detail/ChokepointDetail';
 export { BasinDetail } from './detail/BasinDetail';
+export { ShaleDetail } from './detail/ShaleDetail';
 export { PipelineDetail } from './detail/PipelineDetail';
 export { CountryDetail, CrudeImportsSource } from './detail/CountryDetail';
 export { LngDetail } from './detail/LngDetail';

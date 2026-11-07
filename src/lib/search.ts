@@ -1,6 +1,7 @@
 // Type-ahead search across pipelines, chokepoints, basins, LNG terminals and countries, and US regions,
 // states, cities and ZIP codes for "Where is my oil from?". Pure.
 
+import { formationById } from './shale';
 import type { Selection } from '../app/urlState';
 import { PADDS, SEARCH, STORAGE_NOT_COVERED } from './config';
 import { storageByCountry } from './gasStorage';
@@ -79,6 +80,11 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
       entry({ kind: 'refinery', id: r.id }, r.name, `Refinery${r.state ? ` · ${r.state}` : ''} · ${r.country}`, [...r.aliases, ...(r.operator ? [r.operator] : [])], 2),
     ),
     ...data.basins.map((b) => entry({ kind: 'basin', id: b.id }, b.name, 'Basin', [], 3)),
+    // Empty while FEATURES.shale is off. A play is found by its formation too, and by "fracking", which is
+    // what most people call it; plays with an EIA figure first.
+    ...data.shalePlays.map((p) =>
+      entry({ kind: 'shale', id: p.id }, p.name, `Shale play · ${p.basin} basin`, [...(p.formation ? [formationById(p.formation)!.label] : []), 'shale', 'fracking'], p.formation ? 2 : 3),
+    ),
     ...usPlaceEntries(data, entry),
     ...data.lngTerminals.map((t) =>
       entry(
@@ -200,6 +206,7 @@ const SCOPE_OF: Record<Selection['kind'], Exclude<SearchScope, 'all'>> = {
   country: 'countries',
   region: 'us-places',
   basin: 'basins',
+  shale: 'basins',
 };
 
 /** Result groups: one per kind, finer than the scopes, so oil and LNG terminals head their own lists. */
@@ -212,6 +219,7 @@ export const SEARCH_GROUP_LABELS: Record<Selection['kind'], string> = {
   country: 'Countries',
   region: 'US places',
   basin: 'Basins',
+  shale: 'Shale plays',
 };
 
 export interface SearchGroup {

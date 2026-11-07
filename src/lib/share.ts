@@ -10,7 +10,8 @@ import { countryOrigins, importPeriod } from './crudeImports';
 import { chokepointFlow } from './flow';
 import { fuelOriginsFor, originsFor, seriesById, type Datasets } from './data';
 import { lngStatus, pipelineStatus, refineryStatus, terminalStatus } from './encoding';
-import { formatCapacity, formatCountry, formatRefineryCapacity, formatIndexShare, formatNumber, formatShare, formatSignedPct } from './format';
+import { formatCapacity, formatCountry, formatMonth, formatRefineryCapacity, formatIndexShare, formatNumber, formatShare, formatSignedPct } from './format';
+import { formationById, formatShaleValue, latestMonth, shaleSeries } from './shale';
 import { STORAGE_HEADLINE, storageByCountry, storageFigure, type CountryStorage } from './gasStorage';
 import { cellIndex } from './globe';
 import { pointInPolygon } from './geo';
@@ -174,7 +175,7 @@ const IMPORT_SOURCE = { eurostat: 'Eurostat', comtrade: 'UN Comtrade', eia: 'EIA
 
 /** Every page's card, by file and key. */
 export function shareCards(data: Datasets): Record<ShareFile, ShareIndex> {
-  const out: Record<ShareFile, ShareIndex> = { pipeline: {}, chokepoint: {}, basin: {}, country: {}, lng: {}, terminal: {}, refinery: {}, region: {}, view: {} };
+  const out: Record<ShareFile, ShareIndex> = { pipeline: {}, chokepoint: {}, basin: {}, shale: {}, country: {}, lng: {}, terminal: {}, refinery: {}, region: {}, view: {} };
 
   for (const c of data.chokepoints) {
     const flow = chokepointFlow(seriesById(data, c.transitSeriesId));
@@ -260,6 +261,27 @@ export function shareCards(data: Datasets): Record<ShareFile, ShareIndex> {
       source: 'USGS World Petroleum Assessment 2000',
       center: round1(b.labelPoint),
       focus: polygonCells(b.geometry),
+    };
+  }
+
+  // Shale plays (M12): the formation's newest month, as the page labels it, the formation's and not the outline's.
+  for (const p of data.shalePlays) {
+    const formation = formationById(p.formation);
+    const oil = latestMonth(shaleSeries(data, formation && 'oil' in formation ? formation.oil : undefined));
+    const gas = latestMonth(shaleSeries(data, formation && 'gas' in formation ? formation.gas : undefined));
+    const month = (oil ?? gas)?.period;
+    const facts = [
+      oil && `${formation!.label} tight oil: ${formatShaleValue({ kind: 'oil' }, oil.value)} million barrels a day`,
+      gas && `${formation!.label} shale gas: ${formatShaleValue({ kind: 'gas' }, gas.value)} billion ft³ a day`,
+      !formation && `${p.basin} basin; EIA reports no production for this outline's formation`,
+    ].filter((f): f is string => Boolean(f));
+    out.shale[`shale/${p.id}`] = {
+      kicker: detailKind({ kind: 'shale', item: p }),
+      title: p.name,
+      facts,
+      source: month ? `EIA Short-Term Energy Outlook, ${formatMonth(month)}` : 'EIA, tight oil and shale gas plays',
+      center: round1(p.labelPoint),
+      focus: polygonCells(p.geometry),
     };
   }
 

@@ -10,21 +10,63 @@ import { Info } from './Info';
 import { BarSwatch, PartsBar, type BarTone } from '../ui/Bar';
 import { SectionTitle } from '../ui/SectionTitle';
 import { Note } from '../ui/Note';
+import { FEATURES } from '../lib/config';
+import { Segmented } from './GroupList';
+import { ShalePlaysView } from './ShalePlaysView';
 
-/** The basins view: every mapped oil and gas province, the most oil remaining (as of 2000) first. */
-export function BasinsView({ data, onSelect }: { data: Datasets; onSelect: (selection: Selection) => void }) {
+export type BasinsMode = 'provinces' | 'shale';
+const BASINS_MODES = ['provinces', 'shale'] as const;
+const BASINS_MODE_LABELS: Record<BasinsMode, string> = { provinces: 'Provinces', shale: 'Shale plays' };
+
+export interface BasinsViewProps {
+  data: Datasets;
+  /** Provinces, or EIA's shale plays (SPEC M12, while FEATURES.shale is on). */
+  mode: BasinsMode;
+  onMode: (mode: BasinsMode) => void;
+  onSelect: (selection: Selection) => void;
+}
+
+/**
+ * The basins view: every mapped oil and gas province, the most oil remaining (as of 2000) first; or, switched,
+ * EIA's US shale plays with their monthly production.
+ */
+export function BasinsView({ data, mode: chosen, onMode, onSelect }: BasinsViewProps) {
   const rows = useMemo(() => basinViewRows(data.basins), [data]);
   const total = useMemo(() => basinsSummary(data.basins), [data]);
-  return (
-    <>
-      <section className="section">
-        <SectionTitle title="Basins" level="page">
-          <Info label="About this list">
+  const mode = FEATURES.shale ? chosen : 'provinces';
+  const title = (
+    <SectionTitle
+      title="Basins"
+      level="page"
+      aside={
+        FEATURES.shale ? (
+          <Segmented id="basins-mode" label="Show" options={BASINS_MODES} labels={BASINS_MODE_LABELS} value={mode} onChange={onMode} hideLabel />
+        ) : undefined
+      }
+    >
+      <Info label="About this list">
+        {mode === 'shale' ? (
+          <>
+            EIA's outlines of US tight oil and shale gas plays, and its monthly estimates of what each formation produces,
+            from the Short-Term Energy Outlook's history. Formations with the most tight oil first, then gas-only ones.
+          </>
+        ) : (
+          <>
             Oil and gas provinces from the USGS World Petroleum Assessment 2000. Ordered by oil remaining in fields
             discovered by 1996, in billion barrels; nothing produced or found since is counted. Provinces with no oil
             figure, the United States among them, come last.
-          </Info>
-        </SectionTitle>
+          </>
+        )}
+      </Info>
+    </SectionTitle>
+  );
+  if (mode === 'shale') {
+    return <ShalePlaysView data={data} title={title} onSelect={onSelect} />;
+  }
+  return (
+    <>
+      <section className="section">
+        {title}
         {total && (
           <p className="view-headline">
             {total.provinces} provinces hold {formatThousandfold(total.oil)} billion barrels of oil in fields found by 1996 (USGS,

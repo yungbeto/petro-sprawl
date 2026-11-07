@@ -16,6 +16,8 @@ import type {
   OilTerminal,
   Pipeline,
   Refinery,
+  ShalePlay,
+  ShaleSeries,
   UsLookup,
 } from '../types';
 import { chokepointFlow, type ChokepointFlow } from './flow';
@@ -29,6 +31,9 @@ import { withMeasuredEvidence, withMeasuredLngEvidence } from './evidence';
 
 export interface Datasets {
   basins: Basin[];
+  /** Shale plays (M12): EIA's outlines, and STEO's monthly history for their formations and regions. Empty while `FEATURES.shale` is off. */
+  shalePlays: ShalePlay[];
+  shaleSeries: ShaleSeries[];
   chokepoints: Chokepoint[];
   pipelines: Pipeline[];
   lngTerminals: LngTerminal[];
@@ -57,6 +62,8 @@ export interface Datasets {
 
 export const EMPTY_DATASETS: Datasets = {
   basins: [],
+  shalePlays: [],
+  shaleSeries: [],
   chokepoints: [],
   pipelines: [],
   lngTerminals: [],
@@ -77,7 +84,7 @@ export const EMPTY_DATASETS: Datasets = {
 };
 
 /** Every published dataset the app loads, as `public/data/<id>.json`. */
-export const DATASET_IDS = ['basins', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'refineries', 'countries', 'country-regions', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'gas-storage-us', 'gas-storage-ca', 'gas-storage-jodi', 'lng-sendout', 'disruptions', 'news-headlines', 'oil-origins', 'fuel-origins', 'oil-routes', 'crude-imports', 'us-lookup', 'us-regions'] as const;
+export const DATASET_IDS = ['basins', 'shale-plays', 'shale-production', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'refineries', 'countries', 'country-regions', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'gas-storage-us', 'gas-storage-ca', 'gas-storage-jodi', 'lng-sendout', 'disruptions', 'news-headlines', 'oil-origins', 'fuel-origins', 'oil-routes', 'crude-imports', 'us-lookup', 'us-regions'] as const;
 export type DatasetId = (typeof DATASET_IDS)[number];
 
 /**
@@ -97,6 +104,8 @@ export function assembleDatasets(get: (id: DatasetId) => unknown[], meta: Datase
   ] as Datasets['series'];
   return {
     basins: get('basins') as Datasets['basins'],
+    shalePlays: FEATURES.shale ? (get('shale-plays') as Datasets['shalePlays']) : [],
+    shaleSeries: FEATURES.shale ? (get('shale-production') as Datasets['shaleSeries']) : [],
     chokepoints: get('chokepoints') as Datasets['chokepoints'],
     // Measured flow goes first in each linked pipeline's evidence, so it sets the current status.
     pipelines: withMeasuredEvidence(get('pipelines') as Datasets['pipelines'], series),
@@ -117,7 +126,7 @@ export function assembleDatasets(get: (id: DatasetId) => unknown[], meta: Datase
     // One record holding every table.
     usLookup: (get('us-lookup')[0] as Datasets['usLookup']) ?? null,
     usRegions: get('us-regions') as Datasets['usRegions'],
-    meta: FEATURES.refineries ? meta : meta.filter((m) => m.id !== 'refineries'),
+    meta: meta.filter((m) => !(m.id === 'refineries' && !FEATURES.refineries) && !(m.id.startsWith('shale-') && !FEATURES.shale)),
   };
 }
 
@@ -172,6 +181,7 @@ export type Resolved =
   | { kind: 'pipeline'; item: Pipeline }
   | { kind: 'chokepoint'; item: Chokepoint }
   | { kind: 'basin'; item: Basin }
+  | { kind: 'shale'; item: ShalePlay }
   | { kind: 'country'; item: Country }
   | { kind: 'lng'; item: LngTerminal }
   | { kind: 'terminal'; item: OilTerminal }
@@ -193,6 +203,10 @@ export function resolveSelection(selection: Selection | null, data: Datasets): R
     case 'basin': {
       const item = data.basins.find((b) => b.id === selection.id);
       return item ? { kind: 'basin', item } : null;
+    }
+    case 'shale': {
+      const item = data.shalePlays.find((p) => p.id === selection.id);
+      return item ? { kind: 'shale', item } : null;
     }
     case 'country': {
       const item = data.countries.find((c) => c.id.toLowerCase() === selection.id);
@@ -254,10 +268,12 @@ export function systemSections(pipeline: Pipeline, pipelines: Pipeline[]): Pipel
   return pipelines.filter((p) => p.system === pipeline.system && p.id !== pipeline.id);
 }
 
-const basinPipelines = new WeakMap<Basin, WeakMap<Pipeline[], Pipeline[]>>();
+/** Anything with an outline: a USGS province, or an EIA shale play. */
+type Outlined = Pick<Basin, 'geometry'>;
+const basinPipelines = new WeakMap<Outlined, WeakMap<Pipeline[], Pipeline[]>>();
 
 /** The pipelines inside or crossing a basin. Kept per basin and pipeline list, so the page and the map share one pass. */
-export function pipelinesTouchingBasin(basin: Basin, pipelines: Pipeline[]): Pipeline[] {
+export function pipelinesTouchingBasin(basin: Outlined, pipelines: Pipeline[]): Pipeline[] {
   let byList = basinPipelines.get(basin);
   if (!byList) basinPipelines.set(basin, (byList = new WeakMap()));
   let touching = byList.get(pipelines);
