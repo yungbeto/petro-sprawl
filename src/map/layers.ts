@@ -1,4 +1,4 @@
-import { ArcLayer, GeoJsonLayer, IconLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, IconLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
 import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon, Position } from 'geojson';
 import type { Layer } from '@deck.gl/core';
 import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, OilTerminal, Pipeline, Refinery, ShalePlay, UsRegion } from '../types';
@@ -23,6 +23,7 @@ import {
 import type { ChokepointFlow, FlowBand } from '../lib/flow';
 import { withAlpha } from '../lib/color';
 import type { MapColors } from './colors';
+import { FlowArcLayer } from './FlowArcLayer';
 
 import type { LayerId, LayerVisibility } from '../lib/views';
 export type { LayerId, LayerVisibility };
@@ -186,6 +187,8 @@ interface BuildLayersInput {
   onlyPipelines: Set<string> | null;
   /** A region view's origin arcs ("Where is my oil from?"); empty otherwise. */
   originArcs: OriginArc[];
+  /** Pulses run along the arcs toward the open place; off under reduced motion. */
+  animateArcs: boolean;
   /** The fuel origins surface or a region view: the region outlines and arcs only, every other layer off. */
   regionsOnly: boolean;
   /** The basins surface: stronger outlines with a faint fill, since they're all the map shows. */
@@ -211,6 +214,7 @@ export function buildLayers({
   hoveredPipelineId,
   onlyPipelines,
   originArcs,
+  animateArcs,
   regionsOnly,
   basinsFocus,
   regionLabelMinZoom,
@@ -441,8 +445,9 @@ export function buildLayers({
       updateTriggers: { getColor: [colors] },
     }),
     // Where a region's crude comes from: schematic arcs, width by share, foreign and domestic in two tones.
-    new ArcLayer<OriginArc>({
+    new FlowArcLayer<OriginArc>({
       id: 'origin-arcs',
+      animate: animateArcs,
       data: originArcs,
       getSourcePosition: (a) => a.from,
       getTargetPosition: (a) => a.to,

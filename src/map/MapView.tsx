@@ -150,6 +150,14 @@ const NO_ARCS: OriginArc[] = [];
 
 export function MapView(props: MapViewProps) {
   const { theme, initialCamera, data, visibility, selection, fuel, highlight, onlyPipelines, regionsOnly, basinsFocus, countryMode, focus } = props;
+  // The origin arcs' pulses stop under reduced motion, and start again if it's switched off.
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReducedMotion(query.matches);
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const overlayRef = useRef<MapboxOverlay | null>(null);
@@ -302,6 +310,7 @@ export function MapView(props: MapViewProps) {
         hoveredPipelineId,
         onlyPipelines,
         originArcs: originView?.arcs ?? NO_ARCS,
+        animateArcs: !reducedMotion,
         countryMode,
         importers,
         regionsOnly,
@@ -313,7 +322,7 @@ export function MapView(props: MapViewProps) {
         fontFamily: `"${LABEL_FONT}", sans-serif`,
       }),
     });
-  }, [data, flows, pipelineShares, storage, visibility, selection, highlight, onlyPipelines, regionsOnly, basinsFocus, originView, countryMode, importers, hoveredPipelineId, colors, zoom, fontsReady]);
+  }, [data, flows, pipelineShares, storage, visibility, selection, highlight, onlyPipelines, regionsOnly, basinsFocus, originView, countryMode, importers, hoveredPipelineId, colors, zoom, fontsReady, reducedMotion]);
 
   // The camera frames the open item, or a surface, in the map left showing between the search bar and
   // chips above and the sheet below. While the map hasn't been moved by hand since, a new sheet height

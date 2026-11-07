@@ -566,7 +566,18 @@ export const MOBILE = {
 } as const;
 
 /** Origin arcs in a region view: width in px from the smallest share shown to the whole supply. */
-export const ORIGIN_ARC = { minPx: 1.5, maxPx: 14 } as const;
+export const ORIGIN_ARC = {
+  minPx: 1.5,
+  maxPx: 14,
+  /**
+   * Pulses running along each arc from the origin to the open place, so the direction reads at a glance
+   * (FlowArcLayer). `pulses` on an arc at once; `speed` in arc lengths a second, so a long arc's pulses
+   * move faster over the ground and every arc keeps time; `tail` the share of the gap between pulses the
+   * fading tail fills; `boost` how many times brighter the head is than the arc under it. Still under
+   * reduced motion.
+   */
+  flow: { pulses: 3, speed: 0.12, tail: 0.45, boost: 2.4 },
+} as const;
 
 /**
  * The fuel regions as outlines, the only thing on the map on the fuel origins surface and in a
