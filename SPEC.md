@@ -487,6 +487,9 @@ Done when: storage shows every country or region that publishes it on the source
 **M11: Refineries.** Refineries join the map as a fourth kind of oil asset, beside pipelines, terminals and chokepoints: where they are, how much crude they can run, who runs them, and whether they're running, each from a cited source. The US first, then Europe, then the largest elsewhere. Detail below.
 Done when: every US refinery EIA lists as operable on 1 January 2026 is on the map with its EIA capacity and an operating or idle status from the same report; Europe's refineries from the EEA's industrial register are on the map with their operator, and a capacity only where one is cited; at least 20 of the largest refineries elsewhere are researched one by one with a cited capacity; the news scan and the claims refresh cover refineries under the same review rules; a refinery's page links the pipelines and terminals that serve it; and nothing on the surface shows a capacity or status that can't be sourced.
 
+**M12: Shale plays.** Where the US produces oil and gas by fracking joins the map, inside the Basins surface: EIA's outlines of the shale and tight plays, each with the monthly production of its formation and, for EIA's five shale regions, rigs and wells completed, all from EIA. Then fracking activity per play from FracFocus disclosures, counted, never redrawn. Free sources only. Detail below.
+Done when: EIA's 50 play outlines are on the map behind `FEATURES.shale`; Basins switches between provinces and shale plays; every play whose formation EIA reports shows that formation's latest month and 24 months before it, labelled as the formation's when outlines share one; no forecast month is ever shown; a play's page links the USGS province it sits in and the pipelines that cross it; and every figure carries its series, month and release.
+
 ### M8 and M9 detail: a self-updating "What's happening"
 
 **Why.** Disruptions are hand-curated, so the hero only changed when someone edited `data/curated/disruptions.json`, and it was ordered by start date, so the newest report on Hormuz (started March) could never lead. Trending lists on Twitter, Bluesky and Reddit work by spotting what is moving against its own normal, grouping mentions into one story, ranking, and only then naming it. This site has its own version of each step: a measured series against its own recent weeks is the spike, an asset is the story mentions group into, and a cited source is the name. The aim is a hero that keeps itself current while never saying something no source or meter supports.
@@ -624,6 +627,72 @@ Disruptions take `assetKind: 'refinery'`. The selection is `refinery/<id>`, the 
 
 **Open for M11.** Whether OpenStreetMap points make the published file a derived database under ODbL; which Wikidata property holds capacity and how often it's referenced; whether the EEA register's INSPIRE access note limits the download; the current HIFLD layer and its date; how far EIA's 2021 shapefile has drifted from the 2026 list.
 
+### M12 detail: shale plays
+
+**Why.** Shale and tight rock, fractured from wells drilled sideways, are where much of the US's oil and gas now comes from: EIA's tight oil series for the Lower 48 was 9.471 million barrels a day in 2026-09, and its shale gas series 92.908 billion cubic feet a day. Yet every US province on the Basins surface says "no volumes", because USGS left the US out of its 2000 assessment. The plays fill that gap with dated, monthly figures, and give "fracking" a place on the map without a separate surface (section 4: hold further surfaces until one proves thin).
+
+**Sources** (checked 2026-11-06; open points in `TODO-research.md`).
+
+| Coverage | Source | What it gives | Terms |
+| --- | --- | --- | --- |
+| US play outlines | EIA, "Tight Oil and Shale Gas Plays in the U.S." (`eia.gov/maps/map_data/TightOil_ShaleGas_Plays_Lower48_EIA.zip`, layer `ShalePlays_US_EIA_Dec2021`, listed on `eia.gov/maps/oil-naturalgas.php` as released 8 October 2019, updated December 2021 with the Spraberry and Wolfcamp plays) | 50 polygons: play, basin, lithology, geological age, area, and the reference each outline was drawn from | Metadata: "Use limits: None (public use)"; US government work |
+| US production by formation | EIA Short-Term Energy Outlook data (API route `steo`): tight oil `TOPR*` for 7 named formations, "other" and the Lower 48; shale gas `SNGPR*` for 11 named formations, "other" and the Lower 48 | Monthly, million barrels a day and billion cubic feet a day. In the release of 6 October 2026 these series end at 2026-09: history only | Public domain; `EIA_API_KEY` already in use |
+| US activity by region | The same STEO data, the Drilling Productivity Report's series since 11 June 2024 (EIA's note on `eia.gov/petroleum/drilling`): active rigs `RIGS*`, wells drilled `NWD*`, wells completed `NWC*`, drilled but uncompleted `DUCS*` | Monthly, for Permian, Bakken, Eagle Ford, Appalachia and Haynesville. Also end at 2026-09 | Public domain |
+| US fracking jobs (phase 2) | FracFocus, the chemical disclosure registry run by the Ground Water Protection Council (`fracfocus.org/data-download`), CSV zip of 444 MB refreshed five days a week | One disclosure per fracked well since 2011: location, dates, operator, water volume, chemicals | Download terms: "may be aggregated or combined with other datasets, but the FracFocus data may not be altered in any way". The site's terms say downloaded data "may be used without restriction". Downloading accepts them |
+| Argentina (phase 3) | Secretaría de Energía, production per well on `datos.gob.ar`, unconventional wells flagged | Vaca Muerta | Not checked yet |
+| Not used | EIA's regional crude and gas production (`COPR*`, `NGMP*`) | Run on into the forecast (to 2027-12) with no flag on which months are history | Left out: a forecast never shows as data |
+| Not used | Enverus, Rystad, IHS well databases | Complete | Paid; ruled out |
+
+**Rules for the data.**
+
+- No forecast month is ever shown. STEO mixes history and forecast in one route with no flag, so the fetch keeps only the series listed above and fails if any of them has a month at or after its release month; the release date is recorded with each series.
+- A play's figure is its formation's, and the page says so: seven Permian outlines share EIA's one Permian figure, Woodford's three share one. A play with no EIA formation (Antrim, Monterey, Tuscaloosa and others) shows its outline and "production not published by formation".
+- Regional activity (rigs, wells completed, uncompleted wells) belongs to EIA's region, which is wider than any one outline; a play's page labels it as the region's, as a refinery's page does with its region's refinery use.
+- The outlines are EIA's "general areas". Each record names where it was drawn from: papers and company maps dated 1995 to 2010 for most of the older plays, several "hand-drawn boundary around wells", and EIA itself for the large plays (Permian, Eagle Ford, Bakken, Marcellus and others), with Spraberry and Wolfcamp added in December 2021. The page gives the reference and says the outline is approximate.
+- FracFocus rows are counted and summed per play and month, never edited, cleaned or republished one by one. A disclosure whose point falls outside every outline is counted as outside, not moved. Trade-secret ingredients are not shown, only job counts and water volumes.
+
+**Phases.**
+
+1. **EIA outlines and production** (`import:shale-plays`, manual; `fetch:shale`, scheduled with `fetch:eia`): the shapefile simplified once to `public/data/shale-plays.json`, each play tagged with the USGS province it overlaps most and its EIA formation (`SHALE.formations` in config, one entry per formation with the play ids it covers); the STEO series to `public/data/shale-production.json`.
+2. **FracFocus activity** (`import:fracfocus`, monthly, manual until its size and run time are known): jobs started per play per month, and the median water volume per job, to `public/data/shale-activity.json`. Before the first download the owner accepts the terms above.
+3. **Vaca Muerta**, once Argentina's licence is checked.
+
+**Data model.**
+
+```ts
+interface ShalePlay {
+  id: string;                  // 'eia-bak001', from the shapefile's ID
+  name: string;                // Shale_play
+  basin: string;               // EIA's basin name, as given
+  provinceId?: string;         // the USGS province it overlaps most ('usgs-5031')
+  lithology: string;
+  age: string;
+  areaKm2: number;
+  formation?: string;          // key into SHALE.formations, when EIA reports one
+  reference: string;           // where EIA drew the outline from
+  labelPoint: [number, number];
+  geometry: Polygon | MultiPolygon;
+}
+
+interface ShaleSeries {
+  id: string;                  // EIA series id, 'TOPRPM'
+  kind: 'oil' | 'gas' | 'rigs' | 'wellsDrilled' | 'wellsCompleted' | 'uncompleted';
+  unit: string;                // as EIA gives it
+  release: string;             // STEO release date, '2026-10-06'
+  points: { period: string; value: number }[];  // history only
+}
+```
+
+No status and no evidence: a play is an area, like a basin, not an asset that runs or stops. Disruptions don't attach to plays. The selection is `shale/<id>`; the layer `shale` (an entry in `VIEW_LAYERS` for Basins and Home's layer list); all behind `FEATURES.shale`.
+
+**Surface.** Basins gains a switch at the end of its title row, "Provinces" and "Shale plays", as Terminals switches LNG and oil. Shale plays lists formations as cards, largest tight oil first, then gas-only ones, then plays EIA doesn't report: the formation's latest month as the figure with its unit, a 24-month sparkline, and its outlines in the notes. The summary line: the Lower 48's tight oil and shale gas in the latest month, and the largest formation's share. On the map the plays draw over the provinces, quieter than a selected province, oil-weighted and gas-weighted in two hues of the flow band's neutrals; the province outlines stay.
+
+**A play's page.** The header with the play and its basin; the formation's oil and gas, latest month and the 24 before, labelled as the formation's; for a play in one of EIA's five regions, the region's rigs, wells completed and uncompleted wells, labelled as the region's; then the USGS province it sits in (opening it), the pipelines that cross it (`basinPipelineFocus`), area, age and lithology under Details, and the outline's reference and the series with their release under sources. A US province's page lists the plays inside it with their formation's latest month, in place of "no volumes".
+
+**Words.** The page says what fracking is once, in an ⓘ, citing EIA's own explainer: wells drilled down and then sideways through the rock, and water, sand and chemicals pumped in to crack it open. A play is defined once, where the switch first shows it: "A play is an area where companies drill one rock layer for oil or gas." Plays are named as EIA names them. "Fracking" appears in search as an alias of the surface, so the colleague's word finds it.
+
+**Open for M12.** Whether EIA's Bakken figure includes Three Forks, and which outlines EIA's Niobrara-Codell covers; whether any `TOPR*` or `SNGPR*` month is an EIA estimate rather than reported production, and how the page should say so; FracFocus's fields and coordinates once downloaded, and whether its two wordings of the terms (aggregated "but not altered" against "used without restriction") need a question to the Ground Water Protection Council; Argentina's licence; whether plays need a hatch rather than a fill to read over provinces.
+
 ## 12. Working notes for Claude Code
 
 - Read this spec fully before starting. Build milestone by milestone and stop for review at the end of each.
@@ -642,4 +711,5 @@ Disruptions take `assetKind: 'refinery'`. The selection is `refinery/<id>`, the 
 - M9 decided 2026-10-31: GDELT and Google News RSS, falling back to GDELT alone when Google News fails; every 12 hours; a new source from a trusted domain on a disruption in effect is committed without review and marked as unreviewed on the page.
 - M10 decided 2026-11-01: storage and fuel origins return once they reach past the EU and the US, on the sources in M10; fuel origins becomes country-first with the US regional view kept underneath; the phone bar gets a More slot rather than an off-canvas menu.
 - M11 proposed 2026-11-05: refineries in three phases (US from EIA, Europe from the EEA register, the largest elsewhere curated), capacity only when cited, behind `FEATURES.refineries` until the US is done.
+- M12 proposed 2026-11-06: shale plays inside the Basins surface, free sources only (EIA outlines and STEO history, then FracFocus counts, then Vaca Muerta), no forecast month ever shown, behind `FEATURES.shale`.
 - Later: story placement beyond assets (company, then place, then country), and matching companies to assets via GEM's ownership tracker.
