@@ -929,6 +929,32 @@ export const NEWS = {
  * fewer, larger dots, so they hold at 16 px. The social card (render:og) is a still frame with more dots,
  * `px` wide, centred on the Gulf.
  */
+/**
+ * The menu footer's puddle of crude (src/lib/slosh.ts, OilSlosh). Lengths in px, times in seconds. Viscous:
+ * heavy damping and a slow spread, so it rolls rather than splashes. `canvasPx` is the band it lives in.
+ */
+export const OIL_SLOSH = {
+  canvasPx: 120,
+  depthPx: 52,
+  minPx: 6,
+  maxPx: 116,
+  columnPx: 8,
+  stiffness: 0.8,
+  spread: 400,
+  damping: 0.9,
+  maxStepS: 1 / 120,
+  /** The tank's rock: how hard the walls push at the peak (px/s²), the main swing's period, and how far in from each wall the push reaches. */
+  rock: { accel: 35, periodS: 7, wallPx: 96 },
+  /** A pointer moving over it: impulse per px/s of pointer speed, capped, spread over `radiusPx`. */
+  stir: { radiusPx: 72, gain: 0.08, maxImpulse: 90 },
+  /** Scrolling down into the footer jolts the tank: impulse per px/s of scroll speed, capped. */
+  lurch: { gain: 0.012, maxImpulse: 36 },
+  /** Seconds simulated before the first frame, so the menu opens on oil already moving. */
+  warmUpS: 9,
+  /** Frames longer than this (a background tab coming back) are cut down, so the oil doesn't lurch. */
+  maxFrameS: 0.05,
+} as const;
+
 export const GLOBE = {
   size: 24,
   dots: 16,

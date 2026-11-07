@@ -101,6 +101,14 @@
   --map-basin-line-focus: #6d6a5cb3;
   --map-basin-fill-focus: #6d6a5c14;
   --map-basin-label: #5c5a4e;
+  /* The menu footer's crude (OilSlosh): the body from its surface down, the highlight on its surface, and
+     the slick of colour a film of oil throws, at low opacity so it stays a sheen. */
+  --oil: #2a2219;
+  --oil-deep: #0c0a08;
+  --oil-sheen: #ffffff4d;
+  --oil-slick-1: #7a5cff40;
+  --oil-slick-2: #2fb5a840;
+  --oil-slick-3: #e0a84040;
   /*
    * The app's base layer, behind the header, rail and cards: a fine grain, like paper, and a faint
    * light from the top left. The cards keep flat surfaces, so the grain reads as depth around them.
@@ -149,6 +157,13 @@
     --map-basin-line-focus: #c4bfa8a6;
     --map-basin-fill-focus: #c4bfa814;
     --map-basin-label: #a8a490;
+    /* The menu footer's crude: darker than the dark surface, so it reads as a pool; the sheen finds its edge. */
+    --oil: #0b0907;
+    --oil-deep: #030202;
+    --oil-sheen: #ffffff3d;
+    --oil-slick-1: #9a80ff55;
+    --oil-slick-2: #45d1c255;
+    --oil-slick-3: #f0bc5c55;
     --app-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.075 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
     --app-glow: radial-gradient(120% 80% at 0% 0%, #1e2125 0%, #15171a 100%);
   }
@@ -194,6 +209,13 @@
   --map-basin-line-focus: #c4bfa8a6;
   --map-basin-fill-focus: #c4bfa814;
   --map-basin-label: #a8a490;
+  /* The menu footer's crude: darker than the dark surface, so it reads as a pool; the sheen finds its edge. */
+  --oil: #0b0907;
+  --oil-deep: #030202;
+  --oil-sheen: #ffffff3d;
+  --oil-slick-1: #9a80ff55;
+  --oil-slick-2: #45d1c255;
+  --oil-slick-3: #f0bc5c55;
   --app-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.075 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   --app-glow: radial-gradient(120% 80% at 0% 0%, #1e2125 0%, #15171a 100%);
 }

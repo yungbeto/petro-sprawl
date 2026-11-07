@@ -1,12 +1,13 @@
-import { ArrowRightIcon } from '@phosphor-icons/react';
+import { ArrowRightIcon, XIcon } from '@phosphor-icons/react';
 import { SegmentedOptions } from '../ui/Segmented';
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent, type RefObject } from 'react';
 import { BASEMAP_CREDITS, DATASET_FRESHNESS, GLOBE, SITE } from '../lib/config';
 import type { Datasets } from '../lib/data';
 import { formatDate } from '../lib/format';
 import { formatAge, formatUtcClock, overallFreshness, type Freshness } from '../lib/freshness';
 import { THEME_PREFERENCES, type ThemePreference } from '../lib/theme';
 import { Globe } from './Globe';
+import { OilSlosh } from './OilSlosh';
 import { useIsPhone } from './useSheet';
 import { IconButton } from '../ui/Button';
 import { SectionTitle } from '../ui/SectionTitle';
@@ -52,6 +53,7 @@ export function AppMenu({ onClose, section, data, freshness, now, theme, themePr
   const phone = useIsPhone();
   const closeRef = useRef<HTMLButtonElement>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<Partial<Record<MenuSection, HTMLButtonElement | null>>>({});
   const [tab, setTab] = useState<MenuSection>(section ?? 'about');
 
@@ -102,13 +104,14 @@ export function AppMenu({ onClose, section, data, freshness, now, theme, themePr
             <Globe size={GLOBE.size} dots={GLOBE.dots} className="brand-mark" theme={theme} />
             {SITE.name}
           </span>
-          <IconButton ref={closeRef} onClick={onClose} label="Close menu" title="Close  Esc">
-            <CloseIcon />
+          {/* Where the menu button was, at the same size, so the menu closes from the spot that opened it. */}
+          <IconButton ref={closeRef} size="lg" className="menu__close" onClick={onClose} label="Close menu" title="Close  Esc">
+            <XIcon size={24} />
           </IconButton>
         </div>
       </header>
 
-      <div className="menu__scroll">
+      <div ref={scrollRef} className="menu__scroll">
         <section className="menu__hero" aria-labelledby="menu-tagline">
           <div className="menu__inner menu__hero-inner">
             <div className="menu__hero-text">
@@ -207,7 +210,7 @@ export function AppMenu({ onClose, section, data, freshness, now, theme, themePr
           )}
         </div>
 
-        <MenuFooter theme={theme} freshness={freshness} now={now} onData={() => jumpToTab('data')} />
+        <MenuFooter theme={theme} freshness={freshness} now={now} scrollRef={scrollRef} onData={() => jumpToTab('data')} />
       </div>
     </div>
   );
@@ -251,10 +254,23 @@ function AboutTab() {
   );
 }
 
-function MenuFooter({ theme, freshness, now, onData }: { theme: string; freshness: Freshness[]; now: Date; onData: () => void }) {
+function MenuFooter({
+  theme,
+  freshness,
+  now,
+  scrollRef,
+  onData,
+}: {
+  theme: string;
+  freshness: Freshness[];
+  now: Date;
+  scrollRef: RefObject<HTMLDivElement | null>;
+  onData: () => void;
+}) {
+  const footerRef = useRef<HTMLElement>(null);
   const overall = overallFreshness(freshness);
   return (
-    <footer className="menu__footer">
+    <footer ref={footerRef} className="menu__footer">
       <div className="menu__inner menu__footer-inner">
         <div className="menu__footer-brand">
           <span className="menu__brand">
@@ -288,15 +304,8 @@ function MenuFooter({ theme, freshness, now, onData }: { theme: string; freshnes
           </a>
         </div>
       </div>
+      <OilSlosh stirTarget={footerRef} scrollTarget={scrollRef} theme={theme} />
     </footer>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
   );
 }
 

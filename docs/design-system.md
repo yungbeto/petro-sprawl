@@ -28,6 +28,7 @@ big files are split (plan step 4). What's left marked "No" is a class pattern wi
 | Flow band | `--flow-below`, `--flow-near`, `--flow-above` | Measured against a baseline; `--flow-near` doubles as the neutral bar fill |
 | Data age | `--data-stale` | Stale data, unverified claims |
 | Map | `--map-*` | Map layers only (read by the map code as hex) |
+| Oil | `--oil`, `--oil-deep`, `--oil-sheen`, `--oil-slick-1` to `--oil-slick-3` | The menu footer's sloshing crude (`OilSlosh`, motion in `src/lib/slosh.ts`, `OIL_SLOSH`), nothing else; still under reduced motion |
 
 `--text-subtle` is for notes and captions: quieter than `--text-muted`, still 4.5:1 on `--surface` and
 `--surface-subtle` in both themes (light #6c7178, 4.9:1; dark #868b92, 5.1:1).

@@ -30,6 +30,7 @@
 }
 
 .menu__bar {
+  position: relative;
   flex: none;
   height: var(--menu-bar);
   padding-top: env(safe-area-inset-top);
@@ -42,6 +43,13 @@
   align-items: center;
   justify-content: space-between;
   height: 100%;
+}
+
+/* Pinned where the header's menu button sits (.app-header__actions), not in the centred column. */
+.menu__bar .menu__close {
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + (var(--header-height) - 40px) / 2);
+  right: var(--space-4);
 }
 
 .menu__brand {
@@ -247,8 +255,17 @@
 
 .menu__footer {
   padding-bottom: env(safe-area-inset-bottom);
-  background: var(--surface);
+  /* The oil runs on under a phone's home indicator. */
+  background: linear-gradient(to top, var(--oil-deep) env(safe-area-inset-bottom, 0px), var(--surface) env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--border);
+}
+
+/* The easter egg: a puddle of crude at the very bottom, as if the footer were a tank (OilSlosh). Room
+   above it, so the links don't sit in the oil. */
+.menu__oil {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-6);
 }
 
 .menu__footer-inner {
@@ -300,7 +317,16 @@
 @media (max-width: 720px) {
   .menu {
     --menu-gutter: var(--space-4);
-    --menu-bar: calc(56px + env(safe-area-inset-top));
+    /* Tall enough for the 48px close button to sit where the floating menu button does, 8px from the top. */
+    --menu-bar: calc(48px + 2 * var(--space-2) + env(safe-area-inset-top));
+  }
+
+  /* The floating menu button's place and size (phone.css: .app-header padding, .icon-button--lg). */
+  .menu__bar .menu__close {
+    top: calc(env(safe-area-inset-top) + var(--space-2));
+    right: var(--space-3);
+    width: 48px;
+    height: 48px;
   }
 
   .menu__hero-inner {
