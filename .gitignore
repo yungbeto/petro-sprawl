@@ -2,7 +2,7 @@ node_modules/
 dist/
 .env
 .env.*
-!.env.example
+
 data/raw/
 .DS_Store
 *.log
@@ -12,9 +12,13 @@ playwright-report/
 data/reports/claim-drafts.json
 .vercel
 .env*
+!.env.example
 
 # Link preview function bundles, built by npm run build
 api/_dist
 
 # Demo video and its frames, from npm run record:demo
 demo/
+
+# Saved articles and reports used for research (copyrighted; kept locally)
+docs/research/*.pdf
