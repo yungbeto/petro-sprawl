@@ -1,11 +1,11 @@
 {
-  "recordedAt": "2026-11-06T19:35:10.205Z",
+  "recordedAt": "2026-11-07T01:03:36.294Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 6,
-      "failed": 19,
-      "articles": 0,
+      "requests": 8,
+      "failed": 18,
+      "articles": 148,
       "errors": [
         "fetch failed",
         "fetch failed",
@@ -15,58 +15,76 @@
     "google-news": {
       "requests": 19,
       "failed": 0,
-      "articles": 382,
+      "articles": 381,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-06"
+    "lastOk": "2026-11-07"
   },
   "stories": 20,
-  "candidates": 8,
+  "candidates": 3,
   "usage": {
-    "input": 45039,
-    "output": 4415,
-    "searches": 2
+    "input": 140910,
+    "output": 7243,
+    "searches": 9
   },
-  "estimatedCostUsd": 0.027,
+  "estimatedCostUsd": 0.108,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "unreadable",
-      "detail": "page answered 403",
+      "outcome": "committed",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://iranwire.com/en/news/159877-irgc-claims-two-more-tankers-struck-mines-in-the-strait-of-hormuz/",
-        "publisher": "IranWire",
-        "quote": "one tanker struck a mine east of the Strait of Hormuz, while the second was hit inside the waterway",
+        "url": "https://www.themarysue.com/pentagon-says-thousands-of-us-troops-are-poised-to-strike-iran-then-reports-emerge-of-what-happened-to-five-tankers-in-the-strait-of-hormuz/",
+        "publisher": "The Mary Sue",
+        "quote": "The situation in the Strait of Hormuz has been escalating as Iranian forces report that five oil tankers and a tugboat caught fire in a series of incidents.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
+        "eventAt": "2026-11-05",
+        "eventText": "Iranian forces say five oil tankers and a tugboat caught fire in the Strait of Hormuz after mine strikes."
       },
       "headlines": [
-        "- 2026-11-06 · Geopolitical Futures: Weekly Graphic: Making Sense of Hormuz Traffic Data",
-        "- 2026-11-06 · Middle East Forum: As Iran Chokes Hormuz, Egypt’s Energy Crisis Could Become Israel’s Problem",
-        "- 2026-11-06 · The Jerusalem Post: Iran says it downed US MQ-1 drone over Qeshm Island",
-        "- 2026-11-06 · Drop Site News: Latest U.S. Strikes on Qeshm Island Hit Fishermen Who Clung to Wreckage for Hours",
-        "- 2026-11-06 · Business Insider Africa: Iran challenges US naval blockade by granting China and 3 other countries passage through Hormuz as African economies monitor shipping disruption",
-        "- 2026-11-06 · شفق نيوز: Shafaq News..IRGC downs US drone near Hormuz",
-        "- 2026-11-06 · Eurasia Review: Iran Says Two Tankers Hit Mines In Strait Of Hormuz",
-        "- 2026-11-06 · IranWire: IRGC Claims Two More Tankers Struck Mines in the Strait of Hormuz",
-        "- 2026-11-06 · Arab News: Iran Guards say two tankers caught fire in Hormuz",
-        "- 2026-11-06 · NewsCord: IRGC Says Two Oil Tankers Hit Mines, Catch Fire Near Strait of Hormuz: 5 outlets compared",
-        "- 2026-11-06 · Caspian Post: Two Oil Tankers Catch Fire After Hitting Mines in Strait of Hormuz",
-        "- 2026-11-06 · Washington Examiner: A Hormuz deal leaves Iran its uranium",
-        "- 2026-11-06 · The Times of Israel: Iran claims it downed US drone over Hormuz’s Qeshm Island",
-        "- 2026-11-06 · Caspian Post: Iran Claims It Shot Down Another US Combat Drone over Qeshm Island",
-        "- 2026-11-06 · Tehran Times: Two tankers strike mines in Strait of Hormuz: IRGC Navy"
+        "- 2026-11-07 · arabnews.com: Arab News | Iran says it downed US MQ - 1 drone over Qeshm Island <https://www.arabnews.com/middle-east/iran-says-it-downed-us-mq-1-drone-over-qeshm-island-3010264>",
+        "- 2026-11-07 · themarysue.com: Pentagon says US troops are poised to strike Iran . Then 5 tankers are hit in the Strait of Hormuz <https://www.themarysue.com/pentagon-says-thousands-of-us-troops-are-poised-to-strike-iran-then-reports-emerge-of-what-happened-to-five-tankers-in-the-strait-of-hormuz/>",
+        "- 2026-11-07 · aol.com: Two missiles strike Iran Qeshm Island , Tasnim news agency says <https://www.aol.com/articles/two-missiles-strike-irans-qeshm-225643000.html>",
+        "- 2026-11-07 · Middle East Eye: Iranian air defence destroys MQ-9 drone over Qeshm Island, report says",
+        "- 2026-11-07 · Anadolu Ajansı: Iran says air defense downed US MQ-9 drone above Qeshm Island",
+        "- 2026-11-07 · Beinsure: Strait of Hormuz Attacks Increase Marine War-Risk Insurance Concerns",
+        "- 2026-11-07 · UA.NEWS: Iran says it downed US MQ-9 over Qeshm Island — Anadolu Agency",
+        "- 2026-11-07 · Breakingthenews.net: Iran says drone intercepted over Qeshm",
+        "- 2026-11-07 · NDTV: 2 Missiles Hit Iran's Qeshm Island: Report",
+        "- 2026-11-06 · euronews.com: Hormuz standoff not sustainable , senior Iranian lawmaker tells Euronews <https://www.euronews.com/2026/11/06/hormuz-standoff-not-sustainable-senior-iranian-lawmaker-tells-euronews>",
+        "- 2026-11-06 · oilprice.com: India HPCL Struggles to Secure Oil Tankers as Hormuz Risks Persist <https://oilprice.com/Latest-Energy-News/World-News/Indias-HPCL-Struggles-to-Secure-Oil-Tankers-as-Hormuz-Risks-Persist.html>",
+        "- 2026-11-06 · middleeasteye.net: IRGC says two oil tankers ablaze after collision with mines in Hormuz Strait <https://www.middleeasteye.net/live-blog/live-blog-update/irgc-says-two-oil-tankers-ablaze-after-collision-mines-hormuz-strait>",
+        "- 2026-11-06 · juancole.com: Yes , Laura Loomer , Americans Should be learning Arabic amid Hormuz Crisis <https://www.juancole.com/2026/11/loomer-americans-learning.html>",
+        "- 2026-11-06 · arabnews.com: Arab News | Iran Guards say two tankers caught fire in Hormuz <https://www.arabnews.com/middle-east/iran-guards-say-two-tankers-caught-fire-in-hormuz-3010129>",
+        "- 2026-11-06 · thehindubusinessline.com: Crude oil price gain amid fresh tanker attacks in Strait of Hormuz <https://www.thehindubusinessline.com/markets/commodities/brent-crude-tops-100-wti-nears-92-amid-fresh-strait-of-hormuz-attacks/article71672815.ece>"
       ]
+    },
+    {
+      "ref": "chokepoint/hormuz",
+      "kind": "story",
+      "outcome": "review",
+      "detail": "event 2026-11-05",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://www.themarysue.com/pentagon-says-thousands-of-us-troops-are-poised-to-strike-iran-then-reports-emerge-of-what-happened-to-five-tankers-in-the-strait-of-hormuz/",
+        "publisher": "The Mary Sue",
+        "quote": "The situation in the Strait of Hormuz has been escalating as Iranian forces report that five oil tankers and a tugboat caught fire in a series of incidents.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-05",
+        "eventText": "Iranian forces say five oil tankers and a tugboat caught fire in the Strait of Hormuz after mine strikes."
+      }
     },
     {
       "ref": "refinery/ng-dangote",
@@ -74,95 +92,59 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-06 · Türkiye Today: Turkish executive Betul Sarikaya takes CFO role at Dangote refinery",
-        "- 2026-11-06 · Proshare: Weighing the Dangote Refinery IPO Extension Against the Evidence on Record",
-        "- 2026-11-06 · TheCable: NUPRC: Local producers supplied 94.43m barrels of crude to Dangote refinery in 2025",
-        "- 2026-11-06 · FRCN HQ: Local producers supply Dangote Refinery 94.43m barrels of crude– NUPRC",
-        "- 2026-11-06 · Proshare: Dangote Refinery IPO: Is This IPO Halal? Testing the Offer Against Its Numbers",
-        "- 2026-11-06 · Proshare: Dangote Refinery IPO and the Case for a United African Capital Market – Umaru Kwairanga",
-        "- 2026-11-06 · Proshare: Dangote Refinery IPO: Kwairanga Calls for Greater African Capital Support for Industrialisation",
-        "- 2026-11-06 · Nairametrics: Nigerian stocks can’t hold 250K level without Dangote refinery",
-        "- 2026-11-05 · Face2Face Africa: Dangote Refinery plans in Kenya handed legal boost after Tribunal hearing",
-        "- 2026-11-05 · TRT Afrika: Dangote refinery appoints Turkish expert Sarikaya as Chief Financial Officer",
-        "- 2026-11-05 · Proshare: Dangote Refinery Ramps Up to 700,000 Barrels Per Day, Strengthening Africa's Energy Landscape",
-        "- 2026-11-05 · Proshare: Beyond the Dangote Refinery IPO: Opportunity, Investment Discipline and National Strategy",
-        "- 2026-11-05 · MSME Africa: Dangote Refinery IPO: How to Check Your Share Allotment, When Will Shares -",
-        "- 2026-11-05 · Proshare: Dangote Refinery IPO: When the NGX Meets Its Destiny",
-        "- 2026-11-05 · Proshare: Dangote Refinery Secures SEC Approval for Landmark N2.15trn IPO at N525 Per Share"
+        "- 2026-11-06 · Modern Ghana: Dangote refinery extends IPO: Plant has reshaped Nigeria's fuel market"
       ]
     },
     {
-      "ref": "chokepoint/babelm",
+      "ref": "lng/gem-t100000130594-export",
       "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-05 · TradingView: ConocoPhillips Says Qatar LNG Production Remained Constrained Through Q3",
+        "- 2026-11-05 · Telegraph India: Tehran-nodded second Qatar LNG tanker clears Hormuz, continues toward Pakistan, data shows"
+      ]
+    },
+    {
+      "ref": "terminal/primorsk",
+      "kind": "end check",
+      "outcome": "rejected",
+      "detail": "page is older than 14 days",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "bps-1-2026-primorsk-strikes",
+        "url": "https://www.france24.com/en/europe/20260503-ukrainian-drones-strike-russia-baltic-sea-port-primorsk",
+        "publisher": "France 24",
+        "quote": "Ukrainian drones struck Russia's Primorsk port and a number of vessels in the Baltic Sea on Sunday",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-05-03",
+        "eventText": "Ukrainian drones strike the Primorsk port and several vessels in the Baltic Sea."
+      }
+    },
+    {
+      "ref": "lng/gem-t100000130601-export",
+      "kind": "end check",
+      "outcome": "nothing"
+    },
+    {
+      "ref": "pipeline/druzhba-north",
+      "kind": "end check",
       "outcome": "committed",
       "draft": {
         "action": "add_source",
-        "disruptionId": "babelm-2026-houthi-attacks",
-        "url": "https://www.jpost.com/middle-east/article-914072",
-        "publisher": "JPost",
-        "quote": "Captains who wish to transit the Bab al-Mandab Strait have been using a communication channel with the Iran-backed Houthi terror group via email for safe transit.",
+        "disruptionId": "druzhba-north-2026-kazakh-halt",
+        "url": "https://timesca.com/kazakhstan-asks-russia-to-reopen-druzhba-oil-route-to-germany-after-six-month-halt/",
+        "publisher": "Times of Central Asia",
+        "quote": "Kazakhstan has formally asked Russia to restore oil shipments to Germany through the Druzhba pipeline",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
         "eventAt": "",
         "eventText": ""
-      },
-      "headlines": [
-        "- 2026-11-06 · The Jerusalem Post: Shippers wishing to cross Bab al-Mandab email Houthis for permits, sign up for alerts - report",
-        "- 2026-11-06 · UA.NEWS: Ship captains contact Houthis over passage through strait — Jerusalem Post",
-        "- 2026-11-06 · وكالة سبأ: Transport Ministry: 1,083 vessels passed through Bab al-Mandab Strait last October",
-        "- 2026-11-06 · thecradle.co: Yemen sets up email-based clearance system to screen vessels seeking Red Sea passage for Israel ties",
-        "- 2026-11-06 · Demokratis.co.id: Shipping Firms Seek Houthi Approval to Cross Bab el-Mandeb",
-        "- 2026-11-06 · وكالة سبأ: War Media: Footage of expulsion of Saudi enemy reinforcements from positions in Kahboub mountain range, east of Bab al-Mandab, will be broadcast at 4:00 PM"
-      ]
-    },
-    {
-      "ref": "pipeline/nord-stream-2",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-06 · Informat.ro: Court of Justice dismisses Nord Stream 2 appeal and upholds rules on third-party access to the gas pipeline"
-      ]
-    },
-    {
-      "ref": "pipeline/east-west-crude",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-04 · The Edge Malaysia: Aramco exploring expansion of East-West Pipeline that avoids Hormuz",
-        "- 2026-11-03 · https://megaproject.com/: Aramco Targets Hormuz Bypass with East-West Pipeline Expansion"
-      ]
-    },
-    {
-      "ref": "pipeline/btc",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-05 · Report.az: Kazakhstan plans to export 1.7 million tons of oil via BTC in 2027",
-        "- 2026-11-04 · The Times Of Central Asia: Kazakhstan Oil Exports: Talks With Azerbaijan on Higher BTC Shipments"
-      ]
-    },
-    {
-      "ref": "pipeline/druzhba-north",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-04 · The New Voice of Ukraine: Astana asks Russia to restore Druzhba pipeline shipments to Germany"
-      ]
-    },
-    {
-      "ref": "pipeline/druzhba-south",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-04 · The New Voice of Ukraine: Astana asks Russia to restore Druzhba pipeline shipments to Germany"
-      ]
+      }
     }
   ]
 }
