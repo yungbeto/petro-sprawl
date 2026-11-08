@@ -1,15 +1,36 @@
 [
   {
-    "ref": "terminal/ras-tanura",
-    "reason": "cause changes from other to conflict",
-    "action": "add_source",
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
     "source": {
-      "publisher": "Safety4Sea",
-      "title": "Oil prices rise after Houthi attack near Saudi Arabia’s Ras Tanura Terminal",
-      "url": "https://safety4sea.com/oil-prices-rise-after-houthi-attack-near-saudi-arabias-ras-tanura-terminal/",
-      "publishedAt": "2026-10-29"
+      "publisher": "The Mary Sue",
+      "title": "Pentagon says thousands of US troops are poised to strike Iran. Then reports emerge of what happened to five tankers in the Strait of Hormuz",
+      "url": "https://www.themarysue.com/pentagon-says-thousands-of-us-troops-are-poised-to-strike-iran-then-reports-emerge-of-what-happened-to-five-tankers-in-the-strait-of-hormuz/",
+      "publishedAt": "2026-11-06"
     },
-    "disruptionId": "ras-tanura-2026-10-fire",
-    "cause": "conflict"
+    "event": {
+      "at": "2026-11-05",
+      "text": "Iranian forces say five oil tankers and a tugboat caught fire in the Strait of Hormuz after mine strikes.",
+      "source": "https://www.themarysue.com/pentagon-says-thousands-of-us-troops-are-poised-to-strike-iran-then-reports-emerge-of-what-happened-to-five-tankers-in-the-strait-of-hormuz/"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "House of Saud",
+      "title": "IRGC Says 2 Tankers Hit Mines as US Disables M/V Huda",
+      "url": "https://houseofsaud.com/hormuz-mutual-enforcement-nov7/",
+      "publishedAt": "2026-11-08"
+    },
+    "event": {
+      "at": "2026-11-07",
+      "text": "Iran's Revolutionary Guards say two oil tankers hit mines and caught fire in the Strait of Hormuz, hours after US forces disabled a cargo vessel in the Gulf of Oman.",
+      "source": "https://houseofsaud.com/hormuz-mutual-enforcement-nov7/"
+    }
   }
 ]
