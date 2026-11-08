@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  apiFailure,
   addEvidence,
   assetTerms,
   claimUnreviewed,
@@ -177,5 +178,22 @@ describe('toEvidence and addEvidence', () => {
     const records = addEvidence([{ id: 'cpc', evidence: [claim('operating', '2026-09-30')] }], 'cpc', evidence);
     expect(records[0]?.evidence.map((e) => e.observedAt)).toEqual(['2026-10-28', '2026-09-30']);
     expect(() => addEvidence(records, 'nope', evidence)).toThrow(/no curated record nope/);
+  });
+});
+
+describe('apiFailure', () => {
+  const credit = '400 {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Anthropic API."}}';
+
+  it('fails the run when the account is refused, even if some calls got through', () => {
+    expect(apiFailure([{ outcome: 'committed' }, { outcome: 'error', detail: credit }], { input: 5000 })).toMatch(/refused the account/);
+  });
+
+  it('fails the run when every call errored, and not when some were answered', () => {
+    expect(apiFailure([{ outcome: 'error', detail: '529 overloaded' }], { input: 0 })).toMatch(/Every call/);
+    expect(apiFailure([{ outcome: 'error', detail: '529 overloaded' }, { outcome: 'nothing' }], { input: 1200 })).toBeNull();
+  });
+
+  it('passes a quiet run that made no calls', () => {
+    expect(apiFailure([{ outcome: 'nothing', detail: 'headlines only' }], { input: 0 })).toBeNull();
   });
 });

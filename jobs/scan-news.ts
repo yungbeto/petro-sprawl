@@ -21,7 +21,7 @@ import { lastReported, quietSince } from '../src/lib/summary';
 import { publishDataset, readPublished } from './lib/output';
 import { newsHeadlineSchema } from './lib/schemas';
 import { fetchFavicon, sitesToFetch, type FaviconState } from './lib/favicons';
-import { CLAIMED, citedUrls, htmlToText, pagePublishedAt, tidyStatement, urlKey, type Page } from './lib/claims';
+import { CLAIMED, apiFailure, citedUrls, htmlToText, pagePublishedAt, tidyStatement, urlKey, type Page } from './lib/claims';
 import {
   addEvent,
   addSource,
@@ -644,6 +644,8 @@ if (state.googleNews.consecutiveFailures >= NEWS.googleNewsMaxFailures) {
   failures.push(`Google News has failed ${state.googleNews.consecutiveFailures} runs in a row; scanning GDELT only`);
 } else if (!reached('google-news')) console.log('Google News could not be reached this run; scanned GDELT only');
 if (!reached('gdelt')) console.log('GDELT could not be reached this run; articles were found by search instead');
+const api = apiFailure(log, usage);
+if (api) failures.push(api);
 if (failures.length) {
   console.error(failures.join('\n'));
   process.exitCode = 1;

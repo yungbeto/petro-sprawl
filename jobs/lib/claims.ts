@@ -223,3 +223,17 @@ export function addEvidence<T extends CuratedRecord>(records: T[], id: string, e
   if (!records.some((r) => r.id === id)) throw new Error(`no curated record ${id}`);
   return records.map((r) => (r.id === id ? { ...r, evidence: [evidence, ...r.evidence] } : r));
 }
+
+/**
+ * Why a run should show red because the Anthropic API itself failed, or null. The jobs log each story's error and
+ * carry on, so an empty credit balance or a revoked key used to leave a green run that drafted nothing
+ * (2026-11-07). Account errors fail the run even when some calls got through; any other errors fail it only when
+ * not one call was answered.
+ */
+export function apiFailure(results: { outcome: string; detail?: string }[], usage: { input: number }): string | null {
+  const errors = results.filter((r) => r.outcome === 'error');
+  const account = errors.find((r) => /credit balance|authentication_error|invalid x-api-key|permission_error|billing/i.test(r.detail ?? ''));
+  if (account) return `The Anthropic API refused the account: ${account.detail}`;
+  if (errors.length && usage.input === 0) return `Every call to the Anthropic API failed (${errors.length}), for example: ${errors[0]!.detail}`;
+  return null;
+}

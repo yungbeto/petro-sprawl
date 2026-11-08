@@ -21,6 +21,7 @@ import {
   needsReview,
   pagePublishedAt,
   staleAssets,
+  apiFailure,
   toEvidence,
   unclaimedAssets,
   verifyDraft,
@@ -254,3 +255,10 @@ console.log(
     `${count('nothing found')} unclaimed with nothing found, ${count('error')} errors; ` +
     `about $${costUsd.toFixed(2)} (${usage.searches} searches)`,
 );
+
+// Red in Actions when the Anthropic API refused the account or answered nothing; the log above is already written.
+const api = apiFailure(log, usage);
+if (api) {
+  console.error(api);
+  process.exitCode = 1;
+}
