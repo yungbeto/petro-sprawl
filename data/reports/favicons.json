@@ -47,6 +47,10 @@
     "file": "favicons/arabnews.com.png",
     "checkedAt": "2026-11-06"
   },
+  "asia.nikkei.com": {
+    "file": "favicons/asia.nikkei.com.png",
+    "checkedAt": "2026-11-08"
+  },
   "asiae.co.kr": {
     "file": "favicons/asiae.co.kr.ico",
     "checkedAt": "2026-11-07"
@@ -163,6 +167,10 @@
     "file": null,
     "checkedAt": "2026-11-06"
   },
+  "english.aawsat.com": {
+    "file": "favicons/english.aawsat.com.png",
+    "checkedAt": "2026-11-08"
+  },
   "english.alarabiya.net": {
     "file": null,
     "checkedAt": "2026-11-07"
@@ -178,6 +186,10 @@
   "english.pravda.ru": {
     "file": "favicons/english.pravda.ru.ico",
     "checkedAt": "2026-11-06"
+  },
+  "english.ratopati.com": {
+    "file": null,
+    "checkedAt": "2026-11-08"
   },
   "eualive.net": {
     "file": null,
@@ -235,6 +247,10 @@
     "file": "favicons/hromadske.ua.png",
     "checkedAt": "2026-11-06"
   },
+  "i24news.tv": {
+    "file": "favicons/i24news.tv.png",
+    "checkedAt": "2026-11-08"
+  },
   "idom.com": {
     "file": "favicons/idom.com.ico",
     "checkedAt": "2026-11-06"
@@ -242,6 +258,14 @@
   "ieu-monitoring.com": {
     "file": "favicons/ieu-monitoring.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "independent.ng": {
+    "file": "favicons/independent.ng.jpg",
+    "checkedAt": "2026-11-08"
+  },
+  "indepthnews.net": {
+    "file": "favicons/indepthnews.net.png",
+    "checkedAt": "2026-11-08"
   },
   "indiatoday.in": {
     "file": "favicons/indiatoday.in.ico",
@@ -286,6 +310,10 @@
   "kiiitv.com": {
     "file": "favicons/kiiitv.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "koreaherald.com": {
+    "file": "favicons/koreaherald.com.ico",
+    "checkedAt": "2026-11-08"
   },
   "kristv.com": {
     "file": "favicons/kristv.com.png",
@@ -363,6 +391,10 @@
     "file": "favicons/money.rediff.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "moneycontrol.com": {
+    "file": "favicons/moneycontrol.com.png",
+    "checkedAt": "2026-11-08"
+  },
   "montelnews.com": {
     "file": "favicons/montelnews.com.png",
     "checkedAt": "2026-11-06"
@@ -371,6 +403,10 @@
     "file": "favicons/nairametrics.com.png",
     "checkedAt": "2026-11-06"
   },
+  "nationalheraldindia.com": {
+    "file": "favicons/nationalheraldindia.com.png",
+    "checkedAt": "2026-11-08"
+  },
   "nationthailand.com": {
     "file": "favicons/nationthailand.com.png",
     "checkedAt": "2026-11-06"
@@ -378,6 +414,10 @@
   "ndtv.com": {
     "file": "favicons/ndtv.com.ico",
     "checkedAt": "2026-11-07"
+  },
+  "ndtvprofit.com": {
+    "file": "favicons/ndtvprofit.com.png",
+    "checkedAt": "2026-11-08"
   },
   "newarab.com": {
     "file": "favicons/newarab.com.ico",
@@ -546,6 +586,10 @@
   "tradingview.com": {
     "file": "favicons/tradingview.com.ico",
     "checkedAt": "2026-11-06"
+  },
+  "trend.az": {
+    "file": "favicons/trend.az.png",
+    "checkedAt": "2026-11-08"
   },
   "turkiyetoday.com": {
     "file": "favicons/turkiyetoday.com.png",
