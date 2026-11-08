@@ -3,9 +3,17 @@
     "file": "favicons/aa.com.tr.ico",
     "checkedAt": "2026-11-06"
   },
+  "abc.net.au": {
+    "file": "favicons/abc.net.au.png",
+    "checkedAt": "2026-11-08"
+  },
   "africa.businessinsider.com": {
     "file": "favicons/africa.businessinsider.com.ico",
     "checkedAt": "2026-11-06"
+  },
+  "agcnews.eu": {
+    "file": "favicons/agcnews.eu.png",
+    "checkedAt": "2026-11-08"
   },
   "agenzianova.com": {
     "file": null,
@@ -26,6 +34,10 @@
   "anews.com.tr": {
     "file": "favicons/anews.com.tr.png",
     "checkedAt": "2026-11-06"
+  },
+  "aninews.in": {
+    "file": "favicons/aninews.in.png",
+    "checkedAt": "2026-11-08"
   },
   "aol.com": {
     "file": "favicons/aol.com.png",
@@ -231,6 +243,10 @@
     "file": "favicons/ieu-monitoring.com.png",
     "checkedAt": "2026-11-06"
   },
+  "indiatoday.in": {
+    "file": "favicons/indiatoday.in.ico",
+    "checkedAt": "2026-11-08"
+  },
   "informat.ro": {
     "file": "favicons/informat.ro.png",
     "checkedAt": "2026-11-06"
@@ -274,6 +290,10 @@
   "kristv.com": {
     "file": "favicons/kristv.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "kt.kz": {
+    "file": "favicons/kt.kz.ico",
+    "checkedAt": "2026-11-08"
   },
   "kurdistan24.net": {
     "file": "favicons/kurdistan24.net.ico",
@@ -359,6 +379,10 @@
     "file": "favicons/ndtv.com.ico",
     "checkedAt": "2026-11-07"
   },
+  "newarab.com": {
+    "file": "favicons/newarab.com.ico",
+    "checkedAt": "2026-11-08"
+  },
   "news.az": {
     "file": null,
     "checkedAt": "2026-11-06"
@@ -406,6 +430,10 @@
   "proshare.co": {
     "file": null,
     "checkedAt": "2026-11-06"
+  },
+  "qazinform.com": {
+    "file": null,
+    "checkedAt": "2026-11-08"
   },
   "qcintel.com": {
     "file": "favicons/qcintel.com.ico",
@@ -530,6 +558,10 @@
   "ukrmedia.news": {
     "file": "favicons/ukrmedia.news.jpg",
     "checkedAt": "2026-11-07"
+  },
+  "vietnam.vn": {
+    "file": "favicons/vietnam.vn.ico",
+    "checkedAt": "2026-11-08"
   },
   "voiceofemirates.com": {
     "file": "favicons/voiceofemirates.com.png",

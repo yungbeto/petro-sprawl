@@ -1,54 +1,133 @@
 {
-  "recordedAt": "2026-11-07T22:02:13.092Z",
+  "recordedAt": "2026-11-08T01:52:48.097Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 7,
-      "failed": 18,
-      "articles": 236,
+      "requests": 10,
+      "failed": 52,
+      "articles": 0,
       "errors": [
         "answered 429",
-        "fetch failed",
+        "answered 429",
+        "answered 429",
         "fetch failed"
       ]
     },
     "google-news": {
-      "requests": 19,
+      "requests": 53,
       "failed": 0,
-      "articles": 347,
+      "articles": 505,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-07"
+    "lastOk": "2026-11-08"
   },
-  "stories": 18,
-  "candidates": 3,
+  "stories": 23,
+  "candidates": 4,
   "usage": {
-    "input": 0,
-    "output": 0,
-    "searches": 0
+    "input": 51227,
+    "output": 4154,
+    "searches": 2
   },
-  "estimatedCostUsd": 0,
+  "estimatedCostUsd": 0.027,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "error",
-      "detail": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CgpKdxBEcrDxafDa3325a\"}"
+      "outcome": "committed",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://houseofsaud.com/hormuz-mutual-enforcement-nov7/",
+        "publisher": "House of Saud",
+        "quote": "Iran’s Islamic Revolutionary Guard Corps announced that two oil tankers had struck mines and caught fire in the Strait of Hormuz",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-07",
+        "eventText": "Iran's Revolutionary Guards say two oil tankers hit mines and caught fire in the Strait of Hormuz, hours after US forces disabled a cargo vessel in the Gulf of Oman."
+      },
+      "headlines": [
+        "- 2026-11-08 · The New Arab: Explosions in Iran’s Qeshm, Houthis say targeted Saudi oil sites",
+        "- 2026-11-08 · ABC News & Headlines – Australian Broadcasting Corporation: Explosions in Strait of Hormuz as Iran reviews de-escalation proposals",
+        "- 2026-11-08 · https://houseofsaud.com/: IRGC Says 2 Tankers Hit Mines as US Disables M/V Huda Near Hormuz",
+        "- 2026-11-08 · Vietnam.vn: Iran exempts Iraq from restrictions across the Strait of Hormuz as oil exports increase.",
+        "- 2026-11-07 · Yahoo: Explosions heard in Iran’s Qeshm Island, Jask Port, state media says",
+        "- 2026-11-07 · Yahoo: Reports of explosions in Qeshm and Jask in Iran",
+        "- 2026-11-07 · Middle East Eye: Explosions reported on Iran's Qeshm Island and in port of Jask",
+        "- 2026-11-07 · Anadolu Ajansı: Iran’s Revolutionary Guards say 2 oil tankers hit mines, caught fire near Strait of Hormuz",
+        "- 2026-11-07 · Türkiye Today: Explosions reported near Iran’s Qeshm Island and Jask Port",
+        "- 2026-11-07 · Anadolu Ajansı: Explosions heard in southern Iran’s Qeshm, Jask: Report",
+        "- 2026-11-07 · India Today: Blasts rock southern Iran, 2 tankers catch fire amid US blockade of Hormuz",
+        "- 2026-11-07 · ANI News: Explosions heard on Iran’s Qeshm island linked to Strait of Hormuz, Iranian media says",
+        "- 2026-11-07 · A News: Explosions heard in southern Iran’s Qeshm, Jask: Report"
+      ]
     },
     {
-      "ref": "refinery/ng-dangote",
+      "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "error",
-      "detail": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CgpKdyBG5sNnzyHFT3wMp\"}"
+      "outcome": "review",
+      "detail": "event 2026-11-07",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://houseofsaud.com/hormuz-mutual-enforcement-nov7/",
+        "publisher": "House of Saud",
+        "quote": "Iran’s Islamic Revolutionary Guard Corps announced that two oil tankers had struck mines and caught fire in the Strait of Hormuz",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-07",
+        "eventText": "Iran's Revolutionary Guards say two oil tankers hit mines and caught fire in the Strait of Hormuz, hours after US forces disabled a cargo vessel in the Gulf of Oman."
+      }
     },
     {
       "ref": "chokepoint/babelm",
       "kind": "story",
-      "outcome": "error",
-      "detail": "400 {\"type\":\"error\",\"error\":{\"type\":\"invalid_request_error\",\"message\":\"Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.\"},\"request_id\":\"req_011CgpKdypDRBat6edxsA5FV\"}"
+      "outcome": "committed",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "babelm-2026-houthi-attacks",
+        "url": "https://www.agcnews.eu/israeliranwar-houthi-forces-in-control-of-bab-al-mandab-repelled-an-attack-by-pro-saudi-forces-ansar-allah-has-established-a-transit-permit-system-via-email/",
+        "publisher": "AGC News",
+        "quote": "The attack was thwarted thanks to the resistance of Yemeni forces in Dhubab and near the Bab al-Mandab Strait, as well as thanks to precise missile strikes in the al-Saqya area.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      },
+      "headlines": [
+        "- 2026-11-08 · The New Arab: Explosions in Iran’s Qeshm, Houthis say targeted Saudi oil sites",
+        "- 2026-11-08 · agc communication news: ISRAELIRANWAR. Houthi forces in control of Bab al-Mandab repelled an attack by pro-Saudi forces. Ansar Allah has established a transit permit system via email.",
+        "- 2026-11-07 · 아시아경제: \"Ships Must Apply to Houthis by Email to Transit the Bab el-Mandeb Strait in the Red Sea\""
+      ]
+    },
+    {
+      "ref": "field/gem-l100000312599",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-06 · Kazakhstan Today: Chinese-led consortium to build new gas processing plant at Kazakhstan’s Kashagan field",
+        "- 2026-11-06 · Qazinform: QazaqGaz signs EPCC deal for new gas processing plant at Kashagan",
+        "- 2026-11-06 · PravdaReport: QazaqGaz Signs Contract for 2.5 Billion Cubic Meter Gas Plant at Kashagan"
+      ]
+    },
+    {
+      "ref": "field/gem-l100000314116",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-05 · Construction Review: Zuluf Field Oil Increment Project Commissioned After $7bn Construction Investment in Saudi Arabia",
+        "- 2026-11-05 · MEED: Aramco commissions Zuluf field oil increment project"
+      ]
     }
   ]
 }
