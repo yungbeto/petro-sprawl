@@ -1,23 +1,21 @@
 {
-  "recordedAt": "2026-11-08T13:55:02.245Z",
+  "recordedAt": "2026-11-08T19:51:40.470Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 27,
-      "failed": 46,
-      "articles": 267,
+      "requests": 6,
+      "failed": 53,
+      "articles": 0,
       "errors": [
-        "answered 429",
-        "answered 429",
-        "answered 429",
         "fetch failed",
+        "answered 429",
         "answered 429"
       ]
     },
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 492,
+      "articles": 485,
       "errors": []
     }
   },
@@ -25,77 +23,68 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-08"
   },
-  "stories": 20,
-  "candidates": 5,
+  "stories": 15,
+  "candidates": 4,
   "usage": {
-    "input": 17295,
-    "output": 2075,
-    "searches": 0
+    "input": 77733,
+    "output": 4089,
+    "searches": 4
   },
-  "estimatedCostUsd": 0.003,
+  "estimatedCostUsd": 0.05,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "rejected",
-      "detail": "quote is 75 words",
+      "outcome": "committed",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.lankanewspapers.com/2026/11/08/oil-tanker-engulfed-in-flames-after-striking-naval-mine-in-strait-of-hormuz-iran-says",
-        "publisher": "Lanka Newspapers",
-        "quote": "An oil tanker has caught fire in the Strait of Hormuz after striking a naval mine, the Iranian navy has confirmed, raising fresh concerns over maritime safety in one of the world's most strategically vital waterways. Iran's semi-official news agency cited the Iranian navy, which described the vessel as \"an offending oil tanker that was travelling in an unsafe area east of the Strait of Hormuz\" at the time of the incident.",
+        "url": "https://www.jpost.com/middle-east/iran-news/article-914153",
+        "publisher": "JPost",
+        "quote": "the IRGC Navy announced that two oil tankers hit mines near the Strait of Hormuz.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "2026-11-08",
-        "eventText": "An oil tanker strikes a naval mine and catches fire in the Strait of Hormuz, Iran's navy says."
+        "eventAt": "",
+        "eventText": ""
       },
       "headlines": [
-        "- 2026-11-08 · lankanewspapers.com: Oil Tanker Engulfed in Flames After Striking Naval Mine in Strait of Hormuz , Iran Says <https://www.lankanewspapers.com/2026/11/08/oil-tanker-engulfed-in-flames-after-striking-naval-mine-in-strait-of-hormuz-iran-says>",
-        "- 2026-11-08 · moneycontrol.com: Strait Hormuz gives Iran strategic leverage : Tehran warns US against misreading its power <https://www.moneycontrol.com/world/strait-of-hormuz-gives-iran-strategic-leverage-iran-warns-us-against-misreading-its-power-article-14074909.html>",
-        "- 2026-11-08 · news.webindia123.com: Strait of Hormuz gives Iran strategic leverage , says Iranian official <https://news.webindia123.com/news/Articles/World/20261108/4517342.html>",
-        "- 2026-11-08 · ecr.co.za: Iran says two tankers caught fire in Hormuz after hitting mines <https://www.ecr.co.za/news/news/-headline-options--1-iran-says-two-oil-tankers-caug/>",
-        "- 2026-11-08 · english.news.cn: Iran IRGC says 2 violating tankers hit mines in Hormuz Strait , U . S . forces disable vessel in Gulf of Oman - Xinhua <https://english.news.cn/20261108/35f56d5f87294f648f3223cea814e580/c.html>",
-        "- 2026-11-08 · iraqsun.com: Explosions heard on Iran Qeshm island linked to Strait of Hormuz , Iranian media says <http://www.iraqsun.com/news/279418873/explosions-heard-on-iran-qeshm-island-linked-to-strait-of-hormuz-iranian-media-says>",
-        "- 2026-11-08 · Middle East Eye: IRGC says three tankers ablaze in Strait of Hormuz",
-        "- 2026-11-08 · The Arab Weekly: Iran reports blasts on Qeshm Island amid US-Iran standoff",
-        "- 2026-11-08 · The Times of Israel: Iran says 3 tankers caught fire in Hormuz",
-        "- 2026-11-08 · Caspian Post: Iran Fires on Three Tankers in Strait of Hormuz, Blames Navigation Violations",
-        "- 2026-11-08 · Seatrade Maritime News: Crew abandon tanker in Hormuz, US strikes bulker in Gulf of Oman",
-        "- 2026-11-08 · شفق نيوز: Shafaq News..IRGC: Three oil tankers explode in Hormuz",
-        "- 2026-11-08 · Inquirer.net: Iran says 3 tankers caught fire in Strait of Hormuz",
-        "- 2026-11-08 · Al Arabiya English: Iran says three tankers caught fire in Strait of Hormuz",
-        "- 2026-11-08 · WANA News Agency: Third Oil Tanker Explodes in Strait of Hormuz"
+        "- 2026-11-08 · Reuters: Iraq has reached understandings with US to allow oil exports through Hormuz, minister says",
+        "- 2026-11-08 · Middle East Eye: Iran says oil tanker on fire after striking a mine near Hormuz",
+        "- 2026-11-08 · NewsCord: Trump Confirms U.S. Strikes on Iran’s Qeshm Island, Says “It’s Not a War”: how 23 outlets framed it",
+        "- 2026-11-08 · WANA News Agency: Iranian Army Reports Oil Tanker Fire in Eastern Strait of Hormuz",
+        "- 2026-11-08 · WHAS11: U.S. strikes Iran as tensions rise in the Strait of Hormuz",
+        "- 2026-11-08 · Forth.News: Explosions on Qeshm Island Amid U.S.-Iran Maritime Skirmishes",
+        "- 2026-11-08 · The Jerusalem Post: Oil tanker reportedy catches fire after striking mine near Hormuz",
+        "- 2026-11-08 · NewsCord: IRGC Spokesperson Hossein Mohebbi Says Mines Are Ready, Strait of Hormuz Under IRGC Navy Control",
+        "- 2026-11-08 · Briefs Finance: Explosions near the Strait of Hormuz tied to Iranian activity as ship attacks persist",
+        "- 2026-11-08 · GreekReporter.com: Two Oil Tankers Reportedly Hit Mines in Strait of Hormuz Amid Rising Tensions",
+        "- 2026-11-08 · TradingView: Iraq has reached understandings with US to allow oil exports through Hormuz, minister says",
+        "- 2026-11-08 · Latest news from Azerbaijan: US and Iran report attacks on vessels near Strait of Hormuz",
+        "- 2026-11-08 · The Independent: US military says it fired on ship that visited Iranian port after it tried to breach Strait of Hormuz blockade",
+        "- 2026-11-08 · The Lufkin Daily News: Vessels at the Strait of Hormuz, as seen from Musandam",
+        "- 2026-11-08 · TodayPress.tv: Strait of Hormuz could reopen: Iran makes PROPOSAL to the US"
       ]
     },
     {
       "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
-      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-08 · وكالة خبر للأنباء: US Institute Warns of Houthi Efforts to Control Bab al-Mandab Strait"
+        "- 2026-11-08 · The Insight International: Ships email Houthis for permission to cross Bab al-Mandab, WSJ reports",
+        "- 2026-11-07 · EnergyNow.com: Houthis Say They Targeted Saudi East-West Oil Transport"
       ]
     },
     {
-      "ref": "pipeline/nord-stream-1",
+      "ref": "refinery/ng-dangote",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-08 · وكالة سبأ: Russia: Sabotage of \"Nord Stream\" Pipelines Destroyed Trust Between Us and Europe",
-        "- 2026-11-08 · Laodong.vn: Russia criticizes Germany for avoiding finding the real culprit to sabotage Nord Stream"
-      ]
-    },
-    {
-      "ref": "terminal/kharg",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-07 · TodayPress.tv: Trump targets Kharg Island: “Bye bye, Kharg” – PHOTO"
+        "- 2026-11-08 · Vanguard News: Dangote refinery IPO misses 10m investors target",
+        "- 2026-11-08 · Daily Trust: Dangote refinery IPO misses 10m investors target",
+        "- 2026-11-08 · Brand Icon Image: Dangote Refinery IPO Attracts Millions of Investors, Falls Short of 10m Target"
       ]
     },
     {
@@ -104,7 +93,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-06 · Trend News Agency: QazaqGaz signs EPCC contract for second gas processing plant at Kashagan"
+        "- 2026-11-06 · Qazinform: QazaqGaz signs EPCC deal for new gas processing plant at Kashagan"
       ]
     }
   ]

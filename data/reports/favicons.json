@@ -79,9 +79,17 @@
     "file": "favicons/bolnews.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "brandiconimage.com": {
+    "file": null,
+    "checkedAt": "2026-11-08"
+  },
   "breakingthenews.net": {
     "file": "favicons/breakingthenews.net.ico",
     "checkedAt": "2026-11-06"
+  },
+  "briefs.co": {
+    "file": "favicons/briefs.co.png",
+    "checkedAt": "2026-11-08"
   },
   "businessworld.in": {
     "file": "favicons/businessworld.in.webp",
@@ -222,6 +230,10 @@
   "finance.biggo.com": {
     "file": "favicons/finance.biggo.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "forth.news": {
+    "file": null,
+    "checkedAt": "2026-11-08"
   },
   "freemalaysiatoday.com": {
     "file": "favicons/freemalaysiatoday.com.png",
@@ -599,6 +611,10 @@
     "file": "favicons/thehindubusinessline.com.ico",
     "checkedAt": "2026-11-07"
   },
+  "theinsightinternational.com": {
+    "file": "favicons/theinsightinternational.com.jpg",
+    "checkedAt": "2026-11-08"
+  },
   "themarysue.com": {
     "file": "favicons/themarysue.com.ico",
     "checkedAt": "2026-11-07"
@@ -647,6 +663,10 @@
     "file": "favicons/turkiyetoday.com.png",
     "checkedAt": "2026-11-07"
   },
+  "tvoneusa.com": {
+    "file": "favicons/tvoneusa.com.png",
+    "checkedAt": "2026-11-08"
+  },
   "ua.news": {
     "file": "favicons/ua.news.ico",
     "checkedAt": "2026-11-06"
@@ -658,6 +678,10 @@
   "ukrmedia.news": {
     "file": "favicons/ukrmedia.news.jpg",
     "checkedAt": "2026-11-07"
+  },
+  "vanguardngr.com": {
+    "file": "favicons/vanguardngr.com.ico",
+    "checkedAt": "2026-11-08"
   },
   "vietnam.vn": {
     "file": "favicons/vietnam.vn.ico",
