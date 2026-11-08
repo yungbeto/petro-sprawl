@@ -11,6 +11,7 @@ const FILES = {
   lng: 'data/curated/lng-evidence.json',
   terminal: 'data/curated/oil-terminals.json',
   refinery: 'data/curated/refinery-evidence.json',
+  field: 'data/curated/field-evidence.json',
 } as const;
 
 const drafts = JSON.parse(await readFile('data/reports/claim-drafts.json', 'utf8')) as { ref: string; evidence: Evidence }[];

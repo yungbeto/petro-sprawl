@@ -811,7 +811,8 @@ export const CLAIMS_REFRESH = {
   /** A first claim for an asset with none must describe something this recent. */
   firstClaimDays: 90,
   /** Old claims about lasting stops; searching again won't find anything newer. */
-  skip: ['pipeline/urengoy-pomary-uzhhorod', 'pipeline/progress', 'pipeline/soyuz'],
+  // Groningen closed by law on 1 October 2024 (field-evidence.json).
+  skip: ['pipeline/urengoy-pomary-uzhhorod', 'pipeline/progress', 'pipeline/soyuz', 'field/gem-l100000301000'],
   /** Governments, operators, wires and outlets already cited reliably; subdomains count. */
   trustedDomains: [
     'reuters.com',
@@ -951,6 +952,15 @@ export const NEWS = {
    * claim. All 121 would add about 20 queries a run to a GDELT that already answers 429 at times.
    */
   refineriesLargest: 40,
+  /**
+   * Oil and gas fields the scan looks for (M13): the largest by GEM's figure (oil against oil, gas against gas),
+   * plus any with a disruption or a cited claim, and only while the fields surface is on.
+   */
+  fieldsLargest: 120,
+  /** A field's name alone (weak) needs this many letters: "Delta" or "Troll" alone would match too much. */
+  fieldWeakMinLetters: 6,
+  /** Field names that are also companies, crude grades or common words: no news terms at all. */
+  fieldDropTerms: ['heritage', 'dolphin', 'perseus', 'lauren', 'murban bab', 'gasco', 'king sea'],
   /** GDELT asks for 5 seconds between requests but answers 429 at that pace; a 429 waits `gdeltBackoffMs`. */
   gdeltGapMs: 8_000,
   gdeltBackoffMs: 30_000,

@@ -2,7 +2,7 @@
 // stories, and the checks every draft must pass before it touches data/curated/disruptions.json. Pure.
 
 import { z } from 'zod';
-import type { Disruption, DisruptionEvent, NewsHeadline, Refinery, SourceRef } from '../../src/types';
+import type { Disruption, DisruptionEvent, Field, NewsHeadline, Refinery, SourceRef } from '../../src/types';
 import { NEWS } from '../../src/lib/config';
 import { daysBetween, htmlToText, isTrusted, matchKey, quoteOnPage, urlKey, type Page } from './claims';
 import { siteKey } from './favicons';
@@ -94,7 +94,7 @@ export function parseGoogleNewsRss(xml: string): Article[] {
 }
 
 export interface AssetEntry {
-  /** "pipeline/<id>", "chokepoint/<id>", "lng/<id>", "terminal/<id>" or "refinery/<id>". */
+  /** "pipeline/<id>", "chokepoint/<id>", "lng/<id>", "terminal/<id>", "refinery/<id>" or "field/<id>". */
   ref: string;
   name: string;
   aliases: string[];
@@ -113,7 +113,7 @@ export interface AssetTerm {
 // Shipping words and ship fuels count too (added 2026-11-04): news of a terminal town often says "port",
 // "ships" or "LSMGO", not "oil".
 const ENERGY_WORDS =
-  /\b(oil|gas|crude|lng|pipelines?|terminals?|tankers?|exports?|imports?|fuel|energy|refiner(?:y|ies)|barrels?|loadings?|shipments?|flows?|supply|supplies|ports?|ships?|shipping|vessels?|storage|bunker(?:s|ing)?|lsmgo|vlsfo|hsfo|mgo|diesel)\b/;
+  /\b(oil|gas|crude|lng|pipelines?|terminals?|tankers?|exports?|imports?|fuel|energy|refiner(?:y|ies)|oilfields?|gasfields?|drilling|output|barrels?|loadings?|shipments?|flows?|supply|supplies|ports?|ships?|shipping|vessels?|storage|bunker(?:s|ing)?|lsmgo|vlsfo|hsfo|mgo|diesel)\b/;
 
 /**
  * Every name an asset goes by in news: parts of its display name, its aliases and NEWS.extraTerms. GEM's
@@ -166,6 +166,57 @@ export function refineryTerms(
     const brands = [...new Set([r.operator, r.corporation].filter((c): c is string => !!c).map(brandOf))];
     const texts = !shared ? [`${site} refinery`] : brands.flatMap((brand) => [`${brand} ${site} refinery`, `${brand}'s ${site} refinery`]);
     return texts.map((text) => ({ ref: `refinery/${r.id}`, text, key: matchKey(text), weak: false }));
+  });
+}
+
+/**
+ * A field's name as news uses it, without GEM's description: "Kashagan Oil and Gas Field" is Kashagan,
+ * "Tengiz FGP Oil and Gas Phase" Tengiz FGP. GEM's Canadian licence prefixes ("10097UUU/") go too.
+ */
+export function fieldCore(name: string): string {
+  return name
+    .replace(/^\d+\w*\//, '')
+    .replace(/\s*\([^()]*\)\s*/g, ' ')
+    .replace(/\s+(?:(?:oil|gas|condensate|ngl)(?:\s*(?:,|and)\s*(?:oil|gas|condensate|ngl))*\s+)?(?:fields?|projects?|phases?|assets?|developments?|blocks?)$/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * News terms for oil and gas fields (M13). "<name> field" and "<name> oilfield" (or "gas field") are strong;
+ * the name alone is weak, so "Sharara" counts only beside an energy word ("Sharara output"). A project takes
+ * its fields' names too: Kashagan is North Caspian's. A name two fields share on the map (GEM has dozens of
+ * "Athabasca" assets) is left out, as a refinery's shared site is.
+ */
+export function fieldTerms(
+  fields: readonly Pick<Field, 'id' | 'name' | 'aliases' | 'fuel' | 'parts'>[],
+  all: readonly Pick<Field, 'name' | 'aliases' | 'parts'>[],
+): AssetTerm[] {
+  const namesOf = (f: Pick<Field, 'name' | 'aliases' | 'parts'>) =>
+    [...new Set([f.name, ...f.aliases, ...(f.parts ?? []).map((p) => p.name)].map(fieldCore).filter((c) => c.replace(/[^\p{L}]/gu, '').length >= 4))];
+  const owners = new Map<string, number>();
+  for (const f of all) for (const c of namesOf(f)) owners.set(matchKey(c), (owners.get(matchKey(c)) ?? 0) + 1);
+  const drop = new Set<string>(NEWS.fieldDropTerms.map(matchKey));
+  const letters = (s: string) => s.replace(/[^\p{L}]/gu, '').length;
+  return fields.flatMap((f) => {
+    const ref = `field/${f.id}`;
+    const oil = f.fuel === 'oil' || f.fuel === 'oil and gas';
+    const gas = f.fuel !== 'oil';
+    return namesOf(f)
+      // GEM's US company aggregates ("Wattenberg - Noble") aren't names news uses.
+      .filter((core) => (owners.get(matchKey(core)) ?? 0) <= 1 && !/\s[-–]\s/.test(core) && !drop.has(matchKey(core)))
+      .flatMap((core) => {
+        const alone = letters(core) >= NEWS.fieldWeakMinLetters ? [{ text: core, weak: true }] : [];
+        // "North Field" is already a field's name; adding "field" again would never match.
+        if (/\bfields?$/i.test(core)) return alone;
+        return [
+          { text: `${core} field`, weak: false },
+          ...(oil ? [{ text: `${core} oilfield`, weak: false }] : []),
+          ...(gas ? [{ text: `${core} gas field`, weak: false }] : []),
+          ...alone,
+        ];
+      })
+      .map(({ text, weak }) => ({ ref, text, key: matchKey(text), weak }));
   });
 }
 

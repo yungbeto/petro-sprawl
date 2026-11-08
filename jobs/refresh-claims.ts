@@ -10,7 +10,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
 import { readFile, writeFile } from 'node:fs/promises';
 import { CLAIMS_REFRESH, STALE_AFTER_DAYS } from '../src/lib/config';
-import type { Evidence, LngTerminal, Pipeline, Refinery } from '../src/types';
+import type { Evidence, Field, LngTerminal, Pipeline, Refinery } from '../src/types';
 import {
   addEvidence,
   assetTerms,
@@ -36,6 +36,7 @@ const FILES = {
   lng: 'data/curated/lng-evidence.json',
   terminal: 'data/curated/oil-terminals.json',
   refinery: 'data/curated/refinery-evidence.json',
+  field: 'data/curated/field-evidence.json',
 } as const;
 const DRAFTS = 'data/reports/claim-drafts.json';
 const LOG = 'data/reports/refresh-claims.json';
@@ -43,15 +44,15 @@ const LOG = 'data/reports/refresh-claims.json';
 type Kind = keyof typeof FILES;
 type NamedRecord = CuratedRecord & { name: string; aliases?: string[] };
 
-const SYSTEM = `You keep the status of energy infrastructure current for a map of world energy flows. For one pipeline, LNG terminal, oil terminal or refinery, search the web for a news report or official statement that is newer than the claim we already show (or recent, when we have none) and says whether the asset is operating, running reduced, idle or offline.
+const SYSTEM = `You keep the status of energy infrastructure current for a map of world energy flows. For one pipeline, LNG terminal, oil terminal, refinery or oil or gas field, search the web for a news report or official statement that is newer than the claim we already show (or recent, when we have none) and says whether the asset is operating, running reduced, idle or offline.
 
 Rules:
-- The source must be published after the current claim's date, or within the window we give when there is no current claim, and must name the asset (or, for a pipeline, its terminal port or entry point, saying so in the statement). For a section of a longer system, the source must be about that section, not gas or oil moving through other sections. For an oil terminal, the source must be about loadings or operations at that terminal, not a country's exports in general. For a refinery, the source must be about that refinery's units running, shut or restarting, not the company's refining in general or another refinery in the same town.
+- The source must be published after the current claim's date, or within the window we give when there is no current claim, and must name the asset (or, for a pipeline, its terminal port or entry point, saying so in the statement). For a section of a longer system, the source must be about that section, not gas or oil moving through other sections. For an oil terminal, the source must be about loadings or operations at that terminal, not a country's exports in general. For a refinery, the source must be about that refinery's units running, shut or restarting, not the company's refining in general or another refinery in the same town. For an oil or gas field, the source must be about production at that field (or, for a project, at one of the fields it names), not a country's output in general.
 - Use only the publication date printed on the article. Never work a date out from "days ago" labels or search results; if the article shows no date, don't use it.
 - Prefer operators, governments and regulators, then wire services and established trade press. Never use Wikipedia, forums, aggregators or AI-written pages.
 - quote: one or two sentences copied exactly, character for character, from the article body. Not the headline, and not paraphrased.
 - observedAt: the date the claim describes (YYYY-MM-DD). For monthly data, the last day of that month. It can't be after the article's publication date.
-- status: operating if it is carrying oil or gas (for a refinery, processing crude); reduced only if the source says flows are below normal because of a disruption; idle or offline only if the source says nothing is flowing; unknown otherwise.
+- status: operating if it is carrying oil or gas (for a refinery, processing crude; for a field, producing); reduced only if the source says flows are below normal because of a disruption; idle or offline only if the source says nothing is flowing; unknown otherwise.
 - statement: one sentence in your own words saying what the source reports, ending with the publisher's short name in parentheses, for example "(Reuters)" or "(Enterprise)". Use sentence case and no em dashes. Say only what the source says: no inferences such as "which indicates" or "implying", and no remarks about the article itself.
 - publisher: the outlet's short name, as in the statement.
 - sourceType: operator, regulator or government for official statements; press otherwise.
@@ -75,8 +76,12 @@ function prompt(asset: StaleAsset, aliases: string[], today: string): string {
   ].join('\n');
 }
 
-/** What kind of place a refinery is, for the prompt: its name alone is a town. */
+/** What kind of place a refinery or field is, for the prompt: a refinery's name alone is a town. */
 function describe(ref: string): string {
+  if (ref.startsWith('field/')) {
+    const f = fieldOf(ref.slice('field/'.length));
+    return f ? `, ${f.fuel === 'oil' ? 'an oil' : f.fuel === 'oil and gas' ? 'an oil and gas' : 'a gas'} ${f.level} in ${f.country}${f.operator ? ` run by ${f.operator}` : ''}` : ', an oil or gas field';
+  }
   if (!ref.startsWith('refinery/')) return '';
   const r = refineryOf(ref.slice('refinery/'.length));
   return r ? `, an oil refinery in ${[r.state, r.country].filter(Boolean).join(', ')}${r.operator ? ` run by ${r.operator}` : ''}` : ', an oil refinery';
@@ -131,6 +136,7 @@ const texts = {
   lng: await readFile(FILES.lng, 'utf8'),
   terminal: await readFile(FILES.terminal, 'utf8'),
   refinery: await readFile(FILES.refinery, 'utf8'),
+  field: await readFile(FILES.field, 'utf8'),
 };
 const records = {
   pipeline: JSON.parse(texts.pipeline) as NamedRecord[],
@@ -138,13 +144,22 @@ const records = {
   terminal: JSON.parse(texts.terminal) as NamedRecord[],
   // Only refineries with a cited claim, as for LNG: a first claim for every imported refinery would be a search each.
   refinery: JSON.parse(texts.refinery) as CuratedRecord[],
+  // Fields the same way: only those with a cited claim.
+  field: JSON.parse(texts.field) as CuratedRecord[],
 };
 const refineries = JSON.parse(await readFile('public/data/refineries.json', 'utf8')) as Refinery[];
 const refineryOf = (id: string) => refineries.find((r) => r.id === id);
+const fields = JSON.parse(await readFile('public/data/fields.json', 'utf8')) as Field[];
+const fieldOf = (id: string) => fields.find((f) => f.id === id);
 const terminals = JSON.parse(await readFile('public/data/lng-terminals.json', 'utf8')) as LngTerminal[];
 const lngName = (id: string) => terminals.find((t) => t.id === id)?.name ?? id;
-const aliasesOf = (ref: string) =>
-  ref.startsWith('refinery/')
+const aliasesOf = (ref: string): string[] =>
+  ref.startsWith('field/')
+    ? (() => {
+        const f = fieldOf(ref.slice('field/'.length));
+        return f ? [...f.aliases, ...(f.parts ?? []).map((p) => p.name)] : [];
+      })()
+    : ref.startsWith('refinery/')
     ? (refineryOf(ref.slice('refinery/'.length))?.aliases ?? [])
     : [...records.pipeline.map((r) => ['pipeline', r] as const), ...records.terminal.map((r) => ['terminal', r] as const)].find(
     ([kind, r]) => `${kind}/${r.id}` === ref,
@@ -155,6 +170,7 @@ const assets = [
   ...records.lng.map((t) => ({ ref: `lng/${t.id}`, name: lngName(t.id), evidence: t.evidence })),
   ...records.terminal.map((t) => ({ ref: `terminal/${t.id}`, name: t.name, evidence: t.evidence })),
   ...records.refinery.map((r) => ({ ref: `refinery/${r.id}`, name: refineryOf(r.id)?.name ?? r.id, evidence: r.evidence })),
+  ...records.field.map((r) => ({ ref: `field/${r.id}`, name: fieldOf(r.id)?.name ?? r.id, evidence: r.evidence })),
 ];
 // A pipeline with a measured flow series already has a status from the data; it doesn't need a first claim.
 const measured = new Set(
@@ -164,7 +180,7 @@ const unclaimed = unclaimedAssets(assets, { skip: CLAIMS_REFRESH.skip }).filter(
 const stale = [...unclaimed, ...staleAssets(assets, { today, staleDays: STALE_AFTER_DAYS, skip: CLAIMS_REFRESH.skip })];
 console.log(`${unclaimed.length} assets with no claim, ${stale.length - unclaimed.length} stale claims`);
 
-const cited = citedUrls([texts.pipeline, texts.lng, texts.terminal, texts.refinery, await readFile('data/curated/disruptions.json', 'utf8')]);
+const cited = citedUrls([texts.pipeline, texts.lng, texts.terminal, texts.refinery, texts.field, await readFile('data/curated/disruptions.json', 'utf8')]);
 const drafts: { ref: string; reason: string; evidence: Evidence }[] = [];
 const log: { ref: string; name: string; outcome: string; detail?: string; draft?: ClaimDraft }[] = [];
 
@@ -209,6 +225,7 @@ for (const asset of stale) {
       if (kind === 'pipeline') records.pipeline = addEvidence(records.pipeline, id, evidence);
       else if (kind === 'terminal') records.terminal = addEvidence(records.terminal, id, evidence);
       else if (kind === 'refinery') records.refinery = addEvidence(records.refinery, id, evidence);
+      else if (kind === 'field') records.field = addEvidence(records.field, id, evidence);
       else records.lng = addEvidence(records.lng, id, evidence);
       log.push({ ref: asset.ref, name: asset.name, outcome: 'committed', draft });
       console.log(`committed\t${asset.name}: ${draft.status}, ${draft.observedAt}${evidence.unreviewed ? ', unreviewed' : ''}`);
@@ -224,6 +241,7 @@ await writeFile(FILES.pipeline, json(records.pipeline));
 await writeFile(FILES.lng, json(records.lng));
 await writeFile(FILES.terminal, json(records.terminal));
 await writeFile(FILES.refinery, json(records.refinery));
+await writeFile(FILES.field, json(records.field));
 await writeFile(DRAFTS, json(drafts));
 const { price } = CLAIMS_REFRESH;
 const costUsd =

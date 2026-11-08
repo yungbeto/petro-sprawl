@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { fieldCore, fieldTerms, matchAssets } from '../jobs/lib/news';
+import type { Field } from '../src/types';
 import { fieldName, fieldOutputs, mapGogetStatus, mergeFieldEvidence, parseYear, projectOutputs, toFields, type GogetRows } from '../jobs/lib/fields';
 
 const field = (id: string, over: Record<string, string> = {}) => ({
@@ -160,5 +162,43 @@ describe('mergeFieldEvidence', () => {
 
   it('throws when a claim names a field that is not there', () => {
     expect(() => mergeFieldEvidence([{ id: 'gem-l2', evidence: [claim] }], [base!])).toThrow(/gem-l2/);
+  });
+});
+
+describe('news terms', () => {
+  const f = (id: string, name: string, over: Partial<Field> = {}) =>
+    ({ id, name, aliases: [], fuel: 'oil and gas', ...over }) as Pick<Field, 'id' | 'name' | 'aliases' | 'fuel' | 'parts'>;
+
+  it("strips GEM's description from a name", () => {
+    expect(fieldCore('Kashagan Oil and Gas Field')).toBe('Kashagan');
+    expect(fieldCore('El Sharara Oil Field')).toBe('El Sharara');
+    expect(fieldCore('Tengiz FGP Oil and Gas Phase')).toBe('Tengiz FGP');
+    expect(fieldCore('North Field Oil and Gas Project')).toBe('North Field');
+    expect(fieldCore('10097UUU/Athabasca Oil Asset')).toBe('Athabasca');
+  });
+
+  it('makes "<name> field" strong and the name alone weak', () => {
+    const terms = fieldTerms([f('a', 'El Sharara Oil Field', { fuel: 'oil' })], []);
+    expect(terms.map((t) => [t.text, t.weak])).toEqual([
+      ['El Sharara field', false],
+      ['El Sharara oilfield', false],
+      ['El Sharara', true],
+    ]);
+  });
+
+  it("gives a project its fields' names, and leaves out a name two fields share", () => {
+    const project = f('p', 'North Caspian Oil and Gas Project', { parts: [{ id: 'k', name: 'Kashagan Oil and Gas Field', output: [] }] });
+    const all = [project, f('x', '10097UUU/Athabasca Oil Asset'), f('y', '10419YY/Athabasca Oil Asset')];
+    const texts = fieldTerms([project, all[1]!], all).map((t) => t.text);
+    expect(texts).toContain('Kashagan field');
+    expect(texts).toContain('North Caspian gas field');
+    expect(texts.some((t) => t.startsWith('Athabasca'))).toBe(false);
+  });
+
+  it('matches a weak name only beside an energy word', () => {
+    const terms = fieldTerms([f('a', 'El Sharara Oil Field', { fuel: 'oil' })], []);
+    expect(matchAssets('Protesters shut El Sharara oilfield', terms)).toEqual(['field/a']);
+    expect(matchAssets('El Sharara output resumes', terms)).toEqual(['field/a']);
+    expect(matchAssets('A festival in El Sharara', terms)).toEqual([]);
   });
 });

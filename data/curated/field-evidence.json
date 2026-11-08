@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "id": "gem-l100000301000",
+    "evidence": [
+      {
+        "status": "offline",
+        "sourceType": "press",
+        "statement": "The Dutch Senate passed a law to close the Groningen gas field for good from 1 October 2024; normal production had stopped in October 2023 (Offshore Technology).",
+        "url": "https://www.offshore-technology.com/news/netherlands-law-groningen-field/",
+        "observedAt": "2024-04-17",
+        "recordedAt": "2026-11-07"
+      }
+    ]
+  }
+]

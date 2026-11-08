@@ -7,11 +7,12 @@
 // end checks and Google News health to data/reports/news-state.json. Run build:curated afterwards.
 // Needs ANTHROPIC_API_KEY. Run: npm run scan:news
 
+import { byFieldSize, fieldScale } from '../src/lib/fields';
 import Anthropic from '@anthropic-ai/sdk';
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { CLAIMS_REFRESH, FEATURES, NEWS } from '../src/lib/config';
-import type { Chokepoint, Disruption, LngTerminal, NewsHeadline, ObservationSeries, OilTerminal, Pipeline, Refinery, SourceRef } from '../src/types';
+import type { Chokepoint, Disruption, Field, LngTerminal, NewsHeadline, ObservationSeries, OilTerminal, Pipeline, Refinery, SourceRef } from '../src/types';
 import { EMPTY_DATASETS, type Datasets } from '../src/lib/data';
 import { chokepointFlow } from '../src/lib/flow';
 import { ALSI_METER, measuredEvidence } from '../src/lib/evidence';
@@ -26,6 +27,7 @@ import {
   addSource,
   assetTermsFor,
   refineryTerms,
+  fieldTerms,
   disruptionId,
   disruptionReview,
   endCheckCandidates,
@@ -84,6 +86,7 @@ const chokepoints = await readJson<Chokepoint[]>('public/data/chokepoints.json',
 const oilTerminals = await readJson<OilTerminal[]>('public/data/oil-terminals.json', []);
 const refineries = await readJson<Refinery[]>('public/data/refineries.json', []);
 const lngTerminals = await readJson<LngTerminal[]>('public/data/lng-terminals.json', []);
+const fields = await readJson<Field[]>('public/data/fields.json', []);
 const series = [
   ...(await readJson<ObservationSeries[]>('public/data/chokepoint-transits.json', [])),
   ...(await readJson<ObservationSeries[]>('public/data/gas-flows.json', [])),
@@ -101,6 +104,13 @@ const scannedRefineries = !FEATURES.refineries ? [] : refineries.filter(
   (r) => largestRefineries.has(r.id) || refineriesWithDisruption.has(r.id) || r.evidence.some((e) => CLAIMED.includes(e.sourceType)),
 );
 
+// Fields (M13), the same way: the largest, and any with a disruption or a cited claim.
+const fieldsWithDisruption = new Set(disruptions.filter((d) => d.assetKind === 'field').map((d) => d.assetId));
+const largestFields = new Set([...fields].sort(byFieldSize(fieldScale(fields))).slice(0, NEWS.fieldsLargest).map((f) => f.id));
+const scannedFields = !FEATURES.fields ? [] : fields.filter(
+  (f) => largestFields.has(f.id) || fieldsWithDisruption.has(f.id) || f.evidence.some((e) => CLAIMED.includes(e.sourceType)),
+);
+
 const assets: AssetEntry[] = [
   ...pipelines.filter((p) => p.sources.includes('curated')).map((p) => ({ ref: `pipeline/${p.id}`, name: p.name, aliases: p.aliases })),
   ...chokepoints.map((c) => ({ ref: `chokepoint/${c.id}`, name: c.name, aliases: [] })),
@@ -109,11 +119,14 @@ const assets: AssetEntry[] = [
     .filter((t) => lngWithDisruption.has(t.id) || t.evidence.some((e) => CLAIMED.includes(e.sourceType)))
     .map((t) => ({ ref: `lng/${t.id}`, name: t.name, aliases: t.aliases })),
   ...scannedRefineries.map((r) => ({ ref: `refinery/${r.id}`, name: r.name, aliases: r.aliases })),
+  ...scannedFields.map((f) => ({ ref: `field/${f.id}`, name: f.name, aliases: [...f.aliases, ...(f.parts ?? []).map((p) => p.name)] })),
 ];
-// A refinery's name is a town, so its terms come from refineryTerms, never from the name itself.
+// A refinery's name is a town, so its terms come from refineryTerms, never from the name itself; a field's
+// carries GEM's description ("Oil and Gas Field"), so its terms come from fieldTerms.
 const terms = [
-  ...assets.filter((a) => !a.ref.startsWith('refinery/')).flatMap(assetTermsFor),
+  ...assets.filter((a) => !a.ref.startsWith('refinery/') && !a.ref.startsWith('field/')).flatMap(assetTermsFor),
   ...refineryTerms(scannedRefineries, refineries),
+  ...fieldTerms(scannedFields, fields),
 ];
 const assetOf = new Map(assets.map((a) => [a.ref, a]));
 
@@ -217,7 +230,7 @@ const recent = [...gdeltArticles, ...googleArticles].filter(
 
 // Rank
 
-const data: Datasets = { ...EMPTY_DATASETS, chokepoints, pipelines, lngTerminals, oilTerminals, refineries, series, disruptions };
+const data: Datasets = { ...EMPTY_DATASETS, chokepoints, pipelines, lngTerminals, oilTerminals, refineries, fields, series, disruptions };
 const measured = new Set(measuredChanges(data, now).map((c) => `${c.selection.kind}/${c.selection.id}`));
 const stories = groupStories(recent, terms, seen);
 const candidates = rankStories(stories, { trustedDomains: CLAIMS_REFRESH.trustedDomains, measured });
@@ -287,7 +300,7 @@ const usage = { input: 0, output: 0, searches: 0 };
 const { price } = CLAIMS_REFRESH;
 const cost = () => (usage.input / 1e6) * price.inputPerM + (usage.output / 1e6) * price.outputPerM + usage.searches * price.perSearch;
 
-const SYSTEM = `You keep a list of energy supply disruptions current for a map of world energy flows. You get one asset (a pipeline, chokepoint, LNG terminal, oil terminal or refinery), the disruptions we show as in effect on it, and recent news about it. Decide what the news reports:
+const SYSTEM = `You keep a list of energy supply disruptions current for a map of world energy flows. You get one asset (a pipeline, chokepoint, LNG terminal, oil terminal, refinery, or oil or gas field), the disruptions we show as in effect on it, and recent news about it. Decide what the news reports:
 
 - add_source: a new report on one of the disruptions in effect (an attack, damage, a halt continuing, flows still cut, repairs under way). Give its disruptionId.
 - new_disruption: flows or operations at this asset were halted, cut or damaged, and no disruption in effect covers it. Give startedAt, cause and summary.

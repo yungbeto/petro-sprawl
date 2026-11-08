@@ -5,7 +5,8 @@
 import type { Country } from '../types';
 import { THUMBNAIL } from './config';
 import { chokepointFlow } from './flow';
-import { lngStatus, pipelineStatus, terminalStatus } from './encoding';
+import { lngStatus, pipelineStatus, refineryStatus, terminalStatus } from './encoding';
+import { fieldStatus } from './fields';
 import { seriesById, type Datasets } from './data';
 
 type LonLat = [number, number];
@@ -54,6 +55,14 @@ function shapeOf(ref: string, data: Datasets): Shape | null {
   if (kind === 'terminal') {
     const t = data.oilTerminals.find((x) => x.id === id);
     return t ? { name: t.name, kind: 'point', lines: [[t.point]], tone: `status-${terminalStatus(t)}` } : null;
+  }
+  if (kind === 'refinery') {
+    const r = data.refineries.find((x) => x.id === id);
+    return r ? { name: r.name, kind: 'point', lines: [[r.point]], tone: `status-${refineryStatus(r)}` } : null;
+  }
+  if (kind === 'field') {
+    const f = data.fields.find((x) => x.id === id);
+    return f ? { name: f.name, kind: 'point', lines: [[f.point]], tone: `status-${fieldStatus(f)}` } : null;
   }
   return null;
 }
