@@ -107,6 +107,10 @@
     "file": "favicons/constructionreviewonline.com.jpg",
     "checkedAt": "2026-11-06"
   },
+  "daily-sun.com": {
+    "file": "favicons/daily-sun.com.ico",
+    "checkedAt": "2026-11-08"
+  },
   "dailypost.ng": {
     "file": "favicons/dailypost.ng.png",
     "checkedAt": "2026-11-07"
@@ -130,6 +134,10 @@
   "economictimes.indiatimes.com": {
     "file": "favicons/economictimes.indiatimes.com.ico",
     "checkedAt": "2026-11-07"
+  },
+  "ecr.co.za": {
+    "file": "favicons/ecr.co.za.ico",
+    "checkedAt": "2026-11-08"
   },
   "egyptian-gazette.com": {
     "file": "favicons/egyptian-gazette.com.png",
@@ -179,6 +187,10 @@
     "file": "favicons/english.globalarabnetwork.com.png",
     "checkedAt": "2026-11-06"
   },
+  "english.news.cn": {
+    "file": "favicons/english.news.cn.png",
+    "checkedAt": "2026-11-08"
+  },
   "english.nv.ua": {
     "file": "favicons/english.nv.ua.ico",
     "checkedAt": "2026-11-06"
@@ -223,6 +235,10 @@
     "file": "favicons/galvnews.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "globalnation.inquirer.net": {
+    "file": null,
+    "checkedAt": "2026-11-08"
+  },
   "gulfnews.com": {
     "file": "favicons/gulfnews.com.png",
     "checkedAt": "2026-11-06"
@@ -258,6 +274,10 @@
   "ieu-monitoring.com": {
     "file": "favicons/ieu-monitoring.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "ilkha.com": {
+    "file": null,
+    "checkedAt": "2026-11-08"
   },
   "independent.ng": {
     "file": "favicons/independent.ng.jpg",
@@ -295,6 +315,10 @@
     "file": null,
     "checkedAt": "2026-11-06"
   },
+  "iraqsun.com": {
+    "file": null,
+    "checkedAt": "2026-11-08"
+  },
   "jordannews.jo": {
     "file": "favicons/jordannews.jo.png",
     "checkedAt": "2026-11-06"
@@ -306,6 +330,10 @@
   "khaama.com": {
     "file": null,
     "checkedAt": "2026-11-07"
+  },
+  "khabaragency.net": {
+    "file": "favicons/khabaragency.net.ico",
+    "checkedAt": "2026-11-08"
   },
   "kiiitv.com": {
     "file": "favicons/kiiitv.com.png",
@@ -327,6 +355,10 @@
     "file": "favicons/kurdistan24.net.ico",
     "checkedAt": "2026-11-07"
   },
+  "lankanewspapers.com": {
+    "file": "favicons/lankanewspapers.com.png",
+    "checkedAt": "2026-11-08"
+  },
   "lloydslist.com": {
     "file": "favicons/lloydslist.com.png",
     "checkedAt": "2026-11-06"
@@ -334,6 +366,10 @@
   "malaymail.com": {
     "file": null,
     "checkedAt": "2026-11-07"
+  },
+  "marineinsight.com": {
+    "file": "favicons/marineinsight.com.png",
+    "checkedAt": "2026-11-08"
   },
   "maritime-executive.com": {
     "file": "favicons/maritime-executive.com.png",
@@ -443,6 +479,10 @@
     "file": "favicons/newscord.org.ico",
     "checkedAt": "2026-11-07"
   },
+  "newsmobile.in": {
+    "file": "favicons/newsmobile.in.jpg",
+    "checkedAt": "2026-11-08"
+  },
   "newstodaynet.com": {
     "file": null,
     "checkedAt": "2026-11-07"
@@ -499,6 +539,10 @@
     "file": "favicons/rudaw.net.png",
     "checkedAt": "2026-11-07"
   },
+  "saba.ye": {
+    "file": null,
+    "checkedAt": "2026-11-08"
+  },
   "sabq.org": {
     "file": "favicons/sabq.org.ico",
     "checkedAt": "2026-11-07"
@@ -506,6 +550,10 @@
   "scmp.com": {
     "file": "favicons/scmp.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "seatrade-maritime.com": {
+    "file": "favicons/seatrade-maritime.com.ico",
+    "checkedAt": "2026-11-08"
   },
   "shafaq.com": {
     "file": "favicons/shafaq.com.png",
@@ -522,6 +570,10 @@
   "tbsnews.net": {
     "file": "favicons/tbsnews.net.ico",
     "checkedAt": "2026-11-07"
+  },
+  "tehrantimes.com": {
+    "file": "favicons/tehrantimes.com.ico",
+    "checkedAt": "2026-11-08"
   },
   "telegraphindia.com": {
     "file": "favicons/telegraphindia.com.png",
@@ -599,6 +651,10 @@
     "file": "favicons/ua.news.ico",
     "checkedAt": "2026-11-06"
   },
+  "uk.news.yahoo.com": {
+    "file": "favicons/uk.news.yahoo.com.ico",
+    "checkedAt": "2026-11-08"
+  },
   "ukrmedia.news": {
     "file": "favicons/ukrmedia.news.jpg",
     "checkedAt": "2026-11-07"
@@ -618,6 +674,10 @@
   "washingtonexaminer.com": {
     "file": "favicons/washingtonexaminer.com.webp",
     "checkedAt": "2026-11-07"
+  },
+  "wionews.com": {
+    "file": "favicons/wionews.com.ico",
+    "checkedAt": "2026-11-08"
   },
   "wsj.com": {
     "file": "favicons/wsj.com.ico",
