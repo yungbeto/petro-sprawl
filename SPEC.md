@@ -493,6 +493,9 @@ Done when: EIA's 50 play outlines are on the map behind `FEATURES.shale`; Basins
 **M13: Oil and gas fields.** Where crude and gas come out of the ground joins the map, inside the Basins surface: Global Energy Monitor's extraction tracker, the same source and licence as the pipelines, with each field's or project's location, status, operator and owners, and its latest yearly production with the year and GEM's page. Fields complete the chain the map already draws, field to pipeline to terminal to strait to refinery, and give the news scan a place for stories that name a field. Detail below.
 Done when: the fields and projects GEM locates are on the map behind `FEATURES.fields`; Basins switches between provinces, shale plays and fields; every production figure shows its fuel, year and GEM page, and no figure is summed across fuels or reserve classes; a field's page links the USGS province it sits in and the pipelines that start near it, worded as a distance; and fields GEM can't locate are named in the import report, never placed by hand.
 
+**M14: Crude production by country.** Backlog: specified 2026-11-07, not started. How much crude each country pumps, month by month, from EIA's international data (the same API key as M6), on the oil origins surface and on each country's page. A country's oil comes from its own fields and from imports, and the map so far shows only the second; production also shows supply moving where no ship or pipe is measured (Saudi Arabia from 10.8 million barrels a day in February 2026 to 6.6 in May). Detail below.
+Done when: every country EIA reports crude production for has its latest month on its page with the 24 months before it and the change from a year earlier, each figure with its month, unit and EIA series; the oil origins surface switches between imports and production, listing producers largest first and colouring the map by each country's change against itself; a country's page lists its largest fields from M13; no forecast or estimate is shown without saying so; and a change is never given a cause unless a cited disruption gives one.
+
 ### M8 and M9 detail: a self-updating "What's happening"
 
 **Why.** Disruptions are hand-curated, so the hero only changed when someone edited `data/curated/disruptions.json`, and it was ordered by start date, so the newest report on Hormuz (started March) could never lead. Trending lists on Twitter, Bluesky and Reddit work by spotting what is moving against its own normal, grouping mentions into one story, ranking, and only then naming it. This site has its own version of each step: a measured series against its own recent weeks is the spike, an asset is the story mentions group into, and a cited source is the name. The aim is a hero that keeps itself current while never saying something no source or meter supports.
@@ -766,6 +769,52 @@ Disruptions take `assetKind: 'field'`. The selection is `field/<id>`, the layer 
 **News and claims (built 2026-11-07).** The news scan takes the `NEWS.fieldsLargest` (120) largest fields, oil against oil and gas against gas, plus any with a disruption or a cited claim. `fieldTerms` (`jobs/lib/news.ts`) drops GEM's description from a name ("Kashagan Oil and Gas Field" is Kashagan) and gives a project its fields' names. "<name> field", "<name> oilfield" and "<name> gas field" match alone. The name by itself needs an energy word in the headline and at least `NEWS.fieldWeakMinLetters` letters. Names two fields share, GEM's US company aggregates ("Wattenberg - Noble") and `NEWS.fieldDropTerms` (companies and crude grades: Heritage, Murban Bab) get no terms. "Output", "drilling" and "oilfield" now count as energy words. The claims refresh searches fields with a cited claim in `data/curated/field-evidence.json`, as for refineries. The first claim is Groningen's closure by law (Offshore Technology, 17 April 2024), skipped by the weekly search as a lasting stop.
 
 **Open for M13.** Whether 6,500 points need clustering on a phone; how a unit across a border shows its country (GEM lists both; the first is kept for now); whether the news scan's matching of short field names needs more weak terms than refineries did; whether the quick filters should count fields, and how, without filling Home's offline list with GEM listings; and the 569 units GEM gives no point for.
+
+### M14 detail: crude production by country
+
+**Why.** The oil origins surface answers where a country's imported crude comes from. Most countries' oil comes from home, and the largest moves in supply this year happened at the wellhead, where nothing on the map measures them: the Hormuz closure shows on the chokepoint as fewer tankers, but not as Saudi Arabia, Iraq, Kuwait, the UAE and Qatar cutting output (Kuwait from 2.66 million barrels a day in February 2026 to 0.57 in April, in EIA's figures). Production by country closes that gap and gives the M13 fields a total to sit inside.
+
+**Source** (checked 2026-11-07 through the API).
+
+| Coverage | Source | What it gives | Terms |
+| --- | --- | --- | --- |
+| 218 countries | EIA International Energy Statistics, API v2 `international`, product 57 (crude oil including lease condensate), activity 1 (production), unit TBPD (thousand barrels a day) | Monthly for decades (714 months for Saudi Arabia); latest month 2026-06 on 2026-11-07, so four to five months behind. Also product 55 (crude, NGPL and other liquids) and 58 (NGPL) | US government work, public domain; credit EIA. Same `EIA_API_KEY` |
+| Gas, by country | Same API, product 26 (dry natural gas) | Annual only, latest 2024 | Same |
+| Not used | JODI-Oil (production by country, monthly) | Production as countries report it | Its permission is still pending (M10); not added while it is |
+| Not used | OPEC MOMR secondary sources, IEA Oil Market Report | Monthly, current | OPEC's tables are PDFs for its members only; the IEA's are paid |
+
+EIA flags some values (`dataFlagId`): 5 "rounds to zero", 10 "derived using STEO estimation methodology". A value flagged 10 is shown with "EIA estimate"; flags 1 to 4 and 6 mean no value and are dropped. EIA's international monthly series carries no history or forecast marker of its own; the job keeps months up to the API's `endPeriod` and never later than the month before the run.
+
+**Rules for the data.**
+
+- Crude including lease condensate (product 57) is the figure, because it is what pipelines, terminals and refineries in the map carry. NGPL and other liquids are left out of it, never added in; the page says so. EIA's "total petroleum and other liquids" is not used.
+- One unit throughout: thousand barrels a day as EIA gives it, shown as million barrels a day above 1,000 ("7.29 million barrels a day"). No conversion to tonnes.
+- A country is compared only with itself: the latest month against the same month a year earlier and against its own 12 months before. Countries are ranked by the latest month's volume, never by change.
+- The data is months old, so it never goes into Home's measured changes (`MEASURED_CHANGES.maxAgeDays` is 14). The latest month is always written beside the figure.
+- A change is described, not explained: "down 38% from a year earlier". A cause appears only where a disruption in `data/curated/disruptions.json` covers that country's fields or terminals and the page links it.
+- Countries EIA covers but reports as zero for the last 12 months are left off the list and the map, and counted in the note.
+
+**Data.** `fetch:eia-production` (scheduled with the other EIA fetches, every 6 hours, a no-op between releases) to `public/data/crude-production.json`:
+
+```ts
+interface CountryProduction {
+  country: string;                 // ISO 3166-1 alpha-2, from EIA's alpha-3
+  unit: 'thousand b/d';
+  series: { period: string; value: number; estimate?: boolean }[];  // monthly, 36 months to the latest
+  latest: string;                  // 'YYYY-MM'
+  sourceUrl: string;               // EIA's page for that country
+}
+```
+
+36 months keeps the 24-month line and a year-earlier comparison for every month on it. Countries EIA has no ISO code for (regions, "Former USSR") are dropped and counted in the meta.
+
+**Surface.** The oil origins surface is renamed Origins (decided 2026-11-07): it already holds gasoline, diesel and jet fuel for the US regions, and with production it covers home and abroad, so "oil" and "imports" each say too little. The rail, the page title, the link preview's kicker and the phone's More list follow; the URL keeps `view=origins`. It gets a switch at its top, "Imports" and "Production", as Basins has. Production lists countries largest first: flag and name, the latest month's volume with its month, the change from a year earlier, a small 24-month line. On the map, the countries layer takes the change from a year earlier on a diverging scale, the same one storage uses against its own year (`countryMode: 'production'`), and grey for countries with no figure. The world total is EIA's own world row, not a sum of countries.
+
+**A country's page.** A "Crude production" section above "Where its crude comes from": the latest month, the change from a year earlier, the 24-month line, the EIA series link; then "Largest fields" from M13 (the five largest by oil figure, each with its year), linking to their pages, and the note that GEM's fields and EIA's total are different sources and years and are not meant to add up. No share of supply (production against imports): imports come in tonnes from Eurostat and by weight or value from UN Comtrade, and turning tonnes into barrels needs a density per crude that no source here gives. Only the US has both in barrels; its share waits until it can be shown for more than one country.
+
+**Phase 2.** Gas production, annual, on the country page beside storage, labelled with its year. Refined product output by country is not in EIA's monthly data and is not planned.
+
+**Open for M14.** How EIA arrives at its 2026 monthly figures for the Gulf producers, which carry no estimate flag on 2026-11-07 while the producers publish little; whether JODI-Oil comes in if JODI agrees.
 
 ## 12. Working notes for Claude Code
 
