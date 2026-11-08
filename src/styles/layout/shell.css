@@ -233,8 +233,11 @@
 
 .layer-control__list {
   min-width: 200px;
+  max-height: var(--layer-list-max-h, none);
   margin: 0;
   padding: 6px 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   list-style: none;
   background: var(--surface);
   border-radius: var(--radius-lg);

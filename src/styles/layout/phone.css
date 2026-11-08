@@ -228,6 +228,17 @@
     left: var(--space-3);
   }
 
+  /* The list opens upward from the button: it stops short of the search pill and scrolls the rest. */
+  .layer-control__list {
+    --layer-list-max-h: max(
+      80px,
+      calc(
+        100dvh - env(safe-area-inset-top) - var(--space-2) - 48px - var(--space-2) -
+          var(--tabbar-h) - var(--sheet-h) - var(--space-3) - 40px - var(--space-2)
+      )
+    );
+  }
+
   .app[data-sheet-dragging='true']
     :is(
       .layer-control,
