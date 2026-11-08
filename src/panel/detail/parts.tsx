@@ -1,6 +1,7 @@
 // What the detail pages share: the header, fact rows, sources, the lead card and flow meter, the port calls
 // chart, the news, and the lists of related assets.
 
+import { fieldLead, fieldScale, fieldStatus, formatFieldOutput } from '../../lib/fields';
 import { useId, useState, type ReactNode } from 'react';
 import type { Company } from '../../types';
 import type { Selection } from '../../app/urlState';
@@ -288,6 +289,8 @@ export function AssetList({ rows, data, onSelect }: { rows: FilterRow[]; data: D
   const terminals = new Map(data.lngTerminals.map((t) => [t.id, t]));
   const oilTerminals = new Map(data.oilTerminals.map((t) => [t.id, t]));
   const refineries = new Map(data.refineries.map((r) => [r.id, r]));
+  const fields = new Map(data.fields.map((f) => [f.id, f]));
+  const scale = fieldScale(data.fields);
   const bands = new Map(chokepointRows(data).map((c) => [c.selection.id, c.band]));
   return (
     <ul className="changes">
@@ -296,13 +299,17 @@ export function AssetList({ rows, data, onSelect }: { rows: FilterRow[]; data: D
         const terminal = row.selection.kind === 'lng' ? terminals.get(row.selection.id) : undefined;
         const oilTerminal = row.selection.kind === 'terminal' ? oilTerminals.get(row.selection.id) : undefined;
         const refinery = row.selection.kind === 'refinery' ? refineries.get(row.selection.id) : undefined;
+        const field = row.selection.kind === 'field' ? fields.get(row.selection.id) : undefined;
+        const lead = field ? fieldLead(field, scale)?.output : undefined;
         const status = pipeline
           ? pipelineStatus(pipeline)
           : terminal
             ? lngStatus(terminal)
             : oilTerminal
               ? terminalStatus(oilTerminal)
-              : refinery && refineryStatus(refinery);
+              : refinery
+                ? refineryStatus(refinery)
+                : field && fieldStatus(field);
         return (
           <li key={`${row.selection.kind}/${row.selection.id}`}>
             <button type="button" className="change" onClick={() => onSelect(row.selection)}>
@@ -320,7 +327,11 @@ export function AssetList({ rows, data, onSelect }: { rows: FilterRow[]; data: D
                           ? refinery.capacity
                             ? formatRefineryCapacity(refinery.capacity)
                             : 'Refinery'
-                          : 'Chokepoint'}
+                          : field
+                            ? lead
+                              ? `${formatFieldOutput(lead)}${lead.year ? `, ${lead.year}` : ''}`
+                              : field.level === 'project' ? 'Project' : 'Field'
+                            : 'Chokepoint'}
                   {' · '}
                   {status ? (
                     <span className={`status status--${status}`}>{statusLabel(status)}</span>

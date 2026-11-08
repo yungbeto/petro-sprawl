@@ -22,7 +22,7 @@ import { MoreView } from './MoreView';
 import { DetailSkeleton, HomeSkeleton, ListSkeleton } from './Skeleton';
 import { OriginsView, type OriginsViewProps } from './OriginsView';
 import { CiteThisPage } from './detail/Cite';
-import { BasinDetail, ShaleDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RefineryDetail, RegionDetail, CountryDetail } from './details';
+import { BasinDetail, FieldDetail, ShaleDetail, ChokepointDetail, detailKind, LngDetail, OilTerminalDetail, PipelineDetail, RefineryDetail, RegionDetail, CountryDetail } from './details';
 import { IconButton } from '../ui/Button';
 import { SectionTitle } from '../ui/SectionTitle';
 
@@ -33,8 +33,8 @@ interface PanelProps {
   pipelines: Pick<PipelinesViewProps, 'groups' | 'grouping' | 'onGrouping' | 'openGroup' | 'onToggleGroup'>;
   /** The terminals surface's kind, groups and grouping, held by the app. */
   terminals: Omit<TerminalsViewProps, 'data' | 'onSelect'>;
-  /** The basins surface's switch between provinces and shale plays, held by the app. */
-  basins: Pick<BasinsViewProps, 'mode' | 'onMode'>;
+  /** The basins surface's switch between provinces, shale plays and fields, and the fields' groups, held by the app. */
+  basins: Pick<BasinsViewProps, 'mode' | 'onMode' | 'fields'>;
   /** The refineries surface's groups and grouping, held by the app. */
   refineries: Omit<RefineriesViewProps, 'data' | 'onSelect'>;
   /** The fuel origins surface's fuel, held by the app, and its way into search. */
@@ -78,6 +78,7 @@ const KIND_LABELS: Record<SelectionKind, string> = {
   lng: 'LNG terminal',
   terminal: 'Oil terminal',
   refinery: 'Refinery',
+  field: 'Oil and gas field',
   region: 'US fuel region',
 };
 
@@ -275,6 +276,7 @@ function Detail({
       {resolved?.kind === 'lng' && <LngDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'terminal' && <OilTerminalDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'refinery' && <RefineryDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
+      {resolved?.kind === 'field' && <FieldDetail item={resolved.item} data={data} now={now} onSelect={onSelect} />}
       {resolved?.kind === 'region' && <RegionDetail item={resolved.item} data={data} onSelect={onSelect} fuel={fuel} onFuel={onFuel} />}
       {resolved && (
         <CiteThisPage title={(resolved.item as { name?: string }).name ?? selection.id} kind={detailKind(resolved)} />

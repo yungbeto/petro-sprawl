@@ -83,7 +83,7 @@ export const newsHeadlineSchema = z.object({
   url: z.string().url(),
   publishedAt: isoDate,
   feed: z.enum(['gdelt', 'google-news']),
-  refs: z.array(z.string().regex(/^(pipeline|chokepoint|lng|terminal|refinery)\/.+/)).min(1),
+  refs: z.array(z.string().regex(/^(pipeline|chokepoint|lng|terminal|refinery|field)\/.+/)).min(1),
   site: z.string().regex(/^[a-z0-9-]+(\.[a-z0-9-]+)+$/).optional(),
   icon: z.string().regex(/^favicons\/[a-z0-9.-]+\.(png|ico|jpg|gif|webp)$/).optional(),
 });
@@ -242,6 +242,55 @@ export const curatedRefineryEvidenceSchema = z.object({
     .min(1),
 });
 
+const fieldOutputSchema = z.object({
+  fuel: z.string().min(1),
+  value: z.number().nonnegative(),
+  unit: z.enum(['million bbl/y', 'million m³/y']),
+  year: z.number().int().min(1900).max(2100).optional(),
+  summedByGem: z.literal(true).optional(),
+});
+
+/** An oil or gas field or GEM project (M13), imported from GEM; cited claims join it from data/curated/field-evidence.json. */
+export const fieldSchema = z.object({
+  id: z.string().regex(/^gem-l\d+$/),
+  name: z.string().min(1),
+  aliases: z.array(z.string()),
+  level: z.enum(['project', 'field']),
+  parts: z
+    .array(z.object({ id: z.string().regex(/^gem-l\d+$/), name: z.string().min(1), status: z.string().min(1).optional(), output: z.array(fieldOutputSchema) }))
+    .min(1)
+    .optional(),
+  country: z.string().regex(/^[A-Z]{2}$/),
+  subnational: z.string().min(1).optional(),
+  point: lonLat,
+  pointApprox: z.boolean(),
+  fuel: z.enum(['oil', 'gas', 'oil and gas', 'gas and condensate']),
+  location: z.enum(['onshore', 'offshore', 'unknown']),
+  production: z.enum(['conventional', 'unconventional']).optional(),
+  operator: z.string().min(1).optional(),
+  owners: z.array(companySchema).optional(),
+  discovered: z.number().int().optional(),
+  startYear: z.number().int().optional(),
+  output: z.array(fieldOutputSchema),
+  provinceId: z.string().regex(/^usgs-\d+$/).optional(),
+  gemUrl: z.string().url(),
+  evidence: z.array(evidenceSchema).min(1),
+});
+
+/** Cited claims for one field, by its id: like refinery evidence, never dataset or measured. */
+export const curatedFieldEvidenceSchema = z.object({
+  id: z.string().regex(/^gem-l\d+$/),
+  evidence: z
+    .array(
+      evidenceSchema.extend({
+        sourceType: z.enum(['operator', 'regulator', 'government', 'press']),
+        statement: z.string().min(1),
+        url: z.string().url(),
+      }),
+    )
+    .min(1),
+});
+
 /** A curated oil terminal. Its claims must link a source, and can't pose as dataset or measured. */
 export const oilTerminalSchema = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
@@ -270,7 +319,7 @@ export const oilTerminalSchema = z.object({
 
 export const disruptionSchema = z.object({
   id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
-  assetKind: z.enum(['pipeline', 'chokepoint', 'lng', 'terminal', 'refinery']),
+  assetKind: z.enum(['pipeline', 'chokepoint', 'lng', 'terminal', 'refinery', 'field']),
   assetId: z.string().min(1),
   startedAt: isoDate,
   endedAt: isoDate.optional(),

@@ -8,7 +8,7 @@ import { importsSurfaceHighlight } from './crudeImports';
 import type { Datasets } from './data';
 
 /** The map's switchable layers. */
-export type LayerId = 'storage' | 'basins' | 'shale' | 'pipelines' | 'lng' | 'terminals' | 'refineries' | 'chokepoints';
+export type LayerId = 'storage' | 'basins' | 'shale' | 'fields' | 'pipelines' | 'lng' | 'terminals' | 'refineries' | 'chokepoints';
 export type LayerVisibility = Record<LayerId, boolean>;
 
 export const VIEW_IDS = ['chokepoints', 'pipelines', 'terminals', 'refineries', 'basins', 'storage', 'origins'] as const;
@@ -41,6 +41,7 @@ export function selectionEnabled(kind: SelectionKind): boolean {
   if (kind === 'region') return viewEnabled('origins');
   if (kind === 'refinery') return viewEnabled('refineries');
   if (kind === 'shale') return FEATURES.shale;
+  if (kind === 'field') return FEATURES.fields;
   return true;
 }
 
@@ -59,8 +60,8 @@ export const VIEW_LAYERS: Record<ViewId, LayerId[]> = {
   pipelines: ['pipelines'],
   terminals: ['lng', 'terminals'],
   refineries: ['refineries'],
-  // Shale plays (M12) draw over the provinces; off with FEATURES.shale (visibleLayers).
-  basins: ['basins', 'shale'],
+  // Shale plays (M12) and fields (M13) draw over the provinces; off with their FEATURES flags (visibleLayers).
+  basins: ['basins', 'shale', 'fields'],
   storage: ['storage'],
   origins: ['storage', 'chokepoints', 'terminals'],
 };
@@ -75,6 +76,8 @@ const SELECTION_LAYERS: Record<SelectionKind, LayerId[]> = {
   lng: ['lng'],
   terminal: ['terminals'],
   refinery: ['refineries'],
+  // A field brings the pipelines that end near it, as a basin does.
+  field: ['fields', 'pipelines'],
   region: [],
 };
 
@@ -88,6 +91,7 @@ export function visibleLayers(view: ViewId | null, selection: { kind: SelectionK
     if (id === 'storage' && !FEATURES.gasStorage) return false;
     if (id === 'refineries' && !FEATURES.refineries) return false;
     if (id === 'shale' && !FEATURES.shale) return false;
+    if (id === 'fields' && !FEATURES.fields) return false;
     if (selected.includes(id)) return true;
     return view ? VIEW_LAYERS[view].includes(id) : chosen[id];
   };
@@ -95,6 +99,7 @@ export function visibleLayers(view: ViewId | null, selection: { kind: SelectionK
     storage: shown('storage'),
     basins: shown('basins'),
     shale: shown('shale'),
+    fields: shown('fields'),
     pipelines: shown('pipelines'),
     lng: shown('lng'),
     terminals: shown('terminals'),

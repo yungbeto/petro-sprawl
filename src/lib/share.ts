@@ -11,6 +11,7 @@ import { chokepointFlow } from './flow';
 import { fuelOriginsFor, originsFor, seriesById, type Datasets } from './data';
 import { lngStatus, pipelineStatus, refineryStatus, terminalStatus } from './encoding';
 import { formatCapacity, formatCountry, formatMonth, formatRefineryCapacity, formatIndexShare, formatNumber, formatShare, formatSignedPct } from './format';
+import { fieldLead, fieldScale, fieldStatus, formatFieldOutput } from './fields';
 import { formationById, formatShaleValue, latestMonth, shaleSeries } from './shale';
 import { STORAGE_HEADLINE, storageByCountry, storageFigure, type CountryStorage } from './gasStorage';
 import { cellIndex } from './globe';
@@ -175,7 +176,7 @@ const IMPORT_SOURCE = { eurostat: 'Eurostat', comtrade: 'UN Comtrade', eia: 'EIA
 
 /** Every page's card, by file and key. */
 export function shareCards(data: Datasets): Record<ShareFile, ShareIndex> {
-  const out: Record<ShareFile, ShareIndex> = { pipeline: {}, chokepoint: {}, basin: {}, shale: {}, country: {}, lng: {}, terminal: {}, refinery: {}, region: {}, view: {} };
+  const out: Record<ShareFile, ShareIndex> = { pipeline: {}, chokepoint: {}, basin: {}, shale: {}, country: {}, lng: {}, terminal: {}, refinery: {}, field: {}, region: {}, view: {} };
 
   for (const c of data.chokepoints) {
     const flow = chokepointFlow(seriesById(data, c.transitSeriesId));
@@ -249,6 +250,23 @@ export function shareCards(data: Datasets): Record<ShareFile, ShareIndex> {
       source: statusSource(r.evidence[0]),
       center: round1(r.point),
       focus: pointCells(r.point),
+    };
+  }
+
+  // Fields (M13): GEM's listing and its largest figure, with the year the page shows. Empty while FEATURES.fields is off.
+  const scale = fieldScale(data.fields);
+  for (const f of data.fields) {
+    const lead = fieldLead(f, scale)?.output;
+    out.field[`field/${f.id}`] = {
+      kicker: detailKind({ kind: 'field', item: f }),
+      title: f.name,
+      facts: [
+        [f.subnational, formatCountry(f.country)].filter(Boolean).join(', '),
+        lead ? `${statusLabel(fieldStatus(f))}, ${formatFieldOutput(lead).toLowerCase()}${lead.year ? ` in ${lead.year}` : ', year not given'}` : statusLabel(fieldStatus(f)),
+      ],
+      source: statusSource(f.evidence[0]),
+      center: round1(f.point),
+      focus: pointCells(f.point),
     };
   }
 

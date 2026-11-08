@@ -22,7 +22,7 @@ Energy flows explain a lot about why governments decide what they decide, why al
 | **Look up your fuel** | Type a US ZIP code, city or state to see where your region's gasoline, diesel, jet fuel and crude come from, and which chokepoints sit on the way. The location never leaves your browser. |
 | **Compare countries** | Gas in storage against a year earlier, and crude imports by partner country. |
 | **Cite what you use** | Every page has its own link and a citation to copy. |
-| **Explore the ground** | USGS petroleum provinces and EIA's shale plays, with monthly production by formation. |
+| **Explore the ground** | USGS petroleum provinces, EIA's shale plays with monthly production by formation, and some 6,500 oil and gas fields with their yearly output. |
 
 <table>
   <tr>
@@ -110,7 +110,7 @@ The app shows each source with its terms on the Data tab of its menu. In short:
 
 | Source | Used for | Terms |
 | --- | --- | --- |
-| [Global Energy Monitor](https://globalenergymonitor.org) | Pipelines, LNG terminals, owners | CC BY 4.0 |
+| [Global Energy Monitor](https://globalenergymonitor.org) | Pipelines, LNG terminals, oil and gas fields, owners | CC BY 4.0 |
 | [IMF PortWatch](https://portwatch.imf.org) | Chokepoint transits, tanker port calls | Sources: UN Global Platform; IMF PortWatch |
 | [ENTSOG Transparency Platform](https://transparency.entsog.eu) | EU gas flows and capacity | Attributed |
 | [GIE AGSI+ and ALSI](https://www.gie.eu) | EU gas storage, LNG send-out | Attributed |

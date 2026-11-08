@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { DatasetMeta } from '../types';
-import { assembleDatasets, DATASET_IDS, EMPTY_DATASETS, type Datasets } from '../lib/data';
+import { assembleDatasets, DATASET_IDS, EMPTY_DATASETS, datasetEnabled, type Datasets } from '../lib/data';
 
 
 async function fetchJson<T>(path: string): Promise<T | null> {
@@ -28,7 +28,7 @@ export function useDatasets(): DatasetsState {
   useEffect(() => {
     let cancelled = false;
     Promise.all(
-      DATASET_IDS.map(async (id) => ({
+      DATASET_IDS.filter(datasetEnabled).map(async (id) => ({
         id,
         records: await fetchJson<unknown[]>(`${id}.json`),
         meta: await fetchJson<DatasetMeta>(`meta/${id}.json`),

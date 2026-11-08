@@ -60,12 +60,12 @@ describe('parseView', () => {
 });
 
 describe('visibleLayers', () => {
-  const all: LayerVisibility = { storage: true, basins: true, shale: true, pipelines: true, lng: true, terminals: true, refineries: true, chokepoints: true };
+  const all: LayerVisibility = { storage: true, basins: true, shale: true, fields: true, pipelines: true, lng: true, terminals: true, refineries: true, chokepoints: true };
   const shown = (v: LayerVisibility) => Object.entries(v).filter(([, on]) => on).map(([id]) => id);
 
   it('shows only the layers of a surface, whatever the layer list says', () => {
     expect(shown(visibleLayers('pipelines', null, all))).toEqual(['pipelines']);
-    expect(shown(visibleLayers('basins', null, all))).toEqual(['basins', FEATURES.shale && 'shale'].filter(Boolean));
+    expect(shown(visibleLayers('basins', null, all))).toEqual(['basins', FEATURES.shale && 'shale', FEATURES.fields && 'fields'].filter(Boolean));
     expect(shown(visibleLayers('terminals', null, all))).toEqual(['lng', 'terminals']);
     expect(shown(visibleLayers('chokepoints', null, all))).toEqual(['terminals', 'chokepoints']);
     expect(shown(visibleLayers('origins', null, all))).toEqual(['storage', 'terminals', 'chokepoints']);
@@ -76,14 +76,18 @@ describe('visibleLayers', () => {
     expect(shown(visibleLayers(null, { kind: 'basin' }, { ...all, basins: false }))).toContain('basins');
   });
 
+  it('a field brings the pipelines that end near it', () => {
+    expect(shown(visibleLayers('pipelines', { kind: 'field' }, all))).toEqual(FEATURES.fields ? ['fields', 'pipelines'] : ['pipelines']);
+  });
+
   it('a basin brings its pipelines, even on the basins surface', () => {
-    expect(shown(visibleLayers('basins', { kind: 'basin' }, all))).toEqual(['basins', FEATURES.shale && 'shale', 'pipelines'].filter(Boolean));
+    expect(shown(visibleLayers('basins', { kind: 'basin' }, all))).toEqual(['basins', FEATURES.shale && 'shale', FEATURES.fields && 'fields', 'pipelines'].filter(Boolean));
     expect(shown(visibleLayers(null, { kind: 'basin' }, { ...all, pipelines: false }))).toContain('pipelines');
   });
 
   it('follows the layer list on Home, with storage only while it is switched on', () => {
     expect(shown(visibleLayers(null, null, { ...all, lng: false }))).toEqual(
-      [FEATURES.gasStorage && 'storage', 'basins', FEATURES.shale && 'shale', 'pipelines', 'terminals', FEATURES.refineries && 'refineries', 'chokepoints'].filter(Boolean),
+      [FEATURES.gasStorage && 'storage', 'basins', FEATURES.shale && 'shale', FEATURES.fields && 'fields', 'pipelines', 'terminals', FEATURES.refineries && 'refineries', 'chokepoints'].filter(Boolean),
     );
   });
 });

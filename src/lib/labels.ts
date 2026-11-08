@@ -40,6 +40,12 @@ export function detailKind(resolved: Resolved): string {
       return OIL_ROLE[resolved.item.role];
     case 'refinery':
       return 'Oil refinery';
+    case 'field': {
+      const f = resolved.item;
+      const what = f.level === 'project' ? 'project' : 'field';
+      const fuel = f.fuel === 'oil' ? 'Oil' : f.fuel === 'gas' ? 'Gas' : f.fuel === 'gas and condensate' ? 'Gas and condensate' : 'Oil and gas';
+      return [`${fuel} ${what}`, f.location !== 'unknown' && f.location].filter(Boolean).join(' · ');
+    }
     case 'region':
       return 'US fuel region';
   }

@@ -7,6 +7,7 @@ import type {
   CountryRegion,
   DatasetMeta,
   Disruption,
+  Field,
   NewsHeadline,
   FuelOriginRegion,
   LngTerminal,
@@ -40,6 +41,8 @@ export interface Datasets {
   oilTerminals: OilTerminal[];
   /** Refineries (M11): empty while `FEATURES.refineries` is off. */
   refineries: Refinery[];
+  /** Oil and gas fields (M13), from GEM: empty while `FEATURES.fields` is off. */
+  fields: Field[];
   countries: Country[];
   /** Every country's World Bank region, keyed by ISO code. */
   countryRegions: CountryRegion[];
@@ -69,6 +72,7 @@ export const EMPTY_DATASETS: Datasets = {
   lngTerminals: [],
   oilTerminals: [],
   refineries: [],
+  fields: [],
   countries: [],
   countryRegions: [],
   series: [],
@@ -84,8 +88,13 @@ export const EMPTY_DATASETS: Datasets = {
 };
 
 /** Every published dataset the app loads, as `public/data/<id>.json`. */
-export const DATASET_IDS = ['basins', 'shale-plays', 'shale-production', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'refineries', 'countries', 'country-regions', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'gas-storage-us', 'gas-storage-ca', 'gas-storage-jodi', 'lng-sendout', 'disruptions', 'news-headlines', 'oil-origins', 'fuel-origins', 'oil-routes', 'crude-imports', 'us-lookup', 'us-regions'] as const;
+export const DATASET_IDS = ['basins', 'shale-plays', 'shale-production', 'chokepoints', 'pipelines', 'lng-terminals', 'oil-terminals', 'refineries', 'fields', 'countries', 'country-regions', 'chokepoint-transits', 'port-calls', 'gas-flows', 'gas-storage', 'gas-storage-us', 'gas-storage-ca', 'gas-storage-jodi', 'lng-sendout', 'disruptions', 'news-headlines', 'oil-origins', 'fuel-origins', 'oil-routes', 'crude-imports', 'us-lookup', 'us-regions'] as const;
 export type DatasetId = (typeof DATASET_IDS)[number];
+
+/** Datasets the app fetches: a surface that's switched off doesn't cost its file (fields are several megabytes). */
+export function datasetEnabled(id: DatasetId): boolean {
+  return id !== 'fields' || FEATURES.fields;
+}
 
 /**
  * The loaded files as the app uses them, in the browser and in the share index build: series in one
@@ -114,6 +123,7 @@ export function assembleDatasets(get: (id: DatasetId) => unknown[], meta: Datase
     oilTerminals: get('oil-terminals') as Datasets['oilTerminals'],
     // Off, nothing in the app sees a refinery: no layer, list, search entry or link.
     refineries: FEATURES.refineries ? (get('refineries') as Datasets['refineries']) : [],
+    fields: FEATURES.fields ? (get('fields') as Datasets['fields']) : [],
     countries: get('countries') as Datasets['countries'],
     countryRegions: get('country-regions') as Datasets['countryRegions'],
     series,
@@ -126,7 +136,7 @@ export function assembleDatasets(get: (id: DatasetId) => unknown[], meta: Datase
     // One record holding every table.
     usLookup: (get('us-lookup')[0] as Datasets['usLookup']) ?? null,
     usRegions: get('us-regions') as Datasets['usRegions'],
-    meta: meta.filter((m) => !(m.id === 'refineries' && !FEATURES.refineries) && !(m.id.startsWith('shale-') && !FEATURES.shale)),
+    meta: meta.filter((m) => !(m.id === 'refineries' && !FEATURES.refineries) && !(m.id === 'fields' && !FEATURES.fields) && !(m.id.startsWith('shale-') && !FEATURES.shale)),
   };
 }
 
@@ -186,6 +196,7 @@ export type Resolved =
   | { kind: 'lng'; item: LngTerminal }
   | { kind: 'terminal'; item: OilTerminal }
   | { kind: 'refinery'; item: Refinery }
+  | { kind: 'field'; item: Field }
   | { kind: 'region'; item: OilOriginRegion };
 
 /** Finds the selected item in the loaded data, or null if it isn't there. */
@@ -223,6 +234,10 @@ export function resolveSelection(selection: Selection | null, data: Datasets): R
     case 'refinery': {
       const item = data.refineries.find((r) => r.id === selection.id);
       return item ? { kind: 'refinery', item } : null;
+    }
+    case 'field': {
+      const item = data.fields.find((f) => f.id === selection.id);
+      return item ? { kind: 'field', item } : null;
     }
     case 'region': {
       const item = data.oilOrigins.find((r) => r.id === selection.id);

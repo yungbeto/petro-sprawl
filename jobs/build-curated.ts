@@ -7,17 +7,22 @@
 // - lng-evidence.json adds cited claims to GEM terminals (data/derived/gem-lng-terminals.json) in
 //   public/data/lng-terminals.json.
 // - oil-terminals.json goes out with its links checked against the published pipelines and disruptions.
+// - field-evidence.json adds cited claims to GEM's fields and projects (data/derived/gem-fields.json) in
+//   public/data/fields.json.
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { ALSI, ENTSOG, alsiSeriesId, entsogSeriesId } from '../src/lib/config';
-import type { DatasetMeta, Disruption, LngTerminal, OilTerminal, Pipeline, Refinery } from '../src/types';
+import type { DatasetMeta, Disruption, Field, LngTerminal, OilTerminal, Pipeline, Refinery } from '../src/types';
+import { mergeFieldEvidence } from './lib/fields';
 import { linkSendOut, mergeLngEvidence, type CuratedLngEvidence } from './lib/curated-lng';
 import { mergePipelines, type CuratedPipeline } from './lib/curated-pipelines';
 import { prepareTerminals } from './lib/curated-terminals';
 import { mergeRefineryEvidence, withCuratedRefineries, type CuratedRefineryEvidence } from './lib/refineries';
 import { publishDataset, report, sha256File, validateRecords } from './lib/output';
 import {
+  curatedFieldEvidenceSchema,
   curatedLngEvidenceSchema,
+  fieldSchema,
   curatedPipelineSchema,
   curatedRefineryEvidenceSchema,
   curatedRefinerySchema,
@@ -46,6 +51,9 @@ const allRefineries = async () => withCuratedRefineries(await curatedRefineries(
 const IMPORTED_REFINERIES = ['us', 'eu'] as const;
 const importedRefineries = () => Promise.all(IMPORTED_REFINERIES.map((s) => readJson<Refinery[]>(`data/derived/refineries-${s}.json`))).then((l) => l.flat());
 
+const CURATED_FIELDS = 'data/curated/field-evidence.json';
+const GEM_FIELDS = 'data/derived/gem-fields.json';
+
 const readJson = async <T>(path: string) => JSON.parse(await readFile(path, 'utf8')) as T;
 
 const disruptions = await publishDataset({
@@ -57,6 +65,9 @@ const disruptions = await publishDataset({
     const refineryIds = new Set((await allRefineries()).map((r) => r.id));
     const missing = records.filter((d) => d.assetKind === 'refinery' && !refineryIds.has(d.assetId));
     if (missing.length) throw new Error(`disruptions name refineries that don't exist: ${missing.map((d) => `${d.id} (${d.assetId})`).join('; ')}`);
+    const fieldIds = new Set((await readJson<Field[]>(GEM_FIELDS)).map((f) => f.id));
+    const noField = records.filter((d) => d.assetKind === 'field' && !fieldIds.has(d.assetId));
+    if (noField.length) throw new Error(`disruptions name fields that don't exist: ${noField.map((d) => `${d.id} (${d.assetId})`).join('; ')}`);
     return {
       records,
       meta: {
@@ -148,6 +159,26 @@ const refineries = await publishDataset({
   },
 });
 report(refineries, 'refineries');
+
+const fields = await publishDataset({
+  id: 'fields',
+  schema: fieldSchema,
+  produce: async () => {
+    // Empty until the first claim; validateRecords refuses an empty list.
+    const raw = await readJson<unknown[]>(CURATED_FIELDS);
+    const curated = (raw.length ? validateRecords('field-evidence', raw, curatedFieldEvidenceSchema) : []) as { id: string; evidence: Field['evidence'] }[];
+    const gemMeta = await readJson<DatasetMeta>('data/derived/meta/gem-fields.json');
+    return {
+      records: mergeFieldEvidence(curated, await readJson<Field[]>(GEM_FIELDS)),
+      meta: {
+        sourceUrl: gemMeta.sourceUrl,
+        sourceVersion: `${gemMeta.sourceVersion}; curated ${CURATED_FIELDS} sha256:${await sha256File(CURATED_FIELDS)}`,
+        license: 'CC BY 4.0, Global Energy Monitor; curated evidence ours, linked sources keep their own terms',
+      },
+    };
+  },
+});
+report(fields, 'fields');
 
 const terminals = await publishDataset({
   id: 'oil-terminals',

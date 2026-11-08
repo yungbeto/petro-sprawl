@@ -126,6 +126,20 @@ export const LNG_RADIUS = { scale: 1.4, minPx: 4, maxPx: 10, centreShare: 0.45, 
 /** Refinery dots (M11): area from crude distillation capacity in thousand barrels a day; unknown capacity draws the smallest. */
 export const REFINERY_RADIUS = { scale: 0.34, minPx: 3, maxPx: 9, haloPx: 3, selectionGapPx: 3 } as const;
 
+/**
+ * Oil and gas fields (M13): a triangle, its size from GEM's largest figure against the 99th percentile of the
+ * same unit (oil in barrels, gas in cubic metres), never converted between the two.
+ */
+export const FIELD_MARKER = {
+  minPx: 2,
+  maxPx: 6.5,
+  haloPx: 2,
+  selectionGapPx: 3,
+  scalePercentile: 0.99,
+  /** Operating fields are drawn faded, as operating pipelines are, so stops and the chokepoints read first. */
+  operatingAlpha: 0.45,
+} as const;
+
 /** Oil terminals are diamonds of one size: no comparable capacity figures to scale them by. */
 export const TERMINAL_MARKER = { sizePx: 15, haloPx: 19, selectionRadiusPx: 13 } as const;
 
@@ -530,6 +544,7 @@ export const DATASET_FRESHNESS: Record<
   'us-regions': { label: 'US fuel regions', scheduled: false, publisher: 'U.S. Census Bureau and EIA' },
   refineries: { label: 'Refineries', scheduled: false, publisher: 'EIA, the European Environment Agency and Wikidata' },
   'shale-plays': { label: 'Shale plays', scheduled: false, publisher: 'EIA' },
+  fields: { label: 'Oil and gas fields', scheduled: false, publisher: 'Global Energy Monitor' },
   'shale-production': { label: 'Shale production', scheduled: true, staleAfterHours: 72, publisher: 'EIA', cadence: 'Monthly' },
 };
 
@@ -617,6 +632,8 @@ export const FEATURES = {
   refineries: true,
   /** Shale plays (SPEC M12): EIA's outlines and monthly production, on the basins surface. */
   shale: true,
+  /** Oil and gas fields (SPEC M13): GEM's extraction tracker, on the basins surface (its Fields switch). */
+  fields: true,
 } as const;
 
 /**
@@ -672,6 +689,24 @@ export type ShaleRegionId = (typeof SHALE.regions)[number]['id'];
  * Refineries (SPEC M11). The US import's source page, and how far a GEM pipeline's end may be from a refinery
  * to list it under the refinery's pipelines.
  */
+/**
+ * Oil and gas fields (SPEC M13), from GEM's Global Oil and Gas Extraction Tracker. GEM includes units producing
+ * at least 1 million barrels of oil equivalent a year or holding 25 million in reserves (its About sheet), and
+ * publishes no factor between gas and oil equivalent, so dots are sized within oil and within gas, never
+ * against each other.
+ */
+export const FIELDS = {
+  sourcePage: 'https://globalenergymonitor.org/projects/global-oil-and-gas-extraction-tracker/',
+  sourceTitle: 'Global Oil and Gas Extraction Tracker, March 2026',
+  /** The release, as the evidence's date: GEM's status year is a year, not a day. */
+  release: '2026-03',
+  threshold: 'at least 1 million barrels of oil equivalent a year, or 25 million in reserves',
+  /** GEM statuses kept off the map: not producing and not being built. */
+  excludedStatuses: ['discovered', 'exploration', 'cancelled', 'ugs', 'underground gas storage', 'ugs (converted)'],
+  /** A GEM pipeline start or end this close to a field is listed as "nearby": a distance, not a cited link. */
+  linkKm: 10,
+} as const;
+
 export const REFINERIES = {
   eiaPage: 'https://www.eia.gov/petroleum/refinerycapacity/',
   eiaTitle: 'Refinery Capacity Report 2026, capacity of individual refineries',

@@ -22,3 +22,4 @@ demo/
 
 # Saved articles and reports used for research (copyrighted; kept locally)
 docs/research/*.pdf
+data/derived/goget-rows.json

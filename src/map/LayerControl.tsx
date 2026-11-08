@@ -7,12 +7,13 @@ const LAYERS: { id: LayerId; label: string }[] = [
   { id: 'storage', label: 'Gas storage' },
   { id: 'basins', label: 'Basins' },
   { id: 'shale', label: 'Shale plays' },
+  { id: 'fields', label: 'Oil and gas fields' },
   { id: 'pipelines', label: 'Pipelines' },
   { id: 'lng', label: 'LNG terminals' },
   { id: 'terminals', label: 'Oil terminals' },
   { id: 'refineries', label: 'Refineries' },
   { id: 'chokepoints', label: 'Chokepoints' },
-].filter((layer) => (layer.id !== 'storage' || FEATURES.gasStorage) && (layer.id !== 'refineries' || FEATURES.refineries) && (layer.id !== 'shale' || FEATURES.shale)) as { id: LayerId; label: string }[];
+].filter((layer) => (layer.id !== 'storage' || FEATURES.gasStorage) && (layer.id !== 'refineries' || FEATURES.refineries) && (layer.id !== 'shale' || FEATURES.shale) && (layer.id !== 'fields' || FEATURES.fields)) as { id: LayerId; label: string }[];
 
 interface LayerControlProps {
   open: boolean;

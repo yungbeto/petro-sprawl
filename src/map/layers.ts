@@ -1,10 +1,10 @@
 import { GeoJsonLayer, IconLayer, PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
 import type { Feature, FeatureCollection, Geometry, MultiPolygon, Polygon, Position } from 'geojson';
 import type { Layer } from '@deck.gl/core';
-import type { AssetStatus, Basin, Chokepoint, Country, LngTerminal, OilTerminal, Pipeline, Refinery, ShalePlay, UsRegion } from '../types';
+import type { AssetStatus, Basin, Chokepoint, Country, Field, LngTerminal, OilTerminal, Pipeline, Refinery, ShalePlay, UsRegion } from '../types';
 import type { Selection } from '../app/urlState';
 import type { Datasets } from '../lib/data';
-import { CHOKEPOINT_RADIUS, FILTERS, LNG_RADIUS, ORIGIN_ARC, PIPELINE_WIDTH, REFINERY_RADIUS, REGION_OUTLINE, SHALE, STORAGE_NOT_COVERED, TERMINAL_MARKER } from '../lib/config';
+import { CHOKEPOINT_RADIUS, FIELD_MARKER, FILTERS, LNG_RADIUS, ORIGIN_ARC, PIPELINE_WIDTH, REFINERY_RADIUS, REGION_OUTLINE, SHALE, STORAGE_NOT_COVERED, TERMINAL_MARKER } from '../lib/config';
 import { storageColor, type CountryStorage } from '../lib/gasStorage';
 import type { OriginArc } from '../lib/oilOrigins';
 import type { FilterMatches } from '../lib/filters';
@@ -23,6 +23,7 @@ import {
 } from '../lib/encoding';
 import type { ChokepointFlow, FlowBand } from '../lib/flow';
 import { withAlpha } from '../lib/color';
+import { fieldRadiusPx, fieldScale, fieldStatus } from '../lib/fields';
 import type { MapColors } from './colors';
 import { FlowArcLayer } from './FlowArcLayer';
 
@@ -38,6 +39,7 @@ export type PickedObject =
   | { kind: 'lng'; item: LngTerminal }
   | { kind: 'terminal'; item: OilTerminal }
   | { kind: 'refinery'; item: Refinery }
+  | { kind: 'field'; item: Field }
   | { kind: 'region'; item: UsRegion };
 
 interface PipelinePath {
@@ -75,6 +77,17 @@ const SQUARE = {
   id: 'square',
   url: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect x="4" y="4" width="56" height="56" rx="10" fill="#000"/></svg>',
+  )}`,
+  width: 64,
+  height: 64,
+  mask: true,
+};
+
+/** A triangle pointing up, for oil and gas fields: the mask trick again, a shape no other asset uses. */
+const TRIANGLE = {
+  id: 'triangle',
+  url: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><path d="M32 6 L60 56 L4 56 Z" fill="#000"/></svg>',
   )}`,
   width: 64,
   height: 64,
@@ -186,6 +199,8 @@ interface BuildLayersInput {
   hoveredPipelineId: string | null;
   /** Draw only these pipelines (an open basin's, in a surface); null draws them all. */
   onlyPipelines: Set<string> | null;
+  /** Fields kept bright (an open group's, or none under a quick filter); null keeps them all. */
+  fieldHighlight: Set<string> | null;
   /** A region view's origin arcs ("Where is my oil from?"); empty otherwise. */
   originArcs: OriginArc[];
   /** Pulses run along the arcs toward the open place; off under reduced motion. */
@@ -214,6 +229,7 @@ export function buildLayers({
   highlight,
   hoveredPipelineId,
   onlyPipelines,
+  fieldHighlight,
   originArcs,
   animateArcs,
   regionsOnly,
@@ -224,7 +240,7 @@ export function buildLayers({
   basinLabelMinZoom,
   fontFamily,
 }: BuildLayersInput): Layer[] {
-  if (regionsOnly) visibility = { storage: false, basins: false, shale: false, pipelines: false, lng: false, terminals: false, refineries: false, chokepoints: false };
+  if (regionsOnly) visibility = { storage: false, basins: false, shale: false, fields: false, pipelines: false, lng: false, terminals: false, refineries: false, chokepoints: false };
   const isSelected = (kind: Selection['kind'], id: string) => selection?.kind === kind && selection.id === id;
   // A quick filter fades whatever it doesn't match; the selection always stays at full strength.
   const pipelineFade = (id: string) =>
@@ -236,6 +252,8 @@ export function buildLayers({
     !highlight || highlight.terminals.has(id) || isSelected('terminal', id) ? 1 : FILTERS.fadeAlpha;
   const refineryFade = (id: string) =>
     !highlight || highlight.refineries.has(id) || isSelected('refinery', id) ? 1 : FILTERS.fadeAlpha;
+  const fieldFade = (id: string) => (!fieldHighlight || fieldHighlight.has(id) || isSelected('field', id) ? 1 : FILTERS.fadeAlpha);
+  const scale = fieldScale(data.fields);
   const importTerminals = data.lngTerminals.filter((t) => t.facility === 'import');
 
   const basinFeatures = basinCollection(data.basins);
@@ -409,6 +427,47 @@ export function buildLayers({
       capRounded: true,
       jointRounded: true,
       updateTriggers: { getWidth: [pipelineShares], getColor: [colors] },
+    }),
+    // Oil and gas fields (M13): a triangle colored by status, sized within oil or within gas, on a thin halo.
+    // Above the lines, which often start at a field, so a field can still be picked; below the terminals.
+    new ScatterplotLayer<Field>({
+      id: 'field-selection',
+      data: data.fields.filter((f) => isSelected('field', f.id)),
+      visible: visibility.fields,
+      getPosition: (f) => f.point,
+      getRadius: (f) => fieldRadiusPx(f, scale) * 1.2 + FIELD_MARKER.selectionGapPx,
+      radiusUnits: 'pixels',
+      stroked: true,
+      filled: false,
+      getLineColor: colors.selection,
+      getLineWidth: 2,
+      lineWidthUnits: 'pixels',
+      updateTriggers: { getLineColor: [colors] },
+    }),
+    new IconLayer<Field>({
+      id: 'field-halo',
+      data: data.fields,
+      visible: visibility.fields,
+      getPosition: (f) => f.point,
+      getIcon: () => TRIANGLE,
+      getSize: (f) => fieldRadiusPx(f, scale) * 2 + FIELD_MARKER.haloPx,
+      sizeUnits: 'pixels',
+      getColor: (f) => withAlpha(colors.halo, fieldFade(f.id)),
+      updateTriggers: { getColor: [colors, fieldHighlight, selection] },
+    }),
+    new IconLayer<Field>({
+      id: 'fields',
+      data: data.fields,
+      visible: visibility.fields,
+      pickable: true,
+      getPosition: (f) => f.point,
+      getIcon: () => TRIANGLE,
+      getSize: (f) => fieldRadiusPx(f, scale) * 2,
+      sizeUnits: 'pixels',
+      getColor: (f) => withAlpha(statusColor(fieldStatus(f), colors), (fieldStatus(f) === 'operating' ? FIELD_MARKER.operatingAlpha : 1) * statusAlpha(f) * fieldFade(f.id)),
+      autoHighlight: true,
+      highlightColor: withAlpha(colors.selection, 0.5),
+      updateTriggers: { getColor: [colors, fieldHighlight, selection] },
     }),
     // The fuel regions: a light fill to tap and an outline; the open region is drawn stronger.
     new GeoJsonLayer<UsRegion>({
@@ -668,6 +727,8 @@ export function toPicked(layerId: string | undefined, object: unknown): PickedOb
       return { kind: 'terminal', item: object as OilTerminal };
     case 'refineries':
       return { kind: 'refinery', item: object as Refinery };
+    case 'fields':
+      return { kind: 'field', item: object as Field };
     case 'regions':
       return { kind: 'region', item: (object as Feature<Polygon | MultiPolygon, UsRegion>).properties };
     default:

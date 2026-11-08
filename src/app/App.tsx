@@ -7,6 +7,7 @@ import { VIEW_ICONS } from './viewIcons';
 import { pipelineGroups, type PipelineGrouping } from '../lib/pipelineGroups';
 import { lngGroups, oilGroups, type TerminalGrouping, type TerminalKind } from '../lib/terminalGroups';
 import { refineryGroups, type RefineryGrouping } from '../lib/refineries';
+import { fieldGroups, fieldScale, type FieldGrouping } from '../lib/fields';
 import type { TerminalListing } from '../panel/TerminalsView';
 import type { BasinsMode } from '../panel/BasinsView';
 import type { Pipeline } from '../types';
@@ -61,6 +62,8 @@ export function App() {
     storage: false,
     basins: true,
     shale: true,
+    // Some 6,500 fields would bury Home's disruptions; Basins shows them, and the layer list turns them on.
+    fields: false,
     pipelines: true,
     lng: true,
     terminals: true,
@@ -172,6 +175,16 @@ export function App() {
     [refineryGroupList, openRefineryGroup],
   );
 
+  // The fields' grouping and open group (M13), on the basins surface's Fields switch.
+  const [fieldGrouping, setFieldGrouping] = useState<FieldGrouping>('country');
+  const [openFieldGroup, setOpenFieldGroup] = useState<string | null>(null);
+  const fieldsListed = view === 'basins' && basinsMode === 'fields';
+  const fieldGroupList = useMemo(
+    () => (fieldsListed ? fieldGroups(data.fields, fieldGrouping, fieldScale(data.fields)) : []),
+    [fieldsListed, data, fieldGrouping],
+  );
+  const openFields = useMemo(() => fieldGroupList.find((g) => g.id === openFieldGroup)?.fields ?? null, [fieldGroupList, openFieldGroup]);
+
   const groupMatches = useMemo((): FilterMatches | null => {
     const none = () => new Set<string>();
     if (openGroup) return { pipelines: new Set(openGroup.pipelines.map((p) => p.id)), chokepoints: none(), lng: none(), terminals: none(), refineries: none() };
@@ -192,7 +205,16 @@ export function App() {
   const regionsOnly = selection?.kind === 'region';
 
   // Each surface draws only its own layers, and the open item's (decided 2026-11-01).
-  const mapLayers = useMemo(() => visibleLayers(view, selection, visibility), [view, selection, visibility]);
+  // On the basins surface fields show only on their own switch, and shale plays off it, unless one is open.
+  const mapLayers = useMemo(() => {
+    const layers = visibleLayers(view, selection, visibility);
+    if (view !== 'basins') return layers;
+    return {
+      ...layers,
+      fields: layers.fields && (basinsMode === 'fields' || selection?.kind === 'field'),
+      shale: layers.shale && (basinsMode !== 'fields' || selection?.kind === 'shale'),
+    };
+  }, [view, selection, visibility, basinsMode]);
 
   // A filter narrows the map; otherwise an open group, otherwise the open view, sets what stays bright.
   const viewMatches = useMemo(() => (view ? viewHighlight(view, data) : null), [view, data]);
@@ -227,6 +249,11 @@ export function App() {
     [view, basinPipelines, selection, matches, groupMatches, viewMatches, data],
   );
   const highlight = basinFocus ? basinFocus.highlight : (matches ?? groupMatches ?? viewMatches);
+  // Fields stay bright unless a group is open (only its fields) or a quick filter is on (no chip matches a field).
+  const fieldHighlight = useMemo(
+    () => (fieldsListed && openFields ? new Set(openFields.map((f) => f.id)) : matches ? new Set<string>() : null),
+    [fieldsListed, openFields, matches],
+  );
 
   // The panel's top bar: Back names the item or list this one was opened from, within the same
   // surface; Close returns to the surface's own page (the summary, or the view's list).
@@ -278,6 +305,21 @@ export function App() {
       if (opening && group) setFocus((prev) => ({ points: group.refineries.map((r) => r.point), nonce: (prev?.nonce ?? 0) + 1 }));
     },
     [openRefineryGroup, refineryGroupList],
+  );
+
+  const changeFieldGrouping = useCallback((next: FieldGrouping) => {
+    setFieldGrouping(next);
+    setOpenFieldGroup(null);
+  }, []);
+  // Opening a group frames its fields.
+  const toggleFieldGroup = useCallback(
+    (id: string) => {
+      const opening = openFieldGroup !== id;
+      setOpenFieldGroup(opening ? id : null);
+      const group = fieldGroupList.find((g) => g.id === id);
+      if (opening && group) setFocus((prev) => ({ points: group.fields.map((f) => f.point), nonce: (prev?.nonce ?? 0) + 1 }));
+    },
+    [openFieldGroup, fieldGroupList],
   );
 
   // Switching to shale plays frames them: they're all in the Lower 48.
@@ -511,7 +553,17 @@ export function App() {
               openGroup: openTerminalGroup,
               onToggleGroup: toggleTerminalGroup,
             }}
-            basins={{ mode: basinsMode, onMode: changeBasinsMode }}
+            basins={{
+              mode: basinsMode,
+              onMode: changeBasinsMode,
+              fields: {
+                groups: fieldGroupList,
+                grouping: fieldGrouping,
+                onGrouping: changeFieldGrouping,
+                openGroup: openFieldGroup,
+                onToggleGroup: toggleFieldGroup,
+              },
+            }}
             refineries={{
               groups: refineryGroupList,
               grouping: refineryGrouping,
@@ -551,6 +603,7 @@ export function App() {
             selection={selection}
             fuel={fuel}
             highlight={highlight}
+            fieldHighlight={fieldHighlight}
             onlyPipelines={basinFocus?.only ?? null}
             regionsOnly={regionsOnly}
             basinsFocus={view === 'basins'}
@@ -591,6 +644,7 @@ export function App() {
                 storage: data.series.filter((s) => s.metric === 'storage_fill_pct').length,
                 basins: data.basins.length,
                 shale: data.shalePlays.length,
+                fields: data.fields.length,
                 pipelines: data.pipelines.length,
                 lng: data.lngTerminals.length,
                 terminals: data.oilTerminals.length,

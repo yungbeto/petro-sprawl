@@ -17,6 +17,7 @@
     "import:refineries-eu": "python3 -I jobs/import-refineries-eu.py && tsx jobs/import-refineries-eu.ts",
     "import:basins": "tsx jobs/import-basins.ts",
     "import:shale-plays": "tsx jobs/import-shale-plays.ts",
+    "import:fields": "python3 -I jobs/import-fields.py && tsx jobs/import-fields.ts",
     "import:countries": "tsx jobs/import-countries.ts",
     "import:us-lookup": "tsx jobs/import-us-lookup.ts",
     "import:us-regions": "tsx jobs/import-us-regions.ts",

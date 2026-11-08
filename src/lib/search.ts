@@ -85,6 +85,17 @@ export function buildSearchIndex(data: Datasets): SearchEntry[] {
     ...data.shalePlays.map((p) =>
       entry({ kind: 'shale', id: p.id }, p.name, `Shale play · ${p.basin} basin`, [...(p.formation ? [formationById(p.formation)!.label] : []), 'shale', 'fracking'], p.formation ? 2 : 3),
     ),
+    // Empty while FEATURES.fields is off. A GEM project is found by its fields' names too: Kashagan opens
+    // North Caspian. Projects and fields with a figure first.
+    ...data.fields.map((f) =>
+      entry(
+        { kind: 'field', id: f.id },
+        f.name,
+        `${f.level === 'project' ? 'Project' : 'Field'} · ${formatCountry(f.country)}`,
+        [...f.aliases, ...(f.parts ?? []).map((p) => p.name), ...(f.operator ? [f.operator] : [])],
+        f.level === 'project' ? 2 : f.output.length ? 3 : 4,
+      ),
+    ),
     ...usPlaceEntries(data, entry),
     ...data.lngTerminals.map((t) =>
       entry(
@@ -207,6 +218,7 @@ const SCOPE_OF: Record<Selection['kind'], Exclude<SearchScope, 'all'>> = {
   region: 'us-places',
   basin: 'basins',
   shale: 'basins',
+  field: 'basins',
 };
 
 /** Result groups: one per kind, finer than the scopes, so oil and LNG terminals head their own lists. */
@@ -220,6 +232,7 @@ export const SEARCH_GROUP_LABELS: Record<Selection['kind'], string> = {
   region: 'US places',
   basin: 'Basins',
   shale: 'Shale plays',
+  field: 'Oil and gas fields',
 };
 
 export interface SearchGroup {

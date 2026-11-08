@@ -1030,6 +1030,37 @@ test('search finds a shale play by "fracking"', async ({ page }) => {
   await expect(page).toHaveURL(/sel=shale\/eia-bak001/);
 });
 
+test('the basins surface switches to fields, and a project opens with its fields and their years', async ({ page }) => {
+  test.skip(!FEATURES.fields, 'FEATURES.fields is off');
+  await page.goto('/?view=basins');
+  const panel = page.getByLabel('Panel', { exact: true });
+  await panel.getByRole('radio', { name: 'Fields' }).click();
+  await expect(panel.getByText(/oil and gas fields from Global Energy Monitor/)).toBeVisible();
+  const groups = panel.getByRole('list', { name: 'Fields by country' });
+  await expect(groups.getByRole('button').first()).toContainText('United States');
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/fields-surface.png` });
+  // Ghawar is one GEM project holding two field rows, each with its own year.
+  await page.goto('/?view=basins&sel=field/gem-l100000314112');
+  await expect(panel.getByRole('heading', { name: 'Ghawar Oil and Gas Project' })).toBeVisible();
+  await expect(panel.getByText('year not given').first()).toBeVisible();
+  await expect(panel.getByRole('heading', { name: /Fields in this project/ })).toBeVisible();
+  await expect(panel.getByText(/Gas, [\d,]+ million m³ a year, 2023/)).toBeVisible();
+  await expect(panel.getByText(/no dated source confirms it yet/)).toBeVisible();
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/field-detail.png` });
+  await panel.getByRole('button', { name: 'Greater Ghawar Uplift' }).click();
+  await expect(page).toHaveURL(/sel=basin\/usgs-/);
+  await expect(panel.getByRole('heading', { name: /Largest fields inside it/ })).toBeVisible();
+});
+
+test("search finds a GEM project by one of its fields' names", async ({ page }) => {
+  test.skip(!FEATURES.fields, 'FEATURES.fields is off');
+  await page.goto('/');
+  const search = await openSearch(page);
+  await search.fill('Kashagan');
+  await page.getByRole('option', { name: /North Caspian.*Project/ }).click();
+  await expect(page).toHaveURL(/sel=field\/gem-l100000312599/);
+});
+
 test('the oil origins surface finds a US region through search and opens it on the chosen fuel', async ({ page }) => {
   test.skip(!FEATURES.fuelOrigins, 'FEATURES.fuelOrigins is off');
   await page.goto('/?view=origins');

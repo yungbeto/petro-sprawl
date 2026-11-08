@@ -1,5 +1,6 @@
 // A basin's page: oil and gas as assessed in 2000, and the assets inside it.
 
+import { fieldScale, fieldsInBasin } from '../../lib/fields';
 import { useId } from 'react';
 import type { Basin } from '../../types';
 import { chokepointsInBasin, lngTerminalsInBasin, pipelinesTouchingBasin, type Datasets } from '../../lib/data';
@@ -23,6 +24,8 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
   const terminals = lngTerminalsInBasin(item, data.lngTerminals);
   // Empty while FEATURES.shale is off.
   const plays = playsInProvince(item.id, data.shalePlays);
+  // Empty while FEATURES.fields is off: GEM's fields whose point falls inside, largest first.
+  const fieldRows = fieldsInBasin(item, data.fields, fieldScale(data.fields)).map((f) => ({ selection: { kind: 'field' as const, id: f.id }, name: f.name, curated: false }));
   const none = new Set<string>();
   const pipelineRows = filterRows({ pipelines: new Set(pipelines.map((p) => p.id)), chokepoints: none, lng: none, terminals: none, refineries: none }, data);
   const chokepointRowsInside = filterRows(
@@ -55,6 +58,7 @@ export function BasinDetail({ item, data, onSelect }: { item: Basin; data: Datas
       </dl>
       <BasinVolumesSection basin={item} />
       {plays.length > 0 && <ShalePlaysInBasin plays={plays} data={data} onSelect={onSelect} />}
+      {fieldRows.length > 0 && <RelatedList title="Largest fields inside it" empty="" rows={fieldRows} data={data} onSelect={onSelect} />}
       <RelatedList
         title="Pipelines crossing it"
         empty={data.pipelines.length ? 'None in the loaded data.' : 'Pipelines not loaded yet.'}

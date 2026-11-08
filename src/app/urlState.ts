@@ -5,7 +5,7 @@ import { CAMERA_PRECISION, DEFAULT_REGION_FUEL, REGION_FUELS, type RegionFuel } 
 import { parseFilter, type FilterId } from '../lib/filters';
 import { parseView, selectionEnabled, type ViewId } from '../lib/views';
 
-export const SELECTION_KINDS = ['pipeline', 'chokepoint', 'basin', 'shale', 'country', 'lng', 'terminal', 'refinery', 'region'] as const;
+export const SELECTION_KINDS = ['pipeline', 'chokepoint', 'basin', 'shale', 'country', 'lng', 'terminal', 'refinery', 'field', 'region'] as const;
 export type SelectionKind = (typeof SELECTION_KINDS)[number];
 
 export interface Selection {

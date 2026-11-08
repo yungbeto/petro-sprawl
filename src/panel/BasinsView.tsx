@@ -13,16 +13,19 @@ import { Note } from '../ui/Note';
 import { FEATURES } from '../lib/config';
 import { Segmented } from './GroupList';
 import { ShalePlaysView } from './ShalePlaysView';
+import { FieldsView, type FieldsListing } from './FieldsView';
 
-export type BasinsMode = 'provinces' | 'shale';
-const BASINS_MODES = ['provinces', 'shale'] as const;
-const BASINS_MODE_LABELS: Record<BasinsMode, string> = { provinces: 'Provinces', shale: 'Shale plays' };
+export type BasinsMode = 'provinces' | 'shale' | 'fields';
+const BASINS_MODES = (['provinces', 'shale', 'fields'] as const).filter((m) => (m !== 'shale' || FEATURES.shale) && (m !== 'fields' || FEATURES.fields));
+const BASINS_MODE_LABELS: Record<BasinsMode, string> = { provinces: 'Provinces', shale: 'Shale plays', fields: 'Fields' };
 
 export interface BasinsViewProps {
   data: Datasets;
   /** Provinces, or EIA's shale plays (SPEC M12, while FEATURES.shale is on). */
   mode: BasinsMode;
   onMode: (mode: BasinsMode) => void;
+  /** Fields' groups (SPEC M13, while FEATURES.fields is on). */
+  fields: FieldsListing;
   onSelect: (selection: Selection) => void;
 }
 
@@ -30,22 +33,28 @@ export interface BasinsViewProps {
  * The basins view: every mapped oil and gas province, the most oil remaining (as of 2000) first; or, switched,
  * EIA's US shale plays with their monthly production.
  */
-export function BasinsView({ data, mode: chosen, onMode, onSelect }: BasinsViewProps) {
+export function BasinsView({ data, mode: chosen, onMode, fields, onSelect }: BasinsViewProps) {
   const rows = useMemo(() => basinViewRows(data.basins), [data]);
   const total = useMemo(() => basinsSummary(data.basins), [data]);
-  const mode = FEATURES.shale ? chosen : 'provinces';
+  const mode = (BASINS_MODES as readonly BasinsMode[]).includes(chosen) ? chosen : 'provinces';
   const title = (
     <SectionTitle
       title="Basins"
       level="page"
       aside={
-        FEATURES.shale ? (
+        BASINS_MODES.length > 1 ? (
           <Segmented id="basins-mode" label="Show" options={BASINS_MODES} labels={BASINS_MODE_LABELS} value={mode} onChange={onMode} hideLabel />
         ) : undefined
       }
     >
       <Info label="About this list">
-        {mode === 'shale' ? (
+        {mode === 'fields' ? (
+          <>
+            Oil and gas fields from Global Energy Monitor's extraction tracker, March 2026: where each is, its status as GEM
+            lists it, its operator and owners, and its latest yearly production by fuel. A GEM project that groups several
+            fields shows as one, with its fields listed on its page.
+          </>
+        ) : mode === 'shale' ? (
           <>
             EIA's outlines of US tight oil and shale gas plays, and its monthly estimates of what each formation produces,
             from the Short-Term Energy Outlook's history. Formations with the most tight oil first, then gas-only ones.
@@ -60,6 +69,9 @@ export function BasinsView({ data, mode: chosen, onMode, onSelect }: BasinsViewP
       </Info>
     </SectionTitle>
   );
+  if (mode === 'fields') {
+    return <FieldsView data={data} title={title} {...fields} onSelect={onSelect} />;
+  }
   if (mode === 'shale') {
     return <ShalePlaysView data={data} title={title} onSelect={onSelect} />;
   }

@@ -132,6 +132,7 @@ halo that lifts it off the lines below, and a selection ring when open (`src/map
 | LNG terminal | Dot, hollow centre for import | Capacity in operation (`LNG_RADIUS`) |
 | Oil terminal | Diamond | One size (`TERMINAL_MARKER`) |
 | Refinery (M11) | Rounded square | Crude distillation capacity, the smallest when unknown (`REFINERY_RADIUS`) |
+| Oil or gas field (M13) | Triangle, operating faded (`FIELD_MARKER.operatingAlpha`) as operating pipelines are | GEM's largest figure against its own unit's 99th percentile, oil and gas never converted into each other (`FIELD_MARKER`); off on Home by default, on the basins surface's Fields switch |
 
 Areas are outlines, not markers. USGS provinces are a hairline in `--map-basin-*`, filled faintly only on the
 basins surface. Shale plays (M12) draw over them in `--map-shale-*`, a warm umber, always filled because a play

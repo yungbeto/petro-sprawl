@@ -361,6 +361,7 @@ const SELECTION_OF: Record<Disruption['assetKind'], Selection['kind']> = {
   lng: 'lng',
   terminal: 'terminal',
   refinery: 'refinery',
+  field: 'field',
 };
 
 /** A disruption's newest source, the one its card leads with; the first listed wins a tie. */
@@ -394,6 +395,7 @@ export function situation(data: Datasets): Situation {
     ...data.lngTerminals.map((t) => [`lng/${t.id}`, t.name] as const),
     ...data.oilTerminals.map((t) => [`terminal/${t.id}`, t.name] as const),
     ...data.refineries.map((r) => [`refinery/${r.id}`, r.name] as const),
+    ...data.fields.map((f) => [`field/${f.id}`, f.name] as const),
   ]);
   const ongoing = data.disruptions
     .filter((d) => !d.endedAt)

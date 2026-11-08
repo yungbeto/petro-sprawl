@@ -27,6 +27,7 @@ import { formatShaleValue, formationById, latestMonth, shaleSeries } from '../li
 import { formatCapacity, formatIndexShare, formatMbd, formatMonth, formatNumber, formatRefineryCapacity, formatShare, formatSignedPct } from '../lib/format';
 import type { FilterMatches } from '../lib/filters';
 import { refineryStatus, terminalStatus } from '../lib/encoding';
+import { fieldLead, fieldScale, fieldStatus, formatFieldOutput } from '../lib/fields';
 import { statusLabel } from '../panel/details';
 import { buildLayers, selectionId, toPicked, type CountryMode, type LayerVisibility, type PickedObject } from './layers';
 import { countryArcs, countryHighlight, countryOrigins, importPeriod, originsOfCountry } from '../lib/crudeImports';
@@ -57,6 +58,8 @@ interface MapViewProps {
   highlight: FilterMatches | null;
   /** Draw only these pipelines; null draws them all. */
   onlyPipelines: Set<string> | null;
+  /** Fields kept bright (an open group's, or none under a quick filter); null keeps them all. */
+  fieldHighlight: Set<string> | null;
   /** The fuel origins surface or a region view: only the region outlines (and a region's arcs) show. */
   regionsOnly: boolean;
   /** The basins surface: the outlines drawn stronger and named sooner. */
@@ -123,6 +126,11 @@ function tooltipFigure(
       const status = statusLabel(refineryStatus(picked.item)).toLowerCase();
       return picked.item.capacity ? `${formatRefineryCapacity(picked.item.capacity)} · ${status}` : `Capacity unknown · ${status}`;
     }
+    case 'field': {
+      const status = statusLabel(fieldStatus(picked.item)).toLowerCase();
+      const lead = fieldLead(picked.item, fieldScale(data.fields))?.output;
+      return lead ? `${formatFieldOutput(lead)}${lead.year ? `, ${lead.year}` : ''} · ${status}` : `No figure from GEM · ${status}`;
+    }
     case 'region': {
       const states = PADDS.find((p) => p.id === picked.item.id)?.states.length;
       return `PADD ${picked.item.id.slice(-1)}${states ? ` · ${states} states` : ''}`;
@@ -149,7 +157,7 @@ const fitPadding = () => (window.matchMedia(`(max-width: ${MOBILE.maxWidthPx}px)
 const NO_ARCS: OriginArc[] = [];
 
 export function MapView(props: MapViewProps) {
-  const { theme, initialCamera, data, visibility, selection, fuel, highlight, onlyPipelines, regionsOnly, basinsFocus, countryMode, focus } = props;
+  const { theme, initialCamera, data, visibility, selection, fuel, highlight, fieldHighlight, onlyPipelines, regionsOnly, basinsFocus, countryMode, focus } = props;
   // The origin arcs' pulses stop under reduced motion, and start again if it's switched off.
   const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   useEffect(() => {
@@ -309,6 +317,7 @@ export function MapView(props: MapViewProps) {
         highlight: originView?.highlight ?? highlight,
         hoveredPipelineId,
         onlyPipelines,
+        fieldHighlight,
         originArcs: originView?.arcs ?? NO_ARCS,
         animateArcs: !reducedMotion,
         countryMode,
@@ -322,7 +331,7 @@ export function MapView(props: MapViewProps) {
         fontFamily: `"${LABEL_FONT}", sans-serif`,
       }),
     });
-  }, [data, flows, pipelineShares, storage, visibility, selection, highlight, onlyPipelines, regionsOnly, basinsFocus, originView, countryMode, importers, hoveredPipelineId, colors, zoom, fontsReady, reducedMotion]);
+  }, [data, flows, pipelineShares, storage, visibility, selection, highlight, fieldHighlight, onlyPipelines, regionsOnly, basinsFocus, originView, countryMode, importers, hoveredPipelineId, colors, zoom, fontsReady, reducedMotion]);
 
   // The camera frames the open item, or a surface, in the map left showing between the search bar and
   // chips above and the sheet below. While the map hasn't been moved by hand since, a new sheet height
@@ -365,7 +374,7 @@ export function MapView(props: MapViewProps) {
     }
     const resolved = resolveSelection(target.selection, data);
     if (!resolved) return;
-    if (resolved.kind === 'chokepoint' || resolved.kind === 'lng' || resolved.kind === 'terminal' || resolved.kind === 'refinery') {
+    if (resolved.kind === 'chokepoint' || resolved.kind === 'lng' || resolved.kind === 'terminal' || resolved.kind === 'refinery' || resolved.kind === 'field') {
       map.flyTo({ center: resolved.item.point, zoom: Math.max(map.getZoom(), POINT_FOCUS_ZOOM), padding });
     } else if (resolved.kind === 'country' && countryView?.arcs.length) {
       // The country and every partner it draws an arc from.

@@ -190,6 +190,54 @@ export interface Refinery {
   pipelineIds?: string[];
 }
 
+/** One production figure as GEM gives it: one fuel, in GEM's converted unit. Never summed across fuels. */
+export interface FieldOutput {
+  /** GEM's fuel words, as given: "oil", "gas", "condensate", "associated gas"... */
+  fuel: string;
+  value: number;
+  /** "million bbl/y" or "million m³/y". */
+  unit: string;
+  /** The year the figure is for. GEM's project-level sheet gives none, so a project's figures have no year. */
+  year?: number;
+  /** GEM's project figure is its own sum of the project's fields ("production summed from fields"). */
+  summedByGem?: true;
+}
+
+/**
+ * An oil or gas field, or a GEM project grouping several (SPEC M13, added 2026-11-07), from GEM's Global Oil
+ * and Gas Extraction Tracker. GEM's status is dataset evidence dated to its release.
+ */
+export interface Field {
+  /** 'gem-l100000312600', GEM's project or unit ID. */
+  id: string;
+  /** GEM's name without its "(Country)" tail. */
+  name: string;
+  aliases: string[];
+  level: 'project' | 'field';
+  /** A project's field rows in GEM's sheet, each with its own figures and their years. */
+  parts?: { id: string; name: string; status?: string; output: FieldOutput[] }[];
+  /** ISO 3166-1 alpha-2; a unit GEM lists in two countries keeps the first. */
+  country: string;
+  subnational?: string;
+  point: [number, number];
+  pointApprox: boolean;
+  fuel: 'oil' | 'gas' | 'oil and gas' | 'gas and condensate';
+  location: 'onshore' | 'offshore' | 'unknown';
+  production?: 'conventional' | 'unconventional';
+  operator?: string;
+  owners?: Company[];
+  discovered?: number;
+  startYear?: number;
+  /** Newest year per fuel, as GEM gives it. */
+  output: FieldOutput[];
+  /** The USGS province (basins.json) the point falls in. */
+  provinceId?: string;
+  /** The unit's or project's GEM wiki page. */
+  gemUrl: string;
+  /** Newest first. */
+  evidence: Evidence[];
+}
+
 export interface Company {
   name: string;
   sharePct?: number;
@@ -349,7 +397,7 @@ export interface SourceRef {
  */
 export interface Disruption {
   id: string;
-  assetKind: 'pipeline' | 'chokepoint' | 'lng' | 'terminal' | 'refinery';
+  assetKind: 'pipeline' | 'chokepoint' | 'lng' | 'terminal' | 'refinery' | 'field';
   assetId: string;
   /** ISO date or month; month when sources don't give a day. */
   startedAt: string;

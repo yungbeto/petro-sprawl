@@ -490,6 +490,9 @@ Done when: every US refinery EIA lists as operable on 1 January 2026 is on the m
 **M12: Shale plays.** Where the US produces oil and gas by fracking joins the map, inside the Basins surface: EIA's outlines of the shale and tight plays, each with the monthly production of its formation and, for EIA's five shale regions, rigs and wells completed, all from EIA. Then fracking activity per play from FracFocus disclosures, counted, never redrawn. Free sources only. Detail below.
 Done when: EIA's 50 play outlines are on the map behind `FEATURES.shale`; Basins switches between provinces and shale plays; every play whose formation EIA reports shows that formation's latest month and 24 months before it, labelled as the formation's when outlines share one; no forecast month is ever shown; a play's page links the USGS province it sits in and the pipelines that cross it; and every figure carries its series, month and release.
 
+**M13: Oil and gas fields.** Where crude and gas come out of the ground joins the map, inside the Basins surface: Global Energy Monitor's extraction tracker, the same source and licence as the pipelines, with each field's or project's location, status, operator and owners, and its latest yearly production with the year and GEM's page. Fields complete the chain the map already draws, field to pipeline to terminal to strait to refinery, and give the news scan a place for stories that name a field. Detail below.
+Done when: the fields and projects GEM locates are on the map behind `FEATURES.fields`; Basins switches between provinces, shale plays and fields; every production figure shows its fuel, year and GEM page, and no figure is summed across fuels or reserve classes; a field's page links the USGS province it sits in and the pipelines that start near it, worded as a distance; and fields GEM can't locate are named in the import report, never placed by hand.
+
 ### M8 and M9 detail: a self-updating "What's happening"
 
 **Why.** Disruptions are hand-curated, so the hero only changed when someone edited `data/curated/disruptions.json`, and it was ordered by start date, so the newest report on Hormuz (started March) could never lead. Trending lists on Twitter, Bluesky and Reddit work by spotting what is moving against its own normal, grouping mentions into one story, ranking, and only then naming it. This site has its own version of each step: a measured series against its own recent weeks is the spike, an asset is the story mentions group into, and a cited source is the name. The aim is a hero that keeps itself current while never saying something no source or meter supports.
@@ -692,6 +695,75 @@ No status and no evidence: a play is an area, like a basin, not an asset that ru
 **Words.** The page says what fracking is once, in an ⓘ, citing EIA's own explainer: wells drilled down and then sideways through the rock, and water, sand and chemicals pumped in to crack it open. A play is defined once, where the switch first shows it: "A play is an area where companies drill one rock layer for oil or gas." Plays are named as EIA names them. "Fracking" appears in search as an alias of the surface, so the colleague's word finds it.
 
 **Open for M12.** Whether EIA's Bakken figure includes Three Forks, and which outlines EIA's Niobrara-Codell covers; whether any `TOPR*` or `SNGPR*` month is an EIA estimate rather than reported production, and how the page should say so; FracFocus's fields and coordinates once downloaded, and whether its two wordings of the terms (aggregated "but not altered" against "used without restriction") need a question to the Ground Water Protection Council; Argentina's licence; whether plays need a hatch rather than a fill to read over provinces.
+
+### M13 detail: oil and gas fields
+
+**Why.** The map follows oil and gas from the pipeline onward and starts nowhere: a province says how much USGS thought was there in 2000, not where anything is pumped today. Stories name fields (Kashagan, Sharara, Groningen, Rumaila) and the news scan has no asset to place them on. Fields are where supply starts, and the owner list behind them is the start of "who owns what".
+
+**Source** (checked 2026-11-07, from the March 2026 release already in `data/raw/gem/`).
+
+| Coverage | Source | What it gives | Terms |
+| --- | --- | --- | --- |
+| Worldwide | GEM Global Oil and Gas Extraction Tracker (GOGET), March 2026 (`Global-Oil-and-Gas-Extraction-Tracker-March-2026.xlsx`) | Field level: 7,673 units, with name, fuel, country and subnational unit, status and its year, operator, owners and parents (3,921), onshore or offshore, conventional or unconventional, basin (2,341), point (7,055) with `exact` or `approximate`, outline as WKT (1,110), and a GEM wiki page for every unit. Project level: 999 projects grouping phases or fields (Tengiz, South Pars, Shah Deniz), 795 of them with no field rows of their own (Ghawar, Karachaganak). Production by fuel and year (6,045 units), and reserves by GEM's class | "Distributed under a Creative Commons Attribution 4.0 International License", credit Global Energy Monitor |
+| Not used | Rystad, Wood Mackenzie, S&P field databases | Complete, current | Paid; ruled out |
+
+GEM includes units producing at least 1 million barrels of oil equivalent a year or holding 25 million in reserves, plus units from earlier releases; smaller fields are not on the map, and the surface says so.
+
+**Rules for the data.**
+
+- One item per place: a GEM project where one exists, holding the field rows it lists as its parts; otherwise the field. A project with no point of its own takes GEM's "location derived from fields" or stays off the map. No point is typed in; `pointApprox` follows GEM's `approximate`.
+- GEM's status is dataset evidence dated to its status year, mapped in `mapGogetStatus` (decided 2026-11-07): operating as operating, in development as under construction, mothballed as idle, decommissioning, decommissioned and abandoned as offline, no status as unknown; GEM's word stays in the statement. Discovered, exploration, cancelled and underground gas storage units are left off the map (`FIELDS.excludedStatuses`). It's a listing, not a report, so a stopped field that rests on it alone is drawn faded (`LISTED_STOP_ALPHA`) and the page says so. Cancelled units are not imported; underground gas storage units go to the report, not the map.
+- Production is shown as GEM gives it: one figure per fuel (oil, condensate, NGL, gas and GEM's other fuel names), in GEM's converted unit (million barrels a year, million cubic metres a year), with its data year and the unit's GEM page. Fuels are never added together, and a project's figure is GEM's project-level one, never a sum of its fields. Years differ field to field (2014 to 2025); the page says the year beside each figure, and the list sorts by size within a fuel without implying the years match.
+- No oil equivalent. GEM's sheet and site give no factor between gas and oil (its methodology page was gone on 2026-11-07), so none is invented: a field's dot and its place in a list come from its largest oil figure or its largest gas figure, whichever is larger against the 99th percentile of the same unit (`fieldLead`, `FIELD_MARKER`). Oil is only ever compared with oil and gas with gas, and the page never prints a converted figure (decided 2026-11-07).
+- GEM's project sheet gives production without a year, and some of it is GEM's own sum of the project's fields. The page shows such a figure with "year not given" (or "GEM's sum of its fields, year not given") and lists the project's fields below it with their own figures and years (decided 2026-11-07).
+- Reserves are shown only as GEM's class and year say ("2P reserves, 2023"), never compared across classes or summed. Phase 2.
+- Outlines (1,110 fields) are GEM's and drawn as GEM gives them, phase 2, once the point layer is settled.
+
+**Phases.**
+
+1. **Points and production** (`import:fields`, manual, Python standard library through `jobs/lib/xlsx.py` as `import:gem-companies` does): the tracker to `data/derived/gem-fields.json`, then `build:curated` adds cited claims from `data/curated/field-evidence.json` and publishes `public/data/fields.json`; what was skipped and why in `data/reports/import-fields.json`.
+2. **Reserves and outlines**, and owners as links (through `companyHomePage`, as pipelines do).
+3. **Who owns what**: an owner's page listing its fields, pipelines, terminals and refineries, from GEM's ownership tracker. Its own milestone if it grows.
+
+**Data model.** A new asset kind, `field`:
+
+```ts
+interface Field {
+  id: string;                  // 'gem-L100000312600', GEM's project or unit ID
+  name: string;                // GEM's name without its "(Country)" tail
+  aliases: string[];           // GEM's "Name Other" and local script
+  level: 'project' | 'field';
+  parts?: { id: string; name: string }[];  // a project's field rows
+  country: string;             // ISO 3166-1 alpha-2; a unit across a border keeps GEM's first
+  subnational?: string;
+  point: [number, number];
+  pointApprox: boolean;
+  fuel: 'oil' | 'gas' | 'oil and gas';
+  location: 'onshore' | 'offshore' | 'unknown';
+  production?: 'conventional' | 'unconventional';
+  operator?: string;
+  owners?: Company[];
+  discovered?: number;         // year
+  startYear?: number;
+  output: { fuel: string; value: number; unit: string; year: number }[];  // as GEM gives it
+  provinceId?: string;         // the USGS province the point falls in
+  gemUrl: string;              // the unit's or project's GEM wiki page
+  evidence: Evidence[];        // newest first; GEM's status is dataset evidence
+  pipelineIds?: string[];      // GEM pipeline starts within FIELDS.linkKm, oil to oil and gas to gas
+}
+```
+
+Disruptions take `assetKind: 'field'`. The selection is `field/<id>`, the layer `fields` (an entry in `VIEW_LAYERS` for Basins and in Home's layer list, off on Home by default: 6,500 triangles would bury the disruptions), all behind `FEATURES.fields`. The production figure keeps GEM's fuel words, unit and year (`FieldOutput`); `parts` hold a project's field rows with their own figures; "pipelines with an end nearby" and a province's fields are worked out in the browser (`pipelinesNearField`, `fieldsInBasin`), like a refinery's, so they're not stored.
+
+**Phase 1 as built (2026-11-07).** The March 2026 release gives 6,492 records on the map: 302 projects and 6,190 fields standing alone, 5,600 with a figure, 5,416 inside a USGS province. Left out: 478 discovered, 10 cancelled, 6 storage units, and 569 with no point from GEM (most of them Alberta oil sands assets), named in `data/reports/import-fields.json`. The quick filters don't count fields yet, so Home's offline count stays the cited and listed stops it was. The news scan and the claims refresh don't read fields yet; that's the next step.
+
+**Surface.** Basins' switch gains a third option: "Provinces", "Shale plays", "Fields" (section 4: no new surface). Fields lists cards largest first by the drawing size: the name with its flag and status, the largest fuel's figure with its year ("Oil, 365 million barrels a year, 2024"), operator and country in the notes; chips for oil, gas and stopped, and group by country and by status as Terminals has. The summary line counts what's on the map and says GEM's threshold. On the map, a point sized by oil equivalent (one small size when GEM gives no figure), coloured by status like the terminals, with oil and gas told apart the way the pipelines tell them; under the pipelines' halos, so the chokepoints still read first.
+
+**A field's page.** The detail layout of every asset: the header with fuel and onshore or offshore; the status card with its evidence; production, one row per fuel with its year, citing the GEM page; operator and owners; then disruptions and reports, "In the news", "Pipelines starting nearby" (a distance from a GEM line's start, and the page says so, as refineries do), the USGS province it sits in, and for a project its parts. A province's page lists its largest fields, with the year beside each figure.
+
+**Keeping it current.** GEM releases the tracker about once a year; the import runs by hand after a release, and a weekly check (as `check:eia-refineries`) can open an issue when GEM's download page names a newer one. The news scan matches "<name> field" and the project's name, only for the `FIELDS.newsLargest` largest plus any with a disruption or claim, and names that are also common words go in `NEWS.weakTerms`. The claims refresh searches fields with a cited claim, as for LNG and refineries. A new source on a field disruption in effect publishes; a status change waits for a person (2026-11-05 rules).
+
+**Open for M13.** Whether 6,500 points need clustering on a phone; how a unit across a border shows its country (GEM lists both; the first is kept for now); whether the news scan's matching of short field names needs more weak terms than refineries did; whether the quick filters should count fields, and how, without filling Home's offline list with GEM listings; and the 569 units GEM gives no point for.
 
 ## 12. Working notes for Claude Code
 
