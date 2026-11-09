@@ -99,6 +99,10 @@
     "file": "favicons/briefs.co.png",
     "checkedAt": "2026-11-08"
   },
+  "businessday.ng": {
+    "file": "favicons/businessday.ng.jpg",
+    "checkedAt": "2026-11-09"
+  },
   "businessworld.in": {
     "file": "favicons/businessworld.in.webp",
     "checkedAt": "2026-11-07"
@@ -151,6 +155,10 @@
     "file": "favicons/donga.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "economicconfidential.com": {
+    "file": "favicons/economicconfidential.com.png",
+    "checkedAt": "2026-11-09"
+  },
   "economictimes.indiatimes.com": {
     "file": "favicons/economictimes.indiatimes.com.ico",
     "checkedAt": "2026-11-07"
@@ -162,6 +170,10 @@
   "egyptian-gazette.com": {
     "file": "favicons/egyptian-gazette.com.png",
     "checkedAt": "2026-11-07"
+  },
+  "egyptoil-gas.com": {
+    "file": "favicons/egyptoil-gas.com.png",
+    "checkedAt": "2026-11-09"
   },
   "en.abna24.com": {
     "file": "favicons/en.abna24.com.ico",
@@ -243,6 +255,10 @@
     "file": "favicons/finance.biggo.com.png",
     "checkedAt": "2026-11-06"
   },
+  "firstpost.com": {
+    "file": "favicons/firstpost.com.ico",
+    "checkedAt": "2026-11-09"
+  },
   "forth.news": {
     "file": null,
     "checkedAt": "2026-11-08"
@@ -266,6 +282,10 @@
   "globalnation.inquirer.net": {
     "file": null,
     "checkedAt": "2026-11-08"
+  },
+  "gmanetwork.com": {
+    "file": "favicons/gmanetwork.com.png",
+    "checkedAt": "2026-11-09"
   },
   "gulfnews.com": {
     "file": "favicons/gulfnews.com.png",
@@ -350,6 +370,10 @@
   "iraqsun.com": {
     "file": null,
     "checkedAt": "2026-11-08"
+  },
+  "israelhayom.com": {
+    "file": "favicons/israelhayom.com.jpg",
+    "checkedAt": "2026-11-09"
   },
   "jordannews.jo": {
     "file": "favicons/jordannews.jo.png",
@@ -495,6 +519,10 @@
     "file": null,
     "checkedAt": "2026-11-06"
   },
+  "news.cgtn.com": {
+    "file": "favicons/news.cgtn.com.png",
+    "checkedAt": "2026-11-09"
+  },
   "news.laodong.vn": {
     "file": null,
     "checkedAt": "2026-11-06"
@@ -527,9 +555,17 @@
     "file": "favicons/openthemagazine.com.png",
     "checkedAt": "2026-11-07"
   },
+  "opinionnigeria.com": {
+    "file": "favicons/opinionnigeria.com.png",
+    "checkedAt": "2026-11-09"
+  },
   "orfme.org": {
     "file": "favicons/orfme.org.png",
     "checkedAt": "2026-11-06"
+  },
+  "pakobserver.net": {
+    "file": "favicons/pakobserver.net.ico",
+    "checkedAt": "2026-11-09"
   },
   "parstoday.ir": {
     "file": null,
@@ -591,13 +627,25 @@
     "file": "favicons/shafaq.com.png",
     "checkedAt": "2026-11-07"
   },
+  "shipmanagementinternational.com": {
+    "file": "favicons/shipmanagementinternational.com.jpg",
+    "checkedAt": "2026-11-09"
+  },
   "sofx.com": {
     "file": "favicons/sofx.com.png",
     "checkedAt": "2026-11-06"
   },
+  "splash247.com": {
+    "file": "favicons/splash247.com.png",
+    "checkedAt": "2026-11-09"
+  },
   "sputnikglobe.com": {
     "file": "favicons/sputnikglobe.com.png",
     "checkedAt": "2026-11-07"
+  },
+  "tasnimnews.ir": {
+    "file": "favicons/tasnimnews.ir.ico",
+    "checkedAt": "2026-11-09"
   },
   "tbsnews.net": {
     "file": "favicons/tbsnews.net.ico",
@@ -614,6 +662,10 @@
   "texasgopvote.com": {
     "file": "favicons/texasgopvote.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "the-star.co.ke": {
+    "file": "favicons/the-star.co.ke.ico",
+    "checkedAt": "2026-11-09"
   },
   "thearabweekly.com": {
     "file": null,
@@ -651,6 +703,14 @@
     "file": "favicons/thestar.com.my.ico",
     "checkedAt": "2026-11-07"
   },
+  "thesun.ng": {
+    "file": null,
+    "checkedAt": "2026-11-09"
+  },
+  "thetrumpet.ng": {
+    "file": "favicons/thetrumpet.ng.webp",
+    "checkedAt": "2026-11-09"
+  },
   "timesca.com": {
     "file": "favicons/timesca.com.png",
     "checkedAt": "2026-11-06"
@@ -666,6 +726,10 @@
   "todaypress.tv": {
     "file": "favicons/todaypress.tv.png",
     "checkedAt": "2026-11-07"
+  },
+  "tokenpost.com": {
+    "file": "favicons/tokenpost.com.png",
+    "checkedAt": "2026-11-09"
   },
   "tradefinanceglobal.com": {
     "file": null,

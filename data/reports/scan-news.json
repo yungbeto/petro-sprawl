@@ -1,21 +1,23 @@
 {
-  "recordedAt": "2026-11-09T01:04:00.480Z",
+  "recordedAt": "2026-11-09T12:00:26.245Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 6,
-      "failed": 53,
-      "articles": 0,
+      "requests": 18,
+      "failed": 50,
+      "articles": 1,
       "errors": [
         "answered 429",
-        "fetch failed",
-        "fetch failed"
+        "answered 429",
+        "answered 429",
+        "answered 429",
+        "answered 429"
       ]
     },
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 482,
+      "articles": 480,
       "errors": []
     }
   },
@@ -26,11 +28,11 @@
   "stories": 14,
   "candidates": 3,
   "usage": {
-    "input": 43891,
-    "output": 2507,
-    "searches": 2
+    "input": 74740,
+    "output": 3438,
+    "searches": 4
   },
-  "estimatedCostUsd": 0.026,
+  "estimatedCostUsd": 0.049,
   "results": [
     {
       "ref": "chokepoint/hormuz",
@@ -39,9 +41,80 @@
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://maritime-executive.com/article/tanker-burns-after-strike-in-strait-of-hormuz",
-        "publisher": "Maritime Executive",
-        "quote": "On Saturday, at least two tankers were attacked in the Strait of Hormuz, including one that caught fire.",
+        "url": "https://www.al-monitor.com/originals/2026/11/iran-says-no-unauthorised-vessels-transited-strait-hormuz-overnight-after",
+        "publisher": "Al-Monitor",
+        "quote": "Navigational aid systems in the south of the Strait of Hormuz were destroyed and no unauthorised vessels transited the maritime route overnight.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-09",
+        "eventText": "Iran's Revolutionary Guards Navy says navigation aids in the south of the strait were destroyed and no unauthorized vessels transited overnight."
+      },
+      "headlines": [
+        "- 2026-11-09 · Reuters: Iran says no unauthorised vessels transited Strait of Hormuz overnight after navigation aids destroyed",
+        "- 2026-11-09 · Anadolu Ajansı: Iran says 2-day proposal to US offers roadmap for restoring security in Strait of Hormuz",
+        "- 2026-11-09 · Arab News: Iran says no unauthorized vessels transited Strait of Hormuz overnight after navigation aids destroyed",
+        "- 2026-11-09 · Bloomberg.com: Oil Falls on Unconfirmed Report That Iran Eased Hormuz Demands",
+        "- 2026-11-09 · Al-Monitor: Iran says no unauthorised vessels transited Strait of Hormuz overnight after navigation aids destroyed",
+        "- 2026-11-09 · Investing.com: Oil prices pare losses as Hormuz, Houthi tensions persist",
+        "- 2026-11-09 · Crude Oil Prices Today | OilPrice.com: Iraq Strikes U.S. Deal to Boost Oil Exports Through Hormuz",
+        "- 2026-11-09 · IranWire: Official Confirms U.S. Military Strike Near Qeshm Island",
+        "- 2026-11-09 · IranWire: IRNA Reports Four Explosions Heard on Qeshm Island",
+        "- 2026-11-09 · TradeWinds News: Tanker stocks tempt as markets give Hormuz reopening deal just 36% chance this year",
+        "- 2026-11-09 · Egypt Oil & Gas: Iraq Reaches Understanding with US to Facilitate Oil Exports Through Hormuz",
+        "- 2026-11-09 · Middle East Eye: IRGC says 'oil smuggling' through Hormuz Strait has been completely halted",
+        "- 2026-11-09 · Middle East Eye: Iranian official says no vital infrastructure damaged in US attack on Qeshm island",
+        "- 2026-11-09 · The Lufkin Daily News: Oil falls as Trump signals restraint on Iran amid fresh Hormuz shipping attacks",
+        "- 2026-11-09 · Splash247: Hormuz suffers weekend of fire"
+      ]
+    },
+    {
+      "ref": "chokepoint/hormuz",
+      "kind": "story",
+      "outcome": "event rejected",
+      "detail": "event is after the page was published",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://www.al-monitor.com/originals/2026/11/iran-says-no-unauthorised-vessels-transited-strait-hormuz-overnight-after",
+        "publisher": "Al-Monitor",
+        "quote": "Navigational aid systems in the south of the Strait of Hormuz were destroyed and no unauthorised vessels transited the maritime route overnight.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-09",
+        "eventText": "Iran's Revolutionary Guards Navy says navigation aids in the south of the strait were destroyed and no unauthorized vessels transited overnight."
+      }
+    },
+    {
+      "ref": "refinery/ng-dangote",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-09 · Business News Nigeria: Dangote refinery IPO misses 10m investors target despite N6.4tn demand",
+        "- 2026-11-09 · Vanguard News: Election fever, Dangote Refinery to drive stock investors’ fortune at year end",
+        "- 2026-11-09 · Economic Confidential: Dangote Refinery IPO Falls Short of 10m Investors Target",
+        "- 2026-11-09 · The Star, Kenya: Ichung’wah: Dangote refinery deal info available to public",
+        "- 2026-11-09 · The Sun Nigeria: Dangote Refinery IPO falls short of 10m investor target",
+        "- 2026-11-09 · Opinion Nigeria: Election Uncertainty, Dangote Refinery Listing to Shape Investors’ Stock Market Gains in 2026",
+        "- 2026-11-09 · The Trumpet Newspaper Nigeria: Dangote Refinery IPO Closes with ₦6.4tn in Subscription, Moves to NGX Listing Stage",
+        "- 2026-11-08 · Discovery Alert: Dangote Refinery IPO Draws ₦6.4 Trillion but Misses Investor Goal"
+      ]
+    },
+    {
+      "ref": "chokepoint/babelm",
+      "kind": "story",
+      "outcome": "rejected",
+      "detail": "page is older than 14 days",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "babelm-2026-houthi-attacks",
+        "url": "https://www.israelhayom.com/2026/09/11/houthis-seize-control-of-bab-al-mandab-strait/",
+        "publisher": "Israel Hayom",
+        "quote": "The takeover effectively gave the Houthis control of the Bab al-Mandab Strait area.",
         "cause": "",
         "startedAt": "",
         "summary": "",
@@ -50,42 +123,9 @@
         "eventText": ""
       },
       "headlines": [
-        "- 2026-11-09 · ABC7 Bay Area: US-Iran war news: Donald Trump says renewed Iran attacks 'unlikely' if nuclear program, Strait of Hormuz talks show progress",
-        "- 2026-11-09 · Eurasia Review: Blasts Heard On Iran’s Qeshm Island",
-        "- 2026-11-08 · Iran International: Trump signals openness to Iran deal amid renewed Hormuz tensions",
-        "- 2026-11-08 · gCaptain: Iraq Has Reached Understandings With US To Allow Oil Exports Through Hormuz",
-        "- 2026-11-08 · Fox News: Iran conflict intensifies in Strait of Hormuz",
-        "- 2026-11-08 · The Times of Israel: Explosions heard on Qeshm Island in the Strait of Hormuz",
-        "- 2026-11-08 · The Maritime Executive: Tanker Burns After Strike in Strait of Hormuz",
-        "- 2026-11-08 · Middle East Eye: Explosions heard on Iran's Qeshm Island, state media reports",
-        "- 2026-11-08 · The Jerusalem Post: Four explosions heard on Qeshm Island, Iranian state media says - report",
-        "- 2026-11-08 · Middle East Eye: Iraq has agreed with the US to allow oil exports through Hormuz, minister says",
-        "- 2026-11-08 · Iran International: Four explosions heard on Iran's Qeshm island - IRNA",
-        "- 2026-11-08 · Lloyd's List: US strike on bulker marks new escalation as Hormuz ship casualties mount",
-        "- 2026-11-08 · Anadolu Ajansı: Explosions heard in southern Iran’s Bandar Abbas, Qeshm: Report",
-        "- 2026-11-08 · AzerNews: Iran's Hormuz proposal remains valid, Araghchi says",
-        "- 2026-11-08 · KSLM Radio: IRGC Targets Three Oil Tankers in the Strait of Hormuz"
-      ]
-    },
-    {
-      "ref": "refinery/ng-dangote",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-09 · 21st CENTURY CHRONICLE: Dangote Refinery IPO misses 10m Investor target",
-        "- 2026-11-09 · Chronicle NG: Dangote Refinery IPO fails to attract 10 million investors",
-        "- 2026-11-08 · S&P Global: Strategic lessons from the Dangote refinery",
-        "- 2026-11-08 · UA.NEWS: Dangote refinery IPO fell short of target of 10 million investors — The Rio Times"
-      ]
-    },
-    {
-      "ref": "chokepoint/babelm",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-06 · EnergyNow.com: Why Iranian, Houthi Threats to Red Sea Shipping Matter More For Oil Now"
+        "- 2026-11-09 · Investing.com: Oil prices pare losses as Hormuz, Houthi tensions persist",
+        "- 2026-11-09 · www.israelhayom.com: Houthis seize control of Bab al-Mandab Strait",
+        "- 2026-11-07 · Yemen Online: Yemen: The Houthi militia has established a mechanism to receive requests for ships to cross the Red Sea , the Bab al-Mandab Strait"
       ]
     }
   ]
