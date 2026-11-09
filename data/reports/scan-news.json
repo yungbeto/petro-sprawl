@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-11-08T19:51:40.470Z",
+  "recordedAt": "2026-11-09T01:04:00.480Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
@@ -7,30 +7,30 @@
       "failed": 53,
       "articles": 0,
       "errors": [
-        "fetch failed",
         "answered 429",
-        "answered 429"
+        "fetch failed",
+        "fetch failed"
       ]
     },
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 485,
+      "articles": 482,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-08"
+    "lastOk": "2026-11-09"
   },
-  "stories": 15,
-  "candidates": 4,
+  "stories": 14,
+  "candidates": 3,
   "usage": {
-    "input": 77733,
-    "output": 4089,
-    "searches": 4
+    "input": 43891,
+    "output": 2507,
+    "searches": 2
   },
-  "estimatedCostUsd": 0.05,
+  "estimatedCostUsd": 0.026,
   "results": [
     {
       "ref": "chokepoint/hormuz",
@@ -39,9 +39,9 @@
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.jpost.com/middle-east/iran-news/article-914153",
-        "publisher": "JPost",
-        "quote": "the IRGC Navy announced that two oil tankers hit mines near the Strait of Hormuz.",
+        "url": "https://maritime-executive.com/article/tanker-burns-after-strike-in-strait-of-hormuz",
+        "publisher": "Maritime Executive",
+        "quote": "On Saturday, at least two tankers were attacked in the Strait of Hormuz, including one that caught fire.",
         "cause": "",
         "startedAt": "",
         "summary": "",
@@ -50,30 +50,21 @@
         "eventText": ""
       },
       "headlines": [
-        "- 2026-11-08 · Reuters: Iraq has reached understandings with US to allow oil exports through Hormuz, minister says",
-        "- 2026-11-08 · Middle East Eye: Iran says oil tanker on fire after striking a mine near Hormuz",
-        "- 2026-11-08 · NewsCord: Trump Confirms U.S. Strikes on Iran’s Qeshm Island, Says “It’s Not a War”: how 23 outlets framed it",
-        "- 2026-11-08 · WANA News Agency: Iranian Army Reports Oil Tanker Fire in Eastern Strait of Hormuz",
-        "- 2026-11-08 · WHAS11: U.S. strikes Iran as tensions rise in the Strait of Hormuz",
-        "- 2026-11-08 · Forth.News: Explosions on Qeshm Island Amid U.S.-Iran Maritime Skirmishes",
-        "- 2026-11-08 · The Jerusalem Post: Oil tanker reportedy catches fire after striking mine near Hormuz",
-        "- 2026-11-08 · NewsCord: IRGC Spokesperson Hossein Mohebbi Says Mines Are Ready, Strait of Hormuz Under IRGC Navy Control",
-        "- 2026-11-08 · Briefs Finance: Explosions near the Strait of Hormuz tied to Iranian activity as ship attacks persist",
-        "- 2026-11-08 · GreekReporter.com: Two Oil Tankers Reportedly Hit Mines in Strait of Hormuz Amid Rising Tensions",
-        "- 2026-11-08 · TradingView: Iraq has reached understandings with US to allow oil exports through Hormuz, minister says",
-        "- 2026-11-08 · Latest news from Azerbaijan: US and Iran report attacks on vessels near Strait of Hormuz",
-        "- 2026-11-08 · The Independent: US military says it fired on ship that visited Iranian port after it tried to breach Strait of Hormuz blockade",
-        "- 2026-11-08 · The Lufkin Daily News: Vessels at the Strait of Hormuz, as seen from Musandam",
-        "- 2026-11-08 · TodayPress.tv: Strait of Hormuz could reopen: Iran makes PROPOSAL to the US"
-      ]
-    },
-    {
-      "ref": "chokepoint/babelm",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-08 · The Insight International: Ships email Houthis for permission to cross Bab al-Mandab, WSJ reports",
-        "- 2026-11-07 · EnergyNow.com: Houthis Say They Targeted Saudi East-West Oil Transport"
+        "- 2026-11-09 · ABC7 Bay Area: US-Iran war news: Donald Trump says renewed Iran attacks 'unlikely' if nuclear program, Strait of Hormuz talks show progress",
+        "- 2026-11-09 · Eurasia Review: Blasts Heard On Iran’s Qeshm Island",
+        "- 2026-11-08 · Iran International: Trump signals openness to Iran deal amid renewed Hormuz tensions",
+        "- 2026-11-08 · gCaptain: Iraq Has Reached Understandings With US To Allow Oil Exports Through Hormuz",
+        "- 2026-11-08 · Fox News: Iran conflict intensifies in Strait of Hormuz",
+        "- 2026-11-08 · The Times of Israel: Explosions heard on Qeshm Island in the Strait of Hormuz",
+        "- 2026-11-08 · The Maritime Executive: Tanker Burns After Strike in Strait of Hormuz",
+        "- 2026-11-08 · Middle East Eye: Explosions heard on Iran's Qeshm Island, state media reports",
+        "- 2026-11-08 · The Jerusalem Post: Four explosions heard on Qeshm Island, Iranian state media says - report",
+        "- 2026-11-08 · Middle East Eye: Iraq has agreed with the US to allow oil exports through Hormuz, minister says",
+        "- 2026-11-08 · Iran International: Four explosions heard on Iran's Qeshm island - IRNA",
+        "- 2026-11-08 · Lloyd's List: US strike on bulker marks new escalation as Hormuz ship casualties mount",
+        "- 2026-11-08 · Anadolu Ajansı: Explosions heard in southern Iran’s Bandar Abbas, Qeshm: Report",
+        "- 2026-11-08 · AzerNews: Iran's Hormuz proposal remains valid, Araghchi says",
+        "- 2026-11-08 · KSLM Radio: IRGC Targets Three Oil Tankers in the Strait of Hormuz"
       ]
     },
     {
@@ -82,18 +73,19 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-08 · Vanguard News: Dangote refinery IPO misses 10m investors target",
-        "- 2026-11-08 · Daily Trust: Dangote refinery IPO misses 10m investors target",
-        "- 2026-11-08 · Brand Icon Image: Dangote Refinery IPO Attracts Millions of Investors, Falls Short of 10m Target"
+        "- 2026-11-09 · 21st CENTURY CHRONICLE: Dangote Refinery IPO misses 10m Investor target",
+        "- 2026-11-09 · Chronicle NG: Dangote Refinery IPO fails to attract 10 million investors",
+        "- 2026-11-08 · S&P Global: Strategic lessons from the Dangote refinery",
+        "- 2026-11-08 · UA.NEWS: Dangote refinery IPO fell short of target of 10 million investors — The Rio Times"
       ]
     },
     {
-      "ref": "field/gem-l100000312599",
+      "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-06 · Qazinform: QazaqGaz signs EPCC deal for new gas processing plant at Kashagan"
+        "- 2026-11-06 · EnergyNow.com: Why Iranian, Houthi Threats to Red Sea Shipping Matter More For Oil Now"
       ]
     }
   ]
