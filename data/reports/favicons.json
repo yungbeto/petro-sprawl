@@ -23,6 +23,10 @@
     "file": "favicons/africa.businessinsider.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "agbi.com": {
+    "file": "favicons/agbi.com.png",
+    "checkedAt": "2026-11-10"
+  },
   "agcnews.eu": {
     "file": "favicons/agcnews.eu.png",
     "checkedAt": "2026-11-08"
@@ -323,6 +327,10 @@
     "file": "favicons/galvnews.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "gcaptain.com": {
+    "file": "favicons/gcaptain.com.jpg",
+    "checkedAt": "2026-11-10"
+  },
   "globalnation.inquirer.net": {
     "file": null,
     "checkedAt": "2026-11-08"
@@ -330,6 +338,10 @@
   "gmanetwork.com": {
     "file": "favicons/gmanetwork.com.png",
     "checkedAt": "2026-11-09"
+  },
+  "guardian.ng": {
+    "file": null,
+    "checkedAt": "2026-11-10"
   },
   "gulfnews.com": {
     "file": "favicons/gulfnews.com.png",
@@ -387,6 +399,10 @@
     "file": "favicons/informat.ro.png",
     "checkedAt": "2026-11-06"
   },
+  "inspenet.com": {
+    "file": "favicons/inspenet.com.png",
+    "checkedAt": "2026-11-10"
+  },
   "intellinews.com": {
     "file": null,
     "checkedAt": "2026-11-06"
@@ -431,6 +447,10 @@
     "file": "favicons/jpost.com.png",
     "checkedAt": "2026-11-06"
   },
+  "justsecurity.org": {
+    "file": null,
+    "checkedAt": "2026-11-10"
+  },
   "khaama.com": {
     "file": null,
     "checkedAt": "2026-11-07"
@@ -470,6 +490,10 @@
   "lankanewspapers.com": {
     "file": "favicons/lankanewspapers.com.png",
     "checkedAt": "2026-11-08"
+  },
+  "legit.ng": {
+    "file": "favicons/legit.ng.png",
+    "checkedAt": "2026-11-10"
   },
   "lloydslist.com": {
     "file": "favicons/lloydslist.com.png",
@@ -546,6 +570,10 @@
   "montelnews.com": {
     "file": "favicons/montelnews.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "mtv.com.lb": {
+    "file": "favicons/mtv.com.lb.ico",
+    "checkedAt": "2026-11-10"
   },
   "mundodeportivo.com": {
     "file": "favicons/mundodeportivo.com.png",
@@ -679,6 +707,10 @@
     "file": "favicons/reuters.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "rigzone.com": {
+    "file": "favicons/rigzone.com.ico",
+    "checkedAt": "2026-11-10"
+  },
   "rudaw.net": {
     "file": "favicons/rudaw.net.png",
     "checkedAt": "2026-11-07"
@@ -702,6 +734,10 @@
   "seatrade-maritime.com": {
     "file": "favicons/seatrade-maritime.com.ico",
     "checkedAt": "2026-11-08"
+  },
+  "seekingalpha.com": {
+    "file": "favicons/seekingalpha.com.png",
+    "checkedAt": "2026-11-10"
   },
   "shafaq.com": {
     "file": "favicons/shafaq.com.png",
@@ -795,6 +831,10 @@
     "file": "favicons/thestar.com.my.ico",
     "checkedAt": "2026-11-07"
   },
+  "thestar.ng": {
+    "file": "favicons/thestar.ng.png",
+    "checkedAt": "2026-11-10"
+  },
   "thesun.ng": {
     "file": null,
     "checkedAt": "2026-11-09"
@@ -827,6 +867,10 @@
     "file": null,
     "checkedAt": "2026-11-06"
   },
+  "tradewindsnews.com": {
+    "file": null,
+    "checkedAt": "2026-11-10"
+  },
   "tradingpedia.com": {
     "file": null,
     "checkedAt": "2026-11-09"
@@ -843,9 +887,17 @@
     "file": "favicons/turkiyetoday.com.png",
     "checkedAt": "2026-11-07"
   },
+  "tvcnews.tv": {
+    "file": "favicons/tvcnews.tv.png",
+    "checkedAt": "2026-11-10"
+  },
   "tvoneusa.com": {
     "file": "favicons/tvoneusa.com.png",
     "checkedAt": "2026-11-08"
+  },
+  "twaslnews1.twaslnews.com": {
+    "file": null,
+    "checkedAt": "2026-11-10"
   },
   "ua.news": {
     "file": "favicons/ua.news.ico",

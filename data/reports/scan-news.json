@@ -1,13 +1,15 @@
 {
-  "recordedAt": "2026-11-10T07:33:47.788Z",
+  "recordedAt": "2026-11-10T17:20:39.114Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 7,
-      "failed": 52,
-      "articles": 250,
+      "requests": 19,
+      "failed": 49,
+      "articles": 1,
       "errors": [
-        "answered 429",
+        "fetch failed",
+        "fetch failed",
+        "fetch failed",
         "fetch failed",
         "fetch failed"
       ]
@@ -15,7 +17,7 @@
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 500,
+      "articles": 513,
       "errors": []
     }
   },
@@ -23,14 +25,14 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-10"
   },
-  "stories": 17,
-  "candidates": 7,
+  "stories": 20,
+  "candidates": 6,
   "usage": {
-    "input": 52934,
-    "output": 3875,
-    "searches": 2
+    "input": 122154,
+    "output": 7415,
+    "searches": 6
   },
-  "estimatedCostUsd": 0.027,
+  "estimatedCostUsd": 0.076,
   "results": [
     {
       "ref": "chokepoint/hormuz",
@@ -39,57 +41,99 @@
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://econotimes.com/Iran-s-Navy-Says-Tanker-Disabled-After-Fire-East-of-Strait-of-Hormuz-1774088",
-        "publisher": "EconoTimes",
-        "quote": "Iran’s navy warned commercial vessels to avoid waters it calls restricted after saying a mine caused a tanker fire east of the Strait of Hormuz.",
+        "url": "https://www.aa.com.tr/en/middle-east/-iran-says-2-oil-tankers-explode-catch-fire-in-strait-of-hormuz/4118745",
+        "publisher": "Anadolu",
+        "quote": "Iran's Islamic Revolutionary Guard Corps (IRGC) said Tuesday that two oil tankers were left burning after explosions while attempting to navigate “an unauthorized route” through the Strait of Hormuz.",
         "cause": "",
         "startedAt": "",
         "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-10",
+        "eventText": "Iran's IRGC Navy says two oil tankers exploded and caught fire in the Strait of Hormuz after attempting an unauthorized route, one allegedly after striking a naval mine."
+      },
+      "headlines": [
+        "- 2026-11-10 · ABC News - Breaking News, Latest News and Videos: Why unrest in the Strait of Hormuz is leading to rising oil and gasoline prices",
+        "- 2026-11-10 · Anadolu Ajansı: Iran says 2 oil tankers explode, catch fire in Strait of Hormuz",
+        "- 2026-11-10 · Los Angeles Times: Rubio urges nations to ‘step up’ on Strait of Hormuz security",
+        "- 2026-11-10 · Semafor: More renewables and Hormuz disruption drive emissions fall",
+        "- 2026-11-10 · Union-Bulletin: Rubio urges nations to 'step up' on Strait of Hormuz security",
+        "- 2026-11-10 · Davis Vanguard: THE BLOCKADE OF HORMUZ? (2026)",
+        "- 2026-11-10 · Al-Monitor: Hormuz LNG shipments hit wartime high, but Qatar lags",
+        "- 2026-11-10 · IranWire: IRGC Claims Two Tankers Caught Fire in Strait of Hormuz",
+        "- 2026-11-10 · Bloomberg.com: Macron Talks to Gulf Countries About Providing Hormuz Insurance",
+        "- 2026-11-10 · Bloomberg.com: Adnoc Gas Sees LNG Exports Up This Quarter as Hormuz Flows Rise",
+        "- 2026-11-10 · Crude Oil Prices Today | OilPrice.com: U.S. Military Coordinates With Saudi Oil Tankers on Risky Hormuz Crossings",
+        "- 2026-11-10 · Middle East Eye: Rubio claims Strait of Hormuz oil flows near pre-war levels on some nights",
+        "- 2026-11-10 · safety4sea: Iran reports two tankers on fire in Strait of Hormuz",
+        "- 2026-11-10 · TradeWinds News: US mulling fire sale of sanctioned VLCCs for Strait of Hormuz passage",
+        "- 2026-11-10 · Deutsche Welle: Strait of Hormuz still a source of leverage for Iran despite US efforts to protect commercial shipping"
+      ]
+    },
+    {
+      "ref": "chokepoint/hormuz",
+      "kind": "story",
+      "outcome": "review",
+      "detail": "event 2026-11-10",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://www.aa.com.tr/en/middle-east/-iran-says-2-oil-tankers-explode-catch-fire-in-strait-of-hormuz/4118745",
+        "publisher": "Anadolu",
+        "quote": "Iran's Islamic Revolutionary Guard Corps (IRGC) said Tuesday that two oil tankers were left burning after explosions while attempting to navigate “an unauthorized route” through the Strait of Hormuz.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-10",
+        "eventText": "Iran's IRGC Navy says two oil tankers exploded and caught fire in the Strait of Hormuz after attempting an unauthorized route, one allegedly after striking a naval mine."
+      }
+    },
+    {
+      "ref": "pipeline/east-west-crude",
+      "kind": "story",
+      "outcome": "rejected",
+      "detail": "quote not found on the page",
+      "draft": {
+        "action": "new_disruption",
+        "disruptionId": "",
+        "url": "https://www.voiceofemirates.com/en/news/2026/11/09/a-source-at-the-saudi-ministry-of-energy-a-small-fire-broke-out-following-an-attack-on-the-east-west-pipeline-and-has-been-extinguished/",
+        "publisher": "Voice of Emirates",
+        "quote": "a small fire was brought under control following an attack targeting the \"East-West\" oil pipeline, with no casualties.",
+        "cause": "conflict",
+        "startedAt": "2026-11-09",
+        "summary": "A Saudi Energy Ministry source said an attack on the East-West pipeline in the Medina region caused a small fire, which was extinguished with no casualties. The ministry said operations were not affected. The Houthis denied attacking the Medina section and said they had targeted the pipeline in Riyadh province.",
         "endedAt": "",
         "eventAt": "",
         "eventText": ""
       },
       "headlines": [
-        "- 2026-11-10 · economictimes.indiatimes.com: Hormuz LNG traffic hits highest in October since Iran war began <https://economictimes.indiatimes.com/news/international/world-news/hormuz-lng-traffic-hits-highest-in-october-since-iran-war-began/articleshow/135699220.cms>",
-        "- 2026-11-10 · thenationalnews.com: Japan Inpex stays committed to Middle East oil despite Hormuz disruption <https://www.thenationalnews.com/business/energy/2026/11/10/japans-inpex-stays-committed-to-middle-east-oil-despite-hormuz-disruption/>",
-        "- 2026-11-10 · econotimes.com: Iran Navy Says Tanker Disabled After Fire East of Strait of Hormuz <https://econotimes.com/Iran-s-Navy-Says-Tanker-Disabled-After-Fire-East-of-Strait-of-Hormuz-1774088>",
-        "- 2026-11-10 · Reuters: Hormuz LNG traffic hits highest in October since Iran war began",
-        "- 2026-11-10 · Forbes: Hunt Grows For Gas East Of Hormuz, And Away From Iran",
-        "- 2026-11-10 · Bloomberg.com: Rising Fuel Flows Through Hormuz May Help Ease Strained Market",
-        "- 2026-11-10 · Crude Oil Prices Today | OilPrice.com: LNG Traffic Through Hormuz Hits Highest Level Since Iran War Began",
-        "- 2026-11-10 · WSJ: Adnoc Gas Still Evaluating Options to Bypass Strait of Hormuz",
-        "- 2026-11-10 · ORF Middle East: The Weaponisation of Bab el-Mandeb and Hormuz Chokepoints",
-        "- 2026-11-10 · Shipping Telegraph: Two tankers hit mines in Hormuz, US disables cargo ship",
-        "- 2026-11-10 · Reuters: ADNOC Gas studying potential new export routes amid Hormuz disruption",
-        "- 2026-11-10 · Bloomberg.com: Saudi Oil Tanker Firm Crossing Hormuz With US Coordination",
-        "- 2026-11-10 · Nation Thailand: Trump holds off fresh Iran strikes but keeps Strait of Hormuz blockade",
-        "- 2026-11-10 · Latest news from Azerbaijan: Strait of Hormuz will not return to prewar status, IRGC commander warns",
-        "- 2026-11-10 · Korea JoongAng Daily: Cabinet approves expanding Cheonghae Unit’s mission closer to Hormuz"
-      ]
-    },
-    {
-      "ref": "pipeline/east-west-crude",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-10 · dominicanrepublicpost.com: Saudi Arabia reports new attack on key East - West pipeline - Dominican Republic Post – Caribbean News , Business , Travel & Culture <https://dominicanrepublicpost.com/saudi-arabia-reports-new-attack-on-key-east-west-pipeline/>",
-        "- 2026-11-10 · The Maritime Executive: Saudi Arabia Confirms Strike on East-West Pipeline",
-        "- 2026-11-10 · Malay Mail: Saudi Arabia says East-West pipeline targeted amid escalating Houthi strikes, operations unaffected",
-        "- 2026-11-10 · Jordan Times: Saudi Arabia says East-West pipeline targeted, operations unaffected",
-        "- 2026-11-09 · Fana News -: Saudi Ministry of Energy: East-West Pipeline Targeted in Medina Region",
-        "- 2026-11-09 · https://houseofsaud.com/: Saudi Energy Minister Meets US Business Council as East-West Pipeline Hit",
-        "- 2026-11-09 · يمن مونيتور: Saudi Energy Ministry: East-West Pipeline Targeted Without Affecting Operations",
-        "- 2026-11-09 · وكالة الانباء الاردنية: Saudi East-West pipeline targeted in Madinah region, causing limited fire - The Jordan News Agency"
+        "- 2026-11-10 · صوت الإمارات: The Houthi group announces targeting oil pumping stations on the \"East-West\" pipeline in Saudi Arabia",
+        "- 2026-11-10 · Devdiscourse: Yemen's Houthis deny attacking East-West pipeline in Medina",
+        "- 2026-11-10 · MEED: Saudi Arabia’s East-West pipeline targeted in latest attack",
+        "- 2026-11-10 · Telegraph India: Houthis say they attack Saudi East-West pipeline in Riyadh, deny Medina strike",
+        "- 2026-11-10 · Firstpost: Riyadh Wakes Up To Houthi Missiles; Saudi On Alert As MBS' East West Pipeline Hit | Firstpost Live",
+        "- 2026-11-10 · MTV Lebanon: Houthis: We targeted the East-West Pipeline in Riyadh only, not in Medina",
+        "- 2026-11-10 · شبكة تواصل الإخبارية: Houthis hit Saudi again where it hurts, strike East-West pipeline as Iran demands Trump's 'surrender' | GRAVITAS",
+        "- 2026-11-10 · Business Recorder: Yemen's Houthis deny attacking East-West pipeline in Medina",
+        "- 2026-11-10 · ИФЗ РАН: Why The Latest Attack On Saudi Arabia's East-west Pipeline Changes Everything",
+        "- 2026-11-10 · The Siasat Daily: East-west pipeline targeted in Madina region: Saudi Arabia"
       ]
     },
     {
       "ref": "refinery/ng-dangote",
       "kind": "story",
       "outcome": "nothing",
-      "detail": "headlines only",
       "headlines": [
+        "- 2026-11-10 · Bloomberg.com: Dangote Refinery Gets $4.1 Billion Orders in Top Africa IPO",
+        "- 2026-11-10 · Seeking Alpha: Dangote refinery IPO is said to draw $4.1B in orders, nearly triple target (XLE:NYSEARCA)",
+        "- 2026-11-10 · Businessfront: Dangote Refinery IPO attracts $4.1 billion orders, nearly triple target",
+        "- 2026-11-10 · TVC News: Dangote Refinery, Fertiliser Projects To Employ 90,000 In Lagos By 2027",
+        "- 2026-11-10 · The Guardian Nigeria News: Dangote Refinery, Fertiliser expansion to employ over 90,000 people in Lagos",
         "- 2026-11-10 · The Nation Newspaper: Dangote Refinery, Fertiliser expansion to create over 90,000 jobs",
-        "- 2026-11-09 · Business News Nigeria: Dangote Refinery ships 208,000 tons of petrol as Nigeria expands exports"
+        "- 2026-11-10 · Legit News: Dangote Refinery Cuts Diesel Price by N120 as Petrol Landing Cost Falls to N1,072",
+        "- 2026-11-10 · Nairametrics: Exclusive: Dangote Refinery IPO attracts N5.85 trillion in bids from nearly 3.8m applicants",
+        "- 2026-11-10 · TheStar: 2027: Dangote refinery, fertiliser projects to employ 90,000 in Lagos",
+        "- 2026-11-09 · The Trumpet Newspaper Nigeria: FG Blames Advance Crude Oil Sales for Dangote Refinery’s Supply Shortfall"
       ]
     },
     {
@@ -98,30 +142,37 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-10 · dominicanrepublicpost.com: Saudi Arabia downs missiles fired at Riyadh after Houthi attack on pipeline - Dominican Republic Post – Caribbean News , Business , Travel & Culture <https://dominicanrepublicpost.com/saudi-arabia-downs-missiles-fired-at-riyadh-after-houthi-attack-on-pipeline/>",
-        "- 2026-11-10 · ORF Middle East: The Weaponisation of Bab el-Mandeb and Hormuz Chokepoints",
-        "- 2026-11-10 · X: 🇸🇦🇾🇪 Saudi oil is squeezed on both coasts: Hormuz is shut and the Houthis closed the Red Sea’s southern exit to Saudi ships Shireen Al-Adeimi, a Michigan State professor, says the Houthis answered Riyadh’s blockade with their own, on the logic that if you",
-        "- 2026-11-10 · Malay Mail: Saudi Arabia says East-West pipeline targeted amid escalating Houthi strikes, operations unaffected",
-        "- 2026-11-09 · EnergyNow: Oil Prices Unlikely to Fall as Houthi Attacks Threaten Saudi Export Routes, Middle East Expert Warns"
+        "- 2026-11-10 · صوت الإمارات: The Houthi group announces targeting oil pumping stations on the \"East-West\" pipeline in Saudi Arabia",
+        "- 2026-11-10 · Devdiscourse: Yemen's Houthis deny attacking East-West pipeline in Medina",
+        "- 2026-11-10 · Telegraph India: Houthis say they attack Saudi East-West pipeline in Riyadh, deny Medina strike",
+        "- 2026-11-10 · Firstpost: Riyadh Wakes Up To Houthi Missiles; Saudi On Alert As MBS' East West Pipeline Hit | Firstpost Live",
+        "- 2026-11-10 · MTV Lebanon: Houthis: We targeted the East-West Pipeline in Riyadh only, not in Medina",
+        "- 2026-11-10 · شبكة تواصل الإخبارية: Houthis hit Saudi again where it hurts, strike East-West pipeline as Iran demands Trump's 'surrender' | GRAVITAS",
+        "- 2026-11-10 · Business Recorder: Yemen's Houthis deny attacking East-West pipeline in Medina",
+        "- 2026-11-09 · وكالة سبأ: Seminar at Center for Studies on geopolitical, economic importance of Bab al-Mandab"
       ]
     },
     {
-      "ref": "pipeline/progress",
+      "ref": "lng/gem-t100000130594-export",
       "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
+      "outcome": "rejected",
+      "detail": "the quote doesn't name the asset",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "ras-laffan-north-2026-war",
+        "url": "https://www.rigzone.com/news/qatar_lng_loadings_gain_pace-10-nov-2026-185047-article",
+        "publisher": "Rigzone",
+        "quote": "The number of LNG shipments departing Qatar's Ras Laffan facility has ranged from 13 to 15",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      },
       "headlines": [
-        "- 2026-11-10 · mymotherlode.com: Heat - trapping carbon pollution drops , but scientists cite the Iran war rather than energy progress <https://mymotherlode.com/news/world/11295878/heat-trapping-carbon-pollution-drops-but-scientists-cite-the-iran-war-rather-than-energy-progress.html>",
-        "- 2026-11-10 · clickondetroit.com: Heat - trapping carbon pollution drops , but scientists cite the Iran war rather than energy progress <https://www.clickondetroit.com/business/2026/11/10/heat-trapping-carbon-pollution-drops-but-scientists-cite-the-iran-war-rather-than-energy-progress/>",
-        "- 2026-11-10 · sitkasentinel.com: Heat - trapping carbon pollution drops , but scientists cite the Iran war rather than energy progress <http://www.sitkasentinel.com/stories/heat-trapping-carbon-pollution-drops-but-scientists-cite-the-iran-war-rather-than-energy-progress,185097>",
-        "- 2026-11-10 · wfmz.com: Heat - trapping carbon pollution drops , but scientists cite the Iran war rather than energy progress <https://www.wfmz.com/business/heat-trapping-carbon-pollution-drops-but-scientists-cite-the-iran-war-rather-than-energy-progress/article_abc35e6d-3f4a-5257-b18c-06a9cb7aad84.html>",
-        "- 2026-11-10 · isp.netscape.com: Heat - trapping carbon pollution drops , but scientists cite the Iran war rather than energy progress <https://isp.netscape.com:443/news/world/story/0001/20261110/3adab6b51554800012a11fa0936f34f8>",
-        "- 2026-11-10 · gjsentinel.com: Heat - trapping carbon pollution drops , but scientists cite the Iran war rather than energy progress <https://www.gjsentinel.com/news/us/heat-trapping-carbon-pollution-drops-but-scientists-cite-the-iran-war-rather-than-energy-progress/article_ab6e96dd-f638-5297-a9dd-2d674cee8b39.html>",
-        "- 2026-11-10 · clickorlando.com: Heat - trapping carbon pollution drops , but scientists cite the Iran war rather than energy progress <https://www.clickorlando.com/business/2026/11/10/heat-trapping-carbon-pollution-drops-but-scientists-cite-the-iran-war-rather-than-energy-progress/>",
-        "- 2026-11-10 · bozemandailychronicle.com: Heat - trapping carbon pollution drops , but scientists cite the Iran war rather than energy progress <http://www.bozemandailychronicle.com/wire/business/heat-trapping-carbon-pollution-drops-but-scientists-cite-the-iran-war-rather-than-energy-progress/article_c63bf906-b906-5975-890e-e2ff05f332b5.html>",
-        "- 2026-11-10 · winnipegfreepress.com: Heat - trapping carbon pollution drops , but scientists cite the Iran war rather than energy progress – Winnipeg Free Press <https://www.winnipegfreepress.com/arts-and-life/life/greenpage/2026/11/09/heat-trapping-carbon-pollution-drops-but-scientists-cite-the-iran-war-rather-than-energy-progress>",
-        "- 2026-11-10 · dailygazette.com: Heat - trapping carbon pollution drops , but scientists cite the Iran war rather than energy progress <https://www.dailygazette.com/hv360/ap/business/heat-trapping-carbon-pollution-drops-but-scientists-cite-the-iran-war-rather-than-energy-progress/article_7a4b093a-2529-5c85-81e4-f85d108cf1b2.html>",
-        "- 2026-11-10 · WREG.com: Heat-trapping carbon pollution drops, but scientists cite the Iran war rather than energy progress"
+        "- 2026-11-10 · Rigzone: Qatar LNG Loadings Gain Pace",
+        "- 2026-11-10 · Montel News: Qatar LNG exports 1-2 years to ramp up even with peace – analyst"
       ]
     },
     {
@@ -130,15 +181,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-10 · Laodong.vn: Russia raises new accusations about the forces directing the Nord Stream pipeline explosion"
-      ]
-    },
-    {
-      "ref": "lng/gem-t100000130594-export",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-10 · Bloomberg.com: Qatar LNG Loadings Pick Up to Around Half of Pre-War Levels"
+        "- 2026-11-10 · Just Security: The Nord Stream Prosecution: Immunity, Military Objectives, and Superior Orders"
       ]
     }
   ]
