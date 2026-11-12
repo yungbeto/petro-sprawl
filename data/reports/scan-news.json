@@ -1,81 +1,123 @@
 {
-  "recordedAt": "2026-11-11T17:21:08.033Z",
+  "recordedAt": "2026-11-12T01:04:20.511Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 6,
-      "failed": 53,
-      "articles": 0,
+      "requests": 23,
+      "failed": 48,
+      "articles": 2,
       "errors": [
         "answered 429",
+        "answered 429",
         "fetch failed",
-        "fetch failed"
+        "fetch failed",
+        "answered 429"
       ]
     },
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 599,
+      "articles": 612,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-11"
+    "lastOk": "2026-11-12"
   },
   "stories": 23,
-  "candidates": 6,
+  "candidates": 4,
   "usage": {
-    "input": 99377,
-    "output": 6388,
-    "searches": 5
+    "input": 58211,
+    "output": 3249,
+    "searches": 3
   },
-  "estimatedCostUsd": 0.063,
+  "estimatedCostUsd": 0.037,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "unreadable",
-      "detail": "page answered 403",
+      "outcome": "committed",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://iranwire.com/en/news/160059-irgc-claims-two-tankers-caught-fire-in-strait-of-hormuz/",
-        "publisher": "IranWire",
-        "quote": "navigating a passage designated by the military body as “unauthorized” in the Strait of Hormuz.",
+        "url": "https://www.rivieramm.com/news-content-hub/tankers-hit-by-projectiles-in-strait-of-hormuz-iran-reports-further-mine-strikes-90547",
+        "publisher": "Riviera",
+        "quote": "The United Kingdom Maritime Trade Operations (UKMTO) Centre has reported two more tanker attacks in the Strait of Hormuz.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "2026-11-10",
-        "eventText": "The IRGC says two oil tankers caught fire in the Strait of Hormuz, one after striking a mine, while using a route it calls unauthorized."
+        "eventAt": "2026-11-11",
+        "eventText": "A merchant vessel is struck by a projectile northeast of Lima, Oman, according to Ambrey.}"
       },
       "headlines": [
-        "- 2026-11-11 · Al Jazeera: Iran denies talks with US, says Hormuz will stay shut until demands are met",
-        "- 2026-11-11 · EnergyNow.com: Oil Prices Rebound as Iran Rejects Key U.S. Nuclear Demand and Strait of Hormuz Shipping Attacks Renew Supply Concerns",
-        "- 2026-11-11 · IranWire: IRGC Says Two More Tankers Exploded in the Strait of Hormuz",
-        "- 2026-11-11 · safety4sea: Iran claims tanker hit mine in Strait of Hormuz",
-        "- 2026-11-11 · Kitco: Gold, silver rebound after CPI-driven selloff, Hormuz tensions lift crude oil - Kitco AM Report",
-        "- 2026-11-11 · Ynetnews: Tankers burn in Hormuz as Iran vows enriched uranium will never leave",
-        "- 2026-11-11 · The Times of Israel: Strait of Hormuz will not return to pre-war status, Iran’s Ghalibaf says",
-        "- 2026-11-11 · Bloomberg.com: Watch Gulf States Deepen Military Coordination as Iran Diplomacy Faces Hormuz Risks",
-        "- 2026-11-11 · NewsCord: Iran’s Mohsen Rezaei Rejects US Talks, Says Hormuz Stays Shut Until Seven Conditions Are Met",
-        "- 2026-11-11 · grafa.com: Oil Prices Rebound as Hormuz Shipping Risks Persist",
-        "- 2026-11-11 · Reuters: NEWSLETTER: Hormuz traffic is up. So are the attacks",
-        "- 2026-11-11 · The Times of Israel: Iran says tanker caught fire in the Strait of Hormuz after hitting mine",
-        "- 2026-11-11 · Lloyd's List: Iran warns Kuwait over Hormuz shipping as MEG states bolster military command",
-        "- 2026-11-11 · Naharnet: Iran says a tanker caught fire in the Strait of Hormuz",
-        "- 2026-11-11 · شفق نيوز: Shafaq News..IRGC criticizes CENTCOM chief over Hormuz tanker blasts"
+        "- 2026-11-12 · FXStreet: Iran says Strait of Hormuz will remain closed until leader of the revolution orders",
+        "- 2026-11-12 · Riviera Maritime Media: Tankers hit by projectiles in Strait of Hormuz; Iran reports further mine strikes",
+        "- 2026-11-12 · BigGo Finance: Oil Slips as Washington Weighs New Iran Talks While Hormuz Standoff Persists",
+        "- 2026-11-12 · ANI News: Strait of Hormuz will \"never return\" to pre-war status: Ghalibaf says \"ball in US court\" on peace talks",
+        "- 2026-11-11 · Al Jazeera: Hormuz Strait will ‘never return’ to pre-war status, Iran’s Ghalibaf says",
+        "- 2026-11-11 · Fox News: Iran escalates in Hormuz, claims strike on Omani island it says 'enemy' uses for US military ops",
+        "- 2026-11-11 · Foreign Policy: What a Hormuz Endgame Could Actually Look Like",
+        "- 2026-11-11 · PolitiFact: Hormuz oil flows are not regularly above pre-war levels",
+        "- 2026-11-11 · CNBC: International Seaways CEO on geopolitical risks, avoiding Hormuz Strait",
+        "- 2026-11-11 · Al-Monitor: Hormuz LNG rebounds, Qatar lags",
+        "- 2026-11-11 · NewsCord: Ghalibaf Says Strait of Hormuz Will “Never Return” to Pre-War Status: 7 outlets compared",
+        "- 2026-11-11 · ORF Middle East: Hormuz as a Harbinger: Lessons in Risk and Resilience",
+        "- 2026-11-11 · NewsCord: Mohsen Rezaei Says Iran Won’t Reopen Strait of Hormuz Until US Meets Seven Conditions: 22 outlets compared",
+        "- 2026-11-11 · Forth.News: Iran Attacks Navigation Systems in Strait of Hormuz; U.S. Maintains Naval Blockade Amid Diplomatic Stalemate",
+        "- 2026-11-11 · https://houseofsaud.com/: NCC Fajr Attacked in Hormuz as Iran Claims 2 Ships Struck"
       ]
     },
     {
-      "ref": "pipeline/east-west-crude",
+      "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "nothing",
+      "outcome": "review",
+      "detail": "event 2026-11-11",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://www.rivieramm.com/news-content-hub/tankers-hit-by-projectiles-in-strait-of-hormuz-iran-reports-further-mine-strikes-90547",
+        "publisher": "Riviera",
+        "quote": "The United Kingdom Maritime Trade Operations (UKMTO) Centre has reported two more tanker attacks in the Strait of Hormuz.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-11",
+        "eventText": "A merchant vessel is struck by a projectile northeast of Lima, Oman, according to Ambrey.}"
+      }
+    },
+    {
+      "ref": "terminal/ust-luga",
+      "kind": "story",
+      "outcome": "review",
+      "detail": "new disruption; kyivpost.com isn't on the trusted list",
+      "draft": {
+        "action": "new_disruption",
+        "disruptionId": "",
+        "url": "https://www.kyivpost.com/post/89842",
+        "publisher": "Kyiv Post",
+        "quote": "According to reports, tanks were hit at the Novatek-Ust-Luga and Ust-Luga Oil terminals, causing a petroleum spill and large fires.",
+        "cause": "conflict",
+        "startedAt": "2026-11-11",
+        "summary": "Ukraine's SBU said its drones hit oil and port facilities at Ust-Luga overnight on November 11, damaging tanks at the Novatek-Ust-Luga and Ust-Luga Oil terminals. Ukraine's General Staff said five tanks with a combined capacity of 150,000 cubic meters were damaged and a hydrocracking unit was on fire. Russian Leningrad governor Aleksandr Drozdenko confirmed drone strikes and a fire in the port area, and said a transformer substation was shut down.",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      },
       "headlines": [
-        "- 2026-11-11 · Pipeline Technology Journal: Saudi Arabia’s Key East-West Pipeline Still Operational After Latest Attack Near Medina",
-        "- 2026-11-10 · www.marketscreener.com: Saudi Arabia's East-West Pipeline Targeted in Attack",
-        "- 2026-11-10 · وكالة الأنباء السعودية: Ministry of Energy Official: East–West Pipeline Targeted in Madinah Region"
+        "- 2026-11-11 · Kyiv Post: SBU Says Drones Hit 30,000-Ton Tanks at Ust-Luga as General Staff Reports Hydrocracking Unit on Fire",
+        "- 2026-11-11 · Energy Intelligence: Russia’s Ust-Luga Port Hit as Ukraine Escalates Attacks",
+        "- 2026-11-11 · Ukrinform: Drones attack Russia's strategic Ust-Luga port, sparking fire",
+        "- 2026-11-11 · Odessa Journal: Ukrainian Drones Strike Russian Oil Terminals and Missile Ship in Ust-Luga Operation - Oj",
+        "- 2026-11-11 · TradeWinds News: Peace talks end with prisoner exchange as Russia strikes ships and Ukraine attacks Ust-Luga port",
+        "- 2026-11-11 · UA.NEWS: In addition to the oil terminal in Ust-Luga, the defense forces struck the missile ship Buyan-M",
+        "- 2026-11-11 · Ukrainian News Agency: SSU strikes port of Ust-Luga and russian missile ship. Reports of helicopters being destroyed under verification",
+        "- 2026-11-11 · The Straits Times: Drone attack triggers fire in Russia’s Baltic port of Ust-Luga, Ukraine says it launched attack",
+        "- 2026-11-11 · Interfax-Ukraine: SBU, Defence Forces strike Russian port, oil infrastructure in Ust-Luga, Buyan-M missile ship",
+        "- 2026-11-11 · RBC-Ukraine: Ukraine strikes Russian Kalibr missile carrier and Ust-Luga: SBU reveals details",
+        "- 2026-11-11 · صوت الإمارات: The Ukrainian army targeted the Russian oil port of Ust-Luga on the Baltic Sea, damaging fuel tanks"
       ]
     },
     {
@@ -84,51 +126,11 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-11 · Semafor: Dangote Refinery IPO draws more than $4B of interest",
-        "- 2026-11-11 · News24: Dangote Refinery get orders for more than R70bn shares before biggest African listing yet",
-        "- 2026-11-11 · Business Post Nigeria: Dangote Refinery IPO Attracts N5.85trn Bids from 3.8 million Subscribers",
-        "- 2026-11-11 · LEADERSHIP Newspapers: Dangote Refinery IPO Records 172% Oversubscription As Bids Hit N5.85trn",
-        "- 2026-11-11 · Blueprint Newspapers: Dangote Refinery, fertiliser expansion to employ over 90,000 in Lagos",
-        "- 2026-11-11 · Legit News: Dangote Refinery Drops 12 Marketers, Names 25 Firms to Sell Petrol Under New Deal",
-        "- 2026-11-11 · Legit News: Dangote Refinery Cuts Petrol Price to ₦1,250/L, Changes Pricing System, Names 25 Marketers",
-        "- 2026-11-11 · Daily Nigerian: Dangote Refinery targets 1.4m bpd capacity, 12m tonnes fertiliser output by 2030",
-        "- 2026-11-08 · The Hope Newspaper: Dangote refinery IPO fails to meet 10m investors target"
-      ]
-    },
-    {
-      "ref": "terminal/ust-luga",
-      "kind": "story",
-      "outcome": "unreadable",
-      "detail": "page answered 403",
-      "draft": {
-        "action": "new_disruption",
-        "disruptionId": "",
-        "url": "https://euromaidanpress.com/2026/11/11/drones-hit-ust-luga-port-near-natos-border-starting-a-fire-and-injuring-three-workers/",
-        "publisher": "Euromaidan Press",
-        "quote": "Drones hit the port zone of Ust-Luga overnight on 11 November, starting a fire and injuring three workers",
-        "cause": "conflict",
-        "startedAt": "2026-11-11",
-        "summary": "Leningrad Oblast Governor Aleksandr Drozdenko said drones hit the Ust-Luga port zone overnight on 11 November, starting a fire and injuring three workers. He also reported that a transformer substation had shut down. The Ukrinform article could not be retrieved directly, so this report from Euromaidan Press is used instead.",
-        "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
-      },
-      "headlines": [
-        "- 2026-11-11 · Ukrinform: Drones attack Russia's strategic Ust-Luga port, sparking fire",
-        "- 2026-11-11 · Gwara Media: Ukrainian drones reportedly hit Russia’s Ust-Luga Baltic Sea port",
-        "- 2026-11-11 · The Maritime Executive: Video: Ukrainian Strike Causes Major Fire at Russian Oil Port of Ust-Luga",
-        "- 2026-11-11 · safety4sea: Drone attack sparks fire at Russia’s Ust-Luga port",
-        "- 2026-11-11 · Euromaidan Press: Drones hit Ust-Luga port near NATO’s border, starting a fire and injuring three workers",
-        "- 2026-11-11 · UNITED24 Media: Russia’s Ust-Luga Port Erupts in Flames Visible From Estonia After Ukrainian Drone Attack",
-        "- 2026-11-11 · Yahoo: Ukraine reportedly strikes Ust-Luga Baltic Sea port as drones attack regions across Russia",
-        "- 2026-11-11 · Odessa Journal: Massive Drone Attack Sparks Fire at Russia’s Ust-Luga Port - Oj",
-        "- 2026-11-11 · IntelliNews: Missile War Monitor: Ukrainian drones set fire to Russia's Ust-Luga port, Russian strikes cut power to 135,000 in Ukraine's Odesa region",
-        "- 2026-11-11 · UA.NEWS: Video: A massive fire broke out at the port of Ust-Luga following an attack by Ukrainian drones",
-        "- 2026-11-11 · Around Prague: Ust-Luga on fire after drone attack: Russia’s largest Baltic port",
-        "- 2026-11-11 · Modern Ghana: Ukraine Strikes Russia's Ust-Luga Port as Peace Talks Face Major Obstacles",
-        "- 2026-11-11 · UA.NEWS: In Russia, drones launched massive attacks on dozens of regions, and a fire broke out at the port of Ust-Luga",
-        "- 2026-11-11 · Цензор.НЕТ: Drone attack sparks multiple fires at Russia’s Ust-Luga port",
-        "- 2026-11-11 · The New Voice of Ukraine: Drones strike Russia's Baltic export port of Ust-Luga, triggering massive fires — video"
+        "- 2026-11-11 · Dabafinance: Dangote Refinery IPO Risk Factors: What Every Investor Should Read First",
+        "- 2026-11-11 · MLQ.ai: Dangote refinery IPO draws more than $4 billion in bids, nearly three times its $1.6 billion target",
+        "- 2026-11-11 · MSME Africa: Dangote Refinery, Fertiliser Projects to Employ 90,000 People in Lagos by 2027",
+        "- 2026-11-11 · Western Post: IPO : Dangote Refinery attracts N5.85trn in bids from nearly 3.8m applicants",
+        "- 2026-11-10 · Business News Nigeria: Dangote Refinery IPO attracts N5.85tn in share applications, nearly triple offer size"
       ]
     },
     {
@@ -137,39 +139,8 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-11 · WSJ: Poland’s Orlen Cancels Qatar LNG Supply Deal After Months of Force Majeure",
-        "- 2026-11-11 · Crude Oil Prices Today | OilPrice.com: Poland's Orlen Becomes First Buyer to Cancel Long-Term Qatar LNG Deal",
-        "- 2026-11-11 · marketscreener.com: Poland's Orlen Cancels Qatar LNG Supply Deal After Months of Force Majeure -- Update",
         "- 2026-11-11 · TVP World: Poland’s Orlen moves to end Qatar LNG deal after prolonged supply disruption",
-        "- 2026-11-11 · Quantum Commodity Intelligence: Poland's Orlen terminates Qatar LNG deal over supply issues",
-        "- 2026-11-11 · The Diplomatic Insight: Poland’s Orlen Becomes First Buyer to Terminate Qatar LNG Contract Since Gulf Disruption",
-        "- 2026-11-11 · IntelliNews: Poland’s Orlen cancels Qatar LNG deal following supply disruptions",
-        "- 2026-11-11 · NewzTodays: Poland’s Orlen Cancels Long-Term Qatar LNG Agreement",
-        "- 2026-11-11 · Offshore Technology: Orlen terminates QatarEnergy LNG deal after force majeure",
-        "- 2026-11-11 · The New Arab: Poland's Orlen ends long-term QatarEnergy LNG contract over delivery failure",
-        "- 2026-11-11 · Baird Maritime: Poland's Orlen terminates QatarEnergy LNG deal in war fallout",
-        "- 2026-11-11 · ChemAnalyst: Orlen Terminates QatarEnergy LNG Deal After Iran War Disrupts Supplies",
-        "- 2026-11-11 · TradeWinds News: Poland’s Orlen cans QatarEnergy LNG supply deal",
-        "- 2026-11-11 · Euronext Markets: Real-time Stock Market Data | live: Poland's Orlen ends long-term QatarEnergy LNG contract over delivery failure",
-        "- 2026-11-11 · LNG Prime: Orlen terminates QatarEnergy LNG supply contract"
-      ]
-    },
-    {
-      "ref": "lng/gem-t100000130598-export",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-11 · Offshore Technology: Orlen terminates QatarEnergy LNG deal after force majeure",
-        "- 2026-11-11 · The New Arab: Poland's Orlen ends long-term QatarEnergy LNG contract over delivery failure",
-        "- 2026-11-11 · Baird Maritime: Poland's Orlen terminates QatarEnergy LNG deal in war fallout",
-        "- 2026-11-11 · ChemAnalyst: Orlen Terminates QatarEnergy LNG Deal After Iran War Disrupts Supplies",
-        "- 2026-11-11 · TradeWinds News: Poland’s Orlen cans QatarEnergy LNG supply deal",
-        "- 2026-11-11 · Euronext Markets: Real-time Stock Market Data | live: Poland's Orlen ends long-term QatarEnergy LNG contract over delivery failure",
-        "- 2026-11-11 · LNG Prime: Orlen terminates QatarEnergy LNG supply contract",
-        "- 2026-11-11 · MEED: Poland's Orlen terminates QatarEnergy LNG supply deal",
-        "- 2026-11-11 · the deep dive: Orlen Terminates 2009 QatarEnergy LNG Contract After Months of Force Majeure",
-        "- 2026-11-11 · EXPRO Consulting: Orlen terminates QatarEnergy LNG contract over delivery failures"
+        "- 2026-11-11 · ad-hoc-news.de: Orlen stock ends Qatar LNG deal as force majeure halts deliveries"
       ]
     }
   ]

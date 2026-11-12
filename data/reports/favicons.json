@@ -171,6 +171,10 @@
     "file": "favicons/container-news.com.png",
     "checkedAt": "2026-11-10"
   },
+  "dabafinance.com": {
+    "file": "favicons/dabafinance.com.png",
+    "checkedAt": "2026-11-12"
+  },
   "daily-sun.com": {
     "file": "favicons/daily-sun.com.ico",
     "checkedAt": "2026-11-08"
@@ -366,6 +370,10 @@
   "fxempire.com": {
     "file": "favicons/fxempire.com.ico",
     "checkedAt": "2026-11-06"
+  },
+  "fxstreet.com": {
+    "file": null,
+    "checkedAt": "2026-11-12"
   },
   "galvnews.com": {
     "file": "favicons/galvnews.com.ico",
@@ -603,6 +611,10 @@
     "file": null,
     "checkedAt": "2026-11-06"
   },
+  "mlq.ai": {
+    "file": null,
+    "checkedAt": "2026-11-12"
+  },
   "moderndiplomacy.eu": {
     "file": "favicons/moderndiplomacy.eu.png",
     "checkedAt": "2026-11-06"
@@ -626,6 +638,10 @@
   "montelnews.com": {
     "file": "favicons/montelnews.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "msmeafricaonline.com": {
+    "file": "favicons/msmeafricaonline.com.png",
+    "checkedAt": "2026-11-12"
   },
   "mtv.com.lb": {
     "file": "favicons/mtv.com.lb.ico",
@@ -786,6 +802,10 @@
   "rigzone.com": {
     "file": "favicons/rigzone.com.ico",
     "checkedAt": "2026-11-10"
+  },
+  "rivieramm.com": {
+    "file": null,
+    "checkedAt": "2026-11-12"
   },
   "rudaw.net": {
     "file": "favicons/rudaw.net.png",
