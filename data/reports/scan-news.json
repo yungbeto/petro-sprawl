@@ -1,117 +1,91 @@
 {
-  "recordedAt": "2026-11-12T20:15:26.784Z",
+  "recordedAt": "2026-11-13T02:03:10.662Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 15,
-      "failed": 50,
-      "articles": 251,
+      "requests": 10,
+      "failed": 51,
+      "articles": 3,
       "errors": [
         "answered 429",
-        "fetch failed",
-        "fetch failed",
-        "fetch failed",
-        "answered 429"
+        "answered 429",
+        "answered 429",
+        "fetch failed"
       ]
     },
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 610,
+      "articles": 609,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-12"
+    "lastOk": "2026-11-13"
   },
-  "stories": 23,
-  "candidates": 9,
+  "stories": 21,
+  "candidates": 8,
   "usage": {
-    "input": 145307,
-    "output": 7149,
-    "searches": 7
+    "input": 99877,
+    "output": 5280,
+    "searches": 6
   },
-  "estimatedCostUsd": 0.088,
+  "estimatedCostUsd": 0.073,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "rejected",
-      "detail": "the quote doesn't name the asset",
+      "outcome": "committed",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.ibtimes.com.au/iran-strait-hormuz-prewar-status-shipping-concerns-1878465",
-        "publisher": "IBTimes AU",
-        "quote": "Traffic through the strait remains a fraction of normal levels. Just three vessels transited on Nov. 8, about 4% of typical traffic, according to PortWatch data cited by the Straits.live tracker.",
+        "url": "https://www.newarab.com/news/trump-says-no-need-iran-deal-four-tankers-hit-hormuz",
+        "publisher": "The New Arab",
+        "quote": "Iran's armed forces said on Thursday that four tankers had caught fire in the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
+        "eventAt": "2026-11-12",
+        "eventText": "Iran's armed forces say four tankers catch fire in the Strait of Hormuz, where Tehran is targeting ships transiting without its authorisation."
       },
       "headlines": [
-        "- 2026-11-12 · ibtimes.com.au: Strait of Hormuz Latest : Iran Vows Waterway Will Never Return to Pre - War Status as More Tankers Hit Mines <https://www.ibtimes.com.au/iran-strait-hormuz-prewar-status-shipping-concerns-1878465>",
-        "- 2026-11-12 · openthemagazine.com: Strait of Hormuz Crisis : Iran Rejects Pre - War Status Amid US Peace Talks Stalemate <https://openthemagazine.com/world/strait-of-hormuz-crisis-iran-says-key-oil-route-will-never-return-to-pre-war-status-as-us-peace-talks-stall>",
-        "- 2026-11-12 · hani.co.kr: Cheonghae Unit would answer to on - site commander in multinational operations near Hormuz <https://www.hani.co.kr/arti/english_edition/e_national/1287006.html>",
-        "- 2026-11-12 · politifact.com: Is more oil going through Hormuz than before the Iran war , as Byron Donalds said ? No . – PolitiFact <https://politifact.com/factchecks/2026/nov/11/byron-donalds/florida-byron-donalds-iran-war-strait-hormuz-oil/>",
-        "- 2026-11-12 · business-standard.com: Hormuz will never return to pre - war status , says Iran chief negotiator <https://www.business-standard.com/world-news/hormuz-will-never-return-to-pre-war-status-says-iran-s-chief-negotiator-126111200051_1.html>",
-        "- 2026-11-12 · econotimes.com: Iran Ties Hormuz Reopening to Seven Conditions , Denies Reports of Talks <https://econotimes.com/Iran-Ties-Hormuz-Reopening-to-Seven-Conditions-Denies-Reports-of-Talks-1775564>",
-        "- 2026-11-12 · Reuters: Four tankers struck by explosions in Strait of Hormuz, Iran says",
-        "- 2026-11-12 · The Jerusalem Post: Barnea: Blockade in Strait of Hormuz best current option to stop nuclear weapons",
-        "- 2026-11-12 · Arab News: Iran says four tankers on fire in Hormuz",
-        "- 2026-11-12 · Yahoo Finance: The Strait of Hormuz was the biggest game changer for markets in 2026",
-        "- 2026-11-12 · NewsCord: IRGC Navy Says Two Oil Tankers Exploded in Strait of Hormuz After Ignoring Warnings: how 18 outlets framed it",
-        "- 2026-11-12 · Middle East Council on Global Affairs: Does Iran’s Hormuz Gambit Signal a Desire to Dominate the Gulf?",
-        "- 2026-11-12 · شفق نيوز: Shafaq News..Iran: Two tankers catch fire near Hormuz",
-        "- 2026-11-12 · Anadolu Ajansı: Trump says US 'doesn't need' deal with Iran, claims control of Strait of Hormuz",
-        "- 2026-11-12 · NewsCord: Iran’s IRGC Navy Says Two Oil Tankers Exploded in Strait of Hormuz After Ignoring Warnings: 15 outlets compared"
+        "- 2026-11-13 · The New Arab: Trump says no need for Iran deal as four tankers hit in Hormuz",
+        "- 2026-11-13 · Eurasia Review: Iran’s IRGC Claims Tanker Explosion In Hormuz Strait",
+        "- 2026-11-13 · UA.NEWS: Iran reports strike in Sirik County near Strait of Hormuz — Anadolu Agency",
+        "- 2026-11-12 · IndustryWeek: Strait of Hormuz Watch: Negotiations Uncertain as Vessel Attacks Continue",
+        "- 2026-11-12 · The Maritime Executive: Three Tankers Attacked in Two Days in Strait of Hormuz Crisis",
+        "- 2026-11-12 · Insurance Journal: Macron Talks to Gulf Countries About Providing Hormuz Insurance",
+        "- 2026-11-12 · Anadolu Ajansı: Southern Iran's Sirik County near Strait of Hormuz hit by 'enemy' strike: State media",
+        "- 2026-11-12 · The Times of India: Iran Confirms US Strike On IRGC Naval Base Near Strait Of Hormuz | Report",
+        "- 2026-11-12 · Energy Intelligence: Hormuz Bypass Plans Face Weight of History",
+        "- 2026-11-12 · FXEmpire: Oil News: WTI and Brent Rise as Hormuz Shipping Disruptions Renew Supply Fears",
+        "- 2026-11-12 · Yahoo: Ships Seeking to Cross The Strait of Hormuz Have Been Under Fire. Now Oil Spills Are Visible From Space.",
+        "- 2026-11-12 · Egyptian Gazette: Iran: 4 tankers on fire in Hormuz",
+        "- 2026-11-12 · BigGo Finance: NY Crude Extends Gains 2.6% as Tanker Attacks in Strait of Hormuz Revive Supply Fears; Gold Plunges 2.9%",
+        "- 2026-11-12 · Central Oregon Daily: Oil gains over $2 on attacks on Saudi energy sites, Strait of Hormuz disruptions",
+        "- 2026-11-12 · Al Arabiya English: Hormuz Strait Won't Return to Pre-war Status: Ghalibaf"
       ]
     },
     {
-      "ref": "terminal/ust-luga",
+      "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "rejected",
-      "detail": "the quote doesn't name the asset",
+      "outcome": "review",
+      "detail": "event 2026-11-12",
       "draft": {
         "action": "add_source",
-        "disruptionId": "ust-luga-2026-11-11",
-        "url": "https://ua.news/en/war-vs-rf/kilkist-tankeriv-iaki-zavantazhuiutsia-v-rosiiskomu-portu-ust-luga-skorotilasia-maizhe-vdvichi",
-        "publisher": "UA.NEWS",
-        "quote": "following the Ukrainian strike the day before, only one berth at the port is currently operational.",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://www.newarab.com/news/trump-says-no-need-iran-deal-four-tankers-hit-hormuz",
+        "publisher": "The New Arab",
+        "quote": "Iran's armed forces said on Thursday that four tankers had caught fire in the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
-      },
-      "headlines": [
-        "- 2026-11-12 · S&P Global: Drone strike starts fire at Russian Baltic port of Ust-Luga",
-        "- 2026-11-12 · UA.NEWS: The number of tankers being loaded at the Russian port of Ust-Luga has nearly halved",
-        "- 2026-11-12 · АрміяInform: From Storage Tanks to Tankers: How Ukraine Is Weakening Russia’s Oil Exports by Striking Ust-Luga",
-        "- 2026-11-11 · https://theins.press/en: Drone strike on key northern port of Ust-Luga sparks major fire as Russian military bloggers report three helicopter crews killed",
-        "- 2026-11-11 · Ukrainian News Agency: SSU strikes port of Ust-Luga and russian missile ship. Reports of helicopters being destroyed under verification",
-        "- 2026-11-11 · NewsBreak: Local News & Alerts: Ukrainian drones slam Russian oil port Ust-Luga"
-      ]
-    },
-    {
-      "ref": "pipeline/east-west-crude",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-12 · The New Arab: Yemen’s Houthis say targeted Saudi East-West pipeline, Yanbu",
-        "- 2026-11-12 · https://houseofsaud.com/: Houthis Claim 2 Strikes on East-West Pipeline and Yanbu Oil Facilities",
-        "- 2026-11-12 · Newsquawk: Houthi spokesperson says its armed forces carried out two military operations; The first operation targeted pumping station No. 7 on the East-West pipeline and the second operation targeted the Yanbu oil facility",
-        "- 2026-11-12 · news.sbs.co.kr: Yemen's Houthi Rebels Claim Attacks on Saudi East-West Pipeline and Yanbu Oil Facilities",
-        "- 2026-11-11 · TOKENPOST: Houthis Claim They Targeted Saudi East-West Pipeline Stations",
-        "- 2026-11-10 · アラブニュース: East-West pipeline targeted in Madinah region, Saudi energy ministry says",
-        "- 2026-11-10 · WION: Houthis hit Saudi again where it hurts, strike East-West pipeline as Iran demands Trump's 'surrender'",
-        "- 2026-11-10 · Business Recorder: Yemen's Houthis deny attacking East-West pipeline in Medina",
-        "- 2026-11-10 · Menafn: Fire Breaks Out After Saudi East-West Pipeline Targeted Operations Unaffected"
-      ]
+        "eventAt": "2026-11-12",
+        "eventText": "Iran's armed forces say four tankers catch fire in the Strait of Hormuz, where Tehran is targeting ships transiting without its authorisation."
+      }
     },
     {
       "ref": "lng/gem-t100000130594-export",
@@ -119,7 +93,19 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-12 · Natural Gas Intelligence: Orlen Exits Qatar LNG Deal as US Supply Expands Its Trading Options"
+        "- 2026-11-12 · Natural Gas Intelligence: Orlen Exits Qatar LNG Deal as US Supply Expands Its Trading Options",
+        "- 2026-11-10 · TradingView: Poland's Orlen ends long-term QatarEnergy LNG contract over delivery failure"
+      ]
+    },
+    {
+      "ref": "pipeline/east-west-crude",
+      "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-12 · The Hindu: Yemen’s Houthis say they targeted Saudi East-West pipeline, port city of Yanbu",
+        "- 2026-11-12 · Ahram Online: Yemen's Houthis say targeted Saudi East-West pipeline, Yanbu - Region - World",
+        "- 2026-11-12 · وكالة سبأ: Yemeni Armed Forces resume targeting Pumping Station No. 7 on East-West Pipeline deep inside Saudi territory",
+        "- 2026-11-10 · Malay Mail: Saudi Arabia says East-West pipeline targeted amid escalating Houthi strikes, operations unaffected"
       ]
     },
     {
@@ -128,8 +114,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-12 · Business News Nigeria: Dangote refinery consortium marketers cut petrol gantry price to N1,215/litre",
-        "- 2026-11-12 · DAILY TIMES Nigeria: Dangote Refinery IPO Attracts ₦5.85trn From 3.8m Applicants"
+        "- 2026-11-12 · Business News Nigeria: Dangote refinery consortium marketers cut petrol gantry price to N1,215/litre"
       ]
     },
     {
@@ -137,36 +122,18 @@
       "kind": "story",
       "outcome": "nothing",
       "headlines": [
-        "- 2026-11-12 · Kuehne+Nagel: Container lines drive sharp Bab el Mandeb traffic rebound despite renewed Houthi escalation",
-        "- 2026-11-12 · thecradle.co: Yemeni army advances on Bab al-Mandab front against Saudi-backed forces",
-        "- 2026-11-12 · Reuters: Yemen's Houthis say they attacked pumping station on Saudi Arabia's East-West oil pipeline",
-        "- 2026-11-12 · The New Arab: Yemen’s Houthis say targeted Saudi East-West pipeline, Yanbu",
-        "- 2026-11-12 · https://houseofsaud.com/: Houthis Claim 2 Strikes on East-West Pipeline and Yanbu Oil Facilities",
-        "- 2026-11-12 · Newsquawk: Houthi spokesperson says its armed forces carried out two military operations; The first operation targeted pumping station No. 7 on the East-West pipeline and the second operation targeted the Yanbu oil facility",
-        "- 2026-11-12 · news.sbs.co.kr: Yemen's Houthi Rebels Claim Attacks on Saudi East-West Pipeline and Yanbu Oil Facilities",
-        "- 2026-11-11 · TOKENPOST: Houthis Claim They Targeted Saudi East-West Pipeline Stations",
-        "- 2026-11-10 · WION: Houthis hit Saudi again where it hurts, strike East-West pipeline as Iran demands Trump's 'surrender'",
-        "- 2026-11-10 · Business Recorder: Yemen's Houthis deny attacking East-West pipeline in Medina"
+        "- 2026-11-12 · The Hindu: Yemen’s Houthis say they targeted Saudi East-West pipeline, port city of Yanbu",
+        "- 2026-11-12 · Ahram Online: Yemen's Houthis say targeted Saudi East-West pipeline, Yanbu - Region - World",
+        "- 2026-11-10 · Malay Mail: Saudi Arabia says East-West pipeline targeted amid escalating Houthi strikes, operations unaffected"
       ]
     },
     {
-      "ref": "pipeline/nord-stream-1",
+      "ref": "lng/gem-t100000130598-export",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-12 · Radio Free Europe/Radio Liberty: Nord Stream Gas Fueled This German Power Plant, Now It's Being Dismantled And Sent To Ukraine"
-      ]
-    },
-    {
-      "ref": "terminal/yanbu",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-12 · The New Arab: Yemen’s Houthis say targeted Saudi East-West pipeline, Yanbu",
-        "- 2026-11-12 · https://houseofsaud.com/: Houthis Claim 2 Strikes on East-West Pipeline and Yanbu Oil Facilities",
-        "- 2026-11-12 · Newsquawk: Houthi spokesperson says its armed forces carried out two military operations; The first operation targeted pumping station No. 7 on the East-West pipeline and the second operation targeted the Yanbu oil facility",
-        "- 2026-11-12 · news.sbs.co.kr: Yemen's Houthi Rebels Claim Attacks on Saudi East-West Pipeline and Yanbu Oil Facilities"
+        "- 2026-11-10 · TradingView: Poland's Orlen ends long-term QatarEnergy LNG contract over delivery failure"
       ]
     },
     {
@@ -175,9 +142,18 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-12 · Devdiscourse: India backs coordinated maritime patrolling near Malacca Strait amid vast surveillance needs",
-        "- 2026-11-12 · Organiser: PM Modi to Visit Philippines for ASEAN Summit: Indo-Pacific, Malacca Strait & supply chains—Key priorities for India",
-        "- 2026-11-12 · Lokmat Times: India Supports Coordinated Patrolling in Malacca Strait for Maritime Security"
+        "- 2026-11-13 · Deccan Herald: India keen to join patrolling in Malacca Strait to gain edge against China",
+        "- 2026-11-13 · NewsBytes: India to join Malacca Strait patrols to protect trade routes",
+        "- 2026-11-12 · www.malaysiasun.com: India backs coordinated maritime patrolling near Malacca Strait amid vast surveillance needs"
+      ]
+    },
+    {
+      "ref": "terminal/yanbu",
+      "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-12 · The Hindu: Yemen’s Houthis say they targeted Saudi East-West pipeline, port city of Yanbu",
+        "- 2026-11-12 · Ahram Online: Yemen's Houthis say targeted Saudi East-West pipeline, Yanbu - Region - World"
       ]
     }
   ]

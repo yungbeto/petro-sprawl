@@ -219,6 +219,10 @@
     "file": "favicons/ddnews.gov.in.png",
     "checkedAt": "2026-11-06"
   },
+  "deccanherald.com": {
+    "file": "favicons/deccanherald.com.png",
+    "checkedAt": "2026-11-13"
+  },
   "defencesecurityasia.com": {
     "file": "favicons/defencesecurityasia.com.png",
     "checkedAt": "2026-11-10"
@@ -310,6 +314,10 @@
   "english.aawsat.com": {
     "file": "favicons/english.aawsat.com.png",
     "checkedAt": "2026-11-08"
+  },
+  "english.ahram.org.eg": {
+    "file": null,
+    "checkedAt": "2026-11-13"
   },
   "english.alarabiya.net": {
     "file": null,
@@ -774,6 +782,10 @@
   "newsmobile.in": {
     "file": "favicons/newsmobile.in.jpg",
     "checkedAt": "2026-11-08"
+  },
+  "newsnationnow.com": {
+    "file": "favicons/newsnationnow.com.ico",
+    "checkedAt": "2026-11-13"
   },
   "newsquawk.com": {
     "file": "favicons/newsquawk.com.png",
