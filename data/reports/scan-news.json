@@ -1,13 +1,12 @@
 {
-  "recordedAt": "2026-11-13T02:03:10.662Z",
+  "recordedAt": "2026-11-13T11:18:17.069Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 10,
-      "failed": 51,
-      "articles": 3,
+      "requests": 7,
+      "failed": 52,
+      "articles": 164,
       "errors": [
-        "answered 429",
         "answered 429",
         "answered 429",
         "fetch failed"
@@ -16,7 +15,7 @@
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 609,
+      "articles": 600,
       "errors": []
     }
   },
@@ -24,14 +23,14 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-13"
   },
-  "stories": 21,
-  "candidates": 8,
+  "stories": 20,
+  "candidates": 10,
   "usage": {
-    "input": 99877,
-    "output": 5280,
-    "searches": 6
+    "input": 163430,
+    "output": 6891,
+    "searches": 10
   },
-  "estimatedCostUsd": 0.073,
+  "estimatedCostUsd": 0.12,
   "results": [
     {
       "ref": "chokepoint/hormuz",
@@ -40,72 +39,59 @@
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.newarab.com/news/trump-says-no-need-iran-deal-four-tankers-hit-hormuz",
-        "publisher": "The New Arab",
-        "quote": "Iran's armed forces said on Thursday that four tankers had caught fire in the Strait of Hormuz",
+        "url": "https://www.anews.com.tr/world/2026/11/13/iran-says-tanker-carrying-liquefied-gas-hit-mine-exploded-in-hormuz",
+        "publisher": "anews",
+        "quote": "a ship was hit by an explosion after striking a mine in the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "2026-11-12",
-        "eventText": "Iran's armed forces say four tankers catch fire in the Strait of Hormuz, where Tehran is targeting ships transiting without its authorisation."
+        "eventAt": "2026-11-13",
+        "eventText": "Iran's Revolutionary Guards say a tanker carrying liquefied gas hit a naval mine and exploded in the Strait of Hormuz."
       },
       "headlines": [
-        "- 2026-11-13 · The New Arab: Trump says no need for Iran deal as four tankers hit in Hormuz",
-        "- 2026-11-13 · Eurasia Review: Iran’s IRGC Claims Tanker Explosion In Hormuz Strait",
-        "- 2026-11-13 · UA.NEWS: Iran reports strike in Sirik County near Strait of Hormuz — Anadolu Agency",
-        "- 2026-11-12 · IndustryWeek: Strait of Hormuz Watch: Negotiations Uncertain as Vessel Attacks Continue",
-        "- 2026-11-12 · The Maritime Executive: Three Tankers Attacked in Two Days in Strait of Hormuz Crisis",
-        "- 2026-11-12 · Insurance Journal: Macron Talks to Gulf Countries About Providing Hormuz Insurance",
-        "- 2026-11-12 · Anadolu Ajansı: Southern Iran's Sirik County near Strait of Hormuz hit by 'enemy' strike: State media",
-        "- 2026-11-12 · The Times of India: Iran Confirms US Strike On IRGC Naval Base Near Strait Of Hormuz | Report",
-        "- 2026-11-12 · Energy Intelligence: Hormuz Bypass Plans Face Weight of History",
-        "- 2026-11-12 · FXEmpire: Oil News: WTI and Brent Rise as Hormuz Shipping Disruptions Renew Supply Fears",
-        "- 2026-11-12 · Yahoo: Ships Seeking to Cross The Strait of Hormuz Have Been Under Fire. Now Oil Spills Are Visible From Space.",
-        "- 2026-11-12 · Egyptian Gazette: Iran: 4 tankers on fire in Hormuz",
-        "- 2026-11-12 · BigGo Finance: NY Crude Extends Gains 2.6% as Tanker Attacks in Strait of Hormuz Revive Supply Fears; Gold Plunges 2.9%",
-        "- 2026-11-12 · Central Oregon Daily: Oil gains over $2 on attacks on Saudi energy sites, Strait of Hormuz disruptions",
-        "- 2026-11-12 · Al Arabiya English: Hormuz Strait Won't Return to Pre-war Status: Ghalibaf"
+        "- 2026-11-13 · Reuters: Iran says tanker carrying LNG hit mine, suffered explosion in Hormuz",
+        "- 2026-11-13 · The Times of Israel: Iran says tanker carrying liquefied gas hit mine, exploded in Hormuz",
+        "- 2026-11-13 · WIRED Middle East: Keeping Tankers Moving Through The Strait of Hormuz Comes at a Human Cost",
+        "- 2026-11-13 · شفق نيوز: Shafaq News..IRGC says gas carrier hits mine near Hormuz",
+        "- 2026-11-13 · safety4sea: Strait of Hormuz: New gas carrier incident reported amid rising security threats",
+        "- 2026-11-13 · Middle East Eye: IRGC Navy says tanker explodes after hitting a sea mine in Hormuz Strait",
+        "- 2026-11-13 · A News: Iran says tanker carrying liquefied gas hit mine, exploded in Hormuz",
+        "- 2026-11-13 · WANA News Agency: Massive Explosion and Fire Hits Gas Carrier in Eastern Strait of Hormuz",
+        "- 2026-11-13 · Al Jazeera: Iran threatens unlimited response over Strait of Hormuz after US attack",
+        "- 2026-11-13 · تسنیم: LPG Carrier Hits Naval Mine in Strait of Hormuz: IRGC",
+        "- 2026-11-13 · Korea JoongAng Daily: Tehran invokes Korean proverb as warning over Cheonghae Unit deployment near Strait of Hormuz",
+        "- 2026-11-13 · Asia Times: Asia’s way out of the Hormuz deadlock",
+        "- 2026-11-13 · Homeland Security Today: IMO Chief Calls for Strict Enforcement of SOLAS Rules in Strait of Hormuz",
+        "- 2026-11-13 · Yahoo: Iran reports gas tanker explosion in Strait of Hormuz",
+        "- 2026-11-13 · Caspian Post: Gas Carrier Explodes After Striking Mine in Strait of Hormuz"
       ]
     },
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
       "outcome": "review",
-      "detail": "event 2026-11-12",
+      "detail": "event 2026-11-13",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.newarab.com/news/trump-says-no-need-iran-deal-four-tankers-hit-hormuz",
-        "publisher": "The New Arab",
-        "quote": "Iran's armed forces said on Thursday that four tankers had caught fire in the Strait of Hormuz",
+        "url": "https://www.anews.com.tr/world/2026/11/13/iran-says-tanker-carrying-liquefied-gas-hit-mine-exploded-in-hormuz",
+        "publisher": "anews",
+        "quote": "a ship was hit by an explosion after striking a mine in the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "2026-11-12",
-        "eventText": "Iran's armed forces say four tankers catch fire in the Strait of Hormuz, where Tehran is targeting ships transiting without its authorisation."
+        "eventAt": "2026-11-13",
+        "eventText": "Iran's Revolutionary Guards say a tanker carrying liquefied gas hit a naval mine and exploded in the Strait of Hormuz."
       }
     },
     {
-      "ref": "lng/gem-t100000130594-export",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-12 · Natural Gas Intelligence: Orlen Exits Qatar LNG Deal as US Supply Expands Its Trading Options",
-        "- 2026-11-10 · TradingView: Poland's Orlen ends long-term QatarEnergy LNG contract over delivery failure"
-      ]
-    },
-    {
-      "ref": "pipeline/east-west-crude",
+      "ref": "terminal/ust-luga",
       "kind": "story",
       "outcome": "nothing",
       "headlines": [
-        "- 2026-11-12 · The Hindu: Yemen’s Houthis say they targeted Saudi East-West pipeline, port city of Yanbu",
-        "- 2026-11-12 · Ahram Online: Yemen's Houthis say targeted Saudi East-West pipeline, Yanbu - Region - World",
-        "- 2026-11-12 · وكالة سبأ: Yemeni Armed Forces resume targeting Pumping Station No. 7 on East-West Pipeline deep inside Saudi territory",
-        "- 2026-11-10 · Malay Mail: Saudi Arabia says East-West pipeline targeted amid escalating Houthi strikes, operations unaffected"
+        "- 2026-11-13 · Odessa Journal: Tanker Loadings at Russia’s Ust-Luga Port Fall Nearly 50% - Oj"
       ]
     },
     {
@@ -114,7 +100,40 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-12 · Business News Nigeria: Dangote refinery consortium marketers cut petrol gantry price to N1,215/litre"
+        "- 2026-11-13 · The Guardian Nigeria News: Businessman donates Dangote Refinery shares to 24 retired Lagos police officers",
+        "- 2026-11-13 · Chronicle NG: Businessman donates Dangote refinery shares to 24 retired police officers",
+        "- 2026-11-11 · www.tokenpost.com: Dangote Refinery Offer Draws Estimated ₦5.85 Trillion in Applications"
+      ]
+    },
+    {
+      "ref": "lng/gem-t100000130594-export",
+      "kind": "story",
+      "outcome": "rejected",
+      "detail": "the quote doesn't name the asset",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "ras-laffan-north-2026-war",
+        "url": "https://gcaptain.com/qatar-lng-loadings-pick-up-to-around-half-of-pre-war-levels/",
+        "publisher": "gCaptain",
+        "quote": "The number of LNG shipments departing Qatar’s Ras Laffan facility has ranged from 13 to 15",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      },
+      "headlines": [
+        "- 2026-11-11 · Crude Oil Prices Today | OilPrice.com: Poland's Orlen Becomes First Buyer to Cancel Long-Term Qatar LNG Deal",
+        "- 2026-11-10 · gCaptain: Qatar LNG Loadings Pick Up to Around Half of Pre-War Levels"
+      ]
+    },
+    {
+      "ref": "pipeline/east-west-crude",
+      "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-13 · Daily Sun: Yemen's Houthis say targeted Saudi East-West pipeline, Yanbu"
       ]
     },
     {
@@ -122,18 +141,8 @@
       "kind": "story",
       "outcome": "nothing",
       "headlines": [
-        "- 2026-11-12 · The Hindu: Yemen’s Houthis say they targeted Saudi East-West pipeline, port city of Yanbu",
-        "- 2026-11-12 · Ahram Online: Yemen's Houthis say targeted Saudi East-West pipeline, Yanbu - Region - World",
-        "- 2026-11-10 · Malay Mail: Saudi Arabia says East-West pipeline targeted amid escalating Houthi strikes, operations unaffected"
-      ]
-    },
-    {
-      "ref": "lng/gem-t100000130598-export",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-10 · TradingView: Poland's Orlen ends long-term QatarEnergy LNG contract over delivery failure"
+        "- 2026-11-13 · Daily Sun: Yemen's Houthis say targeted Saudi East-West pipeline, Yanbu",
+        "- 2026-11-12 · Yemen Online: Yemen: The Houthi militia has established a mechanism to receive requests for ships to cross the Red Sea , the Bab al-Mandab Strait"
       ]
     },
     {
@@ -142,9 +151,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-13 · Deccan Herald: India keen to join patrolling in Malacca Strait to gain edge against China",
-        "- 2026-11-13 · NewsBytes: India to join Malacca Strait patrols to protect trade routes",
-        "- 2026-11-12 · www.malaysiasun.com: India backs coordinated maritime patrolling near Malacca Strait amid vast surveillance needs"
+        "- 2026-11-13 · Inshorts: India backs coordinated patrolling near Malacca Strait | Tap to know more | Inshorts"
       ]
     },
     {
@@ -152,8 +159,25 @@
       "kind": "story",
       "outcome": "nothing",
       "headlines": [
-        "- 2026-11-12 · The Hindu: Yemen’s Houthis say they targeted Saudi East-West pipeline, port city of Yanbu",
-        "- 2026-11-12 · Ahram Online: Yemen's Houthis say targeted Saudi East-West pipeline, Yanbu - Region - World"
+        "- 2026-11-13 · Daily Sun: Yemen's Houthis say targeted Saudi East-West pipeline, Yanbu"
+      ]
+    },
+    {
+      "ref": "pipeline/nord-stream-1",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-13 · The Ukrainian Weekly: Nord Stream gas fueled this German power plant, now it’s being dismantled and sent to Ukraine"
+      ]
+    },
+    {
+      "ref": "terminal/kharg",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-12 · EnergyNow: A Look at Iran’s Kharg Island and Energy Sector"
       ]
     }
   ]

@@ -459,6 +459,10 @@
     "file": "favicons/hromadske.ua.png",
     "checkedAt": "2026-11-06"
   },
+  "hstoday.us": {
+    "file": null,
+    "checkedAt": "2026-11-13"
+  },
   "i24news.tv": {
     "file": "favicons/i24news.tv.png",
     "checkedAt": "2026-11-08"
@@ -487,9 +491,17 @@
     "file": "favicons/indiatoday.in.ico",
     "checkedAt": "2026-11-08"
   },
+  "industryweek.com": {
+    "file": "favicons/industryweek.com.ico",
+    "checkedAt": "2026-11-13"
+  },
   "informat.ro": {
     "file": "favicons/informat.ro.png",
     "checkedAt": "2026-11-06"
+  },
+  "inshorts.com": {
+    "file": "favicons/inshorts.com.png",
+    "checkedAt": "2026-11-13"
   },
   "inspenet.com": {
     "file": "favicons/inspenet.com.png",
@@ -506,6 +518,10 @@
   "investing.com": {
     "file": null,
     "checkedAt": "2026-11-06"
+  },
+  "investinglive.com": {
+    "file": "favicons/investinglive.com.png",
+    "checkedAt": "2026-11-13"
   },
   "iranintl.com": {
     "file": "favicons/iranintl.com.ico",
@@ -655,6 +671,10 @@
     "file": "favicons/mezha.net.ico",
     "checkedAt": "2026-11-06"
   },
+  "middle-east-online.com": {
+    "file": "favicons/middle-east-online.com.png",
+    "checkedAt": "2026-11-13"
+  },
   "middleeasteye.net": {
     "file": "favicons/middleeasteye.net.png",
     "checkedAt": "2026-11-06"
@@ -710,6 +730,10 @@
   "mymotherlode.com": {
     "file": "favicons/mymotherlode.com.ico",
     "checkedAt": "2026-11-10"
+  },
+  "naharnet.com": {
+    "file": "favicons/naharnet.com.ico",
+    "checkedAt": "2026-11-13"
   },
   "naijapreneur.com": {
     "file": "favicons/naijapreneur.com.jpg",
@@ -799,6 +823,10 @@
     "file": "favicons/newsweek.com.png",
     "checkedAt": "2026-11-12"
   },
+  "odessa-journal.com": {
+    "file": null,
+    "checkedAt": "2026-11-13"
+  },
   "offshore-technology.com": {
     "file": "favicons/offshore-technology.com.png",
     "checkedAt": "2026-11-11"
@@ -826,6 +854,10 @@
   "organiser.org": {
     "file": "favicons/organiser.org.ico",
     "checkedAt": "2026-11-12"
+  },
+  "pajhwok.com": {
+    "file": "favicons/pajhwok.com.png",
+    "checkedAt": "2026-11-13"
   },
   "pakobserver.net": {
     "file": "favicons/pakobserver.net.ico",
@@ -966,6 +998,10 @@
   "sputnikglobe.com": {
     "file": "favicons/sputnikglobe.com.png",
     "checkedAt": "2026-11-07"
+  },
+  "subscription.ukrweekly.com": {
+    "file": "favicons/subscription.ukrweekly.com.png",
+    "checkedAt": "2026-11-13"
   },
   "tanahair.net": {
     "file": "favicons/tanahair.net.jpg",
@@ -1182,6 +1218,10 @@
   "wionews.com": {
     "file": "favicons/wionews.com.ico",
     "checkedAt": "2026-11-08"
+  },
+  "wired.me": {
+    "file": null,
+    "checkedAt": "2026-11-13"
   },
   "wsj.com": {
     "file": "favicons/wsj.com.ico",
