@@ -1,11 +1,11 @@
 {
-  "recordedAt": "2026-11-13T11:18:17.069Z",
+  "recordedAt": "2026-11-13T19:56:59.787Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 7,
-      "failed": 52,
-      "articles": 164,
+      "requests": 6,
+      "failed": 53,
+      "articles": 0,
       "errors": [
         "answered 429",
         "answered 429",
@@ -15,7 +15,7 @@
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 600,
+      "articles": 616,
       "errors": []
     }
   },
@@ -23,99 +23,26 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-13"
   },
-  "stories": 20,
-  "candidates": 10,
+  "stories": 18,
+  "candidates": 9,
   "usage": {
-    "input": 163430,
-    "output": 6891,
-    "searches": 10
+    "input": 100155,
+    "output": 9420,
+    "searches": 5
   },
-  "estimatedCostUsd": 0.12,
+  "estimatedCostUsd": 0.065,
   "results": [
     {
       "ref": "chokepoint/hormuz",
-      "kind": "story",
-      "outcome": "committed",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.anews.com.tr/world/2026/11/13/iran-says-tanker-carrying-liquefied-gas-hit-mine-exploded-in-hormuz",
-        "publisher": "anews",
-        "quote": "a ship was hit by an explosion after striking a mine in the Strait of Hormuz",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-13",
-        "eventText": "Iran's Revolutionary Guards say a tanker carrying liquefied gas hit a naval mine and exploded in the Strait of Hormuz."
-      },
-      "headlines": [
-        "- 2026-11-13 · Reuters: Iran says tanker carrying LNG hit mine, suffered explosion in Hormuz",
-        "- 2026-11-13 · The Times of Israel: Iran says tanker carrying liquefied gas hit mine, exploded in Hormuz",
-        "- 2026-11-13 · WIRED Middle East: Keeping Tankers Moving Through The Strait of Hormuz Comes at a Human Cost",
-        "- 2026-11-13 · شفق نيوز: Shafaq News..IRGC says gas carrier hits mine near Hormuz",
-        "- 2026-11-13 · safety4sea: Strait of Hormuz: New gas carrier incident reported amid rising security threats",
-        "- 2026-11-13 · Middle East Eye: IRGC Navy says tanker explodes after hitting a sea mine in Hormuz Strait",
-        "- 2026-11-13 · A News: Iran says tanker carrying liquefied gas hit mine, exploded in Hormuz",
-        "- 2026-11-13 · WANA News Agency: Massive Explosion and Fire Hits Gas Carrier in Eastern Strait of Hormuz",
-        "- 2026-11-13 · Al Jazeera: Iran threatens unlimited response over Strait of Hormuz after US attack",
-        "- 2026-11-13 · تسنیم: LPG Carrier Hits Naval Mine in Strait of Hormuz: IRGC",
-        "- 2026-11-13 · Korea JoongAng Daily: Tehran invokes Korean proverb as warning over Cheonghae Unit deployment near Strait of Hormuz",
-        "- 2026-11-13 · Asia Times: Asia’s way out of the Hormuz deadlock",
-        "- 2026-11-13 · Homeland Security Today: IMO Chief Calls for Strict Enforcement of SOLAS Rules in Strait of Hormuz",
-        "- 2026-11-13 · Yahoo: Iran reports gas tanker explosion in Strait of Hormuz",
-        "- 2026-11-13 · Caspian Post: Gas Carrier Explodes After Striking Mine in Strait of Hormuz"
-      ]
-    },
-    {
-      "ref": "chokepoint/hormuz",
-      "kind": "story",
-      "outcome": "review",
-      "detail": "event 2026-11-13",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.anews.com.tr/world/2026/11/13/iran-says-tanker-carrying-liquefied-gas-hit-mine-exploded-in-hormuz",
-        "publisher": "anews",
-        "quote": "a ship was hit by an explosion after striking a mine in the Strait of Hormuz",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-13",
-        "eventText": "Iran's Revolutionary Guards say a tanker carrying liquefied gas hit a naval mine and exploded in the Strait of Hormuz."
-      }
-    },
-    {
-      "ref": "terminal/ust-luga",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-13 · Odessa Journal: Tanker Loadings at Russia’s Ust-Luga Port Fall Nearly 50% - Oj"
-      ]
-    },
-    {
-      "ref": "refinery/ng-dangote",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-13 · The Guardian Nigeria News: Businessman donates Dangote Refinery shares to 24 retired Lagos police officers",
-        "- 2026-11-13 · Chronicle NG: Businessman donates Dangote refinery shares to 24 retired police officers",
-        "- 2026-11-11 · www.tokenpost.com: Dangote Refinery Offer Draws Estimated ₦5.85 Trillion in Applications"
-      ]
-    },
-    {
-      "ref": "lng/gem-t100000130594-export",
       "kind": "story",
       "outcome": "rejected",
       "detail": "the quote doesn't name the asset",
       "draft": {
         "action": "add_source",
-        "disruptionId": "ras-laffan-north-2026-war",
-        "url": "https://gcaptain.com/qatar-lng-loadings-pick-up-to-around-half-of-pre-war-levels/",
-        "publisher": "gCaptain",
-        "quote": "The number of LNG shipments departing Qatar’s Ras Laffan facility has ranged from 13 to 15",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://houseofsaud.com/irgc-unlimited-response-hormuz-nov13/",
+        "publisher": "House of Saud",
+        "quote": "On the same day, a gas carrier struck an IRGC mine and exploded in the eastern strait.",
         "cause": "",
         "startedAt": "",
         "summary": "",
@@ -124,16 +51,69 @@
         "eventText": ""
       },
       "headlines": [
-        "- 2026-11-11 · Crude Oil Prices Today | OilPrice.com: Poland's Orlen Becomes First Buyer to Cancel Long-Term Qatar LNG Deal",
-        "- 2026-11-10 · gCaptain: Qatar LNG Loadings Pick Up to Around Half of Pre-War Levels"
+        "- 2026-11-13 · Crude Oil Prices Today | OilPrice.com: Iran Says Gas Tanker Hit Mine in Strait of Hormuz",
+        "- 2026-11-13 · UN News: Security Council LIVE: Fragile Gulf calm tested as threats to Hormuz shipping mount",
+        "- 2026-11-13 · Business Insurance: Hormuz insurance rates defy oil export rebound",
+        "- 2026-11-13 · The Media Line: Gulf States’ $16 Billion Railway To Bypass Strait of Hormuz Disruptions",
+        "- 2026-11-13 · gCaptain: Gulf Oil Exports Recover as Hormuz Shipping Struggles",
+        "- 2026-11-13 · Natural Gas Intelligence: LNG Flows Through Strait of Hormuz Snap Back as Qatar Boosts Dark Loadings",
+        "- 2026-11-13 · アラブニュース: Iran says four tankers on fire in Hormuz",
+        "- 2026-11-13 · Al Jazeera: IRGC says tanker caught fire after hitting mines in Strait of Hormuz",
+        "- 2026-11-13 · Crude Oil Prices Today | OilPrice.com: Iraq's Oil Production Soars to 2019 High as Hormuz Flows Surge",
+        "- 2026-11-13 · Substack: The Strait of Hormuz: The Conflict May Be About Oil, But the Bill Is Being Paid by All of Us",
+        "- 2026-11-13 · The Arab Weekly: Iraq exports oil in overland Syrian route revival after Hormuz disruption",
+        "- 2026-11-13 · Riviera Maritime Media: IRGC says gas carrier on fire after striking mine in Hormuz",
+        "- 2026-11-13 · https://houseofsaud.com/: IRGC Aerospace Force Warns of ‘Unlimited Response’ Over Strait of Hormuz After Sirik Strike",
+        "- 2026-11-13 · شفق نيوز: Shafaq News..Iranian navy downs US MQ-1 near Hormuz",
+        "- 2026-11-13 · Energy Intelligence: Fresh Gulf Strikes Test Hormuz Flows, US-Iran 'Status Quo'"
       ]
     },
     {
-      "ref": "pipeline/east-west-crude",
+      "ref": "terminal/ust-luga",
+      "kind": "story",
+      "outcome": "committed",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "ust-luga-2026-11-11",
+        "url": "https://united24media.com/war-in-ukraine/ukraine-strikes-three-russian-radars-guarding-strategic-baltic-oil-port-as-ust-luga-burns-24351",
+        "publisher": "UNITED24",
+        "quote": "On the same day, Ukrainian drones also struck an oil terminal at the nearby port of Ust-Luga, triggering a large-scale fire at the facility.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      },
+      "headlines": [
+        "- 2026-11-13 · UNITED24 Media: Ukraine Strikes Three Russian Radars Guarding Strategic Baltic Oil Port as Ust-Luga Burns",
+        "- 2026-11-13 · Мілітарний: Ukrainian Drones Struck Three Radar Stations That Provided Air Defense for Strategic Port of Ust-Luga in Leningrad Region"
+      ]
+    },
+    {
+      "ref": "lng/gem-t100000130594-export",
       "kind": "story",
       "outcome": "nothing",
+      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-13 · Daily Sun: Yemen's Houthis say targeted Saudi East-West pipeline, Yanbu"
+        "- 2026-11-13 · Reuters: Dropping Qatar LNG deal seen saving Poland's Orlen up to $2 billion",
+        "- 2026-11-13 · TradingView: Dropping Qatar LNG deal seen saving Poland's Orlen up to $2 billion",
+        "- 2026-11-13 · Upstream Online: Orlen highlights measures to replace terminated Qatar LNG volumes"
+      ]
+    },
+    {
+      "ref": "refinery/ng-dangote",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-13 · Business News Nigeria: NGX absorbs N3.5trn pullback ahead of Dangote refinery listing",
+        "- 2026-11-13 · Brand Communicator: Dangote Refinery IPO Draws ₦5.85 Trillion In Subscriptions From 3.8 Million Investors",
+        "- 2026-11-13 · Moneyweb: PIC seeks R8.4bn in shares in Dangote refinery IPO",
+        "- 2026-11-13 · Tekedia: Dangote Refinery IPO Attracts N5.85tn in Applications, Nearly Three Times Target",
+        "- 2026-11-13 · Business News Nigeria: Dangote Refinery IPO draws nearly $1bn demand from African pension funds",
+        "- 2026-11-13 · Nairametrics: South African, Nigerian pension funds seek $1 billion stake in Dangote Refinery IPO",
+        "- 2026-11-13 · The Trumpet Newspaper Nigeria: South African, Nigerian Pension Funds Seek $1bn Stake in Dangote Refinery IPO"
       ]
     },
     {
@@ -141,8 +121,19 @@
       "kind": "story",
       "outcome": "nothing",
       "headlines": [
-        "- 2026-11-13 · Daily Sun: Yemen's Houthis say targeted Saudi East-West pipeline, Yanbu",
-        "- 2026-11-12 · Yemen Online: Yemen: The Houthi militia has established a mechanism to receive requests for ships to cross the Red Sea , the Bab al-Mandab Strait"
+        "- 2026-11-13 · Agenzia Nova: Taiz under siege, Houthis threaten supply routes to Bab el Mandeb",
+        "- 2026-11-13 · Democracy Now!: Houthis Claim Fresh Attacks on Saudi Oil Facilities Including East-West Pipeline",
+        "- 2026-11-13 · energynews.pro: Houthis Claim Strikes on Saudi East-West Pipeline and Aramco Site",
+        "- 2026-11-12 · Energy Intelligence: Houthi Attacks Escalate, But Oil Flows Stay Resilient"
+      ]
+    },
+    {
+      "ref": "pipeline/east-west-crude",
+      "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-13 · Democracy Now!: Houthis Claim Fresh Attacks on Saudi Oil Facilities Including East-West Pipeline",
+        "- 2026-11-13 · energynews.pro: Houthis Claim Strikes on Saudi East-West Pipeline and Aramco Site"
       ]
     },
     {
@@ -151,15 +142,9 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-13 · Inshorts: India backs coordinated patrolling near Malacca Strait | Tap to know more | Inshorts"
-      ]
-    },
-    {
-      "ref": "terminal/yanbu",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-13 · Daily Sun: Yemen's Houthis say targeted Saudi East-West pipeline, Yanbu"
+        "- 2026-11-13 · Indonesia Business Post: Pelindo targets 40% of untapped Malacca Strait vessel traffic with Dumai transshipment hub",
+        "- 2026-11-13 · Inshorts: India backs coordinated patrolling near Malacca Strait | Tap to know more | Inshorts",
+        "- 2026-11-12 · Lokmat Times: India Supports Coordinated Patrolling in Malacca Strait for Maritime Security"
       ]
     },
     {
@@ -168,7 +153,9 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-13 · The Ukrainian Weekly: Nord Stream gas fueled this German power plant, now it’s being dismantled and sent to Ukraine"
+        "- 2026-11-13 · Crude Oil Prices Today | OilPrice.com: Germany Is Dismantling a Nord Stream Power Plant for Ukraine",
+        "- 2026-11-13 · Latest news from Azerbaijan: Germany transfers former Nord Stream power plant to Ukraine",
+        "- 2026-11-12 · ESA: Nord Stream gas leak emissions modelled"
       ]
     },
     {
@@ -177,7 +164,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-12 · EnergyNow: A Look at Iran’s Kharg Island and Energy Sector"
+        "- 2026-11-13 · IranWire: Aging Iranian Oil Tanker Moves Toward Kharg Island Amid U.S. Naval Blockade"
       ]
     }
   ]
