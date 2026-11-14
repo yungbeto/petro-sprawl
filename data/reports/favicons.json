@@ -247,6 +247,10 @@
     "file": "favicons/dailytimesng.com.jpg",
     "checkedAt": "2026-11-09"
   },
+  "dataportuaria.com": {
+    "file": null,
+    "checkedAt": "2026-11-14"
+  },
   "ddnews.gov.in": {
     "file": "favicons/ddnews.gov.in.png",
     "checkedAt": "2026-11-06"
@@ -887,6 +891,10 @@
     "file": "favicons/news.sbs.co.kr.png",
     "checkedAt": "2026-11-12"
   },
+  "news.ssbcrack.com": {
+    "file": "favicons/news.ssbcrack.com.png",
+    "checkedAt": "2026-11-14"
+  },
   "news24.com": {
     "file": "favicons/news24.com.png",
     "checkedAt": "2026-11-11"
@@ -921,6 +929,14 @@
   },
   "newztodays.com": {
     "file": "favicons/newztodays.com.png",
+    "checkedAt": "2026-11-14"
+  },
+  "nwitimes.com": {
+    "file": "favicons/nwitimes.com.ico",
+    "checkedAt": "2026-11-14"
+  },
+  "oceannews.com": {
+    "file": "favicons/oceannews.com.webp",
     "checkedAt": "2026-11-14"
   },
   "odessa-journal.com": {
@@ -1050,6 +1066,10 @@
   "safety4sea.com": {
     "file": null,
     "checkedAt": "2026-11-11"
+  },
+  "sana.sy": {
+    "file": null,
+    "checkedAt": "2026-11-14"
   },
   "saudigazette.com.sa": {
     "file": "favicons/saudigazette.com.sa.png",
@@ -1350,6 +1370,10 @@
   "yahoo.com": {
     "file": "favicons/yahoo.com.png",
     "checkedAt": "2026-11-07"
+  },
+  "yemenmonitor.com": {
+    "file": "favicons/yemenmonitor.com.ico",
+    "checkedAt": "2026-11-14"
   },
   "yemenonline.info": {
     "file": "favicons/yemenonline.info.png",
