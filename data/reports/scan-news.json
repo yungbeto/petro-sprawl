@@ -1,23 +1,22 @@
 {
-  "recordedAt": "2026-11-14T10:49:08.765Z",
+  "recordedAt": "2026-11-14T18:23:15.431Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 15,
-      "failed": 50,
-      "articles": 1,
+      "requests": 10,
+      "failed": 51,
+      "articles": 85,
       "errors": [
-        "answered 429",
-        "answered 429",
-        "answered 429",
         "fetch failed",
-        "answered 429"
+        "answered 429",
+        "answered 429",
+        "fetch failed"
       ]
     },
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 555,
+      "articles": 530,
       "errors": []
     }
   },
@@ -25,14 +24,14 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-14"
   },
-  "stories": 17,
-  "candidates": 5,
+  "stories": 18,
+  "candidates": 6,
   "usage": {
-    "input": 135506,
-    "output": 7258,
-    "searches": 8
+    "input": 51495,
+    "output": 3666,
+    "searches": 3
   },
-  "estimatedCostUsd": 0.097,
+  "estimatedCostUsd": 0.037,
   "results": [
     {
       "ref": "chokepoint/hormuz",
@@ -42,32 +41,41 @@
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://timesofisrael.com/liveblog-november-14-2026",
-        "publisher": "Times of Israel",
-        "quote": "Iran’s navy says an oil tanker caught fire this morning after hitting a naval mine in the eastern Strait of Hormuz, Iranian state media reports.",
+        "url": "https://www.middleeastmonitor.com/20261114-2-tankers-caught-fire-after-hitting-naval-mine-in-hormuz-iranian-navy-says/",
+        "publisher": "Middle East Monitor",
+        "quote": "Iran’s navy said Saturday that two oil tankers caught fire in the eastern Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "2026-11-14",
-        "eventText": "Iran's navy says an oil tanker caught fire after hitting a naval mine in the eastern Strait of Hormuz."
+        "eventAt": "",
+        "eventText": ""
       },
       "headlines": [
-        "- 2026-11-14 · Middle East Eye: Iran says three tankers hit by mines in Hormuz catch fire",
-        "- 2026-11-14 · CNBC: Fertiglobe CEO on Hormuz disruption, fertilizer crisis and global food security",
-        "- 2026-11-14 · chinadailyhk: IRGC: 2 ‘violating’ tankers catches fire in Hormuz after hitting mines",
-        "- 2026-11-14 · Arab News: Iran Guards say two oil tankers hit by mines in Hormuz",
-        "- 2026-11-14 · تسنیم: Tanker Catches Fire after Hitting Sea Mine in Strait of Hormuz",
-        "- 2026-11-14 · The Times of Israel: Oil tanker on fire in Hormuz after hitting mine, Iran’s navy says",
-        "- 2026-11-14 · The New Region: Iran says three tankers hit naval mines in Strait of Hormuz",
-        "- 2026-11-14 · شفق نيوز: Shafaq News..Iranian Navy: Oil tanker hits mine near Hormuz",
-        "- 2026-11-14 · Al Jazeera: UN says 25 seafarers killed in, around Hormuz since US-Israel war on Iran",
-        "- 2026-11-14 · Reuters: Iran's navy says oil tanker on fire after hitting mine in Hormuz",
-        "- 2026-11-14 · Middle East Eye: UKMTO says seven Hormuz tanker attacks recorded in a week",
-        "- 2026-11-14 · Middle East Eye: LNG carrier explodes after hitting mine in Hormuz, IRGC says",
-        "- 2026-11-14 · Diplomacy and Law: Iran Says Tankers Hit Sea Mines in Hormuz: What the Law Says",
-        "- 2026-11-14 · Middle East Monitor: UN warns of rising maritime attacks, urges restoration of safe navigation in Strait of Hormuz, Red Sea",
-        "- 2026-11-14 · https://houseofsaud.com/: Iran Reports 3 Oil Tankers Hit Mines in Hormuz on November 13"
+        "- 2026-11-14 · gCaptain: Oil Tanker On Fire After Hitting Mine In Hormuz",
+        "- 2026-11-14 · Iran International: Live - Trump to raise Iran with Putin, Xi as Hormuz tanker strikes continue",
+        "- 2026-11-14 · The Jerusalem Post: Oil tanker catches fire after hitting naval mine in Strait of Hormuz, Iranian state media says",
+        "- 2026-11-14 · NewsNation: Oil tanker hits naval mine, catches fire in Strait of Hormuz",
+        "- 2026-11-14 · Middle East Monitor: 2 tankers caught fire after hitting naval mine in Hormuz, Iranian navy says",
+        "- 2026-11-14 · ASHARQ AL-AWSAT English: Iran’s Navy Says Oil Tanker on Fire After Hitting Mine in Hormuz",
+        "- 2026-11-14 · Anadolu Ajansı: Iran’s Revolutionary Guard says it shot down US drone over Qeshm Island",
+        "- 2026-11-14 · Muslim Network TV: Iran says two oil tankers struck mines in Hormuz",
+        "- 2026-11-14 · Middle East Eye: Oil tanker on fire in Strait of Hormuz: Iran's navy",
+        "- 2026-11-14 · NewsCord: Iran’s IRGC Says It Shot Down a US MQ-1 Drone Over Qeshm Island: 8 outlets compared",
+        "- 2026-11-14 · Post Register: Iran Strait of Hormuz",
+        "- 2026-11-14 · Middle East Eye: Iran says it intercepted US MQ-1 Predator drone over Qeshm Island",
+        "- 2026-11-14 · RFI: UN official urges Iran, US to let fertilisers through Hormuz Strait",
+        "- 2026-11-14 · WANA News Agency: Another Tanker Catches Fire After Hitting Mine in Strait of Hormuz -",
+        "- 2026-11-14 · The Independent: Oil tanker on fire after hitting mine in Strait of Hormuz"
+      ]
+    },
+    {
+      "ref": "chokepoint/babelm",
+      "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-13 · Yemen Online: Yemen's Houthis claim attacks on Saudi oil, military sites",
+        "- 2026-11-12 · Daily Express US: Houthis bomb vital pipeline as West continues to reel from surging gas prices"
       ]
     },
     {
@@ -76,8 +84,8 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-11 · Наша Ніва: Attack on Ust-Luga: Russian channels report the death of three aircraft crews",
-        "- 2026-11-11 · UkrAgroConsult: Ust-Luga overnight incident: Could Baltic grain exports face delays?"
+        "- 2026-11-13 · YouTube: Friendly Fire Shootdown of Russian Helicopter in Ust-Luga Posibly On Video + Three Radars Destroyed",
+        "- 2026-11-12 · The Sunday Guardian: Russia-Ukraine War Latest News: Ukraine Strikes Russia’s Baltic Sea Port of Ust-Luga; US Envoys Jared Kushner & Steve Witkoff to Head to Moscow"
       ]
     },
     {
@@ -86,52 +94,28 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-14 · The Trumpet Newspaper Nigeria: Chris Iyovwaye Dangote Refinery Claim: NDC Candidate Highlights Wellmann Group’s Role",
-        "- 2026-11-11 · Majorwaves Energy Report: Dangote Refinery, Fertiliser Expansion To Employ Over 90,000 In Lagos"
+        "- 2026-11-14 · Instagram: Northern Creatives Describe Dangote Refinery Visit As Eye-Opening Experience #trusttvnews",
+        "- 2026-11-14 · Peoples Gazette Nigeria: South African, Nigerian pension funds seek $1 billion stake in Dangote refinery"
       ]
     },
     {
-      "ref": "chokepoint/babelm",
+      "ref": "lng/gem-t100000130594-export",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-14 · Aaj English TV: Houthis claim missile attacks on Saudi forces, energy infrastructure",
-        "- 2026-11-14 · https://houseofsaud.com/: Houthis Claim 3 Drones Hit KKIA and East-West Pipeline on November 13",
-        "- 2026-11-12 · 재경일보: Houthi Missile and Drone Attacks Target Key Saudi Oil Bypass Routes : Global : JKN"
+        "- 2026-11-14 · CEO Magazyn: ORLEN Could Save Up to $2 Billion by Ending Qatar LNG Deal, Analysts Estimate"
       ]
     },
     {
-      "ref": "pipeline/east-west-crude",
+      "ref": "pipeline/nord-stream-1",
       "kind": "story",
       "outcome": "nothing",
+      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-14 · https://houseofsaud.com/: Houthis Claim 3 Drones Hit KKIA and East-West Pipeline on November 13"
+        "- 2026-11-14 · Vietnam.vn: Germany gifted Ukraine a power plant that had previously served the Nord Stream project.",
+        "- 2026-11-14 · NewzTodays: Germany Dismantles Nord Stream Power Plant for Ukraine Transfer"
       ]
-    },
-    {
-      "ref": "lng/gem-t100000130601-export",
-      "kind": "end check",
-      "outcome": "rejected",
-      "detail": "the quote doesn't name the asset; end \"\" isn't a date",
-      "draft": {
-        "action": "end_disruption",
-        "disruptionId": "das-island-2026-hormuz",
-        "url": "https://www.bloomberg.com/news/articles/2026-11-10/adnoc-gas-sees-lng-exports-up-this-quarter-as-hormuz-flows-rise",
-        "publisher": "Bloomberg",
-        "quote": "was able to run its main LNG export facility at Das Island at full capacity during the third quarter",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
-      }
-    },
-    {
-      "ref": "terminal/sheskharis",
-      "kind": "end check",
-      "outcome": "nothing"
     }
   ]
 }

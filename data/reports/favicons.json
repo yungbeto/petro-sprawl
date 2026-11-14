@@ -183,6 +183,10 @@
     "file": "favicons/censor.net.ico",
     "checkedAt": "2026-11-11"
   },
+  "ceo.com.pl": {
+    "file": "favicons/ceo.com.pl.png",
+    "checkedAt": "2026-11-14"
+  },
   "channelnewsasia.com": {
     "file": "favicons/channelnewsasia.com.ico",
     "checkedAt": "2026-11-14"
@@ -463,6 +467,10 @@
     "file": "favicons/galvnews.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "gazettengr.com": {
+    "file": "favicons/gazettengr.com.png",
+    "checkedAt": "2026-11-14"
+  },
   "gcaptain.com": {
     "file": "favicons/gcaptain.com.jpg",
     "checkedAt": "2026-11-10"
@@ -699,6 +707,10 @@
     "file": null,
     "checkedAt": "2026-11-07"
   },
+  "manilatimes.net": {
+    "file": "favicons/manilatimes.net.png",
+    "checkedAt": "2026-11-14"
+  },
   "marineinsight.com": {
     "file": "favicons/marineinsight.com.png",
     "checkedAt": "2026-11-08"
@@ -803,6 +815,10 @@
     "file": "favicons/mundodeportivo.com.png",
     "checkedAt": "2026-11-09"
   },
+  "muslimnetwork.tv": {
+    "file": "favicons/muslimnetwork.tv.png",
+    "checkedAt": "2026-11-14"
+  },
   "mykn.kuehne-nagel.com": {
     "file": "favicons/mykn.kuehne-nagel.com.ico",
     "checkedAt": "2026-11-12"
@@ -903,6 +919,10 @@
     "file": "favicons/newsweek.com.png",
     "checkedAt": "2026-11-12"
   },
+  "newztodays.com": {
+    "file": "favicons/newztodays.com.png",
+    "checkedAt": "2026-11-14"
+  },
   "odessa-journal.com": {
     "file": null,
     "checkedAt": "2026-11-13"
@@ -958,6 +978,10 @@
   "pipeline-journal.net": {
     "file": "favicons/pipeline-journal.net.png",
     "checkedAt": "2026-11-11"
+  },
+  "postregister.com": {
+    "file": "favicons/postregister.com.png",
+    "checkedAt": "2026-11-14"
   },
   "prm.ua": {
     "file": "favicons/prm.ua.ico",
@@ -1330,5 +1354,9 @@
   "yemenonline.info": {
     "file": "favicons/yemenonline.info.png",
     "checkedAt": "2026-11-07"
+  },
+  "youtu.be": {
+    "file": "favicons/youtu.be.png",
+    "checkedAt": "2026-11-14"
   }
 }
