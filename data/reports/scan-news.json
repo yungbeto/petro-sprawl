@@ -1,12 +1,13 @@
 {
-  "recordedAt": "2026-11-14T22:38:27.509Z",
+  "recordedAt": "2026-11-15T06:53:40.707Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 6,
-      "failed": 53,
-      "articles": 0,
+      "requests": 10,
+      "failed": 52,
+      "articles": 1,
       "errors": [
+        "fetch failed",
         "answered 429",
         "answered 429",
         "answered 429"
@@ -15,19 +16,19 @@
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 525,
+      "articles": 522,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-14"
+    "lastOk": "2026-11-15"
   },
-  "stories": 18,
+  "stories": 19,
   "candidates": 4,
   "usage": {
-    "input": 22746,
-    "output": 2483,
+    "input": 29927,
+    "output": 1742,
     "searches": 1
   },
   "estimatedCostUsd": 0.014,
@@ -36,36 +37,36 @@
       "ref": "chokepoint/hormuz",
       "kind": "story",
       "outcome": "rejected",
-      "detail": "page is dated in the future",
+      "detail": "page has no publication date",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.aa.com.tr/en/middle-east/2-oil-tankers-hit-mines-catch-fire-near-strait-of-hormuz-irans-revolutionary-guard/4125453",
-        "publisher": "Anadolu",
-        "quote": "Two oil tankers struck naval mines and caught fire south of the Strait of Hormuz.",
+        "url": "https://www.cbsnews.com/miami/video/3-tankers-catch-fire-after-hitting-mines-in-strait-of-hormuz/",
+        "publisher": "CBS News",
+        "quote": "Three oil tankers struck mines overnight and were on fire in the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "2026-11-15",
-        "eventText": "Iran's Revolutionary Guard Navy says two oil tankers hit naval mines and caught fire south of the Strait of Hormuz."
+        "eventAt": "",
+        "eventText": ""
       },
       "headlines": [
-        "- 2026-11-14 · Anadolu Ajansı: 2 oil tankers hit mines, catch fire near Strait of Hormuz: Iran's Revolutionary Guard",
-        "- 2026-11-14 · Al-Monitor: UN official urges Iran, US to let fertilisers through Hormuz Strait",
-        "- 2026-11-14 · Israel National News: Two tankers strike mines in Strait of Hormuz",
-        "- 2026-11-14 · شفق نيوز: Shafaq News..CENTCOM: 1.7B+ barrels crossed Hormuz under US protection",
-        "- 2026-11-14 · Middle East Monitor: Iran’s Revolutionary Guard says it shot down US drone over Qeshm Island",
-        "- 2026-11-14 · Briefs Finance: Tanker Attacks Near Hormuz as Oil Supply Swells",
-        "- 2026-11-14 · The New Region: Iran says three tankers hit naval mines in Strait of Hormuz",
-        "- 2026-11-14 · EnergyNow: Oil Shipments Rise in Hormuz Although Questions Grow Over Iran’s Transit Terms",
-        "- 2026-11-14 · Xinhua: Iran's Army says 2 \"violating\" oil tankers caught fire after hitting mines east of Hormuz Strait",
-        "- 2026-11-14 · Arab News: Iran's navy says oil tanker on fire after hitting mine in Hormuz",
-        "- 2026-11-14 · Yahoo: Oil tanker hits naval mine, catches fire in Strait of Hormuz",
-        "- 2026-11-14 · سانا: CENTCOM: 1.7 billion barrels of oil shipped through Hormuz under U.S. protection",
-        "- 2026-11-14 · Breakingthenews.net: US says 1.7B barrels of oil shipped through Hormuz",
-        "- 2026-11-14 · Traders Union: Qatari investors see geographic concentration around Hormuz as a vulnerability, Tracy Shuchart assesses",
-        "- 2026-11-14 · TV ONE USA: iran-irgc-claims-two-oil-supertankers-catch-fire-explosions-strait-of-hormuz-2026 Archives"
+        "- 2026-11-15 · Korea JoongAng Daily: Decision to expand naval unit's operations toward Hormuz Strait puts Korea between Scylla and Charybdis",
+        "- 2026-11-15 · WANA News Agency: Two Oil Tankers Explode and Catch Fire in the Strait of Hormuz",
+        "- 2026-11-15 · qz.com: Iran's Revolutionary Guard says gas tanker struck mine in Strait of Hormuz",
+        "- 2026-11-15 · CBS News: 3 tankers catch fire after hitting mines in Strait of Hormuz",
+        "- 2026-11-15 · Українські Національні Новини (УНН): Two tankers struck mines and caught fire in the Strait of Hormuz – Iran said they had violated the prohibited route",
+        "- 2026-11-15 · The Times of India: Iran claims three tankers hit naval mines near Hormuz, warns ships against entering restricted zone",
+        "- 2026-11-15 · 巴士的報: Iran says 2 ''violating'' oil tankers caught fire after hitting mines in Hormuz",
+        "- 2026-11-15 · 巴士的報: UN official urges Iran, US to allow fertilizer shipment through Hormuz",
+        "- 2026-11-15 · The Independent: From the Suez Crisis to Hormuz, how much has really changed in 70 years?",
+        "- 2026-11-15 · The Times of India: Iran Turns Hormuz Into A Minefield! Two Tankers Defy IRGC, Explode In Flames",
+        "- 2026-11-15 · DD News: Hormuz standoff: Iran refuses to blink as Trump claims victory and talks freeze",
+        "- 2026-11-15 · Chosunbiz: IRGC says three tankers hit mines in Hormuz as ship attacks surge",
+        "- 2026-11-15 · ABNA English: IRGC says it shot down US MQ-1 drone over Qeshm Island",
+        "- 2026-11-15 · news.sbs.co.kr: Iranian Military Claims Three Tankers Caught Fire in Strait of Hormuz After Striking Mines",
+        "- 2026-11-15 · Myanmar International TV: UN official urges Iran, US to allow fertilizer shipment through Hormuz"
       ]
     },
     {
@@ -74,8 +75,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-14 · Yemen Online: Escalating Battles in Southern Yemen Expand Frontlines Near Bab al-Mandab",
-        "- 2026-11-14 · يمن مونيتور: UN Warns of Escalating Tensions in the Strait of Hormuz and Bab al-Mandab"
+        "- 2026-11-13 · The New Arab: Yemen’s Houthis claim attacks on Saudi oil, military sites"
       ]
     },
     {
@@ -84,7 +84,10 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-14 · SSBCrack: Nigerian Pension Funds Seek Up to $500 Million in Dangote Refinery Shares Amid Oversubscribed IPO"
+        "- 2026-11-15 · The Guardian Nigeria News: Dangote refinery drives £1bn Nigerian fuel exports to UK",
+        "- 2026-11-15 · Nigerian Bulletin: Dangote Refinery: UK Buys £1.02bn in Refined Oil Products From Nigeria",
+        "- 2026-11-14 · Discovery Alert: How the Dangote Refinery Is Redrawing Nigeria’s Crude Flows",
+        "- 2026-11-14 · Punch Newspapers: UK buys £1bn Nigerian oil as Dangote refinery expands"
       ]
     },
     {
@@ -93,7 +96,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-12 · BurgasMedia: Ukraine hits missile ship at Ust-Luga, navy calls it a signal to NATO partners (updated)"
+        "- 2026-11-12 · The Sunday Guardian: Russia-Ukraine War Latest News: Ukraine Strikes Russia’s Baltic Sea Port of Ust-Luga; US Envoys Jared Kushner & Steve Witkoff to Head to Moscow"
       ]
     }
   ]
