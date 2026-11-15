@@ -19,6 +19,10 @@
     "file": "favicons/abc7news.com.ico",
     "checkedAt": "2026-11-09"
   },
+  "addisstandard.com": {
+    "file": null,
+    "checkedAt": "2026-11-15"
+  },
   "africa.businessinsider.com": {
     "file": "favicons/africa.businessinsider.com.ico",
     "checkedAt": "2026-11-06"
@@ -255,6 +259,10 @@
     "file": "favicons/dailytimesng.com.jpg",
     "checkedAt": "2026-11-09"
   },
+  "dailyvoa.com": {
+    "file": null,
+    "checkedAt": "2026-11-15"
+  },
   "dataportuaria.com": {
     "file": null,
     "checkedAt": "2026-11-14"
@@ -266,6 +274,10 @@
   "deccanherald.com": {
     "file": "favicons/deccanherald.com.png",
     "checkedAt": "2026-11-13"
+  },
+  "defence.in": {
+    "file": "favicons/defence.in.png",
+    "checkedAt": "2026-11-15"
   },
   "defencesecurityasia.com": {
     "file": "favicons/defencesecurityasia.com.png",
@@ -289,6 +301,10 @@
   },
   "discoveryalert.com": {
     "file": "favicons/discoveryalert.com.png",
+    "checkedAt": "2026-11-15"
+  },
+  "dmarketforces.com": {
+    "file": "favicons/dmarketforces.com.png",
     "checkedAt": "2026-11-15"
   },
   "dominicanrepublicpost.com": {
@@ -555,6 +571,10 @@
     "file": null,
     "checkedAt": "2026-11-08"
   },
+  "ilpoliticoweb.it": {
+    "file": "favicons/ilpoliticoweb.it.ico",
+    "checkedAt": "2026-11-15"
+  },
   "independent.co.uk": {
     "file": "favicons/independent.co.uk.ico",
     "checkedAt": "2026-11-15"
@@ -574,6 +594,10 @@
   "indianexpress.com": {
     "file": null,
     "checkedAt": "2026-11-13"
+  },
+  "indiasnews.net": {
+    "file": null,
+    "checkedAt": "2026-11-15"
   },
   "indiatoday.in": {
     "file": "favicons/indiatoday.in.ico",
@@ -634,6 +658,10 @@
   "israelhayom.com": {
     "file": "favicons/israelhayom.com.jpg",
     "checkedAt": "2026-11-09"
+  },
+  "jcfa.org": {
+    "file": "favicons/jcfa.org.jpg",
+    "checkedAt": "2026-11-15"
   },
   "jordannews.jo": {
     "file": "favicons/jordannews.jo.png",
@@ -723,6 +751,14 @@
     "file": "favicons/lokmattimes.com.png",
     "checkedAt": "2026-11-12"
   },
+  "lufkindailynews.com": {
+    "file": "favicons/lufkindailynews.com.ico",
+    "checkedAt": "2026-11-15"
+  },
+  "macaubusiness.com": {
+    "file": "favicons/macaubusiness.com.ico",
+    "checkedAt": "2026-11-15"
+  },
   "malaymail.com": {
     "file": null,
     "checkedAt": "2026-11-07"
@@ -766,6 +802,10 @@
   "meforum.org": {
     "file": null,
     "checkedAt": "2026-11-06"
+  },
+  "mereja.com": {
+    "file": "favicons/mereja.com.jpg",
+    "checkedAt": "2026-11-15"
   },
   "mezha.net": {
     "file": "favicons/mezha.net.ico",
@@ -1075,6 +1115,10 @@
     "file": null,
     "checkedAt": "2026-11-12"
   },
+  "rte.ie": {
+    "file": "favicons/rte.ie.png",
+    "checkedAt": "2026-11-15"
+  },
   "rudaw.net": {
     "file": "favicons/rudaw.net.png",
     "checkedAt": "2026-11-07"
@@ -1267,6 +1311,10 @@
     "file": "favicons/timesca.com.png",
     "checkedAt": "2026-11-06"
   },
+  "timesnownews.com": {
+    "file": "favicons/timesnownews.com.ico",
+    "checkedAt": "2026-11-15"
+  },
   "timesofindia.indiatimes.com": {
     "file": "favicons/timesofindia.indiatimes.com.ico",
     "checkedAt": "2026-11-07"
@@ -1306,6 +1354,10 @@
   "trend.az": {
     "file": "favicons/trend.az.png",
     "checkedAt": "2026-11-08"
+  },
+  "trtworld.com": {
+    "file": null,
+    "checkedAt": "2026-11-15"
   },
   "turkiyetoday.com": {
     "file": "favicons/turkiyetoday.com.png",
@@ -1402,6 +1454,10 @@
   "yemenonline.info": {
     "file": "favicons/yemenonline.info.png",
     "checkedAt": "2026-11-07"
+  },
+  "ynetnews.com": {
+    "file": "favicons/ynetnews.com.ico",
+    "checkedAt": "2026-11-15"
   },
   "youtu.be": {
     "file": "favicons/youtu.be.png",

@@ -1,13 +1,12 @@
 {
-  "recordedAt": "2026-11-15T06:53:40.707Z",
+  "recordedAt": "2026-11-15T16:32:44.082Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 10,
-      "failed": 52,
-      "articles": 1,
+      "requests": 6,
+      "failed": 53,
+      "articles": 0,
       "errors": [
-        "fetch failed",
         "answered 429",
         "answered 429",
         "answered 429"
@@ -16,7 +15,7 @@
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 522,
+      "articles": 525,
       "errors": []
     }
   },
@@ -24,58 +23,89 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-15"
   },
-  "stories": 19,
-  "candidates": 4,
+  "stories": 18,
+  "candidates": 5,
   "usage": {
-    "input": 29927,
-    "output": 1742,
-    "searches": 1
+    "input": 79003,
+    "output": 5249,
+    "searches": 4
   },
-  "estimatedCostUsd": 0.014,
+  "estimatedCostUsd": 0.051,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "rejected",
-      "detail": "page has no publication date",
+      "outcome": "committed",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.cbsnews.com/miami/video/3-tankers-catch-fire-after-hitting-mines-in-strait-of-hormuz/",
-        "publisher": "CBS News",
-        "quote": "Three oil tankers struck mines overnight and were on fire in the Strait of Hormuz",
+        "url": "https://aa.com.tr/en/middle-east/iran-says-2-oil-tankers-hit-mines-near-strait-of-hormuz-1-sinks/4125887",
+        "publisher": "Anadolu",
+        "quote": "struck naval mines and caught fire while attempting to cross the southern part of the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
+        "eventAt": "2026-11-15",
+        "eventText": "Iran's IRGC says two oil tankers struck naval mines and caught fire in the southern Strait of Hormuz, and one supertanker sank."
       },
       "headlines": [
-        "- 2026-11-15 · Korea JoongAng Daily: Decision to expand naval unit's operations toward Hormuz Strait puts Korea between Scylla and Charybdis",
-        "- 2026-11-15 · WANA News Agency: Two Oil Tankers Explode and Catch Fire in the Strait of Hormuz",
-        "- 2026-11-15 · qz.com: Iran's Revolutionary Guard says gas tanker struck mine in Strait of Hormuz",
-        "- 2026-11-15 · CBS News: 3 tankers catch fire after hitting mines in Strait of Hormuz",
-        "- 2026-11-15 · Українські Національні Новини (УНН): Two tankers struck mines and caught fire in the Strait of Hormuz – Iran said they had violated the prohibited route",
-        "- 2026-11-15 · The Times of India: Iran claims three tankers hit naval mines near Hormuz, warns ships against entering restricted zone",
-        "- 2026-11-15 · 巴士的報: Iran says 2 ''violating'' oil tankers caught fire after hitting mines in Hormuz",
-        "- 2026-11-15 · 巴士的報: UN official urges Iran, US to allow fertilizer shipment through Hormuz",
-        "- 2026-11-15 · The Independent: From the Suez Crisis to Hormuz, how much has really changed in 70 years?",
-        "- 2026-11-15 · The Times of India: Iran Turns Hormuz Into A Minefield! Two Tankers Defy IRGC, Explode In Flames",
-        "- 2026-11-15 · DD News: Hormuz standoff: Iran refuses to blink as Trump claims victory and talks freeze",
-        "- 2026-11-15 · Chosunbiz: IRGC says three tankers hit mines in Hormuz as ship attacks surge",
-        "- 2026-11-15 · ABNA English: IRGC says it shot down US MQ-1 drone over Qeshm Island",
-        "- 2026-11-15 · news.sbs.co.kr: Iranian Military Claims Three Tankers Caught Fire in Strait of Hormuz After Striking Mines",
-        "- 2026-11-15 · Myanmar International TV: UN official urges Iran, US to allow fertilizer shipment through Hormuz"
+        "- 2026-11-15 · EnergyNow.com: Oil Prices Fly Blind as the Hormuz Enigma Deepens: Bousso",
+        "- 2026-11-15 · Jerusalem Center for Security and Foreign Affairs: Iran’s Hormuz Brinkmanship Tests the Limits of Diplomacy",
+        "- 2026-11-15 · Anadolu Ajansı: Iran says 2 oil tankers hit mines near Strait of Hormuz, 1 sinks",
+        "- 2026-11-15 · Kurdistan24: Iran Says Oil Super Tanker Carrying 2 Million Barrels Sinks in Strait of Hormuz",
+        "- 2026-11-15 · Ynetnews: Iran claims two tankers hit mines in Hormuz, releases unverified video",
+        "- 2026-11-15 · Middle East Eye: Two oil tankers ablaze after striking naval mines in the Strait of Hormuz",
+        "- 2026-11-15 · TRT World: 'Unauthorised supertanker' carrying over 2M barrels of oil sinks in Hormuz: Iran",
+        "- 2026-11-15 · WANA News Agency: Tanker Attacked Near Strait of Hormuz",
+        "- 2026-11-15 · Reuters: Gulf bourses slide as Hormuz tensions and houthi strikes rattle traders",
+        "- 2026-11-15 · Yahoo: Iran's navy: Two more oil tankers hit mines in Strait of Hormuz",
+        "- 2026-11-15 · Mehr News Agency: Two non-compliant tankers hit mines in Hormuz, explode: IRGC",
+        "- 2026-11-15 · Mehr News Agency: UKMTO reports maritime incident near Strait of Hormuz",
+        "- 2026-11-15 · CGTN: Iran rejects GCC compensation demands as Hormuz tensions persist",
+        "- 2026-11-15 · Marine Insight: Oil Tanker Catches Fire After Hitting Naval Mine In Strait Of Hormuz, Iran Says",
+        "- 2026-11-15 · تسنیم: Two Tankers Explode after Hitting Naval Mines South of Strait of Hormuz"
       ]
+    },
+    {
+      "ref": "chokepoint/hormuz",
+      "kind": "story",
+      "outcome": "review",
+      "detail": "event 2026-11-15",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://aa.com.tr/en/middle-east/iran-says-2-oil-tankers-hit-mines-near-strait-of-hormuz-1-sinks/4125887",
+        "publisher": "Anadolu",
+        "quote": "struck naval mines and caught fire while attempting to cross the southern part of the Strait of Hormuz",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-15",
+        "eventText": "Iran's IRGC says two oil tankers struck naval mines and caught fire in the southern Strait of Hormuz, and one supertanker sank."
+      }
     },
     {
       "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
-      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-13 · The New Arab: Yemen’s Houthis claim attacks on Saudi oil, military sites"
+        "- 2026-11-15 · TV ONE USA: un-warns-escalating-attacks-on-commercial-shipping-in-strait-of-hormuz-and-bab-el-mandeb-threaten-global-economy-2026 Archives",
+        "- 2026-11-15 · The Media Line: Saudi-Backed Yemeni Forces Withdraw From Bab el Mandeb, Leaving Houthis in Control",
+        "- 2026-11-15 · Arab News: Yemeni presidency: redeployment of forces near Bab Al-Mandab a ‘calculated military move’",
+        "- 2026-11-15 · Al-Monitor: Yemen government forces withdraw from area near Bab el-Mandeb Strait, Houthis in control",
+        "- 2026-11-15 · https://houseofsaud.com/: Southern Yemeni Forces Withdraw From Dhubab Near Bab el-Mandeb",
+        "- 2026-11-15 · The Jerusalem Post: Yemeni forces withdraw from Bab el-Mandeb Strait, leaving Iran-backed Houthis in control",
+        "- 2026-11-15 · NewsCord: Yemeni Armed Forces Withdraw From Bab el Mandeb, Redeploy Toward Aden Amid Houthi Threats",
+        "- 2026-11-15 · Investing.com: Yemeni government forces withdraw from Bab el-Mandeb area",
+        "- 2026-11-15 · Xinhua: Yemen's gov't forces withdraw from strategic Bab al-Mandab area amid Houthi advances",
+        "- 2026-11-15 · Facebook: #Daily_Brief: #Yemen’s #Houthi gain control of strategic Bab el-Mandeb area following government forces’ withdrawal The withdrawal includes positions around #Dhubab Airport and the #Bab_el_Mandeb area west of Taiz Governorate, placing the strategic c",
+        "- 2026-11-15 · X: 🇾🇪🇸🇦 Saudi-backed Yemeni forces abandon Bab al-Mandab, leaving Houthis in control Yemen’s Southern Armed Forces just announced a redeployment from Dhubab Airport and the Bab al-Mandab area west of Taiz. They say the move is to prioritize securi",
+        "- 2026-11-15 · The Times of India: 'Addressing existing threats': Yemeni forces withdraw from Bab el-Mandeb as Houthis cement foothold",
+        "- 2026-11-15 · UkrMedia News: The Houthis have seized an area near the Bab el-Mandeb Strait",
+        "- 2026-11-15 · The Lufkin Daily News: FILE PHOTO: Views of Bab el-Mandeb strait, Yemen",
+        "- 2026-11-15 · Addis Standard: Daily_Brief: #Yemen’s #Houthi gain control of strategic Bab el-Mandeb area following government forces’ withdrawal"
       ]
     },
     {
@@ -84,19 +114,28 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-15 · The Guardian Nigeria News: Dangote refinery drives £1bn Nigerian fuel exports to UK",
-        "- 2026-11-15 · Nigerian Bulletin: Dangote Refinery: UK Buys £1.02bn in Refined Oil Products From Nigeria",
-        "- 2026-11-14 · Discovery Alert: How the Dangote Refinery Is Redrawing Nigeria’s Crude Flows",
-        "- 2026-11-14 · Punch Newspapers: UK buys £1bn Nigerian oil as Dangote refinery expands"
+        "- 2026-11-15 · Business News Nigeria: Dangote Refinery drives Nigeria’s £1bn refined fuel exports to UK",
+        "- 2026-11-14 · Punch Newspapers: UK buys £1bn Nigerian oil as Dangote refinery expands",
+        "- 2026-11-14 · Proshare: The Dangote Refinery Offer at N525 and the Case for Valuation Discipline",
+        "- 2026-11-13 · Business News Nigeria: Dangote Refinery IPO draws nearly $1bn demand from African pension funds"
       ]
     },
     {
-      "ref": "terminal/ust-luga",
+      "ref": "chokepoint/malacca",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-12 · The Sunday Guardian: Russia-Ukraine War Latest News: Ukraine Strikes Russia’s Baltic Sea Port of Ust-Luga; US Envoys Jared Kushner & Steve Witkoff to Head to Moscow"
+        "- 2026-11-15 · Defence.in: Ahead of ASEAN Summit, India Eyes Malacca Strait Patrol Role with Littoral States to Track PLA Navy and Boost Maritime Security",
+        "- 2026-11-13 · India's News.Net: India backs coordinated maritime patrolling near Malacca Strait amid vast surveillance needs"
+      ]
+    },
+    {
+      "ref": "terminal/yanbu",
+      "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-14 · Mereja: Houthis say they hit a Saudi pipeline pumping station and Yanbu, as the coalition reports only intercepted drones"
       ]
     }
   ]
