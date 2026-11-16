@@ -79,6 +79,14 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "Kpler ship-tracking data showed Das Island had seven LNG loadings in October, unchanged from September, in a Reuters report dated 10 November 2026 (Reuters).",
+        "url": "https://www.businessday.co.za/news/2026-11-10-hormuz-lng-traffic-in-october-at-highest-since-iran-war-began/",
+        "observedAt": "2026-10-31",
+        "recordedAt": "2026-11-16"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "Satellite images showed a tanker docked at Das Island on 2 September and another nearby; ADNOC appears to keep loading LNG, with tankers crossing Hormuz with transponders off. Gulf LNG exports remain far below pre-war levels (Bloomberg, via Energy Connects).",
         "url": "https://www.energyconnects.com/news/gas-lng/2026/september/adnoc-keeps-loading-lng-on-tankers-despite-hormuz-disruption/",
         "observedAt": "2026-09-04",

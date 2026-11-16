@@ -603,6 +603,14 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "The Port of Corpus Christi is reported to move upward of 2.4 million barrels of crude oil daily and to be the nation's second-ranked LNG export port, in an article published November 3, 2026 (MarketScale).",
+        "url": "https://www.marketscale.com/industries/transportation/port-of-corpus-christi-weighs-a-dp-world-container-terminal-and-2000-acre-hub",
+        "observedAt": "2026-11-03",
+        "recordedAt": "2026-11-16"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "Port of Corpus Christi crude oil shipments totaled 30.4 million tons in the third quarter of 2026, down 2.8% from a year earlier, and the port's overall third-quarter volume was 52.4 million tons (DredgeWire).",
         "url": "https://dredgewire.com/port-of-corpus-christi-announces-third-quarter-volumes-none-month-tonnage-record/",
         "observedAt": "2026-09-30",

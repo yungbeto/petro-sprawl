@@ -63,6 +63,14 @@
       {
         "status": "idle",
         "sourceType": "press",
+        "statement": "Reports that the Nord Stream pipelines, which run from Russia to Germany under the Baltic Sea, are no longer operational (RFE/RL).",
+        "url": "https://oilprice.com/Energy/Energy-General/Germany-Is-Dismantling-a-Nord-Stream-Power-Plant-for-Ukraine.html",
+        "observedAt": "2026-11-13",
+        "recordedAt": "2026-11-16"
+      },
+      {
+        "status": "idle",
+        "sourceType": "press",
         "statement": "Reporting on the Hamburg sabotage trial: Nord Stream 2 was built but never opened (Al Jazeera).",
         "url": "https://www.aljazeera.com/news/2026/10/14/ukrainian-ex-officer-goes-on-trial-in-germany-over-nord-stream-blasts",
         "observedAt": "2026-10-14",
@@ -155,6 +163,14 @@
       }
     },
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Reuters calculations show Gazprom's average daily supplies to Europe via TurkStream fell 4% year on year to 52.1 million cubic metres in October, totalling 1.62 bcm (Reuters).",
+        "url": "https://www.bairdmaritime.com/offshore/transport/russian-gas-flows-to-europe-via-undersea-pipeline-drop-in-october",
+        "observedAt": "2026-10-31",
+        "recordedAt": "2026-11-16"
+      },
       {
         "status": "operating",
         "sourceType": "press",
@@ -427,6 +443,14 @@
       }
     },
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "The report says ADNOC currently operates a pipeline carrying Murban crude from onshore oilfields to Fujairah, and that a proposed third pipeline is under consideration (Times Kuwait).",
+        "url": "https://timeskuwait.com/abu-dhabi-plans-to-expand-crude-transport-capacity-to-fujairah/",
+        "observedAt": "2026-11-05",
+        "recordedAt": "2026-11-16"
+      },
       {
         "status": "operating",
         "sourceType": "press",
@@ -912,6 +936,14 @@
     ],
     "autoMatch": false,
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Energy Minister Bayraktar said TANAP transports Azerbaijani gas through Türkiye and has sufficient spare capacity for substantially larger export volumes (Azernews).",
+        "url": "https://www.azernews.az/region/266943.html",
+        "observedAt": "2026-11-06",
+        "recordedAt": "2026-11-16"
+      },
       {
         "status": "operating",
         "sourceType": "press",
