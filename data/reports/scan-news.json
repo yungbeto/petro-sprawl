@@ -1,38 +1,58 @@
 {
-  "recordedAt": "2026-11-15T23:04:43.668Z",
+  "recordedAt": "2026-11-16T06:59:32.988Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 12,
-      "failed": 51,
-      "articles": 31,
+      "requests": 21,
+      "failed": 50,
+      "articles": 1,
       "errors": [
+        "fetch failed",
+        "fetch failed",
         "answered 429",
-        "fetch failed",
-        "fetch failed",
-        "fetch failed"
+        "answered 429",
+        "answered 429"
       ]
     },
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 531,
+      "articles": 543,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-15"
+    "lastOk": "2026-11-16"
   },
-  "stories": 18,
+  "stories": 17,
   "candidates": 5,
   "usage": {
-    "input": 86714,
-    "output": 5283,
-    "searches": 6
+    "input": 120057,
+    "output": 8293,
+    "searches": 7
   },
-  "estimatedCostUsd": 0.071,
+  "estimatedCostUsd": 0.086,
   "results": [
+    {
+      "ref": "chokepoint/babelm",
+      "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-16 · الحرة: Yemeni forces withdraw as Houthis advance at Bab al-Mandab",
+        "- 2026-11-16 · The Lufkin Daily News: Houthi forces take over from Dhubab to Bab el-Mandeb after Saudi-backed forces withdraw from the area, in Taiz Governorate",
+        "- 2026-11-16 · Informed Comment: Yemen: Saudi-backed Forces Retreat, Leaving Houthis in Command of Bab al-Mandab Strait",
+        "- 2026-11-16 · NHKニュース: Yemeni govt. forces reportedly retreat from Bab el-Mandeb",
+        "- 2026-11-16 · Traders Union: Yemen government forces retreat from Bab el-Mandeb as Iran escalates Bahrain strikes",
+        "- 2026-11-16 · News On AIR: Houthis take control of Bab al-Mandab Strait area following withdrawal of Yemeni government forces",
+        "- 2026-11-16 · İlke Haber Ajansı: Ansar Allah forces expand control near Bab al-Mandab as Saudi-backed troops withdraw toward Aden",
+        "- 2026-11-16 · Daijiworld: Yemen government forces withdraw from Bab el-Mandeb area, focus on defending Aden",
+        "- 2026-11-16 · شبكة تواصل الإخبارية: Could Bab al-Mandab Become Iran's New Weapon? Intelligence Reveals a Dangerous Scenario | Sabq",
+        "- 2026-11-15 · The Times of Israel: Yemeni government forces retreat from Bab el-Mandeb Strait in setback against Houthis",
+        "- 2026-11-15 · The Insight International: Yemen government forces pull back from Bab el-Mandeb, leaving Houthis in control of area overlooking strait",
+        "- 2026-11-14 · Avi-Go: Houthis Claim Missile Strike on Saudi Forces in Jazan and Attacks on Riyadh Airport and East-West Pipeline Station"
+      ]
+    },
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
@@ -40,86 +60,51 @@
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://bdnews24.com/world/middle-east/47mh9vo0tx",
-        "publisher": "bdnews24",
-        "quote": "Iran's navy said three oil tankers caught fire on Saturday after hitting naval mines in the Strait of Hormuz, Iranian state media reported. One tanker hit a naval mine in the eastern Strait of Hormuz on Saturday morning, while two others struck mines later in the day.",
+        "url": "https://en.mehrnews.com/news/249438/Two-more-oil-tankers-hit-naval-mines-in-Strait-of-Hormuz",
+        "publisher": "Mehr News",
+        "quote": "The IRGC Navy has announced that two oil tankers exploded and caught fire in the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
+        "eventAt": "2026-11-16",
+        "eventText": "Two oil tankers explode and catch fire in the Strait of Hormuz after hitting naval mines, the IRGC Navy says."
       },
       "headlines": [
-        "- 2026-11-15 · bdnews24.com: Iran navy says three tankers on fire after hitting mines in Hormuz <https://bdnews24.com/world/middle-east/47mh9vo0tx>",
-        "- 2026-11-15 · New York Post: Trump’s Hormuz squeeze has Iran strangled — now slam its back door, too",
-        "- 2026-11-15 · Arab News: Iran’s navy says oil tanker on fire after hitting mine east of Hormuz",
-        "- 2026-11-15 · The Telegraph: Oil supertanker ‘sinks after hitting mine’ in Strait of Hormuz",
-        "- 2026-11-15 · WANA News Agency: Gharibabadi: Iran’s Two-Day Plan to Reopen Strait of Hormuz on the Table; US Must Act",
-        "- 2026-11-15 · EnergyNow: CHARTED: Oil Trade Through the Strait of Hormuz by Country – Visual Capitalist",
-        "- 2026-11-15 · شفق نيوز: Shafaq News..Iranian Navy: Oil tanker catches fire near Hormuz",
-        "- 2026-11-15 · NewsCord: IRGC Says Two Oil Tankers Hit Mines in Strait of Hormuz, Fire Erupts and One Sinks: how 17 outlets framed it",
-        "- 2026-11-15 · WANA News Agency: Tanker Catches Fire After Hitting Mine East of Strait of Hormuz -",
-        "- 2026-11-15 · Around Prague: Iran says supertanker carrying oil sank in Strait of Hormuz",
-        "- 2026-11-15 · Anadolu Ajansı: Iran’s navy says oil tanker struck mine and caught fire east of Strait of Hormuz",
-        "- 2026-11-15 · 巴士的報: Iran says 2 oil tankers exploded on Hormuz Strait's \"unauthorized\" route",
-        "- 2026-11-15 · The New Voice of Ukraine: Iran’s Revolutionary Guards claim two tankers hit mines in Strait of Hormuz",
-        "- 2026-11-15 · Tehran Times: Two tankers explode after hitting naval mines south of Strait of Hormuz",
-        "- 2026-11-15 · UA.NEWS: Iran claims supertanker sank in Strait of Hormuz — NDTV"
+        "- 2026-11-16 · The Jerusalem Post: Two oil tankers hit mines in the Strait of Hormuz, IRGC says",
+        "- 2026-11-16 · The Times of Israel: Two tankers hit mines in Hormuz, IRGC says",
+        "- 2026-11-16 · Middle East Eye: IRGC says two oil tankers hit mines in the Hormuz Strait",
+        "- 2026-11-16 · Arab News: Two oil tankers hit mines in the Strait of Hormuz, IRGC says",
+        "- 2026-11-16 · Anadolu Ajansı: Iran says 2 oil tankers hit mines, catch fire in Strait of Hormuz",
+        "- 2026-11-16 · Caspian Post: Two Tankers Explode in Strait of Hormuz, IRGC Claims",
+        "- 2026-11-16 · The Times of Israel: Oil tanker on fire in Strait of Hormuz due to naval mine, Iran’s army says",
+        "- 2026-11-16 · تسنیم: Sixth Tanker in Two Days Hits Naval Mine in Strait of Hormuz: IRGC",
+        "- 2026-11-16 · شفق نيوز: Shafaq News..IRGC ties six tanker incidents to \"mined Hormuz\"",
+        "- 2026-11-16 · NewsCord: Iran’s Navy Reports Tanker Fire After Mine Hit East of Strait of Hormuz: who 12 outlets blamed",
+        "- 2026-11-16 · Oil & Gas Middle East: Hormuz tanker attack reported in Gulf as Iran says a 2 million-barrel supertanker sank",
+        "- 2026-11-16 · Newsquawk: IRGC warns oil firms that the southern Hormuz route is minded and trusting the lies of US military officials and cooperating with them will make vessels a prey to fire",
+        "- 2026-11-16 · 巴士的報: Iran confirms reaching deal with 2 coastal states on Hormuz shipping lanes",
+        "- 2026-11-16 · IndexBox: Oil Prices Fall as Strait of Hormuz Shipments Recover and IEA Projects Q4 Supply Surplus - News and Statistics",
+        "- 2026-11-16 · Mehr News Agency: Two more oil tankers hit naval mines in Strait of Hormuz"
       ]
     },
     {
-      "ref": "chokepoint/babelm",
-      "kind": "story",
-      "outcome": "committed",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "babelm-2026-houthi-attacks",
-        "url": "https://inshorts.com/en/news/houthis-seize-control-of-bab-el-mandeb-strait-1794737523009",
-        "publisher": "Inshorts",
-        "quote": "Yemen's government-backed forces have retreated from the Bab el-Mandeb Strait, ceding control to Iran-aligned Houthis. Southern forces are now focused on defending Aden.",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-15",
-        "eventText": "Yemen's government-backed forces retreat from the Bab el-Mandeb Strait, ceding control to the Houthis."
-      },
-      "headlines": [
-        "- 2026-11-15 · The Maritime Executive: Houthis Recapture Positions Overlooking the Bab el Mandeb",
-        "- 2026-11-15 · TradeWinds News: Saudi ships face new hurdles after Houthis win back Bab el-Mandeb strait",
-        "- 2026-11-15 · Tehran Times: Saudi-backed militia retreat from Bab el-Mandeb Strait",
-        "- 2026-11-15 · The Lufkin Daily News: FILE PHOTO: Views of Bab el-Mandeb strait, Yemen",
-        "- 2026-11-15 · Palestine Chronicle: Ansarallah Declares Bab al-Mandab ‘Fully Secure’ as Saudi-Backed Forces Withdraw",
-        "- 2026-11-15 · news.sbs.co.kr: Cornered Yemeni Forces Effectively Retreat from Bab el-Mandeb Strait Amid Houthi Offensive",
-        "- 2026-11-15 · وكالة سبأ: Military Source: Areas from which Saudi enemy launched attacks on Bab al-Mandab have been secured",
-        "- 2026-11-15 · CEO Magazyn: Houthis Take Coastal Positions Near Bab al-Mandab, Raising Risk to Europe-Asia Trade",
-        "- 2026-11-15 · LBCI Lebanon: From the Gulf to Bab al Mandab. Diplomatic moves amid fears of wider...",
-        "- 2026-11-15 · Inshorts: Houthis seize control of Bab el-Mandeb Strait | Tap to know more | Inshorts",
-        "- 2026-11-15 · teleSUR English: Yemen Bab al-Mandab Conflict: 2 Key Bases Fall as Houthis Advance",
-        "- 2026-11-15 · Inquisitr: Yemeni forces withdraw from Bab el-Mandeb as Houthis advance",
-        "- 2026-11-15 · The Eastern Herald: Yemen’s Southern Forces Pull Back From Bab al-Mandab to Reinforce Aden",
-        "- 2026-11-15 · OdishaBytes: Saudi-Backed Govt Forces Move Back; Houthis In Control Of Bab el-Mandeb Strait",
-        "- 2026-11-15 · News24Online: Saudi-Houthi war: MAJOR blow to Saudi as Yemeni forces retreat from Bab-el-Mandeb, Houthis seize complete control of strategic sea route; what we know so far - News24 World"
-      ]
-    },
-    {
-      "ref": "chokepoint/babelm",
+      "ref": "chokepoint/hormuz",
       "kind": "story",
       "outcome": "review",
-      "detail": "event 2026-11-15",
+      "detail": "event 2026-11-16",
       "draft": {
         "action": "add_source",
-        "disruptionId": "babelm-2026-houthi-attacks",
-        "url": "https://inshorts.com/en/news/houthis-seize-control-of-bab-el-mandeb-strait-1794737523009",
-        "publisher": "Inshorts",
-        "quote": "Yemen's government-backed forces have retreated from the Bab el-Mandeb Strait, ceding control to Iran-aligned Houthis. Southern forces are now focused on defending Aden.",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://en.mehrnews.com/news/249438/Two-more-oil-tankers-hit-naval-mines-in-Strait-of-Hormuz",
+        "publisher": "Mehr News",
+        "quote": "The IRGC Navy has announced that two oil tankers exploded and caught fire in the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "2026-11-15",
-        "eventText": "Yemen's government-backed forces retreat from the Bab el-Mandeb Strait, ceding control to the Houthis."
+        "eventAt": "2026-11-16",
+        "eventText": "Two oil tankers explode and catch fire in the Strait of Hormuz after hitting naval mines, the IRGC Navy says."
       }
     },
     {
@@ -128,30 +113,45 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-15 · Legit News: UK now one of the top buyers of Nigeria’s fuel, Dangote Refinery tops exports",
-        "- 2026-11-15 · Legit News: Dangote Refinery, Depots Hike Prices as Cooking Gas Jumps to N1,800/Kg"
+        "- 2026-11-16 · News24: PIC wants to invest almost R8.5bn in Dangote refinery",
+        "- 2026-11-16 · The Guardian Nigeria News: Market capitalisation may hit N230tr after Dangote Refinery listing",
+        "- 2026-11-16 · Daily Post Nigeria: Dangote Refinery reduces petrol price by N51/litre"
       ]
     },
     {
       "ref": "pipeline/east-west-crude",
       "kind": "story",
-      "outcome": "nothing",
+      "outcome": "rejected",
+      "detail": "the quote doesn't name the asset; page has no publication date",
+      "draft": {
+        "action": "new_disruption",
+        "disruptionId": "",
+        "url": "https://yemenonline.info/gulf-news/13740",
+        "publisher": "Yemen Online",
+        "quote": "Saudi Arabia has strongly condemned drone attacks targeting the Kingdom's East-West oil pipeline in the Riyadh and Madinah regions",
+        "cause": "conflict",
+        "startedAt": "2026-09-10",
+        "summary": "Saudi Arabia's Foreign Ministry condemned drone attacks on the East-West pipeline in the Riyadh and Madinah regions, which it said came from Iraq and caused injuries and damage. Authorities temporarily halted operations along the pipeline as a precaution while inspections and recovery work continued. Saudi Arabia said it would not respond immediately at the request of Iraq's prime minister.",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      },
       "headlines": [
-        "- 2026-11-15 · Breakingthenews.net: Houthis target stations on Saudi East-West pipeline",
-        "- 2026-11-13 · The Arab Weekly: Houthi attacks raise stakes for Saudi Arabia’s East-West pipeline"
+        "- 2026-11-15 · Yemen Online: Saudi Arabia Condemns Drone Attacks on East-West Pipeline, Suspends Operations as Precaution",
+        "- 2026-11-14 · Avi-Go: Houthis Claim Missile Strike on Saudi Forces in Jazan and Attacks on Riyadh Airport and East-West Pipeline Station"
       ]
     },
     {
       "ref": "terminal/ust-luga",
       "kind": "story",
-      "outcome": "unreadable",
-      "detail": "page answered 403",
+      "outcome": "rejected",
+      "detail": "quote not found on the page",
       "draft": {
         "action": "add_source",
         "disruptionId": "ust-luga-2026-11-11",
-        "url": "https://mezha.net/eng/news/mezha-1219c0aed2594f11c772a729/",
-        "publisher": "Mezha.net",
-        "quote": "The image of the port of Ust-Luga shows at least five completely burned-out tanks containing petroleum products.",
+        "url": "https://censor.net/en/news/4033841/satellite-image-shows-five-burned-out-oil-tanks-at-ust-luga-port",
+        "publisher": "Censor.NET",
+        "quote": "A satellite image shows at least five petroleum storage tanks burned out at Russia’s Ust-Luga port",
         "cause": "",
         "startedAt": "",
         "summary": "",
@@ -160,9 +160,8 @@
         "eventText": ""
       },
       "headlines": [
-        "- 2026-11-15 · Українська правда: Fuel storage tanks burned out in Russian port of Ust-Luga following attack – video",
-        "- 2026-11-15 · Mezha.net: Satellite image of Ust-Luga shows at least five burned fuel tanks",
-        "- 2026-11-15 · UA.NEWS: Video: Fuel tanks burned down in the Russian port of Ust-Luga following a drone attack"
+        "- 2026-11-16 · Цензор.НЕТ: Ukrainian drone attack on Russia’s Ust-Luga port: at least five petroleum storage tanks burned out. SATELLITE IMAGE",
+        "- 2026-11-15 · Українські Національні Новини (УНН): Satellite images showing the aftermath of the attack on the Russian port of Ust-Luga have appeared online"
       ]
     }
   ]

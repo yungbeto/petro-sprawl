@@ -43,6 +43,10 @@
     "file": "favicons/akipress.com.png",
     "checkedAt": "2026-11-06"
   },
+  "alhurra.com": {
+    "file": "favicons/alhurra.com.jpg",
+    "checkedAt": "2026-11-16"
+  },
   "aljazeera.com": {
     "file": "favicons/aljazeera.com.ico",
     "checkedAt": "2026-11-07"
@@ -95,6 +99,10 @@
     "file": "favicons/asiatimes.com.png",
     "checkedAt": "2026-11-06"
   },
+  "avi-go.com": {
+    "file": "favicons/avi-go.com.ico",
+    "checkedAt": "2026-11-16"
+  },
   "azernews.az": {
     "file": "favicons/azernews.az.png",
     "checkedAt": "2026-11-14"
@@ -142,6 +150,10 @@
   "bolnews.com": {
     "file": "favicons/bolnews.com.ico",
     "checkedAt": "2026-11-06"
+  },
+  "borneobulletin.com.bn": {
+    "file": null,
+    "checkedAt": "2026-11-16"
   },
   "brandcom.ng": {
     "file": "favicons/brandcom.ng.png",
@@ -242,6 +254,10 @@
   "dabafinance.com": {
     "file": "favicons/dabafinance.com.png",
     "checkedAt": "2026-11-12"
+  },
+  "daijiworld.com": {
+    "file": "favicons/daijiworld.com.png",
+    "checkedAt": "2026-11-16"
   },
   "daily-sun.com": {
     "file": "favicons/daily-sun.com.ico",
@@ -683,6 +699,10 @@
     "file": "favicons/jpost.com.png",
     "checkedAt": "2026-11-06"
   },
+  "juancole.com": {
+    "file": "favicons/juancole.com.ico",
+    "checkedAt": "2026-11-16"
+  },
   "justsecurity.org": {
     "file": null,
     "checkedAt": "2026-11-10"
@@ -982,6 +1002,10 @@
   "newsnationnow.com": {
     "file": "favicons/newsnationnow.com.ico",
     "checkedAt": "2026-11-13"
+  },
+  "newsonair.gov.in": {
+    "file": "favicons/newsonair.gov.in.png",
+    "checkedAt": "2026-11-16"
   },
   "newsquawk.com": {
     "file": "favicons/newsquawk.com.png",
@@ -1359,6 +1383,10 @@
     "file": null,
     "checkedAt": "2026-11-06"
   },
+  "tradersunion.com": {
+    "file": "favicons/tradersunion.com.ico",
+    "checkedAt": "2026-11-16"
+  },
   "tradewindsnews.com": {
     "file": null,
     "checkedAt": "2026-11-10"
@@ -1463,6 +1491,10 @@
     "file": "favicons/wsj.com.ico",
     "checkedAt": "2026-11-07"
   },
+  "www3.nhk.or.jp": {
+    "file": "favicons/www3.nhk.or.jp.png",
+    "checkedAt": "2026-11-16"
+  },
   "yahoo.com": {
     "file": "favicons/yahoo.com.png",
     "checkedAt": "2026-11-07"
@@ -1482,5 +1514,9 @@
   "youtu.be": {
     "file": "favicons/youtu.be.png",
     "checkedAt": "2026-11-14"
+  },
+  "zawya.com": {
+    "file": "favicons/zawya.com.png",
+    "checkedAt": "2026-11-16"
   }
 }
