@@ -16,6 +16,15 @@
       {
         "status": "offline",
         "sourceType": "press",
+        "statement": "The article reports that Nord Stream 1 has been inoperable since an explosion in mid-2022 (The European Post).",
+        "url": "https://theeuropeanpost.eu/brussels-today/russian-gas-phase-out-leaves-no-road-back-for-nord-stream/",
+        "observedAt": "2026-10-31",
+        "recordedAt": "2026-11-16",
+        "unreviewed": true
+      },
+      {
+        "status": "offline",
+        "sourceType": "press",
         "statement": "Reporting on the Hamburg sabotage trial: three of the four Nord Stream strings were ruptured in the September 2022 blasts (Al Jazeera).",
         "url": "https://www.aljazeera.com/news/2026/10/14/ukrainian-ex-officer-goes-on-trial-in-germany-over-nord-stream-blasts",
         "observedAt": "2026-10-14",
@@ -641,6 +650,15 @@
       "gem-p0644"
     ],
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "KazTransOil reported that 1.321 million tonnes of Kazakh oil were shipped toward the BTC pipeline in January to October 2026, which shows the pipeline carrying crude (Trend).",
+        "url": "https://www.trend.az/casia/kazakhstan/4245476.html",
+        "observedAt": "2026-10-31",
+        "recordedAt": "2026-11-16",
+        "unreviewed": true
+      },
       {
         "status": "operating",
         "sourceType": "press",

@@ -283,6 +283,15 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "Iraq's crude exports through the Ceyhan port rose to 500,000 bpd, with Basra crude trucked north into the pipeline system to reach Ceyhan (OilPrice).",
+        "url": "https://oilprice.com/Latest-Energy-News/World-News/Iraqs-Oil-Exports-via-Turkey-Surge-to-500000-Bpd.html",
+        "observedAt": "2026-11-01",
+        "recordedAt": "2026-11-16",
+        "unreviewed": true
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "Essentially all Turkish crude exports load at Ceyhan, 98.4% in January to September 2026, when exports rose 31.4% year on year to 24.1 million tonnes (Hellenic Shipping News, citing Banchero Costa).",
         "url": "https://www.hellenicshippingnews.com/tanker-market-turkiye-crude-oil-exports-rebound-strongly/",
         "observedAt": "2026-09-30",
