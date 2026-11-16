@@ -19,6 +19,10 @@
     "file": "favicons/abc7news.com.ico",
     "checkedAt": "2026-11-09"
   },
+  "abcnews.com": {
+    "file": "favicons/abcnews.com.ico",
+    "checkedAt": "2026-11-16"
+  },
   "addisstandard.com": {
     "file": null,
     "checkedAt": "2026-11-15"
@@ -299,6 +303,10 @@
     "file": "favicons/defence.in.png",
     "checkedAt": "2026-11-15"
   },
+  "defence.newsd.in": {
+    "file": "favicons/defence.newsd.in.jpg",
+    "checkedAt": "2026-11-16"
+  },
   "defencesecurityasia.com": {
     "file": "favicons/defencesecurityasia.com.png",
     "checkedAt": "2026-11-10"
@@ -450,6 +458,10 @@
   "english.ratopati.com": {
     "file": null,
     "checkedAt": "2026-11-08"
+  },
+  "environewsnigeria.com": {
+    "file": "favicons/environewsnigeria.com.png",
+    "checkedAt": "2026-11-16"
   },
   "esa.int": {
     "file": "favicons/esa.int.png",
@@ -663,6 +675,10 @@
     "file": "favicons/investinglive.com.png",
     "checkedAt": "2026-11-13"
   },
+  "iqna.ir": {
+    "file": "favicons/iqna.ir.png",
+    "checkedAt": "2026-11-16"
+  },
   "iranintl.com": {
     "file": "favicons/iranintl.com.ico",
     "checkedAt": "2026-11-09"
@@ -678,6 +694,10 @@
   "iraqsun.com": {
     "file": null,
     "checkedAt": "2026-11-08"
+  },
+  "irregularwarfare.org": {
+    "file": "favicons/irregularwarfare.org.png",
+    "checkedAt": "2026-11-16"
   },
   "israelhayom.com": {
     "file": "favicons/israelhayom.com.jpg",
@@ -827,6 +847,10 @@
     "file": "favicons/mecouncil.org.png",
     "checkedAt": "2026-11-12"
   },
+  "meduza.io": {
+    "file": "favicons/meduza.io.png",
+    "checkedAt": "2026-11-16"
+  },
   "meed.com": {
     "file": "favicons/meed.com.png",
     "checkedAt": "2026-11-06"
@@ -963,6 +987,10 @@
     "file": "favicons/news.cgtn.com.png",
     "checkedAt": "2026-11-09"
   },
+  "news.err.ee": {
+    "file": "favicons/news.err.ee.png",
+    "checkedAt": "2026-11-16"
+  },
   "news.laodong.vn": {
     "file": null,
     "checkedAt": "2026-11-06"
@@ -1039,6 +1067,14 @@
     "file": null,
     "checkedAt": "2026-11-13"
   },
+  "oedigital.com": {
+    "file": "favicons/oedigital.com.png",
+    "checkedAt": "2026-11-16"
+  },
+  "oenergetice.cz": {
+    "file": "favicons/oenergetice.cz.png",
+    "checkedAt": "2026-11-16"
+  },
   "offshore-technology.com": {
     "file": "favicons/offshore-technology.com.png",
     "checkedAt": "2026-11-11"
@@ -1050,6 +1086,10 @@
   "oilprice.com": {
     "file": "favicons/oilprice.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "opensecrets.org": {
+    "file": null,
+    "checkedAt": "2026-11-16"
   },
   "openthemagazine.com": {
     "file": "favicons/openthemagazine.com.png",
@@ -1083,6 +1123,10 @@
     "file": null,
     "checkedAt": "2026-11-07"
   },
+  "peakprosperity.com": {
+    "file": "favicons/peakprosperity.com.png",
+    "checkedAt": "2026-11-16"
+  },
   "pgjonline.com": {
     "file": "favicons/pgjonline.com.ico",
     "checkedAt": "2026-11-06"
@@ -1090,6 +1134,14 @@
   "pipeline-journal.net": {
     "file": "favicons/pipeline-journal.net.png",
     "checkedAt": "2026-11-11"
+  },
+  "pmnewsnigeria.com": {
+    "file": null,
+    "checkedAt": "2026-11-16"
+  },
+  "porttechnology.org": {
+    "file": null,
+    "checkedAt": "2026-11-16"
   },
   "postregister.com": {
     "file": "favicons/postregister.com.png",
@@ -1142,6 +1194,10 @@
   "reuters.com": {
     "file": "favicons/reuters.com.ico",
     "checkedAt": "2026-11-06"
+  },
+  "reutersconnect.com": {
+    "file": "favicons/reutersconnect.com.ico",
+    "checkedAt": "2026-11-16"
   },
   "rferl.org": {
     "file": "favicons/rferl.org.ico",
@@ -1239,6 +1295,10 @@
     "file": "favicons/sputnikglobe.com.png",
     "checkedAt": "2026-11-07"
   },
+  "streetinsider.com": {
+    "file": "favicons/streetinsider.com.ico",
+    "checkedAt": "2026-11-16"
+  },
   "subscription.ukrweekly.com": {
     "file": "favicons/subscription.ukrweekly.com.png",
     "checkedAt": "2026-11-13"
@@ -1283,6 +1343,14 @@
     "file": null,
     "checkedAt": "2026-11-07"
   },
+  "theconversation.com": {
+    "file": "favicons/theconversation.com.ico",
+    "checkedAt": "2026-11-16"
+  },
+  "thedarksideoftheboom.substack.com": {
+    "file": null,
+    "checkedAt": "2026-11-16"
+  },
   "thedeepdive.ca": {
     "file": "favicons/thedeepdive.ca.png",
     "checkedAt": "2026-11-11"
@@ -1290,6 +1358,10 @@
   "theedgemalaysia.com": {
     "file": "favicons/theedgemalaysia.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "thegazellenews.com": {
+    "file": "favicons/thegazellenews.com.jpg",
+    "checkedAt": "2026-11-16"
   },
   "theguardian.com": {
     "file": "favicons/theguardian.com.ico",
