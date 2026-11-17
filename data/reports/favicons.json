@@ -31,6 +31,10 @@
     "file": "favicons/africa.businessinsider.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "africa.dailynewsegypt.com": {
+    "file": "favicons/africa.dailynewsegypt.com.png",
+    "checkedAt": "2026-11-17"
+  },
   "agbi.com": {
     "file": "favicons/agbi.com.png",
     "checkedAt": "2026-11-10"
@@ -222,6 +226,10 @@
   "ceo.com.pl": {
     "file": "favicons/ceo.com.pl.png",
     "checkedAt": "2026-11-14"
+  },
+  "championnews.com.ng": {
+    "file": "favicons/championnews.com.ng.png",
+    "checkedAt": "2026-11-17"
   },
   "channelnewsasia.com": {
     "file": "favicons/channelnewsasia.com.ico",
@@ -439,6 +447,10 @@
     "file": null,
     "checkedAt": "2026-11-07"
   },
+  "english.anf-news.com": {
+    "file": "favicons/english.anf-news.com.png",
+    "checkedAt": "2026-11-17"
+  },
   "english.globalarabnetwork.com": {
     "file": "favicons/english.globalarabnetwork.com.png",
     "checkedAt": "2026-11-06"
@@ -507,6 +519,10 @@
     "file": "favicons/finance.yahoo.com.png",
     "checkedAt": "2026-11-11"
   },
+  "finimize.com": {
+    "file": null,
+    "checkedAt": "2026-11-17"
+  },
   "firstpost.com": {
     "file": "favicons/firstpost.com.ico",
     "checkedAt": "2026-11-09"
@@ -526,6 +542,10 @@
   "freemalaysiatoday.com": {
     "file": "favicons/freemalaysiatoday.com.png",
     "checkedAt": "2026-11-07"
+  },
+  "freepressjournal.in": {
+    "file": "favicons/freepressjournal.in.webp",
+    "checkedAt": "2026-11-17"
   },
   "fxempire.com": {
     "file": "favicons/fxempire.com.ico",
@@ -635,9 +655,17 @@
     "file": "favicons/indexbox.io.png",
     "checkedAt": "2026-11-14"
   },
+  "indianewengland.com": {
+    "file": "favicons/indianewengland.com.png",
+    "checkedAt": "2026-11-17"
+  },
   "indianexpress.com": {
     "file": null,
     "checkedAt": "2026-11-13"
+  },
+  "indianmasterminds.com": {
+    "file": "favicons/indianmasterminds.com.png",
+    "checkedAt": "2026-11-17"
   },
   "indiasnews.net": {
     "file": null,
@@ -874,6 +902,10 @@
   "mezha.net": {
     "file": "favicons/mezha.net.ico",
     "checkedAt": "2026-11-06"
+  },
+  "mid-day.com": {
+    "file": "favicons/mid-day.com.png",
+    "checkedAt": "2026-11-17"
   },
   "middle-east-online.com": {
     "file": "favicons/middle-east-online.com.png",
@@ -1415,6 +1447,10 @@
     "file": "favicons/thepeninsulaqatar.com.png",
     "checkedAt": "2026-11-06"
   },
+  "theprint.in": {
+    "file": "favicons/theprint.in.png",
+    "checkedAt": "2026-11-17"
+  },
   "thereport.live": {
     "file": "favicons/thereport.live.png",
     "checkedAt": "2026-11-14"
@@ -1434,6 +1470,14 @@
   "thetrumpet.ng": {
     "file": "favicons/thetrumpet.ng.webp",
     "checkedAt": "2026-11-09"
+  },
+  "theweek.in": {
+    "file": "favicons/theweek.in.png",
+    "checkedAt": "2026-11-17"
+  },
+  "thisdaylive.com": {
+    "file": "favicons/thisdaylive.com.png",
+    "checkedAt": "2026-11-17"
   },
   "tickernews.co": {
     "file": "favicons/tickernews.co.jpg",
@@ -1546,6 +1590,10 @@
   "upstreamonline.com": {
     "file": null,
     "checkedAt": "2026-11-09"
+  },
+  "utkarsh.com": {
+    "file": "favicons/utkarsh.com.png",
+    "checkedAt": "2026-11-17"
   },
   "vanguardngr.com": {
     "file": "favicons/vanguardngr.com.ico",

@@ -1,54 +1,49 @@
 {
-  "recordedAt": "2026-11-17T04:04:12.341Z",
+  "recordedAt": "2026-11-17T16:20:02.901Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 6,
-      "failed": 53,
+      "requests": 9,
+      "failed": 52,
       "articles": 0,
       "errors": [
         "answered 429",
+        "answered 429",
         "fetch failed",
-        "fetch failed"
+        "answered 429"
       ]
     },
     "google-news": {
-      "requests": 66,
-      "failed": 1,
-      "articles": 560,
-      "errors": [
-        "answered 429"
-      ]
+      "requests": 53,
+      "failed": 0,
+      "articles": 600,
+      "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
     "lastOk": "2026-11-17"
   },
-  "stories": 19,
-  "candidates": 5,
+  "stories": 25,
+  "candidates": 11,
   "usage": {
-    "input": 50725,
-    "output": 4312,
-    "searches": 2
+    "input": 98404,
+    "output": 7312,
+    "searches": 6
   },
-  "estimatedCostUsd": 0.027,
+  "estimatedCostUsd": 0.073,
   "results": [
     {
       "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
-      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-17 · Facebook: A day after Yemen's government announced its retreat from the Bab el-Mandeb strait, Saudi Arabia dismissed the commander of a military coalition it set up to back the Yemeni government against the Houthis. #dwnews",
-        "- 2026-11-17 · https://houseofsaud.com/: Houthi Bab el-Mandeb Gains and Saudi Arabia's Oil Exports",
-        "- 2026-11-17 · Inshorts: Saudi-backed forces withdraw from area near strategic Bab el-Mandeb Strait, Houthis take over | Aden is seat of Yemen's int'lly recognised govt | Inshorts",
-        "- 2026-11-16 · UA.NEWS: Yemeni government forces withdraw from Bab el-Mandeb Strait — The Guardian",
-        "- 2026-11-16 · وكالة سبأ: War Media to release footage of Saudi enemy forces’ losses near Bab al-Mandab",
-        "- 2026-11-16 · وكالة سبأ: Footage shows destruction of Saudi enemy military vehicles near Bab al-Mandab",
-        "- 2026-11-16 · Times Now: $1 Trillion Trade Route at Risk as Houthis Seize Red Sea Gateway with Capture of Bab el-Mandeb Strait",
-        "- 2026-11-16 · NewsBytes: Houthi advance risks Bab al-Mandab and 12% of global trade",
-        "- 2026-11-16 · Daijiworld: Yemen government forces withdraw from Bab el-Mandeb area, focus on defending Aden"
+        "- 2026-11-17 · Middle East Eye: Yemen's government forces withdraw from Bab al-Mandab and west coast to defend Aden",
+        "- 2026-11-17 · ABNA English: Ansarallah says securing Bab al-Mandab marks historic victory for Yemen",
+        "- 2026-11-17 · A News: Saudi-backed forces retreat from strategic Bab el-Mandeb - anews",
+        "- 2026-11-17 · The Week: OPINION | Houthis now hold the coast at Bab el-Mandeb. What should India do about a chokepoint it cannot control?",
+        "- 2026-11-17 · NDTV: Yemen War Escalates: Houthis Make Gains Near Bab el-Mandeb | Saudi Arabia Conflict",
+        "- 2026-11-17 · SSBCrack: Houthis Say Bab el-Mandeb Strait Is Safer After Seizing Yemen’s Coastline"
       ]
     },
     {
@@ -58,32 +53,32 @@
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.yahoo.com/news/world/articles/iran-reports-fourth-tanker-damaged-004848151.html",
-        "publisher": "Yahoo",
-        "quote": "Another oil tanker caught fire and sustained heavy damage after striking a naval mine near the Strait of Hormuz",
+        "url": "https://gcaptain.com/second-strike-on-lpg-tanker-in-strait-of-hormuz-leaves-one-missing-two-injured/",
+        "publisher": "gCaptain",
+        "quote": "the Panama-flagged LPG tanker TARA GAS came under repeated attack in the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
         "eventAt": "2026-11-16",
-        "eventText": "Iranian state media report that a tanker caught fire after striking a naval mine near the Strait of Hormuz, the fourth tanker damaged in 24 hours."
+        "eventText": "The Panama-flagged LPG tanker TARA GAS is struck in repeated attacks in the Strait of Hormuz, and its crew abandons ship."
       },
       "headlines": [
-        "- 2026-11-17 · Middle East Eye: IRGC says forces seized US drone near Hormuz Strait",
-        "- 2026-11-17 · Briefs Finance: Oil slides as Hormuz flows rebound and surplus forecasts build",
-        "- 2026-11-17 · EnergyNow.com: Brace for a Flood of Oil as Soon as Hormuz Reopens - Energy News, Top Headlines, Commentaries, Features & Events",
-        "- 2026-11-17 · Al Jazeera: Tankers hit in Strait of Hormuz as drone raises alarm at Iraq gas field",
-        "- 2026-11-17 · Ticker News: USS Roosevelt arrives amid Yemen and Hormuz escalations",
-        "- 2026-11-17 · Yahoo: Iran reports fourth tanker damaged by mine near Strait of Hormuz",
-        "- 2026-11-17 · Riviera Maritime Media: Tanker hit off Oman as attacks and mine claims in and around Strait of Hormuz continue",
-        "- 2026-11-17 · Yemen Online: Oil Tanker Attacked Near Strait of Hormuz, Engine Room Fire Reported",
-        "- 2026-11-17 · Yemen Online: Iran’s Revolutionary Guards Claim Control of U.S. Drone Near Qeshm Island",
-        "- 2026-11-17 · NDTV: Tanker Transiting Strait Of Hormuz Attacked Near Oman",
-        "- 2026-11-17 · www.tmgm.com: Fourth oil tanker catches fire in Hormuz after striking naval mine, Iran says",
-        "- 2026-11-17 · Gulf News: UK PM says Iran war must end — and backs deal to reopen Strait of Hormuz",
-        "- 2026-11-17 · Mehr News Agency: IRGC captures ninth U.S. MQM-170 drone over Qeshm",
-        "- 2026-11-17 · BusinessToday Malaysia: Brent Falls To US$92 Despite Continued Tanker Attacks In Strait Of Hormuz",
-        "- 2026-11-17 · NDTV: Video | Tanker Attacked In Strait Of Hormuz Off Oman Coast, All Crew Members Accounted For"
+        "- 2026-11-17 · CNBC: Iran escalates threats as third U.S. carrier arrives in Middle East, tanker struck in Hormuz",
+        "- 2026-11-17 · Forbes: The Real Energy Risk Is The Collapse Of The Hormuz Workarounds.",
+        "- 2026-11-17 · Reuters: Crew abandon gas tanker off Hormuz after being hit by projectile, sources say",
+        "- 2026-11-17 · Transport Topics: Oil prices swing as vessel attacks reported around Hormuz",
+        "- 2026-11-17 · Jerusalem Center for Security and Foreign Affairs: Iran Claims Victory in Hormuz, but Its Own Press Exposes a Regime in Crisis",
+        "- 2026-11-17 · The Loadstar: The Hormuz Letter: A cyberattack hit 178 major companies...",
+        "- 2026-11-17 · Crude Oil Prices Today | OilPrice.com: TTF Gas Bounces Back to 86 Euros as Hormuz Risks Resurface",
+        "- 2026-11-17 · The Times of Israel: Iranian official says US behind strikes on Qeshm Island, didn’t cause any damage",
+        "- 2026-11-17 · Seatrade Maritime News: LPG tanker suffers engine room fire following Hormuz attack",
+        "- 2026-11-17 · gCaptain: Second Strike on LPG Tanker in Strait of Hormuz Leaves One Missing, Two Injured",
+        "- 2026-11-17 · Al Jazeera: Vessels on fire after naval mine hit in Hormuz Strait, Iran says",
+        "- 2026-11-17 · Arab News: Iran’s Navy says another tanker hit by mine in Hormuz",
+        "- 2026-11-17 · Arab News: US attacks Iran’s Qeshm island in Strait of Hormuz: official",
+        "- 2026-11-17 · تسنیم: Tanker Catches Fire After Hitting Sea Mine in Strait of Hormuz",
+        "- 2026-11-17 · Crude Oil Prices Today | OilPrice.com: Iran and Oman Hold Talks on Strait of Hormuz Security as Tanker Attacks Surge"
       ]
     },
     {
@@ -94,15 +89,15 @@
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.yahoo.com/news/world/articles/iran-reports-fourth-tanker-damaged-004848151.html",
-        "publisher": "Yahoo",
-        "quote": "Another oil tanker caught fire and sustained heavy damage after striking a naval mine near the Strait of Hormuz",
+        "url": "https://gcaptain.com/second-strike-on-lpg-tanker-in-strait-of-hormuz-leaves-one-missing-two-injured/",
+        "publisher": "gCaptain",
+        "quote": "the Panama-flagged LPG tanker TARA GAS came under repeated attack in the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
         "eventAt": "2026-11-16",
-        "eventText": "Iranian state media report that a tanker caught fire after striking a naval mine near the Strait of Hormuz, the fourth tanker damaged in 24 hours."
+        "eventText": "The Panama-flagged LPG tanker TARA GAS is struck in repeated attacks in the Strait of Hormuz, and its crew abandons ship."
       }
     },
     {
@@ -111,9 +106,53 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-17 · Daily Trust: Dangote Refinery trains, equips 100 Lekki fishermen",
-        "- 2026-11-16 · Energy Focus Report: Dangote Refinery Boosts Host Communities’ Livelihoods, Empowers 100 Lekki Fishermen",
-        "- 2026-11-16 · theradar.ng: Dangote refinery IPO: what small investors can expect while allotment awaits SEC"
+        "- 2026-11-17 · Finimize: Dangote Refinery Looks To Upsize Its Nigeria IPO",
+        "- 2026-11-17 · TradingView: Dangote Refinery to expand IPO by up to 30% to $2.1 billion, sources say",
+        "- 2026-11-17 · Zawya: Dangote Refinery to expand IPO by up to 30% to $2.1bln, sources say",
+        "- 2026-11-17 · Business News Nigeria: SEC vows to protect small investors as Dangote Refinery allotment awaits nod",
+        "- 2026-11-17 · THISDAYLIVE: Dangote Refinery Boosts Host Communities’ Livelihoods, Empowers 100 Lekki Fishermen",
+        "- 2026-11-17 · Brand Communicator: Premium Energy Brand, Dangote Refinery Rises In Global Relevance As Exports To UK Hit £1bn",
+        "- 2026-11-17 · Daily Champion Newspaper: Dangote Refinery reduces petrol price again by N51/litre",
+        "- 2026-11-17 · Legit News: Petrol Landing Cost Crashes to N1,067 Per Litre, Now Cheaper Than Dangote Refinery’s Rate",
+        "- 2026-11-16 · Proshare: Dangote Refinery: Principal Actors and Factors Behind Its Success",
+        "- 2026-11-16 · Legit News: Dangote Refinery Reduces Petrol Price by N51, Dealers Release New Rates"
+      ]
+    },
+    {
+      "ref": "refinery/in-panipat",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-17 · The Hindu: IOC gets government nod for commercial sustainable aviation fuel supply from Panipat refinery",
+        "- 2026-11-17 · The Indian Express: India’s first sustainable aviation fuel plant ready at IOC’s Panipat refinery ahead of blending mandates",
+        "- 2026-11-17 · ThePrint: Indian Oil’s Panipat refinery set to kick off commercial supply of sustainable aviation fuel soon",
+        "- 2026-11-17 · TradingView: Indian Oil Corp Ltd Chair Says Panipat Refinery's Green Jet Fuel Output Enough To Meet 1% Blending Target In 2027",
+        "- 2026-11-17 · Utkarsh Classes: IOC Gets Government Approval to Commercially Supply Sustainable Aviation Fuel (SAF) from Panipat Refinery",
+        "- 2026-11-17 · ThePrint: IOC gets govt nod for commercial sustainable aviation fuel supply from Panipat refinery",
+        "- 2026-11-17 · Mid-Day: IOC gets government nod for commercial SAF supply from Panipat refinery",
+        "- 2026-11-17 · Free Press Journal: Indian Oil Takes A Big Leap Towards Greener Skies, Panipat Refinery Set To Meet Indias 1% SAF Blending Target"
+      ]
+    },
+    {
+      "ref": "pipeline/kirkuk-ceyhan",
+      "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-17 · The Arab Weekly: Iraq resumes crude oil pumping via Kirkuk-Ceyhan pipeline to Turkey",
+        "- 2026-11-17 · Caspian Post: Iraq Resumes Kirkuk-Ceyhan Oil Exports to Türkiye After Decade-Long Halt",
+        "- 2026-11-17 · Middle East Online: Iraq restarts Kirkuk-Ceyhan pipeline, targets 500,000 bpd",
+        "- 2026-11-17 · IraqiNews: Iraq resumes oil flows via rehabilitated Kirkuk–Ceyhan pipeline",
+        "- 2026-11-17 · ANF English: Oil exports begin through Kirkuk–Ceyhan pipeline"
+      ]
+    },
+    {
+      "ref": "pipeline/nord-stream-1",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-17 · Laodong.vn: Nord Stream sabotage incident reveals more witnesses and notable material evidence"
       ]
     },
     {
@@ -122,15 +161,43 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-16 · LNG Prime: Knutsen takes delivery of tenth QatarEnergy LNG carrier"
+        "- 2026-11-16 · Offshore Engineer Magazine: Orlen's Termination of Qatar LNG Deal Could Yield $2B in Savings"
       ]
     },
     {
-      "ref": "terminal/yanbu",
+      "ref": "chokepoint/malacca",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-17 · Indian Masterminds: What is India Malacca Strait Patrol Plan and How Will It Strengthen Indo-Pacific Security Amid Global Turbulence"
+      ]
+    },
+    {
+      "ref": "terminal/stabroek-fpsos",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-17 · Yahoo Finance: ExxonMobil begins oil production at Uaru in Guyana’s Stabroek block"
+      ]
+    },
+    {
+      "ref": "field/gem-l100000312594",
       "kind": "story",
       "outcome": "nothing",
       "headlines": [
-        "- 2026-11-16 · https://houseofsaud.com/: Aramco Restores Full November Crude Supply to Europe via Yanbu"
+        "- 2026-11-17 · Quantum Commodity Intelligence: Kazakhstan crude exports fall 14% on Karachaganak maintenance",
+        "- 2026-11-17 · Trend News Agency: Kazakhstan commissions sixth gas reinjection compressor at Karachaganak field"
+      ]
+    },
+    {
+      "ref": "refinery/us-indiana-whiting",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-17 · TradingView: BP Sent Letter To USW Regarding Union’S Recent Correspondence On Whiting Refinery Negotiations"
       ]
     }
   ]
