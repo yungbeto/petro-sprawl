@@ -1,21 +1,23 @@
 {
-  "recordedAt": "2026-11-18T12:02:03.983Z",
+  "recordedAt": "2026-11-18T20:50:14.911Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 7,
-      "failed": 52,
-      "articles": 22,
+      "requests": 13,
+      "failed": 51,
+      "articles": 0,
       "errors": [
         "answered 429",
         "answered 429",
-        "fetch failed"
+        "answered 429",
+        "fetch failed",
+        "answered 429"
       ]
     },
     "google-news": {
-      "requests": 55,
+      "requests": 53,
       "failed": 0,
-      "articles": 634,
+      "articles": 633,
       "errors": []
     }
   },
@@ -24,24 +26,44 @@
     "lastOk": "2026-11-18"
   },
   "stories": 25,
-  "candidates": 6,
+  "candidates": 8,
   "usage": {
-    "input": 93532,
-    "output": 5805,
-    "searches": 5
+    "input": 98986,
+    "output": 4556,
+    "searches": 6
   },
-  "estimatedCostUsd": 0.062,
+  "estimatedCostUsd": 0.072,
   "results": [
     {
       "ref": "chokepoint/babelm",
       "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-18 · Montel News: Red Sea route offers limited relief for Qatar LNG exports",
+        "- 2026-11-18 · The Lufkin Daily News: Houthi forces take over from Dhubab to Bab el-Mandeb after Saudi-backed forces withdraw from the area, in Taiz Governorate",
+        "- 2026-11-18 · The Times of India: Two Indian sailors rescued from sunken cargo ship near Bab el-Mandeb, third missing",
+        "- 2026-11-18 · Agenzia Nova: ISW: Houthi advance toward Aden increases shipping risks at Bab el Mandeb",
+        "- 2026-11-18 · MillenniumPost: Two Indian sailors rescued after cargo sinks near Bab el-Mandeb",
+        "- 2026-11-18 · Madhyamam: 2 Indians rescued, one missing after cargo ship sinks near Bab el-Mandeb",
+        "- 2026-11-18 · Munsif News 24x7: ​Two Indians rescued, one missing as cargo vessel sinks near Bab el-Mandeb Strait",
+        "- 2026-11-17 · All Israel News: Houthi terrorists advance against Saudi-backed forces near Yemen’s Bab el-Mandeb Strait",
+        "- 2026-11-16 · ASHARQ AL-AWSAT English: Yemeni Presidency: Redeployment of Forces Near Bab Al-Mandab a 'Calculated Military Move'",
+        "- 2026-11-16 · Ada Derana: Yemen government forces withdraw from area near Bab el-Mandeb Strait, Houthis in control",
+        "- 2026-11-16 · KOHA.net: Houthis strengthen control over Bab el-Mandeb Strait after Yemeni forces withdraw",
+        "- 2026-11-15 · Investing.com Nigeria: Yemeni government forces withdraw from Bab el-Mandeb area By Investing.com",
+        "- 2026-11-15 · ИФЗ РАН: Why The Bab El-mandeb Withdrawal Changes Everything For Global Trade"
+      ]
+    },
+    {
+      "ref": "chokepoint/hormuz",
+      "kind": "story",
       "outcome": "committed",
       "draft": {
         "action": "add_source",
-        "disruptionId": "babelm-2026-houthi-attacks",
-        "url": "https://www.millenniumpost.in/big-stories/two-indian-sailors-rescued-after-cargo-vessel-sinks-near-bab-el-mandeb-one-missing-683684",
-        "publisher": "Millennium Post",
-        "quote": "Two Indian sailors rescued after a cargo vessel sank near the Bab el-Mandeb Strait",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://www.aljazeera.com/news/2026/11/18/status-quo-between-us-and-iran-could-break-out-into-war-analysts-warn",
+        "publisher": "Al Jazeera",
+        "quote": "The UAE’s state-owned Abu Dhabi National Oil Company (ADNOC) confirmed on Wednesday that one of its vessels was attacked in the Strait of Hormuz and one crew member was missing.",
         "cause": "",
         "startedAt": "",
         "summary": "",
@@ -50,57 +72,21 @@
         "eventText": ""
       },
       "headlines": [
-        "- 2026-11-18 · The Times of India: Two Indian sailors rescued from sunken cargo ship near Bab el-Mandeb, third missing",
-        "- 2026-11-18 · X: 🇾🇪🇸🇦 Saudi-backed forces pulled back from the Bab el-Mandeb coast to protect Aden, so the Houthis are now pushing toward the city. The Houthis advanced inland and along the coast, reaching roughly 60 km from Aden. Control near Bab el-Mandeb could g",
-        "- 2026-11-18 · Yahoo: What it means if the Houthis take Aden and control the Bab el-Mandeb Strait",
-        "- 2026-11-18 · MillenniumPost: Two Indian sailors rescued after cargo vessel sinks near Bab el-Mandeb; one missing",
-        "- 2026-11-18 · Aaj TV: Yemen | Houthi Advances | Bab al Mandab | Saudi Coalition Forces - Aaj News",
-        "- 2026-11-18 · The Eastleigh Voice: India moves to repatriate two sailors rescued after cargo ship sank near Bab el-Mandeb Strait",
-        "- 2026-11-18 · The Hans India: ​Two Indians rescued, one missing as cargo vessel sinks near Bab el-Mandeb Strait",
-        "- 2026-11-18 · Wake Up Singapore: Houthis Claim Control of 10 Yemen Districts After Southern Forces Withdraw Near Bab al-Mandab",
-        "- 2026-11-17 · Inshorts: Saudi-backed forces withdraw from area near strategic Bab el-Mandeb Strait, Houthis take over | Aden is seat of Yemen's int'lly recognised govt | Inshorts",
-        "- 2026-11-17 · Peradaban.id: Houthis Seize Bab al-Mandab as Saudi-Backed Forces Retreat",
-        "- 2026-11-17 · BOE Report: Yemen’s Houthis say they launched drones towards Saudi East-West pipeline",
-        "- 2026-11-17 · inkl: Houthis Target Saudi Arabia's Vital Oil Route Again. Five Drones Aimed At Pipeline Carrying 4 Million Barrels Daily.",
-        "- 2026-11-16 · Middle East Monitor: Yemeni forces withdraw from area near Bab al-Mandab as Houthis take control",
-        "- 2026-11-16 · Business Standard: Yemen forces retreat near Bab el-Mandeb in setback in war against Houthis",
-        "- 2026-11-15 · logos-pres.md: The Houthis have strengthened their positions near the Bab el-Mandeb Strait, which heightens the risks to global trade"
-      ]
-    },
-    {
-      "ref": "chokepoint/hormuz",
-      "kind": "story",
-      "outcome": "rejected",
-      "detail": "page has no publication date",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "http://eng.chinamil.com.cn/2025xb/W/N/16500419.html",
-        "publisher": "China Military",
-        "quote": "The U.S. military on Tuesday launched strikes on an Iranian missile site on Qeshm Island in the Strait of Hormuz, a U.S. military official said, describing the strike as an act of \"self-defense.\"",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-17",
-        "eventText": "U.S. forces strike an Iranian missile site on Qeshm Island in the Strait of Hormuz."
-      },
-      "headlines": [
-        "- 2026-11-18 · eng.chinamil.com.cn: U . S . strikes Iran Qeshm Island after reported attack on Bahrain radar site <http://eng.chinamil.com.cn/2025xb/W/N/16500419.html>",
-        "- 2026-11-18 · Time Magazine: U.S. Strikes Qeshm Island as Vance Says Iran Won’t Become ‘Forever War’",
-        "- 2026-11-18 · Crude Oil Prices Today | OilPrice.com: Small Vessel Trade Thrives in Hormuz as Iran Targets Supertankers",
-        "- 2026-11-18 · NBC News: Gas tanker in Strait of Hormuz set ablaze",
-        "- 2026-11-18 · The National: Adnoc L&S ship attacked in Strait of Hormuz with one crew member missing",
-        "- 2026-11-18 · Yahoo News New Zealand: Dramatic moment oil tanker erupts into huge inferno in Strait of Hormuz",
-        "- 2026-11-18 · Bloomberg.com: Watch US Strikes Iran’s Qeshm Island as Bahrain and Kuwait Face Fresh Drone Attacks",
-        "- 2026-11-18 · Al Jazeera: Ships risk Hormuz Strait due to limited US protection",
-        "- 2026-11-18 · Crude Oil Prices Today | OilPrice.com: ADNOC Ship Attacked in Hormuz as Maritime Security Risks Rise",
-        "- 2026-11-18 · Bloomberg.com: Smaller Tankers Join Hormuz Shuttle Trade to Keep Oil Flowing",
-        "- 2026-11-18 · New York Post: Crew abandons gas tanker after being hit by projectile while sailing through Strait of Hormuz",
-        "- 2026-11-18 · Israel Hayom: Gulf states intercept Iranian missiles after US Qeshm strike",
-        "- 2026-11-18 · WANA News Agency: Iranian Army Downs US MQ-9 Drone over Eastern Strait of Hormuz -",
-        "- 2026-11-18 · Modern Diplomacy: Iran Expands Gulf Attacks After US Strikes Qeshm Island, Raising Risks to Energy Security",
-        "- 2026-11-18 · Middle East Eye: UAE company says 11 wounded, one missing after vessel attacked in Hormuz Strait"
+        "- 2026-11-18 · Al Jazeera: US official says Hormuz insurance hits $64m: Is the strait really open?",
+        "- 2026-11-18 · Food Tank: Op-Ed | Late Means Never: The Hormuz Shock Exposed How Little Africa Grows for Itself",
+        "- 2026-11-18 · CNBC: IEA chief sees no 'credible pathway' back to pre-war normality in the Strait of Hormuz",
+        "- 2026-11-18 · Reuters: UAE's ADNOC L&S says one crew member missing after attack on its vessel in Hormuz",
+        "- 2026-11-18 · Goldman Sachs: Oil Is Estimated to Ease in 2027 as Suppliers Adapt to Hormuz Disruption",
+        "- 2026-11-18 · The Independent: Dramatic moment oil tanker erupts into huge inferno in Strait of Hormuz",
+        "- 2026-11-18 · La Voce di New York: U.S. Navy Official Says Hormuz Insurance Hits $64M per Transit",
+        "- 2026-11-18 · ORF Middle East: The EU, the GCC, and Maritime Security: Beyond the Hormuz Crisis",
+        "- 2026-11-18 · NewsCord: Iran Warns of Unlimited Response After U.S. Strikes Qeshm Island, Kuwait Reports Drone Attacks",
+        "- 2026-11-18 · Middle East Eye: US attacks Iran’s Qeshm Island",
+        "- 2026-11-18 · WWD: Tanker Attacks Return to Hormuz, but Container Ships Escape Direct Hits",
+        "- 2026-11-18 · Al Jazeera: Kuwait, Bahrain face new Iran attacks after US strike on Qeshm Island",
+        "- 2026-11-18 · Oklahoma Energy Today: Energy briefs–Strait of Hormuz remains dangerous",
+        "- 2026-11-18 · SNJ Today: Iran Attacks U.S. Air Base in Kuwait After U.S. Strike on Qeshm Island",
+        "- 2026-11-18 · La Voce di New York: In Iran, New U.S. Strikes Near Qeshm Island"
       ]
     },
     {
@@ -109,21 +95,18 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-18 · IntelliNews: Nigeria’s Dangote refinery seeks 30% larger $2.1bn IPO as $49bn valuation tests a thin float",
-        "- 2026-11-18 · 21st CENTURY CHRONICLE: Over subscription: Dangote refinery to raise IPO by 30% to $2 billion",
+        "- 2026-11-18 · energynews.pro: Dangote Refinery Plans to Upsize Its Heavily Oversubscribed Nigerian Stock Market Offering",
+        "- 2026-11-18 · MLQ.ai: Dangote refinery plans to expand its IPO by up to 30% to $2.1 billion after heavy demand, Reuters reports",
         "- 2026-11-18 · Business News Nigeria: Dangote Refinery increases IPO target to $2.1bn after receiving $4.5bn in subscriptions",
-        "- 2026-11-18 · Business Post Nigeria: Dangote Refinery Raises IPO Target to $2.1bn After $4.5bn Investor Demand",
-        "- 2026-11-18 · Majorwaves Energy Report: Dangote Refinery Empowers 100 Lekki Fishermen With Livelihood Support",
-        "- 2026-11-18 · https://thefact.ng/: Dangote Refinery, Fertiliser Expansion To Employ Over 90,000 Workers",
-        "- 2026-11-18 · Business News Nigeria: Dangote Refinery raises IPO target by 30% after investors bid nearly $4.5bn",
-        "- 2026-11-18 · Serrari Group: Dangote Refinery Eyes $2.1bn IPO Expansion",
-        "- 2026-11-18 · Investors King: Dangote Refinery Moves to Expand IPO to $2.1bn as Investor Demand Hits N6trn",
-        "- 2026-11-18 · Nairametrics: Dangote Refinery to increase IPO size to $2.1 billion after $4.5 billion investor demand",
+        "- 2026-11-18 · MSME Africa: Dangote Refinery IPO: Will Retail Investors Get All the Shares They Applied",
+        "- 2026-11-18 · Traders Union: Dangote refinery increases IPO target after $4.5 billion in investor bids",
+        "- 2026-11-18 · Western Post: Dangote Refinery plans to increase IPO size to $2.1bn",
+        "- 2026-11-18 · Legit News: Dangote Refinery to Make Changes to its IPO, Targets $2.1 Billion After N6 Trillion Subscription",
+        "- 2026-11-18 · Intel Region: Dangote refinery to increase IPO by 30% to $2bn after oversubscription",
         "- 2026-11-18 · Investors King: Petrol Marketers Begin Price Cuts After Dangote Refinery Reduces Gantry Rate to N1,159",
-        "- 2026-11-18 · Investors King: SEC Scrutinises Dangote Refinery’s N6trn IPO Applications as Foreign Investors Face Reduced Allotments",
-        "- 2026-11-18 · TTYBrand Africa: Dangote Refinery Empowers 100 Lekki Fishermen Through Livelihood Programme",
-        "- 2026-11-17 · The Nation Newspaper: Dangote Refinery empowers 100 Lekki fishermen",
-        "- 2026-11-16 · https://thefact.ng/: Dangote Refinery IPO Closes October 27 Amid Surge In Investor Subscriptions"
+        "- 2026-11-18 · theradar.ng: Dangote refinery plans an IPO up to 30% bigger. Small investors still await SEC allotment",
+        "- 2026-11-17 · CNBC Africa: Dangote Refinery to expand IPO by up to 30% to $2.1 billion, sources say",
+        "- 2026-11-16 · thestreetjournal.org: Dangote Refinery cuts petrol price by ₦51 to ₦1,159 per litre"
       ]
     },
     {
@@ -131,26 +114,43 @@
       "kind": "story",
       "outcome": "nothing",
       "headlines": [
-        "- 2026-11-18 · Türkiye Today: Iraq eyes 500,000 bpd more oil flows via Türkiye as Kirkuk-Ceyhan line reopens",
-        "- 2026-11-18 · Oil & Gas Middle East: Iraq resumes Kirkuk-Ceyhan pipeline exports to Turkey at 120,000 bpd after 2014 halt",
-        "- 2026-11-18 · Informat.ro: Iraq resumes oil exports through the Kirkuk-Ceyhan pipeline to Turkey"
+        "- 2026-11-18 · Israel Defense: Iraq Resumes Oil Flows via Kirkuk-Ceyhan Pipeline After 12 Years"
       ]
     },
     {
-      "ref": "pipeline/east-west-crude",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-17 · BOE Report: Yemen’s Houthis say they launched drones towards Saudi East-West pipeline"
-      ]
-    },
-    {
-      "ref": "terminal/stabroek-fpsos",
+      "ref": "refinery/in-panipat",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-16 · TipRanks: Exxon Mobil starts production at Uaru in Guyana’s offshore Stabroek block"
+        "- 2026-11-18 · Indian PSU: IOC Gets Government Nod for Commercial Supply of Sustainable Aviation Fuel from Panipat Refinery"
+      ]
+    },
+    {
+      "ref": "lng/gem-t100000130594-export",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-18 · Montel News: Red Sea route offers limited relief for Qatar LNG exports"
+      ]
+    },
+    {
+      "ref": "pipeline/nord-stream-1",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-17 · oEnergetice.cz: Moscow accuses British navy of responsibility for Nord Stream explosions"
+      ]
+    },
+    {
+      "ref": "field/gem-l100000312594",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-18 · PravdaReport: Kazakhstan commissions sixth gas reinjection compressor at Karachaganak field to sustain oil output"
       ]
     }
   ]
