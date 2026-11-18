@@ -431,6 +431,10 @@
     "file": null,
     "checkedAt": "2026-11-06"
   },
+  "eng.chinamil.com.cn": {
+    "file": null,
+    "checkedAt": "2026-11-18"
+  },
   "english.aaj.tv": {
     "file": "favicons/english.aaj.tv.ico",
     "checkedAt": "2026-11-14"
@@ -530,6 +534,10 @@
   "forbes.com": {
     "file": "favicons/forbes.com.ico",
     "checkedAt": "2026-11-10"
+  },
+  "forexfactory.com": {
+    "file": "favicons/forexfactory.com.ico",
+    "checkedAt": "2026-11-18"
   },
   "forth.news": {
     "file": null,
@@ -1051,6 +1059,10 @@
     "file": "favicons/news.sbs.co.kr.png",
     "checkedAt": "2026-11-12"
   },
+  "news.sky.com": {
+    "file": "favicons/news.sky.com.ico",
+    "checkedAt": "2026-11-18"
+  },
   "news.ssbcrack.com": {
     "file": "favicons/news.ssbcrack.com.png",
     "checkedAt": "2026-11-14"
@@ -1314,6 +1326,10 @@
   "shipmanagementinternational.com": {
     "file": "favicons/shipmanagementinternational.com.jpg",
     "checkedAt": "2026-11-09"
+  },
+  "shippax.com": {
+    "file": "favicons/shippax.com.png",
+    "checkedAt": "2026-11-18"
   },
   "shippingtelegraph.com": {
     "file": "favicons/shippingtelegraph.com.png",
@@ -1611,9 +1627,17 @@
     "file": "favicons/wanaen.com.png",
     "checkedAt": "2026-11-06"
   },
+  "waradana.com": {
+    "file": null,
+    "checkedAt": "2026-11-18"
+  },
   "washingtonexaminer.com": {
     "file": "favicons/washingtonexaminer.com.webp",
     "checkedAt": "2026-11-07"
+  },
+  "winknews.com": {
+    "file": "favicons/winknews.com.ico",
+    "checkedAt": "2026-11-18"
   },
   "winnipegfreepress.com": {
     "file": "favicons/winnipegfreepress.com.png",
