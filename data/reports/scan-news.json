@@ -1,84 +1,102 @@
 {
-  "recordedAt": "2026-11-19T02:47:10.283Z",
+  "recordedAt": "2026-11-19T11:57:35.229Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 11,
-      "failed": 49,
-      "articles": 24,
+      "requests": 6,
+      "failed": 53,
+      "articles": 0,
       "errors": [
-        "fetch failed",
+        "answered 429",
         "answered 429",
         "answered 429"
       ]
     },
     "google-news": {
-      "requests": 56,
-      "failed": 1,
-      "articles": 627,
-      "errors": [
-        "answered 429"
-      ]
+      "requests": 53,
+      "failed": 0,
+      "articles": 603,
+      "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
     "lastOk": "2026-11-19"
   },
-  "stories": 23,
+  "stories": 20,
   "candidates": 5,
   "usage": {
-    "input": 69274,
-    "output": 4911,
-    "searches": 4
+    "input": 33387,
+    "output": 2388,
+    "searches": 1
   },
-  "estimatedCostUsd": 0.049,
+  "estimatedCostUsd": 0.015,
   "results": [
     {
-      "ref": "chokepoint/babelm",
+      "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "nothing",
+      "outcome": "committed",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://newscord.org/article/irans-army-says-three-oil-tankers-struck-mines-in-eastern-strait-of-hormuz--Story_20261119_Twoviolatingsupertanfbd7c324",
+        "publisher": "NewsCord",
+        "quote": "Iran’s army said three oil tankers struck naval mines in the eastern Strait of Hormuz and caught fire on Wednesday, leaving the vessels unable to sail.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-18",
+        "eventText": "Iran's army says three oil tankers struck naval mines and caught fire in the eastern Strait of Hormuz."
+      },
       "headlines": [
-        "- 2026-11-18 · Daily Excelsior: Two Indian sailors rescued after cargo vessel sinks near Bab el-Mandeb; one missing",
-        "- 2026-11-18 · Asianet Newsable: India Seeks Missing Sailor After Cargo Vessel Sinks Near Bab el-Mandeb",
-        "- 2026-11-17 · ThePrint: Yemen’s Houthis say they launched drones towards Saudi East-West pipeline",
-        "- 2026-11-16 · 1Lurer: Yemeni government forces retreated from area of ​​Bab el-Mandeb Strait"
+        "- 2026-11-19 · WSJ: The Iran War Could Permanently Slash Reliance on Hormuz, IEA Says",
+        "- 2026-11-19 · The New York Times: Iran Keeps Up Unrelenting Attacks on Ships in the Strait of Hormuz",
+        "- 2026-11-19 · NewsCord: U.S. Strikes Iran’s Qeshm Island After Iran Targets U.S. Radar in Bahrain: 24 outlets compared",
+        "- 2026-11-19 · Daily Sabah: Strait of Hormuz crisis 'largest threat' to energy security ever: IEA | Daily Sabah",
+        "- 2026-11-19 · Financial Times: Energy markets can ‘manage without’ the Strait of Hormuz, says IEA",
+        "- 2026-11-19 · NBC News: Trump says Xi shares U.S. interest in ensuring energy flows through Strait of Hormuz",
+        "- 2026-11-19 · IranWire: Hormuz and Ukraine Top the Agenda of Trump’s Meetings With Putin and Xi in China",
+        "- 2026-11-19 · Anadolu Ajansı: Hormuz supply shock reshaping how countries meet their energy needs: IEA",
+        "- 2026-11-19 · Crude Oil Prices Today | OilPrice.com: Oil Prices Steady as Hormuz Tanker Threats Offset Supply Glut Fears",
+        "- 2026-11-19 · Anadolu Ajansı: Iran's IRGC Navy says 2 oil supertankers strike naval mines in Strait of Hormuz",
+        "- 2026-11-19 · The Arab Weekly: Hormuz is a global responsibility, not just a regional crisis",
+        "- 2026-11-19 · WANA News Agency: IRGC: Two Oil Tankers Explode in Strait of Hormuz",
+        "- 2026-11-19 · Global Trade Magazine: Iran’s Hormuz Blacklist Reshapes Tanker Flows Without Cutting Gulf Exports",
+        "- 2026-11-19 · EnergyWatch: IEA chief: The world can manage without the Strait of Hormuz",
+        "- 2026-11-19 · NewsCord: Iran’s Army Says Three Oil Tankers Struck Mines in Eastern Strait of Hormuz: who 8 outlets blamed"
       ]
     },
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "rejected",
-      "detail": "the quote doesn't name the asset",
+      "outcome": "review",
+      "detail": "event 2026-11-18",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://shippingtelegraph.com/shipping-reports/adnoc-ls-vessel-attacked-in-strait-of-hormuz-1-missing-11-injured/",
-        "publisher": "Shipping Telegraph",
-        "quote": "It remains unclear whether this incident cited by the IRGC is connected to the ADNOC vessel attack on Tuesday.",
+        "url": "https://newscord.org/article/irans-army-says-three-oil-tankers-struck-mines-in-eastern-strait-of-hormuz--Story_20261119_Twoviolatingsupertanfbd7c324",
+        "publisher": "NewsCord",
+        "quote": "Iran’s army said three oil tankers struck naval mines in the eastern Strait of Hormuz and caught fire on Wednesday, leaving the vessels unable to sail.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "2026-11-17",
-        "eventText": "An ADNOC L&S vessel is attacked while transiting the Strait of Hormuz, leaving one crew member missing and 11 injured."
-      },
+        "eventAt": "2026-11-18",
+        "eventText": "Iran's army says three oil tankers struck naval mines and caught fire in the eastern Strait of Hormuz."
+      }
+    },
+    {
+      "ref": "chokepoint/babelm",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-19 · Bloomberg: LNG Exports Through Hormuz Appear to Slow After More Attacks",
-        "- 2026-11-19 · Shipping Telegraph: ADNOC L&S vessel attacked in Strait of Hormuz, 1 missing, 11 injured",
-        "- 2026-11-19 · https://houseofsaud.com/: Iran Claims 3 Tankers Hit Mines East of Hormuz After Muscat Talks Fail",
-        "- 2026-11-19 · Riviera Maritime Media: Update: all crew 'are safe and accounted for' following strike on ADNOC tanker in Strait of Hormuz",
-        "- 2026-11-19 · X: 🇮🇷🇶🇦 Iran has kept the Strait of Hormuz shut for more than eight months, and the staying power surprised even Tehran. Amir Handjani, a Quincy Institute board member, says senior Iranian figures who once doubted the closure have stopped questioning it, an",
-        "- 2026-11-18 · Anadolu Ajansı: 3 oil tankers disabled by mine blasts in Strait of Hormuz: Iranian army",
-        "- 2026-11-18 · TradeWinds News: Tanker hit in Hormuz attack and Iran launches strikes on Gulf states",
-        "- 2026-11-18 · The Hill: Iran war escalation: Tehran strikes Kuwait, Bahrain; US hits Qeshm Island",
-        "- 2026-11-18 · WANA News Agency: Projectile Strikes Oil Tanker While Attempting to Exit Strait of Hormuz",
-        "- 2026-11-18 · Middle East Eye: Iran's navy says three oil tankers caught fire east of Hormuz",
-        "- 2026-11-18 · Syracuse.com: Gas tanker engulfed in flames after attack in Strait of Hormuz (video)",
-        "- 2026-11-18 · Columbia Missourian: Iran Strait of Hormuz",
-        "- 2026-11-18 · NewsCord: Iran Launches New Attacks on Kuwait and Bahrain After U.S. Strike on Qeshm Island: who 13 outlets blamed",
-        "- 2026-11-18 · Anadolu Ajansı: Tanker hit by unknown projectile near Strait of Hormuz, UK maritime agency says",
-        "- 2026-11-18 · Yahoo: Iran reports explosions on three tankers near Strait of Hormuz"
+        "- 2026-11-19 · Egypt Today: Egypt’s FM emphasizes need to ensure freedom of maritime navigation in Red Sea and Bab el-Mandeb",
+        "- 2026-11-19 · Bold News: Two Indian Sailors Rescued After Cargo Ship Sinks Near Bab el-Mandeb, One Still Missing",
+        "- 2026-11-18 · Reuters: What it means if the Houthis take Aden and control the Bab el-Mandeb Strait",
+        "- 2026-11-17 · Aaj TV: Houthis Release Video Showing Military Equipment Destruction Near Bab el-Mandeb - Aaj News",
+        "- 2026-11-16 · ScheerPost: Yemen: Saudi-backed Forces Retreat, Leaving Houthis in Command of Bab al-Mandab Strait"
       ]
     },
     {
@@ -87,26 +105,30 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-19 · Business News Nigeria: Dangote Refinery’s 30% IPO expansion boosts investors’ allotment prospects",
-        "- 2026-11-18 · streamlinefeed.co.ke: Dangote Refinery Seeks $2.1bn Nigeria IPO Expansion After $4.5bn Bids",
-        "- 2026-11-18 · TG NEWS: Dangote Refinery moves to expand IPO to $2.1bn after ₦6tn demand"
+        "- 2026-11-19 · Business News Nigeria: Offshore funds face rationing as Dangote Refinery expands N6trn IPO to shield retail buyers",
+        "- 2026-11-19 · Tekedia: Dangote Refinery Plans to Expand IPO by 30% to $2.1bn After $4.5bn in Subscription Orders",
+        "- 2026-11-19 · THISDAYLIVE: Dangote Refinery May Raise IPO by 30% to $2.1bn, Demand Rises to $4.5bn",
+        "- 2026-11-19 · The Nation Newspaper: Dangote Refinery visit: ADC senatorial candidate pledges greater opportunities for Ebonyi youths",
+        "- 2026-11-19 · Daily Trust: Dangote refinery may raise IPO target to $2.1bn on $4.5bn demand",
+        "- 2026-11-18 · Investors King: SEC Scrutinises Dangote Refinery’s N6trn IPO Applications as Foreign Investors Face Reduced Allotments"
       ]
     },
     {
-      "ref": "refinery/in-panipat",
+      "ref": "lng/gem-t100000130594-export",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-17 · Avi-Go: Indian Oil Corporation Gets Government Approvals to Commercially Supply Sustainable Aviation Fuel from Panipat Refinery"
+        "- 2026-11-16 · https://megaproject.com/: Orlen's Termination of Qatar LNG Deal Could Yield $2B in Savings"
       ]
     },
     {
-      "ref": "pipeline/east-west-crude",
+      "ref": "pipeline/nord-stream-1",
       "kind": "story",
       "outcome": "nothing",
+      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-17 · ThePrint: Yemen’s Houthis say they launched drones towards Saudi East-West pipeline"
+        "- 2026-11-17 · upday News: Nord Stream Trial: Witnesses Describe the Crew of the Yacht Andromeda"
       ]
     }
   ]
