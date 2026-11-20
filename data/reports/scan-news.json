@@ -1,11 +1,11 @@
 {
-  "recordedAt": "2026-11-20T02:31:26.630Z",
+  "recordedAt": "2026-11-20T12:02:26.347Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 6,
-      "failed": 53,
-      "articles": 0,
+      "requests": 13,
+      "failed": 49,
+      "articles": 126,
       "errors": [
         "answered 429",
         "answered 429",
@@ -13,155 +13,126 @@
       ]
     },
     "google-news": {
-      "requests": 53,
-      "failed": 0,
-      "articles": 644,
-      "errors": []
+      "requests": 57,
+      "failed": 1,
+      "articles": 551,
+      "errors": [
+        "answered 429"
+      ]
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
     "lastOk": "2026-11-20"
   },
-  "stories": 20,
+  "stories": 21,
   "candidates": 6,
   "usage": {
-    "input": 133279,
-    "output": 9321,
-    "searches": 9
+    "input": 20965,
+    "output": 2220,
+    "searches": 0
   },
-  "estimatedCostUsd": 0.108,
+  "estimatedCostUsd": 0.003,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "committed",
+      "outcome": "rejected",
+      "detail": "quote is 69 words; page has no publication date",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.japantimes.co.jp/news/2026/11/20/world/iran-hormuz-attacks-oil-prices/",
-        "publisher": "The Japan Times",
-        "quote": "Iran’s attacks on oil tankers crossing the crucial Strait of Hormuz are getting more intense",
+        "url": "https://www.hellenicshippingnews.com/two-supertankers-struck-mines-in-strait-of-hormuz-irans-revolutionary-guard-says/",
+        "publisher": "Hellenic Shipping News",
+        "quote": "Two supertankers caught fire after hitting mines in the Strait of Hormuz, Iran’s Revolutionary Guard has said, adding that the vessels were taking an “unauthorized route” through the conduit. In a statement to Iran’s state broadcaster, the paramilitary group said the ships were carrying over 4 million barrels of crude and attempting to traverse the southern section of Hormuz under the protection of the U.S. military.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
+        "eventAt": "2026-11-20",
+        "eventText": "Iran's Revolutionary Guard says two supertankers caught fire after hitting mines in the Strait of Hormuz."
       },
       "headlines": [
-        "- 2026-11-20 · World Oil: IEA: No “credible pathway” back to pre-Hormuz energy world, latest outlook finds",
-        "- 2026-11-20 · The Japan Times: Iran intensifies Hormuz tanker attacks just as oil prices slide",
-        "- 2026-11-20 · FXEmpire: Natural Gas, WTI Oil, Brent Oil Forecasts – Oil Rebounds As Iran Intensifies Attacks In Hormuz",
-        "- 2026-11-20 · Gulf News: Burning LPG tanker, missing crew, armed skiffs: Inside maritime watchdog’s latest Hormuz report",
-        "- 2026-11-19 · The Jerusalem Post: Iran grows more aggressive in Strait of Hormuz despite surge in oil traffic",
-        "- 2026-11-19 · NPR: Iran's attacks on ships in the Strait of Hormuz escalate",
-        "- 2026-11-19 · Oil & Gas Journal: IEA sees potential for looser oil, LNG markets after Hormuz crisis",
-        "- 2026-11-19 · Al-Monitor: Iran’s IRGC says tankers with 4M barrels of oil hit Hormuz mines: What to know",
-        "- 2026-11-19 · Crude Oil Prices Today | OilPrice.com: Hormuz Oil Exports Could Decline amid Inbound Tanker Shortage",
-        "- 2026-11-19 · CNBC: Chevron Australia President on Hormuz Disruptions and LNG Demand",
-        "- 2026-11-19 · Middle East Eye: US energy chief says 'things have changed' with Hormuz, but 'not visibly'",
-        "- 2026-11-19 · New York Post: Iranians are escalating attacks on Strait of Hormuz because they believe they can force Trump into a deal: experts",
-        "- 2026-11-19 · Climate Home News: As COP31 weighs 35×35 pledge, IEA says Hormuz crisis driving electrification",
-        "- 2026-11-19 · The Maritime Executive: LPG Tanker Tara Gas Fire Extinguished in the Strait of Hormuz",
-        "- 2026-11-19 · Middle East Eye: Confidence in Hormuz has been 'crushed' by war on Iran, IEA says"
+        "- 2026-11-20 · hindustantimes.com: IEA warns of lasting Hormuz shock , hails India clean push in 2026 outlook <https://www.hindustantimes.com/india-news/iea-warns-of-lasting-hormuz-shock-hails-india-s-clean-push-in-2026-outlook-101795152562692.html>",
+        "- 2026-11-20 · businesstoday.in: Hormuz blockade no bar : Iraq offers crude at steep $33 discounts as oil markets retreat from war highs <https://www.businesstoday.in/world/story/hormuz-blockade-no-bar-iraq-offers-crude-at-steep-33-discounts-as-oil-markets-retreat-from-war-highs-568679-2026-11-20>",
+        "- 2026-11-20 · worldoil.com: IEA : No credible pathway back to pre - Hormuz energy world , latest outlook finds <https://www.worldoil.com/news/2026/11/19/iea-no-credible-pathway-back-to-pre-hormuz-energy-world-latest-outlook-finds/>",
+        "- 2026-11-20 · businesstoday.in: India LPG imports may hit 1 million barrels a day by 2035 : Why the Hormuz crisis is a warning sign <https://www.businesstoday.in/india/story/indias-lpg-imports-may-hit-1-million-barrels-a-day-by-2035-why-the-hormuz-crisis-is-a-warning-sign-568655-2026-11-20>",
+        "- 2026-11-20 · middleeasteye.net: US energy chief says things have changed with Hormuz , but not visibly <https://www.middleeasteye.net/live-blog/live-blog-update/us-energy-chief-says-things-have-changed-strait-hormuz>",
+        "- 2026-11-20 · hellenicshippingnews.com: Two supertankers struck mines in Strait of Hormuz , Iran Revolutionary Guard says <https://www.hellenicshippingnews.com/two-supertankers-struck-mines-in-strait-of-hormuz-irans-revolutionary-guard-says/>",
+        "- 2026-11-20 · middleeasteye.net: Confidence in Hormuz has been crushed by war on Iran , IEA says <https://www.middleeasteye.net/live-blog/live-blog-update/confidence-hormuz-has-been-crushed-war-iran-iea-says>",
+        "- 2026-11-20 · The New Region: Iran controls waters over 500km beyond Strait of Hormuz: IRGC chief",
+        "- 2026-11-20 · https://houseofsaud.com/: IRGC Chief Says Iran Controls Waters 500 km Beyond Strait of Hormuz",
+        "- 2026-11-20 · Seatrade Maritime News: Tanker rates bounce amid heightened Hormuz hostilities",
+        "- 2026-11-20 · تسنیم: Tanker Catches Fire After Hitting Sea Mine in Strait of Hormuz",
+        "- 2026-11-20 · investingLive: No way back for oil after Hormuz, says IEA’s Birol, but Goldman still sees Brent at $78",
+        "- 2026-11-20 · chinadailyhk: IEA: Hormuz crisis reshapes global energy outlook, accelerates electrification",
+        "- 2026-11-20 · Benzinga: ‘Eyes on Hormuz’: Analyst Warns Iran May Defy US Blockade With Oil Exports, Flags Hormuz Vessel Strikes a",
+        "- 2026-11-20 · Briefs Finance: Hormuz Tanker Attacks Disrupt Oil Flows, Prices Fall"
       ]
     },
     {
       "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
+      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-19 · horn review: Major Pressure Points in the Bab el-Mandeb and Its Implications for Ethiopian Trade Security",
-        "- 2026-11-19 · ASHARQ AL-AWSAT English: EU Envoy: Developments in Bab el-Mandeb Are Felt in Europe's Ports, Factories and Shops",
-        "- 2026-11-19 · DD News: Houthis reportedly pushing towards the strategic Bab-el-Mandeb strait, raise concerns on Red Sea shipping route",
-        "- 2026-11-19 · The Economic Times: Two Indian sailors rescued after cargo vessel sinks near Bab el-Mandeb; one missing",
-        "- 2026-11-18 · Daily Excelsior: Two Indian sailors rescued after cargo vessel sinks near Bab el-Mandeb; one missing",
-        "- 2026-11-17 · Reuters: Yemen's Houthis say they launched drones towards Saudi East-West pipeline"
+        "- 2026-11-20 · oilprice.com: Oil Prices Rebound as Houthi Attacks Reignite Middle East Supply Fears <https://oilprice.com/Latest-Energy-News/World-News/Oil-Prices-Rebound-as-Houthi-Attacks-Reignite-Middle-East-Supply-Fears.html>",
+        "- 2026-11-20 · tribune.com.pk: Oil prices gain as Houthi attacks on Riyadh raise supply concerns <https://tribune.com.pk/story/2641333/oil-prices-gain-as-houthi-attacks-on-riyadh-raise-supply-concerns>",
+        "- 2026-11-20 · business-standard.com: Oil prices rise on Houthi attacks on Riyadh , supply disruption concerns <https://www.business-standard.com/markets/commodities/oil-prices-rise-on-houthi-attacks-on-riyadh-supply-disruption-concerns-126112000113_1.html>",
+        "- 2026-11-20 · economictimes.indiatimes.com: Oil Price Today ( November 20 ): Brent crude rises to $93 as fresh Houthi attacks heighten worries . What are experts saying ? <https://economictimes.indiatimes.com/markets/commodities/news/oil-price-today-november-20-brent-crude-rises-to-93-as-fresh-houthi-attacks-heighten-worries-what-are-experts-saying/articleshow/136010579.cms>",
+        "- 2026-11-20 · arabnews.com: Arab News | Oil prices edge higher as Houthi attacks on Riyadh raise supply concerns <https://www.arabnews.com/business/oil-prices-edge-higher-as-houthi-attacks-on-riyadh-raise-supply-concerns-3013070>",
+        "- 2026-11-20 · CNBC: Oil prices gain as Houthi attacks on Riyadh raise supply concerns",
+        "- 2026-11-20 · Finimize: Oil Fell Despite Hormuz Disruptions And Houthi Strikes",
+        "- 2026-11-20 · www.engine.online: Middle East war: Oil steady as Houthis attack Saudi energy infrastructure again",
+        "- 2026-11-18 · Lokmat Times: India Works to Bring Home Sailors After Cargo Ship Sinks Near Bab el-Mandeb Strait",
+        "- 2026-11-18 · ETV Bharat: Two Indian Sailors Rescued After Cargo Vessel Sinks Near Bab El-Mandeb; One Missing"
       ]
     },
     {
-      "ref": "pipeline/kirkuk-ceyhan",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-19 · IndexBox: Iraq Resumes Kirkuk-Ceyhan Pipeline Oil Exports to Turkey at 120,000 bpd - News and Statistics"
-      ]
-    },
-    {
-      "ref": "pipeline/east-west-crude",
-      "kind": "story",
-      "outcome": "error",
-      "detail": "every publisher site blocks search (reuters.com)"
-    },
-    {
-      "ref": "lng/gem-t100000130594-export",
-      "kind": "story",
-      "outcome": "rejected",
-      "detail": "the quote doesn't name the asset; page is older than 14 days",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "ras-laffan-north-2026-war",
-        "url": "https://www.tovima.com/finance/iran-strikes-knock-out-17-of-qatar-lng-ceo-warns-of-5-year-disruption/",
-        "publisher": "To Vima",
-        "quote": "the strikes on Ras Laffan have knocked out 17% of Qatar’s LNG export capacity",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
-      },
-      "headlines": [
-        "- 2026-11-19 · tovima.com: Iran Strikes Knock Out 17% of Qatar LNG, CEO Warns of 5-Year Disruption"
-      ]
-    },
-    {
-      "ref": "terminal/stabroek-fpsos",
+      "ref": "refinery/ng-dangote",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-17 · Offshore Technology: ExxonMobil begins oil production at Uaru in Guyana’s Stabroek block"
+        "- 2026-11-20 · HDFC Sky: Kirloskar Brothers Wins ₹366 Cr Dangote Refinery Orders",
+        "- 2026-11-20 · Indian Chemical News: Kirloskar Group bags $38.94 million orders from Dangote refinery in Nigeria",
+        "- 2026-11-20 · Chemical Industry Digest: Kirloskar Brothers Bags Landmark Order for Africa’s Largest Dangote Refinery",
+        "- 2026-11-20 · Manufacturing Today India: KBL and KEPL secure US$ 38.94m orders from Dangote refinery",
+        "- 2026-11-20 · Legit News: Good News as NNPC, MRS, Others Cut Petrol Prices Again After Dangote Refinery's Reduction",
+        "- 2026-11-20 · CNBC TV18: Kirloskar Brothers, JV arm secure ₹366 crore orders from Dangote refinery in Nigeria",
+        "- 2026-11-20 · Business Upturn: Kirloskar Brothers secures landmark order for Africa’s largest Dangote Refinery",
+        "- 2026-11-17 · Brand Spur: Dangote Refinery Drives Nigeria’s £1bn Fuel Exports To UK"
+      ]
+    },
+    {
+      "ref": "refinery/in-panipat",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-19 · Dynamite News: India’s First Commercial Sustainable Aviation Fuel Plant Ready at IOC’s Panipat Refinery Ahead of 2027 Blending Targets",
+        "- 2026-11-17 · PSU Watch: IOC gets Govt nod for commercial sustainable aviation fuel supply from Panipat refinery",
+        "- 2026-11-17 · MillenniumPost: IOC gets govt’s nod for commercial SAF supply from Panipat refinery",
+        "- 2026-11-17 · ETV Bharat: IOC Gets Govt Nod for Commercial Sustainable Aviation Fuel Supply From Panipat Refinery"
       ]
     },
     {
       "ref": "lng/gem-t100000130594-export",
-      "kind": "end check",
-      "outcome": "rejected",
-      "detail": "the quote doesn't name the asset; page is older than 14 days",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "ras-laffan-north-2026-war",
-        "url": "https://finance.yahoo.com/energy/articles/qatar-becomes-largest-buyer-u-230000052.html",
-        "publisher": "Yahoo Finance",
-        "quote": "The Strait of Hormuz crisis, which is still blocking much of Qatar's LNG exports",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
-      }
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-20 · Oil & Gas Middle East: Qatar LNG strategy is shifting to a diversified supply and trading portfolio, S&P Global Ratings says"
+      ]
     },
     {
-      "ref": "lng/gem-t100000130598-export",
-      "kind": "end check",
-      "outcome": "rejected",
-      "detail": "the quote doesn't name the asset",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "ras-laffan-south-2026-war",
-        "url": "https://wbj.pl/business/orlen-terminates-major-qatari-lng-contract-1033975",
-        "publisher": "WBJ",
-        "quote": "Orlen has terminated one of its two long term liquefied natural gas contracts with QatarEnergy after supply disruptions, Money.pl reported Wednesday.",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
-      }
+      "ref": "terminal/kharg",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-20 · Euronews.com: Iran readies tanker convoy at Kharg Island to test US oil blockade"
+      ]
     }
   ]
 }

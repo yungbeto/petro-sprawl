@@ -155,6 +155,10 @@
     "file": "favicons/bluewin.ch.png",
     "checkedAt": "2026-11-09"
   },
+  "bnrnews.bg": {
+    "file": "favicons/bnrnews.bg.ico",
+    "checkedAt": "2026-11-20"
+  },
   "boldnewsonline.com": {
     "file": "favicons/boldnewsonline.com.png",
     "checkedAt": "2026-11-19"
@@ -207,6 +211,14 @@
     "file": "favicons/businesstoday.com.my.ico",
     "checkedAt": "2026-11-17"
   },
+  "businesstoday.in": {
+    "file": "favicons/businesstoday.in.ico",
+    "checkedAt": "2026-11-20"
+  },
+  "businessupturn.com": {
+    "file": "favicons/businessupturn.com.png",
+    "checkedAt": "2026-11-20"
+  },
   "businessworld.in": {
     "file": "favicons/businessworld.in.webp",
     "checkedAt": "2026-11-07"
@@ -247,6 +259,10 @@
     "file": null,
     "checkedAt": "2026-11-11"
   },
+  "chemindigest.com": {
+    "file": "favicons/chemindigest.com.jpg",
+    "checkedAt": "2026-11-20"
+  },
   "chinadailyasia.com": {
     "file": null,
     "checkedAt": "2026-11-14"
@@ -266,6 +282,10 @@
   "cnbc.com": {
     "file": null,
     "checkedAt": "2026-11-12"
+  },
+  "cnbctv18.com": {
+    "file": "favicons/cnbctv18.com.ico",
+    "checkedAt": "2026-11-20"
   },
   "commodity-board.com": {
     "file": "favicons/commodity-board.com.ico",
@@ -375,6 +395,10 @@
     "file": "favicons/donga.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "dynamitenews.com": {
+    "file": "favicons/dynamitenews.com.png",
+    "checkedAt": "2026-11-20"
+  },
   "eastleighvoice.co.ke": {
     "file": null,
     "checkedAt": "2026-11-18"
@@ -466,6 +490,10 @@
   "eng.chinamil.com.cn": {
     "file": null,
     "checkedAt": "2026-11-18"
+  },
+  "engine.online": {
+    "file": "favicons/engine.online.png",
+    "checkedAt": "2026-11-20"
   },
   "english.aaj.tv": {
     "file": "favicons/english.aaj.tv.ico",
@@ -655,9 +683,17 @@
     "file": "favicons/hani.co.kr.ico",
     "checkedAt": "2026-11-12"
   },
+  "hdfcsky.com": {
+    "file": "favicons/hdfcsky.com.ico",
+    "checkedAt": "2026-11-20"
+  },
   "hiiraan.com": {
     "file": "favicons/hiiraan.com.jpg",
     "checkedAt": "2026-11-07"
+  },
+  "hindustantimes.com": {
+    "file": "favicons/hindustantimes.com.ico",
+    "checkedAt": "2026-11-20"
   },
   "hoodline.com": {
     "file": "favicons/hoodline.com.ico",
@@ -714,6 +750,10 @@
   "indexbox.io": {
     "file": "favicons/indexbox.io.png",
     "checkedAt": "2026-11-14"
+  },
+  "indianchemicalnews.com": {
+    "file": "favicons/indianchemicalnews.com.png",
+    "checkedAt": "2026-11-20"
   },
   "indianewengland.com": {
     "file": "favicons/indianewengland.com.png",
@@ -942,6 +982,10 @@
   "manilatimes.net": {
     "file": "favicons/manilatimes.net.png",
     "checkedAt": "2026-11-14"
+  },
+  "manufacturingtodayindia.com": {
+    "file": null,
+    "checkedAt": "2026-11-20"
   },
   "marineinsight.com": {
     "file": "favicons/marineinsight.com.png",
@@ -1403,6 +1447,10 @@
     "file": "favicons/seatrade-maritime.com.ico",
     "checkedAt": "2026-11-08"
   },
+  "see.news": {
+    "file": "favicons/see.news.png",
+    "checkedAt": "2026-11-20"
+  },
   "seekingalpha.com": {
     "file": "favicons/seekingalpha.com.png",
     "checkedAt": "2026-11-10"
@@ -1682,6 +1730,10 @@
   "trend.az": {
     "file": "favicons/trend.az.png",
     "checkedAt": "2026-11-08"
+  },
+  "tribune.com.pk": {
+    "file": "favicons/tribune.com.pk.png",
+    "checkedAt": "2026-11-20"
   },
   "trtworld.com": {
     "file": null,
