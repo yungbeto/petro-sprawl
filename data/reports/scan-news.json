@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-11-21T11:26:34.710Z",
+  "recordedAt": "2026-11-21T19:31:57.452Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
@@ -7,15 +7,15 @@
       "failed": 53,
       "articles": 0,
       "errors": [
-        "fetch failed",
         "answered 429",
+        "fetch failed",
         "answered 429"
       ]
     },
     "google-news": {
-      "requests": 53,
+      "requests": 56,
       "failed": 0,
-      "articles": 573,
+      "articles": 548,
       "errors": []
     }
   },
@@ -23,68 +23,37 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-21"
   },
-  "stories": 19,
-  "candidates": 5,
+  "stories": 17,
+  "candidates": 6,
   "usage": {
-    "input": 76912,
-    "output": 4361,
-    "searches": 5
+    "input": 38062,
+    "output": 2070,
+    "searches": 2
   },
-  "estimatedCostUsd": 0.06,
+  "estimatedCostUsd": 0.025,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "committed",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.jpost.com/middle-east/article-915628",
-        "publisher": "JPost",
-        "quote": "Two tankers sailing outbound through the Strait of Hormuz were hit by unidentified projectiles off Khasab, Oman",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-21",
-        "eventText": "Two outbound tankers are hit by unidentified projectiles off Khasab, Oman, according to UKMTO."
-      },
+      "outcome": "nothing",
+      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-21 · Al Jazeera: Iran’s IRGC downs US drone over Hormuz as efforts to end war remain stalled",
-        "- 2026-11-21 · Financial Times: Oil shipped through Hormuz falls as Iranian strikes increase",
-        "- 2026-11-21 · ABC News - Breaking News, Latest News and Videos: Strait of Hormuz attacks have increased to highest level since Iran war began",
-        "- 2026-11-21 · The Times of Israel: Man swims in Strait of Hormuz to highlight Iran war’s wildlife impact",
+        "- 2026-11-21 · Al Jazeera: Tankers hit in Strait of Hormuz as Iran tightens grip on shipping",
+        "- 2026-11-21 · WSJ: The U.A.E. Is Shuttling Oil Past Iran in Risky Hormuz Operation",
+        "- 2026-11-21 · Al-Monitor: UK man swims in Strait of Hormuz to highlight environmental damage",
+        "- 2026-11-21 · France 24: Endurance athlete swims in Hormuz Strait",
+        "- 2026-11-21 · New York Post: Two tankers hit in Strait of Hormuz as hawks press Trump to resume Iran strikes",
+        "- 2026-11-21 · Newser: Athlete Swims Hormuz Strait to Show War's Impact on Wildlife",
+        "- 2026-11-21 · AP News: Endurance athlete swims in Strait of Hormuz to highlight Iran war’s impact on wildlife",
+        "- 2026-11-21 · Haaretz: Two Oil Tankers Hit by Unidentified Projectiles Near Strait of Hormuz, U.K. Maritime Organization Says",
         "- 2026-11-21 · The National: Iran exaggerates Hormuz sea mine threat but uses fear to tighten grip",
-        "- 2026-11-21 · The New Region: Two tankers hit by ‘unknown projectiles’ in Strait of Hormuz: UKMTO",
-        "- 2026-11-21 · https://houseofsaud.com/: Hormuz Oil Flows Fall to 10 Million Barrels a Day as November Attacks Mount",
-        "- 2026-11-21 · The Jerusalem Post: Two tankers attacked in Strait of Hormuz near Oman, UKMTO says",
-        "- 2026-11-21 · The Times of Israel: UK maritime agency reports second attack today on tanker in Hormuz",
-        "- 2026-11-21 · Al Jazeera: Swimmer braves tanker attacks to expose Hormuz contamination",
-        "- 2026-11-21 · The Times of Israel: Tanker struck in Hormuz, no injuries reported, monitor says",
-        "- 2026-11-21 · تسنیم: IRGC Downs 58th US MQ-9 Drone over Strait of Hormuz",
-        "- 2026-11-21 · https://houseofsaud.com/: Trump Claims US Has Total Control of Hormuz as Iran Sets Terms for Reopening",
-        "- 2026-11-21 · ASHARQ AL-AWSAT English: Two Tankers Attacked in Strait of Hormuz",
-        "- 2026-11-21 · AzerNews: Strait of Hormuz faces rising maritime threats amid tanker attacks"
+        "- 2026-11-21 · Middle East Eye: Iran says new air defence system intercepted US Reaper drone over Hormuz",
+        "- 2026-11-21 · Arab News: Maritime agency says 2 tankers struck in Hormuz, as Iran says ship on fire",
+        "- 2026-11-21 · WANA News Agency: Iran Intensifies Military Activities in the Strait of Hormuz",
+        "- 2026-11-21 · Facebook: DW News. . A British endurance athlete swam in the Strait of Hormuz to highlight the impact the US-Iran war is having on wildlife. Lewis Pugh, a United Nations Patron of the Oceans, said he heard several loud explosions and smelled pungent chemicals while",
+        "- 2026-11-21 · Nikkei Asia: Global crude exports hit record high despite Hormuz closure",
+        "- 2026-11-21 · NewsCord: IRGC Says It Shot Down Two US Drones Over Strait of Hormuz, Including MQ-9 and MQ-1: how 7 outlets framed it"
       ]
-    },
-    {
-      "ref": "chokepoint/hormuz",
-      "kind": "story",
-      "outcome": "review",
-      "detail": "event 2026-11-21",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.jpost.com/middle-east/article-915628",
-        "publisher": "JPost",
-        "quote": "Two tankers sailing outbound through the Strait of Hormuz were hit by unidentified projectiles off Khasab, Oman",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-21",
-        "eventText": "Two outbound tankers are hit by unidentified projectiles off Khasab, Oman, according to UKMTO."
-      }
     },
     {
       "ref": "refinery/ng-dangote",
@@ -92,9 +61,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-21 · Traders Union: Nigeria SEC withholds Dangote refinery share sale approval over investor safeguards",
-        "- 2026-11-19 · Arise News: Dangote Refinery IPO May Rise 30% To $2.1bn After Investor Demand Hits $4.5bn",
-        "- 2026-11-19 · Indian Chemical News: Kirloskar Group bags $38.94 million orders from Dangote refinery in Nigeria"
+        "- 2026-11-21 · ET EnergyWorld: Kirloskar Brothers, JV win ₹366 crore Dangote refinery orders"
       ]
     },
     {
@@ -103,68 +70,51 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-21 · Investing.com: Iran war sees tanker hit near Hormuz as Saudi Arabia intercepts Houthi missiles",
-        "- 2026-11-21 · Il Sole 24 ORE: War, latest news. Iran: oil tanker struck in the Strait of Hormuz. Saudi Arabia: three Houthi missiles intercepted over Riyadh",
-        "- 2026-11-20 · IndexBox: Suez Container Traffic Rises 73% as Bab al-Mandab Security Risks Grow - News and Statistics",
-        "- 2026-11-18 · Yemen Online: Yemen: Fierce Battles in Taiz... Giants Brigades Launch Offensive in Bab al-Mandab",
-        "- 2026-11-18 · Lokmat Times: India Works to Bring Home Sailors After Cargo Ship Sinks Near Bab el-Mandeb Strait"
+        "- 2026-11-21 · وكالة سبأ: Transport Ministry: 733 Commercial ships cross Bab al-Mandab Strait in 20 days",
+        "- 2026-11-18 · Social News XYZ: ​Two Indians rescued, one missing as cargo vessel sinks near Bab el-Mandeb Strait"
       ]
     },
     {
-      "ref": "pipeline/nord-stream-1",
+      "ref": "refinery/om-duqm",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-21 · Yeni Safak English: German government warns against ‘hasty conclusions’ over Nord Stream blasts"
+        "- 2026-11-21 · Kuwait Times: Duqm Refinery exports 934 shipments since May 2023",
+        "- 2026-11-21 · Oman Observer: Duqm Refinery records 934 export vessels",
+        "- 2026-11-21 · Wisevoter: Duqm Refinery Reaches 934 Exported Shipments"
       ]
     },
     {
-      "ref": "refinery/in-panipat",
+      "ref": "terminal/kharg",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-19 · Dynamite News: India’s First Commercial Sustainable Aviation Fuel Plant Ready at IOC’s Panipat Refinery Ahead of 2027 Blending Targets"
+        "- 2026-11-21 · NewsCord: Iran Stages 14-Tanker Convoy at Kharg Island to Test U.S. Naval Blockade: how 11 outlets framed it"
       ]
     },
     {
-      "ref": "pipeline/nord-stream-1",
-      "kind": "end check",
-      "outcome": "rejected",
-      "detail": "page is older than 14 days",
+      "ref": "terminal/ust-luga",
+      "kind": "story",
+      "outcome": "unreadable",
+      "detail": "page answered 403",
       "draft": {
         "action": "add_source",
-        "disruptionId": "nord-stream-2022-blasts",
-        "url": "https://www.euronews.com/2026/10/28/nord-stream-pipeline-wont-reopen-after-the-war-brussels-tells-the-us-and-russia",
-        "publisher": "Euronews",
-        "quote": "Nord Stream 1 has been inoperable since an explosion in mid 2022, while Nord Stream 2 never received certification from the German government.",
+        "disruptionId": "ust-luga-2026-11-11",
+        "url": "https://english.nv.ua/nation/leningrad-oblast-attacked-by-drones-on-nov-21-video-50661253.html",
+        "publisher": "NV",
+        "quote": "Social media users said the Ust-Luga port was hit, BBC News Russian reported.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
-      }
-    },
-    {
-      "ref": "terminal/sheskharis",
-      "kind": "end check",
-      "outcome": "rejected",
-      "detail": "page is older than 14 days; published before the disruption started",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "sheskharis-2026-drone-attacks",
-        "url": "https://militarnyi.com/en/news/strikes-by-ukrainian-maritime-drones-paralyzed-the-work-of-oil-terminals-in-tuapse-and-novorossiysk/",
-        "publisher": "Militarnyi",
-        "quote": "The attack paralyzed the work of Transneft’s oil loading facility and the Caspian Pipeline Consortium’s terminal near Novorossiysk.",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-09-24",
-        "eventText": "Ukrainian maritime attack drones hit an oil loading pier at Novorossiysk, paralyzing Transneft's oil loading facility, according to Ukraine's military intelligence (DIU)."
-      }
+        "eventAt": "2026-11-21",
+        "eventText": "Social media users say drones hit Ust-Luga port during an overnight attack on Leningrad Oblast."
+      },
+      "headlines": [
+        "- 2026-11-21 · The New Voice of Ukraine: Russia's Leningrad Oblast attacked by drones, online reports say Ust-Luga port was hit"
+      ]
     }
   ]
 }

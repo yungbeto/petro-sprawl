@@ -79,6 +79,10 @@
     "file": "favicons/aol.com.png",
     "checkedAt": "2026-11-07"
   },
+  "apnews.com": {
+    "file": "favicons/apnews.com.png",
+    "checkedAt": "2026-11-21"
+  },
   "arabnews.com": {
     "file": "favicons/arabnews.com.png",
     "checkedAt": "2026-11-06"
@@ -355,6 +359,10 @@
     "file": "favicons/ddnews.gov.in.png",
     "checkedAt": "2026-11-06"
   },
+  "deccanchronicle.com": {
+    "file": "favicons/deccanchronicle.com.ico",
+    "checkedAt": "2026-11-21"
+  },
   "deccanherald.com": {
     "file": "favicons/deccanherald.com.png",
     "checkedAt": "2026-11-13"
@@ -447,6 +455,10 @@
     "file": "favicons/en.apa.az.png",
     "checkedAt": "2026-11-11"
   },
+  "en.haberler.com": {
+    "file": "favicons/en.haberler.com.ico",
+    "checkedAt": "2026-11-21"
+  },
   "en.ilsole24ore.com": {
     "file": "favicons/en.ilsole24ore.com.ico",
     "checkedAt": "2026-11-07"
@@ -466,6 +478,10 @@
   "en.yenisafak.com": {
     "file": "favicons/en.yenisafak.com.ico",
     "checkedAt": "2026-11-06"
+  },
+  "energy.economictimes.indiatimes.com": {
+    "file": "favicons/energy.economictimes.indiatimes.com.ico",
+    "checkedAt": "2026-11-21"
   },
   "energyandcleanair.org": {
     "file": "favicons/energyandcleanair.org.png",
@@ -631,6 +647,10 @@
     "file": "favicons/foxnews.com.png",
     "checkedAt": "2026-11-09"
   },
+  "france24.com": {
+    "file": "favicons/france24.com.ico",
+    "checkedAt": "2026-11-21"
+  },
   "freemalaysiatoday.com": {
     "file": "favicons/freemalaysiatoday.com.png",
     "checkedAt": "2026-11-07"
@@ -762,6 +782,10 @@
   "ilpoliticoweb.it": {
     "file": "favicons/ilpoliticoweb.it.ico",
     "checkedAt": "2026-11-15"
+  },
+  "ina.iq": {
+    "file": null,
+    "checkedAt": "2026-11-21"
   },
   "independent.co.uk": {
     "file": "favicons/independent.co.uk.ico",
@@ -959,6 +983,10 @@
     "file": "favicons/kurdistan24.net.ico",
     "checkedAt": "2026-11-07"
   },
+  "kuwaittimes.com": {
+    "file": "favicons/kuwaittimes.com.ico",
+    "checkedAt": "2026-11-21"
+  },
   "kyivpost.com": {
     "file": "favicons/kyivpost.com.png",
     "checkedAt": "2026-11-21"
@@ -970,6 +998,10 @@
   "law360.com": {
     "file": "favicons/law360.com.png",
     "checkedAt": "2026-11-12"
+  },
+  "lbc.co.uk": {
+    "file": "favicons/lbc.co.uk.ico",
+    "checkedAt": "2026-11-21"
   },
   "lbcgroup.tv": {
     "file": "favicons/lbcgroup.tv.ico",
@@ -1103,6 +1135,10 @@
     "file": "favicons/miragenews.com.png",
     "checkedAt": "2026-11-13"
   },
+  "mississippivalleypublishing.com": {
+    "file": "favicons/mississippivalleypublishing.com.png",
+    "checkedAt": "2026-11-21"
+  },
   "mlex.com": {
     "file": null,
     "checkedAt": "2026-11-06"
@@ -1223,6 +1259,10 @@
     "file": null,
     "checkedAt": "2026-11-21"
   },
+  "news.lavx.hu": {
+    "file": "favicons/news.lavx.hu.png",
+    "checkedAt": "2026-11-21"
+  },
   "news.liga.net": {
     "file": null,
     "checkedAt": "2026-11-06"
@@ -1254,6 +1294,10 @@
   "newscord.org": {
     "file": "favicons/newscord.org.ico",
     "checkedAt": "2026-11-07"
+  },
+  "newser.com": {
+    "file": "favicons/newser.com.ico",
+    "checkedAt": "2026-11-21"
   },
   "newsmobile.in": {
     "file": "favicons/newsmobile.in.jpg",
@@ -1330,6 +1374,10 @@
   "oilprice.com": {
     "file": "favicons/oilprice.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "omanobserver.om": {
+    "file": "favicons/omanobserver.om.png",
+    "checkedAt": "2026-11-21"
   },
   "opensecrets.org": {
     "file": null,
@@ -1438,6 +1486,10 @@
   "rammadhav.in": {
     "file": "favicons/rammadhav.in.png",
     "checkedAt": "2026-11-14"
+  },
+  "rediff.com": {
+    "file": "favicons/rediff.com.ico",
+    "checkedAt": "2026-11-21"
   },
   "report.az": {
     "file": null,
@@ -1562,6 +1614,14 @@
   "sputnikglobe.com": {
     "file": "favicons/sputnikglobe.com.png",
     "checkedAt": "2026-11-07"
+  },
+  "standard.co.uk": {
+    "file": "favicons/standard.co.uk.ico",
+    "checkedAt": "2026-11-21"
+  },
+  "straitstimes.com": {
+    "file": "favicons/straitstimes.com.png",
+    "checkedAt": "2026-11-21"
   },
   "streetinsider.com": {
     "file": "favicons/streetinsider.com.ico",
@@ -1906,6 +1966,10 @@
   "wired.me": {
     "file": null,
     "checkedAt": "2026-11-13"
+  },
+  "wisevoter.com": {
+    "file": "favicons/wisevoter.com.png",
+    "checkedAt": "2026-11-21"
   },
   "worldoil.com": {
     "file": "favicons/worldoil.com.png",
