@@ -1,22 +1,21 @@
 {
-  "recordedAt": "2026-11-21T02:34:52.133Z",
+  "recordedAt": "2026-11-21T11:26:34.710Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 12,
-      "failed": 49,
-      "articles": 133,
+      "requests": 6,
+      "failed": 53,
+      "articles": 0,
       "errors": [
+        "fetch failed",
         "answered 429",
-        "fetch failed",
-        "fetch failed",
-        "fetch failed"
+        "answered 429"
       ]
     },
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 544,
+      "articles": 573,
       "errors": []
     }
   },
@@ -25,13 +24,13 @@
     "lastOk": "2026-11-21"
   },
   "stories": 19,
-  "candidates": 3,
+  "candidates": 5,
   "usage": {
-    "input": 79361,
-    "output": 6625,
-    "searches": 6
+    "input": 76912,
+    "output": 4361,
+    "searches": 5
   },
-  "estimatedCostUsd": 0.071,
+  "estimatedCostUsd": 0.06,
   "results": [
     {
       "ref": "chokepoint/hormuz",
@@ -40,51 +39,51 @@
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://gcaptain.com/another-tanker-hit-in-strait-of-hormuz-as-maritime-attacks-surge-worldwide/",
-        "publisher": "gCaptain",
-        "quote": "Another tanker was struck by a projectile and caught fire in the Strait of Hormuz on Friday, extending a wave of attacks on commercial shipping that has pushed maritime security incidents to their highest weekly level since mid-October.",
+        "url": "https://www.jpost.com/middle-east/article-915628",
+        "publisher": "JPost",
+        "quote": "Two tankers sailing outbound through the Strait of Hormuz were hit by unidentified projectiles off Khasab, Oman",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "2026-11-20",
-        "eventText": "A projectile strikes a tanker in the Strait of Hormuz and sets it on fire, according to UKMTO."
+        "eventAt": "2026-11-21",
+        "eventText": "Two outbound tankers are hit by unidentified projectiles off Khasab, Oman, according to UKMTO."
       },
       "headlines": [
-        "- 2026-11-21 · Anadolu Ajansı: Iran denies reports of US-Israeli missile strike on Qeshm Island",
-        "- 2026-11-21 · Middle East Eye: UKMTO weekly report says six vessels attacked in and around Hormuz",
-        "- 2026-11-21 · Yemen Online: Hormuz Strait: Oil Tanker Catches Fire After Being Hit by Projectile",
-        "- 2026-11-20 · gcaptain.com: Another Tanker Hit in Strait of Hormuz as Maritime Attacks Surge Worldwide <https://gcaptain.com/another-tanker-hit-in-strait-of-hormuz-as-maritime-attacks-surge-worldwide/>",
-        "- 2026-11-20 · Lloyd's List: Tanker rates rising again as Hormuz flow falters, says Frontline",
-        "- 2026-11-20 · Seeking Alpha: Energy Markets Underestimate The Hormuz Risk: Good News For Upstream, Bad News For Yields",
-        "- 2026-11-20 · NDTV: Trump Claims US Has \"Total Control\" Over Strait Of Hormuz",
-        "- 2026-11-20 · https://houseofsaud.com/: 31 LNG Tankers Exit Hormuz in October, War-Era High",
-        "- 2026-11-20 · Newsquawk: Iran FM Araghchi Interview, says if US wants agreement, it must correct position; willing to reduce the time for implementing the conditions for opening the Strait of Hormuz from two days to one day or two hours",
-        "- 2026-11-20 · Rudaw: Iranian media report explosions on Qeshm Island",
-        "- 2026-11-20 · The Telegraph: The Strait of Hormuz is broken and China is on the rise: nine months of the US-Iran war",
-        "- 2026-11-20 · Finimize: Oil Rose Into The Weekend As Hormuz Risks Returned",
-        "- 2026-11-20 · ASHARQ AL-AWSAT English: Tanker Catches Fire After Projectile Strike Near Strait of Hormuz, UKMTO Says",
-        "- 2026-11-20 · NDTV: Tanker Catches Fire After Projectile Strike Near Strait Of Hormuz: Report",
-        "- 2026-11-20 · marketscreener.com: Missile strikes Iran's Qeshm Island near Strait of Hormuz, Tasnim reports"
+        "- 2026-11-21 · Al Jazeera: Iran’s IRGC downs US drone over Hormuz as efforts to end war remain stalled",
+        "- 2026-11-21 · Financial Times: Oil shipped through Hormuz falls as Iranian strikes increase",
+        "- 2026-11-21 · ABC News - Breaking News, Latest News and Videos: Strait of Hormuz attacks have increased to highest level since Iran war began",
+        "- 2026-11-21 · The Times of Israel: Man swims in Strait of Hormuz to highlight Iran war’s wildlife impact",
+        "- 2026-11-21 · The National: Iran exaggerates Hormuz sea mine threat but uses fear to tighten grip",
+        "- 2026-11-21 · The New Region: Two tankers hit by ‘unknown projectiles’ in Strait of Hormuz: UKMTO",
+        "- 2026-11-21 · https://houseofsaud.com/: Hormuz Oil Flows Fall to 10 Million Barrels a Day as November Attacks Mount",
+        "- 2026-11-21 · The Jerusalem Post: Two tankers attacked in Strait of Hormuz near Oman, UKMTO says",
+        "- 2026-11-21 · The Times of Israel: UK maritime agency reports second attack today on tanker in Hormuz",
+        "- 2026-11-21 · Al Jazeera: Swimmer braves tanker attacks to expose Hormuz contamination",
+        "- 2026-11-21 · The Times of Israel: Tanker struck in Hormuz, no injuries reported, monitor says",
+        "- 2026-11-21 · تسنیم: IRGC Downs 58th US MQ-9 Drone over Strait of Hormuz",
+        "- 2026-11-21 · https://houseofsaud.com/: Trump Claims US Has Total Control of Hormuz as Iran Sets Terms for Reopening",
+        "- 2026-11-21 · ASHARQ AL-AWSAT English: Two Tankers Attacked in Strait of Hormuz",
+        "- 2026-11-21 · AzerNews: Strait of Hormuz faces rising maritime threats amid tanker attacks"
       ]
     },
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
       "outcome": "review",
-      "detail": "event 2026-11-20",
+      "detail": "event 2026-11-21",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://gcaptain.com/another-tanker-hit-in-strait-of-hormuz-as-maritime-attacks-surge-worldwide/",
-        "publisher": "gCaptain",
-        "quote": "Another tanker was struck by a projectile and caught fire in the Strait of Hormuz on Friday, extending a wave of attacks on commercial shipping that has pushed maritime security incidents to their highest weekly level since mid-October.",
+        "url": "https://www.jpost.com/middle-east/article-915628",
+        "publisher": "JPost",
+        "quote": "Two tankers sailing outbound through the Strait of Hormuz were hit by unidentified projectiles off Khasab, Oman",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "2026-11-20",
-        "eventText": "A projectile strikes a tanker in the Strait of Hormuz and sets it on fire, according to UKMTO."
+        "eventAt": "2026-11-21",
+        "eventText": "Two outbound tankers are hit by unidentified projectiles off Khasab, Oman, according to UKMTO."
       }
     },
     {
@@ -93,7 +92,9 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-20 · Proshare: Dangote Refinery IPO Marks a Homecoming to NGX and a Test of Market Capacity - Umaru Kwairanga"
+        "- 2026-11-21 · Traders Union: Nigeria SEC withholds Dangote refinery share sale approval over investor safeguards",
+        "- 2026-11-19 · Arise News: Dangote Refinery IPO May Rise 30% To $2.1bn After Investor Demand Hits $4.5bn",
+        "- 2026-11-19 · Indian Chemical News: Kirloskar Group bags $38.94 million orders from Dangote refinery in Nigeria"
       ]
     },
     {
@@ -102,40 +103,42 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-20 · rttnews.com: Crude Oil Advances Amid Ongoing U . S .- Iran , Saudi Arabia - Houthi Hostilities <https://www.rttnews.com/3716888/crude-oil-advances-amid-ongoing-u-s-iran-saudi-arabia-houthi-hostilities.aspx>",
-        "- 2026-11-18 · Asianet Newsable: India Seeks Missing Sailor After Cargo Vessel Sinks Near Bab el-Mandeb"
+        "- 2026-11-21 · Investing.com: Iran war sees tanker hit near Hormuz as Saudi Arabia intercepts Houthi missiles",
+        "- 2026-11-21 · Il Sole 24 ORE: War, latest news. Iran: oil tanker struck in the Strait of Hormuz. Saudi Arabia: three Houthi missiles intercepted over Riyadh",
+        "- 2026-11-20 · IndexBox: Suez Container Traffic Rises 73% as Bab al-Mandab Security Risks Grow - News and Statistics",
+        "- 2026-11-18 · Yemen Online: Yemen: Fierce Battles in Taiz... Giants Brigades Launch Offensive in Bab al-Mandab",
+        "- 2026-11-18 · Lokmat Times: India Works to Bring Home Sailors After Cargo Ship Sinks Near Bab el-Mandeb Strait"
       ]
     },
     {
-      "ref": "terminal/primorsk",
+      "ref": "pipeline/nord-stream-1",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-21 · Yeni Safak English: German government warns against ‘hasty conclusions’ over Nord Stream blasts"
+      ]
+    },
+    {
+      "ref": "refinery/in-panipat",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-19 · Dynamite News: India’s First Commercial Sustainable Aviation Fuel Plant Ready at IOC’s Panipat Refinery Ahead of 2027 Blending Targets"
+      ]
+    },
+    {
+      "ref": "pipeline/nord-stream-1",
       "kind": "end check",
       "outcome": "rejected",
       "detail": "page is older than 14 days",
       "draft": {
         "action": "add_source",
-        "disruptionId": "bps-1-2026-primorsk-strikes",
-        "url": "https://www.france24.com/en/europe/20260503-ukrainian-drones-strike-russia-baltic-sea-port-primorsk",
-        "publisher": "France 24",
-        "quote": "Ukrainian drones struck Russia's Primorsk port and a number of vessels in the Baltic Sea on Sunday as part of a wave of attacks targeting Russian energy infrastructure.",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-05-03",
-        "eventText": "Ukrainian drones strike the Primorsk port and several vessels in the Baltic Sea."
-      }
-    },
-    {
-      "ref": "lng/gem-t100000130601-export",
-      "kind": "end check",
-      "outcome": "rejected",
-      "detail": "quote not found on the page; page has no publication date",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "das-island-2026-hormuz",
-        "url": "https://energynews.pro/en/adnoc-gas-studies-alternative-export-routes-as-its-net-profit-rebounds",
-        "publisher": "EnergyNews",
-        "quote": "Its current liquefaction capacity is concentrated on Das Island, inside the Gulf",
+        "disruptionId": "nord-stream-2022-blasts",
+        "url": "https://www.euronews.com/2026/10/28/nord-stream-pipeline-wont-reopen-after-the-war-brussels-tells-the-us-and-russia",
+        "publisher": "Euronews",
+        "quote": "Nord Stream 1 has been inoperable since an explosion in mid 2022, while Nord Stream 2 never received certification from the German government.",
         "cause": "",
         "startedAt": "",
         "summary": "",
@@ -145,22 +148,22 @@
       }
     },
     {
-      "ref": "pipeline/nord-stream-2",
+      "ref": "terminal/sheskharis",
       "kind": "end check",
       "outcome": "rejected",
-      "detail": "page is older than 14 days",
+      "detail": "page is older than 14 days; published before the disruption started",
       "draft": {
         "action": "add_source",
-        "disruptionId": "nord-stream-2-2022-blasts",
-        "url": "https://newsukraine.rbc.ua/news/germany-reveals-its-plans-for-nord-stream-1793114398.html",
-        "publisher": "RBC-Ukraine",
-        "quote": "\"Furthermore, the certification procedure for Nord Stream 2 remains suspended,\" the document states.",
+        "disruptionId": "sheskharis-2026-drone-attacks",
+        "url": "https://militarnyi.com/en/news/strikes-by-ukrainian-maritime-drones-paralyzed-the-work-of-oil-terminals-in-tuapse-and-novorossiysk/",
+        "publisher": "Militarnyi",
+        "quote": "The attack paralyzed the work of Transneft’s oil loading facility and the Caspian Pipeline Consortium’s terminal near Novorossiysk.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
+        "eventAt": "2026-09-24",
+        "eventText": "Ukrainian maritime attack drones hit an oil loading pier at Novorossiysk, paralyzing Transneft's oil loading facility, according to Ukraine's military intelligence (DIU)."
       }
     }
   ]
