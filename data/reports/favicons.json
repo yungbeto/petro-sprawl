@@ -489,7 +489,7 @@
   },
   "energynow.com": {
     "file": null,
-    "checkedAt": "2026-11-06"
+    "checkedAt": "2026-11-21"
   },
   "energywatch.com": {
     "file": null,
@@ -1111,6 +1111,10 @@
     "file": "favicons/montelnews.com.png",
     "checkedAt": "2026-11-06"
   },
+  "moomoo.com": {
+    "file": "favicons/moomoo.com.ico",
+    "checkedAt": "2026-11-21"
+  },
   "msmeafricaonline.com": {
     "file": "favicons/msmeafricaonline.com.png",
     "checkedAt": "2026-11-12"
@@ -1193,7 +1197,7 @@
   },
   "news.laodong.vn": {
     "file": null,
-    "checkedAt": "2026-11-06"
+    "checkedAt": "2026-11-21"
   },
   "news.liga.net": {
     "file": null,
@@ -1373,7 +1377,7 @@
   },
   "proshare.co": {
     "file": null,
-    "checkedAt": "2026-11-06"
+    "checkedAt": "2026-11-21"
   },
   "punchng.com": {
     "file": "favicons/punchng.com.webp",
@@ -1434,6 +1438,10 @@
   "rte.ie": {
     "file": "favicons/rte.ie.png",
     "checkedAt": "2026-11-15"
+  },
+  "rttnews.com": {
+    "file": "favicons/rttnews.com.ico",
+    "checkedAt": "2026-11-21"
   },
   "rudaw.net": {
     "file": "favicons/rudaw.net.png",

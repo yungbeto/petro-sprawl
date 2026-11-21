@@ -1,72 +1,91 @@
 {
-  "recordedAt": "2026-11-20T20:34:21.476Z",
+  "recordedAt": "2026-11-21T02:34:52.133Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 6,
-      "failed": 53,
-      "articles": 0,
+      "requests": 12,
+      "failed": 49,
+      "articles": 133,
       "errors": [
+        "answered 429",
         "fetch failed",
         "fetch failed",
         "fetch failed"
       ]
     },
     "google-news": {
-      "requests": 56,
+      "requests": 53,
       "failed": 0,
-      "articles": 598,
+      "articles": 544,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-20"
+    "lastOk": "2026-11-21"
   },
-  "stories": 18,
-  "candidates": 6,
+  "stories": 19,
+  "candidates": 3,
   "usage": {
-    "input": 51336,
-    "output": 4386,
-    "searches": 3
+    "input": 79361,
+    "output": 6625,
+    "searches": 6
   },
-  "estimatedCostUsd": 0.037,
+  "estimatedCostUsd": 0.071,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "rejected",
-      "detail": "page has no publication date",
+      "outcome": "committed",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.middleeasteye.net/live-blog/live-blog-update/tanker-catches-fire-after-projectile-strike-near-hormuz-ukmto",
-        "publisher": "Middle East Eye",
-        "quote": "A tanker caught fire after a projectile struck it while sailing through the Strait of Hormuz",
+        "url": "https://gcaptain.com/another-tanker-hit-in-strait-of-hormuz-as-maritime-attacks-surge-worldwide/",
+        "publisher": "gCaptain",
+        "quote": "Another tanker was struck by a projectile and caught fire in the Strait of Hormuz on Friday, extending a wave of attacks on commercial shipping that has pushed maritime security incidents to their highest weekly level since mid-October.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
         "eventAt": "2026-11-20",
-        "eventText": "A tanker catches fire after a projectile strikes it in the Strait of Hormuz, UKMTO says."
+        "eventText": "A projectile strikes a tanker in the Strait of Hormuz and sets it on fire, according to UKMTO."
       },
       "headlines": [
-        "- 2026-11-20 · Reuters: Explosion on Iran's Qeshm Island linked to disposal of unexploded munitions, Tasnim reports",
-        "- 2026-11-20 · Al-Monitor: Explosion on Iran's Qeshm Island linked to disposal of unexploded munitions, Tasnim reports",
-        "- 2026-11-20 · gCaptain: Another Tanker Hit in Strait of Hormuz as Maritime Attacks Surge Worldwide",
-        "- 2026-11-20 · Arab News: Tanker hit in Strait of Hormuz as missile strikes Iran's Qeshm Island",
-        "- 2026-11-20 · The Times of Israel: Missile reportedly strikes Iran’s Qeshm Island near Strait of Hormuz",
-        "- 2026-11-20 · Anadolu Ajansı: US-launched missile strikes outskirts of Qeshm Island in southern Iran: Iranian media",
-        "- 2026-11-20 · Marine News Magazine: Tanker On Fire After Struck By Projectile Near Strait of Hormuz",
-        "- 2026-11-20 · Crude Oil Prices Today | OilPrice.com: Iran Steps Up Hormuz Tanker Attacks as Oil Prices Slide",
-        "- 2026-11-20 · Middle East Eye: Tanker catches fire after projectile strike near Strait of Hormuz - UKMTO",
-        "- 2026-11-20 · Skift: Oil Spills Affect UAE, Oman Beaches as Hormuz Strikes Go On",
-        "- 2026-11-20 · Lloyd's List: Non-Iranian ships continue to embrace Tehran’s Hormuz passage system",
-        "- 2026-11-20 · safety4sea: Iran claims two supertankers struck mines in Strait of Hormuz",
-        "- 2026-11-20 · 1470 & 100.3 WMBD: Explosion on Iran’s Qeshm Island linked to disposal of unexploded munitions, Tasnim reports",
-        "- 2026-11-20 · The Times of Israel: Explosion on Iran’s Qeshm Island said linked to disposal of unexploded munitions",
-        "- 2026-11-20 · Energy Digital Magazine: Hormuz, LNG & Electrification: The IEA World Energy Outlook"
+        "- 2026-11-21 · Anadolu Ajansı: Iran denies reports of US-Israeli missile strike on Qeshm Island",
+        "- 2026-11-21 · Middle East Eye: UKMTO weekly report says six vessels attacked in and around Hormuz",
+        "- 2026-11-21 · Yemen Online: Hormuz Strait: Oil Tanker Catches Fire After Being Hit by Projectile",
+        "- 2026-11-20 · gcaptain.com: Another Tanker Hit in Strait of Hormuz as Maritime Attacks Surge Worldwide <https://gcaptain.com/another-tanker-hit-in-strait-of-hormuz-as-maritime-attacks-surge-worldwide/>",
+        "- 2026-11-20 · Lloyd's List: Tanker rates rising again as Hormuz flow falters, says Frontline",
+        "- 2026-11-20 · Seeking Alpha: Energy Markets Underestimate The Hormuz Risk: Good News For Upstream, Bad News For Yields",
+        "- 2026-11-20 · NDTV: Trump Claims US Has \"Total Control\" Over Strait Of Hormuz",
+        "- 2026-11-20 · https://houseofsaud.com/: 31 LNG Tankers Exit Hormuz in October, War-Era High",
+        "- 2026-11-20 · Newsquawk: Iran FM Araghchi Interview, says if US wants agreement, it must correct position; willing to reduce the time for implementing the conditions for opening the Strait of Hormuz from two days to one day or two hours",
+        "- 2026-11-20 · Rudaw: Iranian media report explosions on Qeshm Island",
+        "- 2026-11-20 · The Telegraph: The Strait of Hormuz is broken and China is on the rise: nine months of the US-Iran war",
+        "- 2026-11-20 · Finimize: Oil Rose Into The Weekend As Hormuz Risks Returned",
+        "- 2026-11-20 · ASHARQ AL-AWSAT English: Tanker Catches Fire After Projectile Strike Near Strait of Hormuz, UKMTO Says",
+        "- 2026-11-20 · NDTV: Tanker Catches Fire After Projectile Strike Near Strait Of Hormuz: Report",
+        "- 2026-11-20 · marketscreener.com: Missile strikes Iran's Qeshm Island near Strait of Hormuz, Tasnim reports"
       ]
+    },
+    {
+      "ref": "chokepoint/hormuz",
+      "kind": "story",
+      "outcome": "review",
+      "detail": "event 2026-11-20",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://gcaptain.com/another-tanker-hit-in-strait-of-hormuz-as-maritime-attacks-surge-worldwide/",
+        "publisher": "gCaptain",
+        "quote": "Another tanker was struck by a projectile and caught fire in the Strait of Hormuz on Friday, extending a wave of attacks on commercial shipping that has pushed maritime security incidents to their highest weekly level since mid-October.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-20",
+        "eventText": "A projectile strikes a tanker in the Strait of Hormuz and sets it on fire, according to UKMTO."
+      }
     },
     {
       "ref": "refinery/ng-dangote",
@@ -74,12 +93,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-20 · Wansom AI: Nigerian SEC: Dangote Refinery Secondary Share Sale Talks Underway",
-        "- 2026-11-20 · ChemAnalyst: Kirloskar Group Secures $38.94 Million Orders from Dangote Refinery in Nigeria",
-        "- 2026-11-20 · Asaba Metro News: Dangote Refinery IPO: 3.1 Million Applicants Seek 10–100 Shares, Account for 84.4% of Subscribers",
-        "- 2026-11-20 · scanx.trade: Kirloskar Brothers secures $38.94 million order for Dangote Refinery",
-        "- 2026-11-20 · Dalal Street Investment Journal: Kirloskar Brothers and KEPL Secure Orders for Dangote Refinery as Shares Gain 1.56 per cent",
-        "- 2026-11-20 · Legit News: NMDPRA Unveils Petrol Prices in 8 States as Dangote Refinery Leads Domestic Supply"
+        "- 2026-11-20 · Proshare: Dangote Refinery IPO Marks a Homecoming to NGX and a Test of Market Capacity - Umaru Kwairanga"
       ]
     },
     {
@@ -88,53 +102,66 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-20 · Marine Insight: Global Oil Prices Rise After Reports On Hormuz Tanker Blasts And Houthi Attack On Saudi Capital",
-        "- 2026-11-20 · Yemen Online: Possible Houthi Move Toward Yemen’s Western Coast and Bab al-Mandab Amid Fears of Wider Regional Conflict, sources",
-        "- 2026-11-20 · DD India: USA reportedly deploys a 3rd aircraft carrier to West Asia; Houthis claim control of Bab-al-Mandab",
-        "- 2026-11-18 · Informed Comment: Fighting in Yemen has made crossing the Bab al-Mandab even more Dangerous",
-        "- 2026-11-18 · MillenniumPost: Two Indian sailors rescued after cargo sinks near Bab el-Mandeb"
+        "- 2026-11-20 · rttnews.com: Crude Oil Advances Amid Ongoing U . S .- Iran , Saudi Arabia - Houthi Hostilities <https://www.rttnews.com/3716888/crude-oil-advances-amid-ongoing-u-s-iran-saudi-arabia-houthi-hostilities.aspx>",
+        "- 2026-11-18 · Asianet Newsable: India Seeks Missing Sailor After Cargo Vessel Sinks Near Bab el-Mandeb"
       ]
     },
     {
-      "ref": "terminal/kharg",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-20 · https://houseofsaud.com/: Iran Stages 14-Tanker Convoy at Kharg Island to Test US Oil Blockade",
-        "- 2026-11-20 · Nacionale: What is Kharg Island? Iran's main oil terminal, where tankers reportedly line up to test US blockade"
-      ]
-    },
-    {
-      "ref": "pipeline/nord-stream-1",
-      "kind": "story",
+      "ref": "terminal/primorsk",
+      "kind": "end check",
       "outcome": "rejected",
       "detail": "page is older than 14 days",
       "draft": {
         "action": "add_source",
-        "disruptionId": "nord-stream-2022-blasts",
-        "url": "https://oenergetice.cz/en/natural-gas/swedish-investigation-into-nord-stream-pipeline-explosions-confirms-sabotage",
-        "publisher": "oEnergetice",
-        "quote": "An investigation into the September gas leaks from the Nord Stream pipelines confirmed that they were caused by sabotage",
+        "disruptionId": "bps-1-2026-primorsk-strikes",
+        "url": "https://www.france24.com/en/europe/20260503-ukrainian-drones-strike-russia-baltic-sea-port-primorsk",
+        "publisher": "France 24",
+        "quote": "Ukrainian drones struck Russia's Primorsk port and a number of vessels in the Baltic Sea on Sunday as part of a wave of attacks targeting Russian energy infrastructure.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "2022-11-18",
-        "eventText": "Swedish prosecutor says traces of explosives were found on damaged Nord Stream pipelines."
-      },
-      "headlines": [
-        "- 2026-11-20 · oEnergetice.cz: Swedish investigation into Nord Stream pipeline explosions confirms sabotage"
-      ]
+        "eventAt": "2026-05-03",
+        "eventText": "Ukrainian drones strike the Primorsk port and several vessels in the Baltic Sea."
+      }
     },
     {
-      "ref": "refinery/in-panipat",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-20 · India Today: Indian Oil to supply sustainable aviation fuel from Panipat refinery supporting future mandates - India Today"
-      ]
+      "ref": "lng/gem-t100000130601-export",
+      "kind": "end check",
+      "outcome": "rejected",
+      "detail": "quote not found on the page; page has no publication date",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "das-island-2026-hormuz",
+        "url": "https://energynews.pro/en/adnoc-gas-studies-alternative-export-routes-as-its-net-profit-rebounds",
+        "publisher": "EnergyNews",
+        "quote": "Its current liquefaction capacity is concentrated on Das Island, inside the Gulf",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      }
+    },
+    {
+      "ref": "pipeline/nord-stream-2",
+      "kind": "end check",
+      "outcome": "rejected",
+      "detail": "page is older than 14 days",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "nord-stream-2-2022-blasts",
+        "url": "https://newsukraine.rbc.ua/news/germany-reveals-its-plans-for-nord-stream-1793114398.html",
+        "publisher": "RBC-Ukraine",
+        "quote": "\"Furthermore, the certification procedure for Nord Stream 2 remains suspended,\" the document states.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      }
     }
   ]
 }
