@@ -1,23 +1,23 @@
 {
-  "recordedAt": "2026-11-22T11:48:27.490Z",
+  "recordedAt": "2026-11-22T20:03:59.366Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 12,
-      "failed": 52,
+      "requests": 24,
+      "failed": 48,
       "articles": 2,
       "errors": [
         "answered 429",
-        "answered 429",
-        "answered 429",
+        "fetch failed",
+        "fetch failed",
         "answered 429",
         "answered 429"
       ]
     },
     "google-news": {
-      "requests": 53,
+      "requests": 54,
       "failed": 0,
-      "articles": 515,
+      "articles": 489,
       "errors": []
     }
   },
@@ -28,65 +28,33 @@
   "stories": 17,
   "candidates": 3,
   "usage": {
-    "input": 48310,
-    "output": 2362,
-    "searches": 2
+    "input": 59411,
+    "output": 3218,
+    "searches": 3
   },
-  "estimatedCostUsd": 0.026,
+  "estimatedCostUsd": 0.038,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "committed",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.arabnews.com/middle-east/maritime-agency-says-2-tankers-struck-in-hormuz-as-iran-says-ship-on-fire-3013341",
-        "publisher": "Arab News",
-        "quote": "A tanker transiting outbound in the Strait of Hormuz has been hit on the stern by an unknown projectile.",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-21",
-        "eventText": "Two tankers are struck in the Strait of Hormuz, according to Britain's UKMTO maritime agency."
-      },
+      "outcome": "nothing",
       "headlines": [
-        "- 2026-11-22 · The Guardian: The best thing I ever ate? Lunch on the strait of Hormuz",
-        "- 2026-11-22 · Euronews.com: Tracker says Iranian tanker reported in Strait of Hormuz is fake",
-        "- 2026-11-22 · The Japan Times: Bahrain says Iran struck industrial site as tankers hit in Hormuz",
-        "- 2026-11-22 · Open Magazine: Iran Sets Terms for Reopening Strait of Hormuz as Trump Demands ‘Permanent’ Nuclear Deal",
-        "- 2026-11-22 · Arab News: Bahrain says Iran struck industrial site as tankers hit in Hormuz",
-        "- 2026-11-22 · Washington Examiner: The Blue Wave started in the Strait of Hormuz",
-        "- 2026-11-22 · A News: Iran claims it downed US MQ-1 drone near Hormuz",
-        "- 2026-11-22 · TradeWinds News: Iran strikes two tankers in an hour while transiting Strait of Hormuz",
-        "- 2026-11-22 · Investing.com: Iran asserts control over Hormuz as strikes on Bahrain, Saudi Arabia escalate",
-        "- 2026-11-22 · Iran International: ‘Line-breaker’ tanker signal near Hormuz was fake, tracking firm says",
-        "- 2026-11-22 · Yeni Safak English: Iran's Guard claims it downed US MQ-1 drone east of Hormuz",
-        "- 2026-11-22 · Mehr News Agency: IRGC downs 20th US-made MQ-1 drone in eastern Hormuz Strait",
-        "- 2026-11-22 · DNE Africa: MQ-1 drone downed in Hormuz crisis, Iran says: 4th in a day",
-        "- 2026-11-22 · Gulf News: Hormuz showdown? Cash-strapped Iran readies 14 tankers to break US blockade. What happens if they try?",
-        "- 2026-11-22 · The National: Hormuz standoff puts Jordan in investment spotlight but transformation remains gradual"
+        "- 2026-11-22 · CNN: Iranian attacks in the Strait of Hormuz are at the highest levels since the conflict began",
+        "- 2026-11-22 · The Guardian: Briton swims length of strait of Hormuz to highlight environmental cost of war",
+        "- 2026-11-22 · AFP.com: Bahrain says Iran struck industrial site as tankers hit in Hormuz",
+        "- 2026-11-22 · Forbes: Efficiency Jobs Fall Just As AI And Hormuz Make Them Matter Most",
+        "- 2026-11-22 · Los Angeles Times: Endurance athlete swims in Strait of Hormuz to highlight Iran war’s impact on wildlife",
+        "- 2026-11-22 · Euronews.com: Tanker incident “involving military forces” reported in Hormuz",
+        "- 2026-11-22 · Anadolu Ajansı: Iran says 2 supertankers struck naval mines near Strait of Hormuz",
+        "- 2026-11-22 · Middle East Eye: Two supertankers hit mines near Hormuz, Iranian navy says",
+        "- 2026-11-22 · NewsCord: Lewis Pugh Completes 15km Strait of Hormuz Swim Highlighting Iran War’s Wildlife Impact: 14 outlets compared",
+        "- 2026-11-22 · Middle East Monitor: Iran claims it downed US MQ-1 drone near Hormuz",
+        "- 2026-11-22 · Fox News: Oil prices fall despite Strait of Hormuz tension",
+        "- 2026-11-22 · WANA News Agency: Two Super Tankers Explode After Hitting Naval Mines in Eastern Strait of Hormuz",
+        "- 2026-11-22 · Modern Ghana: Endurance athlete swims Strait of Hormuz",
+        "- 2026-11-22 · WANA News Agency: Two Oil Tankers Catch Fire After Striking Naval Mines East of Strait of Hormuz",
+        "- 2026-11-22 · The Telegraph: Briton dodges tankers and bombs to swim through Strait of Hormuz"
       ]
-    },
-    {
-      "ref": "chokepoint/hormuz",
-      "kind": "story",
-      "outcome": "review",
-      "detail": "event 2026-11-21",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.arabnews.com/middle-east/maritime-agency-says-2-tankers-struck-in-hormuz-as-iran-says-ship-on-fire-3013341",
-        "publisher": "Arab News",
-        "quote": "A tanker transiting outbound in the Strait of Hormuz has been hit on the stern by an unknown projectile.",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-21",
-        "eventText": "Two tankers are struck in the Strait of Hormuz, according to Britain's UKMTO maritime agency."
-      }
     },
     {
       "ref": "refinery/ng-dangote",
@@ -94,20 +62,21 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-22 · Africa.com: Organization of the Petroleum Exporting Countries (OPEC), African Continental Free Trade Area (AfCFTA) and Dangote Refinery Join South Sudanese Ministers on the South Sudan Oil & Power (SSOP) 2026 Keynote Stage",
-        "- 2026-11-22 · LEADERSHIP Newspapers: Dangote Refinery Orders $38.94m Pumping Systems From Indian Firms",
-        "- 2026-11-22 · Legit News: Dangote Refinery makes U-turn on fuel price cut, leaves marketers in suspense",
-        "- 2026-11-21 · Proshare: When Nigeria Went Public - From Share Certificates to the Dangote Refinery IPO",
-        "- 2026-11-21 · NewsGhana: Dangote refinery to lift IPO to $2.1bn on $4.5bn demand"
+        "- 2026-11-22 · PM News Nigeria: Dangote Refinery triggers nationwide petrol price decline",
+        "- 2026-11-22 · within nigeria: Dangote Refinery IPO: Who bought what — A breakdown of 3.8 million investors"
       ]
     },
     {
-      "ref": "pipeline/nord-stream-1",
+      "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
-      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-21 · Yeni Safak English: Polish president says Nord Stream blasts beneficial for Europe"
+        "- 2026-11-22 · The Jerusalem Post: Yemen's Houthis say they attacked Saudi Rabigh oil refinery",
+        "- 2026-11-22 · Internazionale: Yemen’s Houthis say they attacked Saudi Rabigh oil refinery",
+        "- 2026-11-22 · Fakti.bg: The Houthis Tighten Their Grip Around Bab el-Mandeb ᐉ News from Fakti.bg - World",
+        "- 2026-11-20 · EnergyNow.com: INSIGHT: Why is the Bab el-Mandeb Strait so Important?",
+        "- 2026-11-20 · Shipping Telegraph: ‘Free of charge’: Yemen’s HOCC denies imposing tolls on Bab al-Mandab transit",
+        "- 2026-11-20 · gCaptain: Houthis Order Ships to Leave Saudi Red Sea Ports After Hodeidah Airstrikes"
       ]
     }
   ]
