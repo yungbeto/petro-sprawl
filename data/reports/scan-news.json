@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-11-21T19:31:57.452Z",
+  "recordedAt": "2026-11-22T01:30:56.455Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
@@ -8,29 +8,29 @@
       "articles": 0,
       "errors": [
         "answered 429",
-        "fetch failed",
+        "answered 429",
         "answered 429"
       ]
     },
     "google-news": {
-      "requests": 56,
+      "requests": 53,
       "failed": 0,
-      "articles": 548,
+      "articles": 505,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-21"
+    "lastOk": "2026-11-22"
   },
   "stories": 17,
-  "candidates": 6,
+  "candidates": 4,
   "usage": {
-    "input": 38062,
-    "output": 2070,
-    "searches": 2
+    "input": 4673,
+    "output": 985,
+    "searches": 0
   },
-  "estimatedCostUsd": 0.025,
+  "estimatedCostUsd": 0.001,
   "results": [
     {
       "ref": "chokepoint/hormuz",
@@ -38,21 +38,21 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-21 · Al Jazeera: Tankers hit in Strait of Hormuz as Iran tightens grip on shipping",
-        "- 2026-11-21 · WSJ: The U.A.E. Is Shuttling Oil Past Iran in Risky Hormuz Operation",
-        "- 2026-11-21 · Al-Monitor: UK man swims in Strait of Hormuz to highlight environmental damage",
-        "- 2026-11-21 · France 24: Endurance athlete swims in Hormuz Strait",
-        "- 2026-11-21 · New York Post: Two tankers hit in Strait of Hormuz as hawks press Trump to resume Iran strikes",
-        "- 2026-11-21 · Newser: Athlete Swims Hormuz Strait to Show War's Impact on Wildlife",
-        "- 2026-11-21 · AP News: Endurance athlete swims in Strait of Hormuz to highlight Iran war’s impact on wildlife",
-        "- 2026-11-21 · Haaretz: Two Oil Tankers Hit by Unidentified Projectiles Near Strait of Hormuz, U.K. Maritime Organization Says",
-        "- 2026-11-21 · The National: Iran exaggerates Hormuz sea mine threat but uses fear to tighten grip",
-        "- 2026-11-21 · Middle East Eye: Iran says new air defence system intercepted US Reaper drone over Hormuz",
-        "- 2026-11-21 · Arab News: Maritime agency says 2 tankers struck in Hormuz, as Iran says ship on fire",
-        "- 2026-11-21 · WANA News Agency: Iran Intensifies Military Activities in the Strait of Hormuz",
-        "- 2026-11-21 · Facebook: DW News. . A British endurance athlete swam in the Strait of Hormuz to highlight the impact the US-Iran war is having on wildlife. Lewis Pugh, a United Nations Patron of the Oceans, said he heard several loud explosions and smelled pungent chemicals while",
-        "- 2026-11-21 · Nikkei Asia: Global crude exports hit record high despite Hormuz closure",
-        "- 2026-11-21 · NewsCord: IRGC Says It Shot Down Two US Drones Over Strait of Hormuz, Including MQ-9 and MQ-1: how 7 outlets framed it"
+        "- 2026-11-22 · The Times of India: Iran says Hormuz reopening possible if US accepts conditions, warns against economic blockade",
+        "- 2026-11-22 · The Economic Times: Iran says Hormuz reopening possible if US accepts 'reasonable' terms",
+        "- 2026-11-21 · Anchorage Daily News: Endurance athlete swims Strait of Hormuz to highlight Iran war’s impact on wildlife",
+        "- 2026-11-21 · NewsCord: Strait of Hormuz Attacks Hit Highest Level Since U.S.-Israel-Iran War Began: how 17 outlets framed it",
+        "- 2026-11-21 · Iran International: Iran signals readiness for Hormuz showdown despite US buildup",
+        "- 2026-11-21 · Benzinga: Crude Oil Choppy as Strait of Hormuz Flows Fall and Traders Price In Renewed US-Iran Strikes",
+        "- 2026-11-21 · The Times of Israel: Hormuz tankers hit in apparent Iranian attacks as Qataris visit Tehran for mediation talks",
+        "- 2026-11-21 · AgroLatam: Oil Tankers Hit Near Strait of Hormuz as Farm Energy Risks Rise",
+        "- 2026-11-21 · Inquirer.net: Bahrain says Iran struck industrial site as tankers hit in Hormuz",
+        "- 2026-11-21 · CNBC: UK maritime agency reports two tanker attacks near Oman; Iran says vessel hit mine east of Hormuz",
+        "- 2026-11-21 · Euronews.com: Iran launches attacks in Bahrain, Hormuz and moves against US blockade",
+        "- 2026-11-21 · SMH.com.au: Endurance swimmer tackles Strait of Hormuz",
+        "- 2026-11-21 · Briefs Finance: Tankers Hit Near Oman Amid Murky Reports Around Strait of Hormuz",
+        "- 2026-11-21 · The Times: Why I braved flaming tankers to swim the Strait of Hormuz",
+        "- 2026-11-21 · The Independent: British endurance swimmer Lewis Pugh swims in Strait of Hormuz to highlight war’s impact on wildlife"
       ]
     },
     {
@@ -61,7 +61,7 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-21 · ET EnergyWorld: Kirloskar Brothers, JV win ₹366 crore Dangote refinery orders"
+        "- 2026-11-21 · Daily Post Nigeria: Dangote Refinery reduces petrol price again by N99 per litre"
       ]
     },
     {
@@ -70,50 +70,18 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-21 · وكالة سبأ: Transport Ministry: 733 Commercial ships cross Bab al-Mandab Strait in 20 days",
-        "- 2026-11-18 · Social News XYZ: ​Two Indians rescued, one missing as cargo vessel sinks near Bab el-Mandeb Strait"
+        "- 2026-11-20 · The Jerusalem Post: Iran-aligned Houthi terrorists prepare to strike Saudi Red Sea ports",
+        "- 2026-11-20 · Britannica: Red Sea - Trade, Shipping, Fisheries",
+        "- 2026-11-19 · EnergyNow.com: Cutting Off Red Sea Oil Route May Be One Crisis Too Many: Bousso"
       ]
     },
     {
-      "ref": "refinery/om-duqm",
+      "ref": "pipeline/nord-stream-1",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-21 · Kuwait Times: Duqm Refinery exports 934 shipments since May 2023",
-        "- 2026-11-21 · Oman Observer: Duqm Refinery records 934 export vessels",
-        "- 2026-11-21 · Wisevoter: Duqm Refinery Reaches 934 Exported Shipments"
-      ]
-    },
-    {
-      "ref": "terminal/kharg",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-21 · NewsCord: Iran Stages 14-Tanker Convoy at Kharg Island to Test U.S. Naval Blockade: how 11 outlets framed it"
-      ]
-    },
-    {
-      "ref": "terminal/ust-luga",
-      "kind": "story",
-      "outcome": "unreadable",
-      "detail": "page answered 403",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "ust-luga-2026-11-11",
-        "url": "https://english.nv.ua/nation/leningrad-oblast-attacked-by-drones-on-nov-21-video-50661253.html",
-        "publisher": "NV",
-        "quote": "Social media users said the Ust-Luga port was hit, BBC News Russian reported.",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-21",
-        "eventText": "Social media users say drones hit Ust-Luga port during an overnight attack on Leningrad Oblast."
-      },
-      "headlines": [
-        "- 2026-11-21 · The New Voice of Ukraine: Russia's Leningrad Oblast attacked by drones, online reports say Ust-Luga port was hit"
+        "- 2026-11-20 · EnergyNow.com: “I’M NOT JOKING” – Putin Urges Germany to Make Decision on Buying Russian Gas Again via Nord Stream"
       ]
     }
   ]

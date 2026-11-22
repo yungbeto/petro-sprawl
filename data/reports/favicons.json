@@ -27,6 +27,10 @@
     "file": null,
     "checkedAt": "2026-11-15"
   },
+  "adn.com": {
+    "file": "favicons/adn.com.ico",
+    "checkedAt": "2026-11-22"
+  },
   "africa.businessinsider.com": {
     "file": "favicons/africa.businessinsider.com.ico",
     "checkedAt": "2026-11-06"
@@ -45,7 +49,7 @@
   },
   "agenzianova.com": {
     "file": null,
-    "checkedAt": "2026-11-07"
+    "checkedAt": "2026-11-22"
   },
   "akipress.com": {
     "file": "favicons/akipress.com.png",
@@ -1547,6 +1551,10 @@
     "file": "favicons/saudigazette.com.sa.png",
     "checkedAt": "2026-11-09"
   },
+  "sbs.com.au": {
+    "file": "favicons/sbs.com.au.png",
+    "checkedAt": "2026-11-22"
+  },
   "scmp.com": {
     "file": "favicons/scmp.com.png",
     "checkedAt": "2026-11-06"
@@ -1598,6 +1606,10 @@
   "simplywall.st": {
     "file": "favicons/simplywall.st.png",
     "checkedAt": "2026-11-15"
+  },
+  "smh.com.au": {
+    "file": "favicons/smh.com.au.ico",
+    "checkedAt": "2026-11-22"
   },
   "sofx.com": {
     "file": "favicons/sofx.com.png",
@@ -1850,6 +1862,10 @@
   "trend.az": {
     "file": "favicons/trend.az.png",
     "checkedAt": "2026-11-08"
+  },
+  "tribdem.com": {
+    "file": "favicons/tribdem.com.ico",
+    "checkedAt": "2026-11-22"
   },
   "tribune.com.pk": {
     "file": "favicons/tribune.com.pk.png",
