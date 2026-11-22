@@ -35,6 +35,10 @@
     "file": "favicons/africa.businessinsider.com.ico",
     "checkedAt": "2026-11-06"
   },
+  "africa.com": {
+    "file": "favicons/africa.com.webp",
+    "checkedAt": "2026-11-22"
+  },
   "africa.dailynewsegypt.com": {
     "file": "favicons/africa.dailynewsegypt.com.png",
     "checkedAt": "2026-11-17"
@@ -330,6 +334,10 @@
   "daily-sun.com": {
     "file": "favicons/daily-sun.com.ico",
     "checkedAt": "2026-11-08"
+  },
+  "dailyecho.co.uk": {
+    "file": "favicons/dailyecho.co.uk.ico",
+    "checkedAt": "2026-11-22"
   },
   "dailynigerian.com": {
     "file": null,
@@ -1470,6 +1478,10 @@
   "qcintel.com": {
     "file": "favicons/qcintel.com.ico",
     "checkedAt": "2026-11-06"
+  },
+  "qodsna.com": {
+    "file": "favicons/qodsna.com.ico",
+    "checkedAt": "2026-11-22"
   },
   "qz.com": {
     "file": "favicons/qz.com.ico",
