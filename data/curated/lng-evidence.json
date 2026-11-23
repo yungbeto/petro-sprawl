@@ -5,6 +5,14 @@
       {
         "status": "reduced",
         "sourceType": "press",
+        "statement": "Citing Bloomberg, reports that Ras Laffan is loading LNG at roughly half its pre-war pace, with a 10-day average of 13-15 cargoes so far in November against about 11 in October, amid ongoing Hormuz disruption (Enterprise).",
+        "url": "https://enterpriseam.com/menaplus/2026/11/11/qatar-pushes-more-lng-through-hormuz-and-buys-oil-acreage-beyond-it/",
+        "observedAt": "2026-11-10",
+        "recordedAt": "2026-11-23"
+      },
+      {
+        "status": "reduced",
+        "sourceType": "press",
         "statement": "QatarEnergy restored LNG exports in September to about a third of pre-war levels, and at least 20 more cargoes have passed Hormuz since early September (Semafor, citing Bloomberg).",
         "url": "https://www.semafor.com/article/10/20/2026/qatar-is-ramping-up-liquefied-natural-gas-exports-as-prices-surge",
         "observedAt": "2026-10-20",
@@ -42,6 +50,14 @@
       {
         "status": "reduced",
         "sourceType": "press",
+        "statement": "Bloomberg reports that LNG loadings from Ras Laffan in early November were running at 13 to 15 shipments on a 10-day moving average, still roughly half the pre-war pace amid ongoing Strait of Hormuz disruptions (Bloomberg).",
+        "url": "https://www.rigzone.com/news/qatar_lng_loadings_gain_pace-10-nov-2026-185047-article",
+        "observedAt": "2026-11-10",
+        "recordedAt": "2026-11-23"
+      },
+      {
+        "status": "reduced",
+        "sourceType": "press",
         "statement": "QatarEnergy restored LNG exports in September to about a third of pre-war levels, and at least 20 more cargoes have passed Hormuz since early September (Semafor, citing Bloomberg).",
         "url": "https://www.semafor.com/article/10/20/2026/qatar-is-ramping-up-liquefied-natural-gas-exports-as-prices-surge",
         "observedAt": "2026-10-20",
@@ -76,6 +92,14 @@
   {
     "id": "gem-t100000130601-export",
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Reuters reported that S&P Global Energy vessel tracking data showed eight laden LNG tankers left the Strait of Hormuz after loading at Das Island in October 2026 (Reuters).",
+        "url": "https://www.businessday.co.za/news/2026-11-10-hormuz-lng-traffic-in-october-at-highest-since-iran-war-began/",
+        "observedAt": "2026-10-31",
+        "recordedAt": "2026-11-23"
+      },
       {
         "status": "operating",
         "sourceType": "press",
