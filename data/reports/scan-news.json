@@ -1,59 +1,69 @@
 {
-  "recordedAt": "2026-11-22T20:03:59.366Z",
+  "recordedAt": "2026-11-23T01:55:23.185Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 24,
-      "failed": 48,
-      "articles": 2,
+      "requests": 6,
+      "failed": 53,
+      "articles": 0,
       "errors": [
-        "answered 429",
-        "fetch failed",
         "fetch failed",
         "answered 429",
         "answered 429"
       ]
     },
     "google-news": {
-      "requests": 54,
+      "requests": 53,
       "failed": 0,
-      "articles": 489,
+      "articles": 530,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-22"
+    "lastOk": "2026-11-23"
   },
-  "stories": 17,
-  "candidates": 3,
+  "stories": 18,
+  "candidates": 6,
   "usage": {
-    "input": 59411,
-    "output": 3218,
-    "searches": 3
+    "input": 109358,
+    "output": 5651,
+    "searches": 7
   },
-  "estimatedCostUsd": 0.038,
+  "estimatedCostUsd": 0.084,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "nothing",
+      "outcome": "committed",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://ozarab.media/tankers-reported-ablaze-in-hormuz/",
+        "publisher": "Oz Arab Media",
+        "quote": "According to Al Jazeera, tankers were reported set ablaze in Hormuz in live coverage of the Iran war.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      },
       "headlines": [
-        "- 2026-11-22 · CNN: Iranian attacks in the Strait of Hormuz are at the highest levels since the conflict began",
-        "- 2026-11-22 · The Guardian: Briton swims length of strait of Hormuz to highlight environmental cost of war",
-        "- 2026-11-22 · AFP.com: Bahrain says Iran struck industrial site as tankers hit in Hormuz",
-        "- 2026-11-22 · Forbes: Efficiency Jobs Fall Just As AI And Hormuz Make Them Matter Most",
-        "- 2026-11-22 · Los Angeles Times: Endurance athlete swims in Strait of Hormuz to highlight Iran war’s impact on wildlife",
-        "- 2026-11-22 · Euronews.com: Tanker incident “involving military forces” reported in Hormuz",
-        "- 2026-11-22 · Anadolu Ajansı: Iran says 2 supertankers struck naval mines near Strait of Hormuz",
-        "- 2026-11-22 · Middle East Eye: Two supertankers hit mines near Hormuz, Iranian navy says",
-        "- 2026-11-22 · NewsCord: Lewis Pugh Completes 15km Strait of Hormuz Swim Highlighting Iran War’s Wildlife Impact: 14 outlets compared",
-        "- 2026-11-22 · Middle East Monitor: Iran claims it downed US MQ-1 drone near Hormuz",
-        "- 2026-11-22 · Fox News: Oil prices fall despite Strait of Hormuz tension",
-        "- 2026-11-22 · WANA News Agency: Two Super Tankers Explode After Hitting Naval Mines in Eastern Strait of Hormuz",
-        "- 2026-11-22 · Modern Ghana: Endurance athlete swims Strait of Hormuz",
-        "- 2026-11-22 · WANA News Agency: Two Oil Tankers Catch Fire After Striking Naval Mines East of Strait of Hormuz",
-        "- 2026-11-22 · The Telegraph: Briton dodges tankers and bombs to swim through Strait of Hormuz"
+        "- 2026-11-23 · Oz Arab Media: Tankers Reported Ablaze in Hormuz",
+        "- 2026-11-22 · NBC News: Man swims in Strait of Hormuz to show war's wildlife impact",
+        "- 2026-11-22 · Beinsure: US naval blockade of Iran: Tanker incident reported near Strait of Hormuz",
+        "- 2026-11-22 · NewsCord: Iran’s Revolutionary Guards Say They Shot Down Another US MQ-1 Drone East of Hormuz: 10 outlets compared",
+        "- 2026-11-22 · Iran International: Seven tankers hit in Hormuz since Nov. 16 amid Iranian harassment",
+        "- 2026-11-22 · Modern Ghana: Man swims in Strait of Hormuz to show war's wildlife impact",
+        "- 2026-11-22 · ABC News & Headlines – Australian Broadcasting Corporation: ‘We’ve got to stop the war’: Endurance athlete swims in Strait of Hormuz",
+        "- 2026-11-22 · France 24: Bahrain accuses Iran of striking industrial site as tankers hit in Hormuz",
+        "- 2026-11-22 · Ynetnews: As tankers explode around him, British swimmer braves Strait of Hormuz to expose war's hidden toll",
+        "- 2026-11-22 · Gulf News: UAE, Oman continue search for missing Jordanian sailor after Hormuz tanker attack",
+        "- 2026-11-22 · Daily Tribune: UK man swims in Strait of Hormuz to highlight environmental damage",
+        "- 2026-11-22 · شفق نيوز: Shafaq News..Naval mine blast ignites two tankers in Hormuz",
+        "- 2026-11-21 · Reuters: UK maritime agency reports two tanker incidents near Oman; Iran says vessel hit mine east of Hormuz",
+        "- 2026-11-20 · Britannica: How Much Oil Passes Through the Strait of Hormuz? | Daily, Percentage, Choke Point, & Map"
       ]
     },
     {
@@ -62,21 +72,57 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-22 · PM News Nigeria: Dangote Refinery triggers nationwide petrol price decline",
-        "- 2026-11-22 · within nigeria: Dangote Refinery IPO: Who bought what — A breakdown of 3.8 million investors"
+        "- 2026-11-22 · TRIPURA STAR NEWS: Organization Of The Petroleum Exporting Countries (OPEC), African Continental Free Trade Area (Afcfta) And Dangote Refinery Join South Sudanese Ministers On The South Sudan Oil & Power (SSOP) 2026 Keynote Stage."
       ]
     },
     {
       "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
+      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-22 · The Jerusalem Post: Yemen's Houthis say they attacked Saudi Rabigh oil refinery",
-        "- 2026-11-22 · Internazionale: Yemen’s Houthis say they attacked Saudi Rabigh oil refinery",
-        "- 2026-11-22 · Fakti.bg: The Houthis Tighten Their Grip Around Bab el-Mandeb ᐉ News from Fakti.bg - World",
-        "- 2026-11-20 · EnergyNow.com: INSIGHT: Why is the Bab el-Mandeb Strait so Important?",
-        "- 2026-11-20 · Shipping Telegraph: ‘Free of charge’: Yemen’s HOCC denies imposing tolls on Bab al-Mandab transit",
-        "- 2026-11-20 · gCaptain: Houthis Order Ships to Leave Saudi Red Sea Ports After Hodeidah Airstrikes"
+        "- 2026-11-22 · Aaj English TV: Houthis say they attacked Saudi Rabigh oil refinery",
+        "- 2026-11-22 · Telegraph India: Yemen's Houthis claim drone attack on Saudi Arabia's major Rabigh oil refinery on Red Sea coast"
+      ]
+    },
+    {
+      "ref": "terminal/kharg",
+      "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-22 · EnergyNow: IRAN’S “CROWN JEWEL” – Kharg Island, Struck by US, is Key Hub for Iran Oil Exports",
+        "- 2026-11-20 · Britannica: Kharg Island | Oil Terminal, Attack, Significance, Map, Persian Gulf, & Iran"
+      ]
+    },
+    {
+      "ref": "field/gem-l100000312725",
+      "kind": "story",
+      "outcome": "rejected",
+      "detail": "quote not found on the page; starts after the page was published",
+      "draft": {
+        "action": "new_disruption",
+        "disruptionId": "",
+        "url": "https://www.tradingview.com/news/reuters.com,2026:newsml_S8N46B019:0-libya-s-noc-says-pipeline-valve-closure-from-sharara-oilfield-to-cut-output-by-350-000-bpd/",
+        "publisher": "Reuters",
+        "quote": "the closure of a valve on a pipeline from the Sharara oilfield by an \"unlawful group\" would result in the loss of around 350,000 barrels per day of production",
+        "cause": "sabotage",
+        "startedAt": "2026-11-23",
+        "summary": "Libya's National Oil Corporation said an \"unlawful group\" closed a valve on a pipeline from the Sharara oilfield. The NOC said the closure would result in the loss of around 350,000 barrels per day of production.",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      },
+      "headlines": [
+        "- 2026-11-23 · TradingView: Libya's NOC says 'unlawful' pipeline closure from Sharara oilfield to cut output by 350,000 bpd",
+        "- 2026-11-23 · marketscreener.com: Libya's NOC says 'unlawful' pipeline closure from Sharara oilfield to cut output by 350,000 bpd"
+      ]
+    },
+    {
+      "ref": "pipeline/east-west-crude",
+      "kind": "story",
+      "outcome": "nothing",
+      "headlines": [
+        "- 2026-11-22 · Yemen Online: Yemen Condemns Attack on Saudi East-West Pipeline"
       ]
     }
   ]
