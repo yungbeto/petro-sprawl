@@ -63,6 +63,14 @@
       {
         "status": "idle",
         "sourceType": "press",
+        "statement": "Reports that the Nord Stream pipelines, which run from Russia to Germany under the Baltic Sea, are no longer operational (RFE/RL).",
+        "url": "https://oilprice.com/Energy/Energy-General/Germany-Is-Dismantling-a-Nord-Stream-Power-Plant-for-Ukraine.html",
+        "observedAt": "2026-11-13",
+        "recordedAt": "2026-11-16"
+      },
+      {
+        "status": "idle",
+        "sourceType": "press",
         "statement": "Citing the German federal government's response to a parliamentary inquiry, the article reports that putting Nord Stream 2 into operation is not on the government's agenda and its certification procedure remains suspended (RBC-Ukraine).",
         "url": "https://newsukraine.rbc.ua/news/germany-reveals-its-plans-for-nord-stream-1793114398.html",
         "observedAt": "2026-10-27",
@@ -164,6 +172,14 @@
       }
     },
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Reuters calculations show Gazprom's average daily supplies to Europe via TurkStream fell 4% year on year to 52.1 million cubic metres in October, totalling 1.62 bcm (Reuters).",
+        "url": "https://www.bairdmaritime.com/offshore/transport/russian-gas-flows-to-europe-via-undersea-pipeline-drop-in-october",
+        "observedAt": "2026-10-31",
+        "recordedAt": "2026-11-16"
+      },
       {
         "status": "operating",
         "sourceType": "press",
@@ -454,6 +470,14 @@
       }
     },
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "The report says ADNOC currently operates a pipeline carrying Murban crude from onshore oilfields to Fujairah, and that a proposed third pipeline is under consideration (Times Kuwait).",
+        "url": "https://timeskuwait.com/abu-dhabi-plans-to-expand-crude-transport-capacity-to-fujairah/",
+        "observedAt": "2026-11-05",
+        "recordedAt": "2026-11-16"
+      },
       {
         "status": "operating",
         "sourceType": "press",
@@ -915,6 +939,14 @@
     "evidence": [
       {
         "status": "operating",
+        "sourceType": "press",
+        "statement": "Citing the State Statistical Committee, the report says the Baku–Tbilisi–Erzurum South Caucasus Pipeline carried 18,869.9 million cubic meters of gas in January–October 2026, down 1.4% year-on-year (Report).",
+        "url": "https://report.az/en/energy/azerbaijan-s-main-gas-pipeline-shipments-fall-0-3-in-january-october",
+        "observedAt": "2026-10-31",
+        "recordedAt": "2026-11-23"
+      },
+      {
+        "status": "operating",
         "sourceType": "government",
         "statement": "Azerbaijan's State Statistics Committee: 16.86 bcm moved through the Baku–Tbilisi–Erzurum pipeline in January to September 2026, 1.6% less than a year earlier (Trend).",
         "url": "https://www.trend.az/business/energy/4235605.html",
@@ -939,6 +971,14 @@
     ],
     "autoMatch": false,
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Energy Minister Bayraktar said TANAP transports Azerbaijani gas through Türkiye and has sufficient spare capacity for substantially larger export volumes (Azernews).",
+        "url": "https://www.azernews.az/region/266943.html",
+        "observedAt": "2026-11-06",
+        "recordedAt": "2026-11-16"
+      },
       {
         "status": "operating",
         "sourceType": "press",
@@ -977,6 +1017,14 @@
     ],
     "autoMatch": false,
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Reports that Morocco took 785 GWh of natural gas routed from Spain in August 2026, with deliveries transiting the Maghreb-Europe pipeline (Bytes Europe).",
+        "url": "https://www.byteseu.com/2461338/",
+        "observedAt": "2026-08-31",
+        "recordedAt": "2026-11-23"
+      },
       {
         "status": "reduced",
         "sourceType": "press",

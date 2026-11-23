@@ -1,0 +1,122 @@
+[
+  {
+    "ref": "lng/gem-t100000130601-export",
+    "reason": "the quote doesn't name the asset",
+    "evidence": {
+      "status": "operating",
+      "sourceType": "press",
+      "statement": "Reuters reported that S&P Global Energy vessel tracking data showed eight laden LNG tankers left the Strait of Hormuz after loading at Das Island in October 2026 (Reuters).",
+      "url": "https://www.businessday.co.za/news/2026-11-10-hormuz-lng-traffic-in-october-at-highest-since-iran-war-began/",
+      "observedAt": "2026-10-31",
+      "recordedAt": "2026-11-23"
+    }
+  },
+  {
+    "ref": "pipeline/turkstream",
+    "reason": "the quote doesn't name the asset",
+    "evidence": {
+      "status": "operating",
+      "sourceType": "press",
+      "statement": "Reuters calculations show Gazprom's average daily supplies to Europe via TurkStream fell 4% year on year to 52.1 million cubic metres in October, totalling 1.62 bcm (Reuters).",
+      "url": "https://www.bairdmaritime.com/offshore/transport/russian-gas-flows-to-europe-via-undersea-pipeline-drop-in-october",
+      "observedAt": "2026-10-31",
+      "recordedAt": "2026-11-16"
+    }
+  },
+  {
+    "ref": "pipeline/tanap",
+    "reason": "the quote doesn't name the asset",
+    "evidence": {
+      "status": "operating",
+      "sourceType": "press",
+      "statement": "Energy Minister Bayraktar said TANAP transports Azerbaijani gas through Türkiye and has sufficient spare capacity for substantially larger export volumes (Azernews).",
+      "url": "https://www.azernews.az/region/266943.html",
+      "observedAt": "2026-11-06",
+      "recordedAt": "2026-11-16"
+    }
+  },
+  {
+    "ref": "terminal/corpus-christi",
+    "reason": "the quote doesn't name the asset",
+    "evidence": {
+      "status": "operating",
+      "sourceType": "press",
+      "statement": "The Port of Corpus Christi is reported to move upward of 2.4 million barrels of crude oil daily and to be the nation's second-ranked LNG export port, in an article published November 3, 2026 (MarketScale).",
+      "url": "https://www.marketscale.com/industries/transportation/port-of-corpus-christi-weighs-a-dp-world-container-terminal-and-2000-acre-hub",
+      "observedAt": "2026-11-03",
+      "recordedAt": "2026-11-16"
+    }
+  },
+  {
+    "ref": "pipeline/nord-stream-2",
+    "reason": "the quote doesn't name the asset",
+    "evidence": {
+      "status": "idle",
+      "sourceType": "press",
+      "statement": "Reports that the Nord Stream pipelines, which run from Russia to Germany under the Baltic Sea, are no longer operational (RFE/RL).",
+      "url": "https://oilprice.com/Energy/Energy-General/Germany-Is-Dismantling-a-Nord-Stream-Power-Plant-for-Ukraine.html",
+      "observedAt": "2026-11-13",
+      "recordedAt": "2026-11-16"
+    }
+  },
+  {
+    "ref": "pipeline/habshan-fujairah",
+    "reason": "the quote doesn't name the asset",
+    "evidence": {
+      "status": "operating",
+      "sourceType": "press",
+      "statement": "The report says ADNOC currently operates a pipeline carrying Murban crude from onshore oilfields to Fujairah, and that a proposed third pipeline is under consideration (Times Kuwait).",
+      "url": "https://timeskuwait.com/abu-dhabi-plans-to-expand-crude-transport-capacity-to-fujairah/",
+      "observedAt": "2026-11-05",
+      "recordedAt": "2026-11-16"
+    }
+  },
+  {
+    "ref": "pipeline/maghreb-europe",
+    "reason": "status changes from reduced to operating",
+    "evidence": {
+      "status": "operating",
+      "sourceType": "press",
+      "statement": "Reports that Morocco took 785 GWh of natural gas routed from Spain in August 2026, with deliveries transiting the Maghreb-Europe pipeline (Bytes Europe).",
+      "url": "https://www.byteseu.com/2461338/",
+      "observedAt": "2026-08-31",
+      "recordedAt": "2026-11-23"
+    }
+  },
+  {
+    "ref": "pipeline/south-caucasus",
+    "reason": "the quote doesn't name the asset",
+    "evidence": {
+      "status": "operating",
+      "sourceType": "press",
+      "statement": "Citing the State Statistical Committee, the report says the Baku–Tbilisi–Erzurum South Caucasus Pipeline carried 18,869.9 million cubic meters of gas in January–October 2026, down 1.4% year-on-year (Report).",
+      "url": "https://report.az/en/energy/azerbaijan-s-main-gas-pipeline-shipments-fall-0-3-in-january-october",
+      "observedAt": "2026-10-31",
+      "recordedAt": "2026-11-23"
+    }
+  },
+  {
+    "ref": "lng/gem-t100000130594-export",
+    "reason": "the quote doesn't name the asset",
+    "evidence": {
+      "status": "reduced",
+      "sourceType": "press",
+      "statement": "Citing Bloomberg, reports that Ras Laffan is loading LNG at roughly half its pre-war pace, with a 10-day average of 13-15 cargoes so far in November against about 11 in October, amid ongoing Hormuz disruption (Enterprise).",
+      "url": "https://enterpriseam.com/menaplus/2026/11/11/qatar-pushes-more-lng-through-hormuz-and-buys-oil-acreage-beyond-it/",
+      "observedAt": "2026-11-10",
+      "recordedAt": "2026-11-23"
+    }
+  },
+  {
+    "ref": "lng/gem-t100000130598-export",
+    "reason": "the quote doesn't name the asset",
+    "evidence": {
+      "status": "reduced",
+      "sourceType": "press",
+      "statement": "Bloomberg reports that LNG loadings from Ras Laffan in early November were running at 13 to 15 shipments on a 10-day moving average, still roughly half the pre-war pace amid ongoing Strait of Hormuz disruptions (Bloomberg).",
+      "url": "https://www.rigzone.com/news/qatar_lng_loadings_gain_pace-10-nov-2026-185047-article",
+      "observedAt": "2026-11-10",
+      "recordedAt": "2026-11-23"
+    }
+  }
+]
