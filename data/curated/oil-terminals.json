@@ -35,6 +35,14 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "Bloomberg reports that Ras Tanura has restarted after a months-long closure, and Saudi Aramco was asking customers that week to submit loading requests, though some buyers are hesitant over renewed shipping threats (Bloomberg).",
+        "url": "https://www.bloomberg.com/news/articles/2026-07-08/saudi-efforts-to-revive-gulf-oil-loadings-run-into-buyer-caution",
+        "observedAt": "2026-07-08",
+        "recordedAt": "2026-11-23"
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "Reuters reports that at least five supertankers carrying 10 million barrels of Saudi oil loaded at Ras Tanura have exited the Strait of Hormuz and Saudi Aramco is ramping up loadings from the terminal (Reuters).",
         "url": "https://boereport.com/2026/07/02/saudi-aramco-ramps-up-exports-from-ras-tanura-switches-to-spot-sales-sources-say/",
         "observedAt": "2026-07-02",
@@ -182,6 +190,15 @@
       "hormuz"
     ],
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Oil supplies from the southern port of Basra have surged since Baghdad said its exports were nearing pre-conflict levels, with Iraq's exports reported at 3.35 million barrels per day (IraqiNews).",
+        "url": "https://www.iraqinews.com/iraq/iraqs-oil-exports-rise-to-3-35-million-barrels-per-day/",
+        "observedAt": "2026-11-04",
+        "recordedAt": "2026-11-23",
+        "unreviewed": true
+      },
       {
         "status": "operating",
         "sourceType": "press",
@@ -506,6 +523,15 @@
       "danish"
     ],
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Reports that a first tanker carrying diesel left Primorsk in October, marking the resumption of seaborne shipments after Moscow partially lifted its export ban (Insurance Journal).",
+        "url": "https://www.insurancejournal.com/news/international/2026/11/23/893444.htm",
+        "observedAt": "2026-10-31",
+        "recordedAt": "2026-11-23",
+        "unreviewed": true
+      },
       {
         "status": "operating",
         "sourceType": "press",

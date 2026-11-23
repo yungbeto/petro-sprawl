@@ -63,6 +63,15 @@
       {
         "status": "idle",
         "sourceType": "press",
+        "statement": "Citing the German federal government's response to a parliamentary inquiry, the article reports that putting Nord Stream 2 into operation is not on the government's agenda and its certification procedure remains suspended (RBC-Ukraine).",
+        "url": "https://newsukraine.rbc.ua/news/germany-reveals-its-plans-for-nord-stream-1793114398.html",
+        "observedAt": "2026-10-27",
+        "recordedAt": "2026-11-23",
+        "unreviewed": true
+      },
+      {
+        "status": "idle",
+        "sourceType": "press",
         "statement": "Reporting on the Hamburg sabotage trial: Nord Stream 2 was built but never opened (Al Jazeera).",
         "url": "https://www.aljazeera.com/news/2026/10/14/ukrainian-ex-officer-goes-on-trial-in-germany-over-nord-stream-blasts",
         "observedAt": "2026-10-14",
@@ -158,6 +167,15 @@
       {
         "status": "operating",
         "sourceType": "press",
+        "statement": "Reports that Russian gas deliveries through TurkStream's European leg reached 14.6 bcm from January to October, close to the pipeline's 15.75 bcm annual capacity, citing ENTSOG data (Serbia Energy).",
+        "url": "https://serbia-energy.eu/turkstream-deliveries-reach-14-6-bcm-in-ten-months-as-serbias-russian-deal-nears-its-year-end-expiry/",
+        "observedAt": "2026-10-31",
+        "recordedAt": "2026-11-23",
+        "unreviewed": true
+      },
+      {
+        "status": "operating",
+        "sourceType": "press",
         "statement": "Russian gas exports to Europe via TurkStream fell to about 1.34 bcm in September, 44.8 mcm a day, during maintenance at the Strandzha-2 entry into Bulgaria from 21 to 26 September (Baird Maritime, citing Reuters and Entsog data).",
         "url": "https://www.bairdmaritime.com/shipping/tankers/gas/russian-gas-flows-to-europe-via-undersea-pipeline-decline-in-september",
         "observedAt": "2026-09-30",
@@ -233,6 +251,15 @@
       "gem-p0547"
     ],
     "evidence": [
+      {
+        "status": "operating",
+        "sourceType": "press",
+        "statement": "Iraq's oil minister said the Kirkuk-Ceyhan pipeline resumed pumping crude for export to Turkey at an initial 120,000 bpd, with plans to raise flows gradually to 500,000 bpd (Reuters).",
+        "url": "https://boereport.com/2026/11/17/iraq-resumes-crude-oil-pumping-for-export-purposes-via-pipeline-to-turkey-oil-minister-says/",
+        "observedAt": "2026-11-17",
+        "recordedAt": "2026-11-23",
+        "unreviewed": true
+      },
       {
         "status": "operating",
         "sourceType": "press",
