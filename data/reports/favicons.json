@@ -145,7 +145,7 @@
   },
   "bastillepost.com": {
     "file": null,
-    "checkedAt": "2026-11-07"
+    "checkedAt": "2026-11-23"
   },
   "baytownsun.com": {
     "file": "favicons/baytownsun.com.ico",
@@ -253,7 +253,7 @@
   },
   "caspianpost.com": {
     "file": null,
-    "checkedAt": "2026-11-06"
+    "checkedAt": "2026-11-23"
   },
   "cbs19.tv": {
     "file": "favicons/cbs19.tv.png",
@@ -474,6 +474,10 @@
   "en.apa.az": {
     "file": "favicons/en.apa.az.png",
     "checkedAt": "2026-11-11"
+  },
+  "en.bloomingbit.io": {
+    "file": "favicons/en.bloomingbit.io.png",
+    "checkedAt": "2026-11-23"
   },
   "en.haberler.com": {
     "file": "favicons/en.haberler.com.ico",
@@ -711,6 +715,10 @@
     "file": "favicons/gazettengr.com.png",
     "checkedAt": "2026-11-14"
   },
+  "gbcghanaonline.com": {
+    "file": "favicons/gbcghanaonline.com.png",
+    "checkedAt": "2026-11-23"
+  },
   "gcaptain.com": {
     "file": "favicons/gcaptain.com.jpg",
     "checkedAt": "2026-11-10"
@@ -766,6 +774,10 @@
   "hindustantimes.com": {
     "file": "favicons/hindustantimes.com.ico",
     "checkedAt": "2026-11-20"
+  },
+  "hirunews.lk": {
+    "file": "favicons/hirunews.lk.ico",
+    "checkedAt": "2026-11-23"
   },
   "hoodline.com": {
     "file": "favicons/hoodline.com.ico",
@@ -909,7 +921,7 @@
   },
   "iranwire.com": {
     "file": null,
-    "checkedAt": "2026-11-06"
+    "checkedAt": "2026-11-23"
   },
   "iraqinews.com": {
     "file": null,
@@ -1070,6 +1082,10 @@
   "madhyamamonline.com": {
     "file": "favicons/madhyamamonline.com.ico",
     "checkedAt": "2026-11-18"
+  },
+  "magzter.com": {
+    "file": "favicons/magzter.com.ico",
+    "checkedAt": "2026-11-23"
   },
   "majorwavesenergyreport.com": {
     "file": "favicons/majorwavesenergyreport.com.jpg",
@@ -1255,6 +1271,10 @@
     "file": "favicons/naturalgasintel.com.png",
     "checkedAt": "2026-11-12"
   },
+  "natureworldnews.com": {
+    "file": "favicons/natureworldnews.com.png",
+    "checkedAt": "2026-11-23"
+  },
   "nbcnews.com": {
     "file": "favicons/nbcnews.com.png",
     "checkedAt": "2026-11-17"
@@ -1358,6 +1378,10 @@
   "nigerianbulletin.com": {
     "file": "favicons/nigerianbulletin.com.webp",
     "checkedAt": "2026-11-15"
+  },
+  "nigeriannewsdirect.com": {
+    "file": null,
+    "checkedAt": "2026-11-23"
   },
   "nwitimes.com": {
     "file": "favicons/nwitimes.com.ico",
@@ -1717,7 +1741,7 @@
   },
   "thearabweekly.com": {
     "file": null,
-    "checkedAt": "2026-11-07"
+    "checkedAt": "2026-11-23"
   },
   "theconversation.com": {
     "file": "favicons/theconversation.com.ico",
