@@ -1,5 +1,5 @@
 {
-  "recordedAt": "2026-11-23T13:13:47.681Z",
+  "recordedAt": "2026-11-24T02:25:56.290Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
@@ -13,45 +13,58 @@
       ]
     },
     "google-news": {
-      "requests": 54,
+      "requests": 53,
       "failed": 0,
-      "articles": 491,
+      "articles": 760,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-23"
+    "lastOk": "2026-11-24"
   },
-  "stories": 16,
+  "stories": 18,
   "candidates": 6,
   "usage": {
-    "input": 71074,
-    "output": 4872,
-    "searches": 3
+    "input": 84791,
+    "output": 5697,
+    "searches": 5
   },
-  "estimatedCostUsd": 0.04,
+  "estimatedCostUsd": 0.061,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "nothing",
+      "outcome": "committed",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://www.democracynow.org/2026/11/23/headlines/three_more_ships_are_struck_amid_record_pace_of_attacks_in_strait_of_hormuz",
+        "publisher": "Democracy Now",
+        "quote": "At least three more ships have been struck by projectiles while attempting to cross the Strait of Hormuz.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      },
       "headlines": [
-        "- 2026-11-23 · Bloomberg.com: Fake Iran Tanker Highlights Uncertainty Around Hormuz Traffic",
-        "- 2026-11-23 · The Jerusalem Post: Iranian attacks on ships near Strait of Hormuz hit highest level since war began, data shows",
-        "- 2026-11-23 · IranWire: Iranian MP claims Iran hits about 10 tankers a day in Hormuz",
-        "- 2026-11-23 · Middle East Eye: Iran says it can reopen Hormuz Strait if US meets conditions",
-        "- 2026-11-23 · safety4sea: Three tankers struck in Strait of Hormuz amid further Gulf of Oman incident",
-        "- 2026-11-23 · Washington Times: UAE steps up efforts to shuttle oil through Strait of Hormuz",
-        "- 2026-11-23 · تسنیم: Two Supertankers Hit Sea Mines in Strait of Hormuz",
-        "- 2026-11-23 · WANA News Agency: U.S. Compliance Key to Security in Hormuz",
-        "- 2026-11-23 · Lloyd's List: The Week in Charts: Tanker rates rising again as Hormuz flow falters, says Frontline | Non-Iranian ships continue to embrace Tehran’s Hormuz passage system",
-        "- 2026-11-23 · The Jerusalem Post: US Navy orders more underwater drones as Iran attacks on Hormuz intensify",
-        "- 2026-11-23 · Arabian Gulf Business Insight | AGBI: Hormuz oil shipments drop while vessel attacks increase",
-        "- 2026-11-23 · CNBC: Oil market has yet to feel impact of declining Hormuz flows: Analyst",
-        "- 2026-11-23 · Nature World News: Lewis Pugh Swims Strait of Hormuz for War-Hit Wildlife",
-        "- 2026-11-23 · Anadolu Ajansı: Attacks on shipping near Strait of Hormuz hit wartime high in October",
-        "- 2026-11-23 · Ship & Bunker: Tankers Attacked Over the Weekend in Gulf of Oman and Strait of Hormuz"
+        "- 2026-11-23 · Al-Monitor: UK agency logs over 30 Iranian attacks in Hormuz in October, a wartime high",
+        "- 2026-11-23 · Susquehanna University: Research reveals economic impact of Hormuz closure on Africa",
+        "- 2026-11-23 · Anadolu Ajansı: Iran shot down US drone east of Strait of Hormuz, state media claims",
+        "- 2026-11-23 · Middle East Eye: Three tankers explode in Strait of Hormuz",
+        "- 2026-11-23 · Democracy Now!: Three More Ships Are Struck Amid Record Pace of Attacks in Strait of Hormuz",
+        "- 2026-11-23 · WRAL: Fact-check: Is more oil going through the Strait of Hormuz than before the Iran war?",
+        "- 2026-11-23 · The New Arab: Could Iran break the US naval blockade in the Strait of Hormuz?",
+        "- 2026-11-23 · Crude Oil Prices Today | OilPrice.com: What Is Trump Up To Bombing Iran's Qeshm Island",
+        "- 2026-11-23 · The Jerusalem Post: IRGC: Three oil tankers hit mines, caught fire while transiting Hormuz with US support - report",
+        "- 2026-11-23 · Anadolu Ajansı: Iran’s Revolutionary Guard Corps Navy says mine blasts set 3 oil tankers ablaze in Strait of Hormuz",
+        "- 2026-11-23 · Arab News: Attacks on grain ships, Hormuz crisis drive hunger in Yemen and Sudan, UN food agency boss warns",
+        "- 2026-11-23 · Beinsure: Strait of Hormuz shipping attacks reach highest level since Iran war began",
+        "- 2026-11-23 · DW.com: Strait of Hormuz: Extreme swimmer traverses contested waters",
+        "- 2026-11-23 · Crude Oil Prices Today | OilPrice.com: South Korea Asks Qatar for Priority LNG Once Hormuz Reopens",
+        "- 2026-11-23 · Middle East Eye: Explosions reported in Strait of Hormuz"
       ]
     },
     {
@@ -60,55 +73,50 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-23 · Nigerian NewsDirect: Imported petrol still cheaper than Dangote refinery PMS — PETROAN insists",
-        "- 2026-11-23 · The Trumpet Newspaper: Dangote Refinery Cuts Petrol Price by ₦60 to ₦1,070 Per Litre"
+        "- 2026-11-23 · TradingView: Nigeria's SEC approves Dangote refinery's IPO share distribution plan, sources say",
+        "- 2026-11-23 · Finimize: Nigeria’s SEC Approved Dangote Refinery’s Oversubscribed IPO Allocation",
+        "- 2026-11-23 · MLQ.ai: Nigeria's SEC approves Dangote refinery's IPO share allocation plan, clearing the way for a listing",
+        "- 2026-11-23 · Traders Union: Dangote refinery clears IPO allotment hurdle for NGX listing",
+        "- 2026-11-23 · Business News Nigeria: Dangote Refinery set for NGX listing as SEC clears IPO share allotment",
+        "- 2026-11-23 · Channel Africa: ‘Nigeria’s SEC approves Dangote refinery’s IPO share distribution plan’",
+        "- 2026-11-23 · The Guardian Nigeria News: Investors urged to monitor Dangote Refinery share allotment, refunds",
+        "- 2026-11-23 · Bénin Web TV: Nigeria: Approval granted for Dangote refinery share distribution, according to Reuters",
+        "- 2026-11-23 · Legit News: Dangote Refinery slashes petrol price by N99, announces new pump price",
+        "- 2026-11-22 · Zawya: Organization of the Petroleum Exporting Countries (OPEC), African Continental Free Trade Area (AfCFTA) and Dangote Refinery Join South Sudanese Ministers on the South Sudan Oil & Power (SSOP) 2026 Keynote Stage"
       ]
     },
     {
       "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
-      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-23 · IranWire: Oil prices slip as Hormuz transit slows and Houthi attacks widen",
-        "- 2026-11-23 · Hiru News: Houthis claim attack on Saudi oil refinery",
-        "- 2026-11-22 · The Media Line: Could Control Over Bab el Mandeb Be More Valuable to Iran Than Nuclear Weapons?",
-        "- 2026-11-22 · Fakti.bg: The Houthis Tighten Their Grip Around Bab el-Mandeb ᐉ News from Fakti.bg - World"
+        "- 2026-11-23 · CNBC: Yemen's Houthis claim attacks on Saudi oil refinery as Trump warns of new strikes next year",
+        "- 2026-11-23 · وكالة سبأ: Hodeida residents send livestock aid to support armed forces in Bab al-Mandab",
+        "- 2026-11-23 · EnergyNow: Houthis Say They Targeted Saudi East-West Oil Transport"
       ]
     },
     {
       "ref": "field/gem-l100000312725",
       "kind": "story",
-      "outcome": "review",
-      "detail": "new disruption; zawya.com isn't on the trusted list",
+      "outcome": "rejected",
+      "detail": "start \"\" isn't a date",
       "draft": {
         "action": "new_disruption",
         "disruptionId": "",
-        "url": "https://www.zawya.com/en/business/oil-gas/libyas-noc-says-unlawful-pipeline-closure-from-sharara-oilfield-to-cut-output-by-350000-bpd-2443364",
-        "publisher": "Zawya",
-        "quote": "the closure of a valve on a pipeline from the Sharara oilfield, one of Libya's largest,",
+        "url": "https://egyptoil-gas.com/news/libyas-oil-output-loss-hits-350000-bbl-d-after-sharara-field-disruption/",
+        "publisher": "Egypt Oil & Gas",
+        "quote": "The NOC condemned the closure of a valve carrying oil from the Sharara field",
         "cause": "sabotage",
-        "startedAt": "2026-11-23",
-        "summary": "Libya's National Oil Corporation said a valve on a pipeline from the Sharara oilfield was closed by an unlawful group, which it said would cut output by around 350,000 barrels per day. The NOC said a separate Hamada pipeline closure has cost about 15,000 bpd, bringing total losses to about 365,000 bpd. The article does not say who closed the valve or how long the shutdown will last.",
+        "startedAt": "",
+        "summary": "Libya's National Oil Corporation says a valve carrying oil from the Sharara field has been closed by a group of outlaws for more than two weeks. The NOC says the closure has cut about 15,000 bbl/d and raised the country's total daily output loss to 350,000 bbl/d. The NOC condemned the closure and urged security forces to protect oil facilities.",
         "endedAt": "",
         "eventAt": "",
         "eventText": ""
       },
       "headlines": [
-        "- 2026-11-23 · UA.NEWS: Sharara pipeline shutdown could cut output by 350,000 barrels — Anadolu Agency",
-        "- 2026-11-23 · Zawya: Libya's NOC says 'unlawful' pipeline closure from Sharara oilfield to cut output by 350,000 bpd",
-        "- 2026-11-23 · The Arab Weekly: Sharara pipeline closure deepens Libya’s oil production crisis",
-        "- 2026-11-23 · marketscreener.com: Libya's NOC says pipeline valve closure from Sharara oilfield to cut output by 350,000 bpd",
-        "- 2026-11-23 · MLQ.ai: Libya's oil output to fall by 350,000 barrels a day after a pipeline closure at Sharara"
-      ]
-    },
-    {
-      "ref": "terminal/ust-luga",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-23 · Apa.az: Official Moscow: Strikes on Ust-Luga oil terminal in Leningrad region launched from Baltic states"
+        "- 2026-11-23 · Egypt Oil & Gas: Libya’s Oil Output Loss Hits 350,000 bbl/d After Sharara Field Disruption",
+        "- 2026-11-23 · The Libya Observer: NOC reopens Sharara oil pipeline and resumes pumping",
+        "- 2026-11-23 · News of Bahrain: Libya’s Sharara Oil Pipeline Reopens"
       ]
     },
     {
@@ -117,8 +125,29 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-23 · Korea JoongAng Daily: Korea seeks Qatar LNG priority after disruptions",
-        "- 2026-11-23 · Türkiye Today: South Korea seeks priority access to Qatar LNG as Hormuz disruptions continue"
+        "- 2026-11-23 · Kalkine Media: Woodside on the S&P/ASX 50: Why Did It Secure a Qatar LNG Deal?"
+      ]
+    },
+    {
+      "ref": "terminal/ust-luga",
+      "kind": "story",
+      "outcome": "unreadable",
+      "detail": "page answered 403",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "ust-luga-2026-11-11",
+        "url": "https://english.nv.ua/nation/leningrad-oblast-attacked-by-drones-on-nov-21-video-50661253.html",
+        "publisher": "The New Voice of Ukraine",
+        "quote": "Social media users said the Ust-Luga port was hit, BBC News Russian reported.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-21",
+        "eventText": "Social media users say drones hit the Ust-Luga port during an attack on Leningrad Oblast."
+      },
+      "headlines": [
+        "- 2026-11-21 · The New Voice of Ukraine: Russia's Leningrad Oblast attacked by drones, online reports say Ust-Luga port was hit"
       ]
     }
   ]

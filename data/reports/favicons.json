@@ -275,6 +275,10 @@
     "file": "favicons/championnews.com.ng.png",
     "checkedAt": "2026-11-17"
   },
+  "channelafrica.co.za": {
+    "file": "favicons/channelafrica.co.za.png",
+    "checkedAt": "2026-11-24"
+  },
   "channelnewsasia.com": {
     "file": "favicons/channelnewsasia.com.ico",
     "checkedAt": "2026-11-14"
@@ -739,6 +743,10 @@
     "file": "favicons/goshennews.com.ico",
     "checkedAt": "2026-11-21"
   },
+  "greekreporter.com": {
+    "file": "favicons/greekreporter.com.ico",
+    "checkedAt": "2026-11-24"
+  },
   "guardian.ng": {
     "file": null,
     "checkedAt": "2026-11-10"
@@ -779,6 +787,10 @@
     "file": "favicons/hirunews.lk.ico",
     "checkedAt": "2026-11-23"
   },
+  "hometextilestoday.com": {
+    "file": null,
+    "checkedAt": "2026-11-24"
+  },
   "hoodline.com": {
     "file": "favicons/hoodline.com.ico",
     "checkedAt": "2026-11-06"
@@ -786,6 +798,10 @@
   "houseofsaud.com": {
     "file": "favicons/houseofsaud.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "houstonchronicle.com": {
+    "file": "favicons/houstonchronicle.com.png",
+    "checkedAt": "2026-11-24"
   },
   "hromadske.ua": {
     "file": "favicons/hromadske.ua.png",
@@ -893,7 +909,7 @@
   },
   "intellinews.com": {
     "file": null,
-    "checkedAt": "2026-11-06"
+    "checkedAt": "2026-11-24"
   },
   "internazionale.it": {
     "file": "favicons/internazionale.it.ico",
@@ -970,6 +986,10 @@
   "justsecurity.org": {
     "file": null,
     "checkedAt": "2026-11-10"
+  },
+  "kalkinemedia.com": {
+    "file": "favicons/kalkinemedia.com.ico",
+    "checkedAt": "2026-11-24"
   },
   "khaama.com": {
     "file": null,
@@ -1355,6 +1375,10 @@
     "file": "favicons/newsnationnow.com.ico",
     "checkedAt": "2026-11-13"
   },
+  "newsofbahrain.com": {
+    "file": "favicons/newsofbahrain.com.ico",
+    "checkedAt": "2026-11-24"
+  },
   "newsonair.gov.in": {
     "file": "favicons/newsonair.gov.in.png",
     "checkedAt": "2026-11-16"
@@ -1469,7 +1493,7 @@
   },
   "palestinechronicle.com": {
     "file": null,
-    "checkedAt": "2026-11-09"
+    "checkedAt": "2026-11-24"
   },
   "parstoday.ir": {
     "file": null,
@@ -1589,7 +1613,7 @@
   },
   "saba.ye": {
     "file": null,
-    "checkedAt": "2026-11-08"
+    "checkedAt": "2026-11-24"
   },
   "sabq.org": {
     "file": "favicons/sabq.org.ico",
@@ -2054,6 +2078,10 @@
   "worldoil.com": {
     "file": "favicons/worldoil.com.png",
     "checkedAt": "2026-11-20"
+  },
+  "wral.com": {
+    "file": "favicons/wral.com.png",
+    "checkedAt": "2026-11-24"
   },
   "wsj.com": {
     "file": "favicons/wsj.com.ico",
