@@ -1,47 +1,52 @@
 {
-  "recordedAt": "2026-11-24T02:25:56.290Z",
+  "recordedAt": "2026-11-24T14:03:21.850Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 6,
-      "failed": 53,
-      "articles": 0,
+      "requests": 10,
+      "failed": 52,
+      "articles": 1,
       "errors": [
         "answered 429",
         "answered 429",
-        "answered 429"
+        "answered 429",
+        "fetch failed"
       ]
     },
     "google-news": {
-      "requests": 53,
-      "failed": 0,
-      "articles": 760,
-      "errors": []
+      "requests": 63,
+      "failed": 2,
+      "articles": 541,
+      "errors": [
+        "answered 429",
+        "answered 429"
+      ]
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
     "lastOk": "2026-11-24"
   },
-  "stories": 18,
-  "candidates": 6,
+  "stories": 16,
+  "candidates": 4,
   "usage": {
-    "input": 84791,
-    "output": 5697,
-    "searches": 5
+    "input": 37964,
+    "output": 2991,
+    "searches": 3
   },
-  "estimatedCostUsd": 0.061,
+  "estimatedCostUsd": 0.035,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "committed",
+      "outcome": "rejected",
+      "detail": "page is older than 14 days",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.democracynow.org/2026/11/23/headlines/three_more_ships_are_struck_amid_record_pace_of_attacks_in_strait_of_hormuz",
-        "publisher": "Democracy Now",
-        "quote": "At least three more ships have been struck by projectiles while attempting to cross the Strait of Hormuz.",
+        "url": "https://www.middleeasteye.net/live/live-israelis-head-polls-netanyahu-fights-political-life",
+        "publisher": "Middle East Eye",
+        "quote": "says another tanker has hit a naval mine in the Strait of Hormuz, bringing the reported total to four.",
         "cause": "",
         "startedAt": "",
         "summary": "",
@@ -50,21 +55,21 @@
         "eventText": ""
       },
       "headlines": [
-        "- 2026-11-23 · Al-Monitor: UK agency logs over 30 Iranian attacks in Hormuz in October, a wartime high",
-        "- 2026-11-23 · Susquehanna University: Research reveals economic impact of Hormuz closure on Africa",
-        "- 2026-11-23 · Anadolu Ajansı: Iran shot down US drone east of Strait of Hormuz, state media claims",
-        "- 2026-11-23 · Middle East Eye: Three tankers explode in Strait of Hormuz",
-        "- 2026-11-23 · Democracy Now!: Three More Ships Are Struck Amid Record Pace of Attacks in Strait of Hormuz",
-        "- 2026-11-23 · WRAL: Fact-check: Is more oil going through the Strait of Hormuz than before the Iran war?",
-        "- 2026-11-23 · The New Arab: Could Iran break the US naval blockade in the Strait of Hormuz?",
-        "- 2026-11-23 · Crude Oil Prices Today | OilPrice.com: What Is Trump Up To Bombing Iran's Qeshm Island",
-        "- 2026-11-23 · The Jerusalem Post: IRGC: Three oil tankers hit mines, caught fire while transiting Hormuz with US support - report",
-        "- 2026-11-23 · Anadolu Ajansı: Iran’s Revolutionary Guard Corps Navy says mine blasts set 3 oil tankers ablaze in Strait of Hormuz",
-        "- 2026-11-23 · Arab News: Attacks on grain ships, Hormuz crisis drive hunger in Yemen and Sudan, UN food agency boss warns",
-        "- 2026-11-23 · Beinsure: Strait of Hormuz shipping attacks reach highest level since Iran war began",
-        "- 2026-11-23 · DW.com: Strait of Hormuz: Extreme swimmer traverses contested waters",
-        "- 2026-11-23 · Crude Oil Prices Today | OilPrice.com: South Korea Asks Qatar for Priority LNG Once Hormuz Reopens",
-        "- 2026-11-23 · Middle East Eye: Explosions reported in Strait of Hormuz"
+        "- 2026-11-24 · CNBC: Iran says three tankers hit mines in Hormuz despite U.S. escort, as Treasury widens sanctions",
+        "- 2026-11-24 · NPR: Oil slicks in the Strait of Hormuz are harming the environment",
+        "- 2026-11-24 · Reuters: Oil touches three-month lows before recovering on Hormuz threat",
+        "- 2026-11-24 · Middle East Eye: Iran says fourth tanker hits mine in Strait of Hormuz",
+        "- 2026-11-24 · Anadolu Ajansı: Qatar urges restoration of Hormuz navigation, return to US-Iran talks",
+        "- 2026-11-24 · Oxford Institute for Energy Studies: China’s Refining Sector: Impacts of the Strait of Hormuz Crisis",
+        "- 2026-11-24 · Euronews.com: Iran orders Hormuz shut 'further' as Qatar seeks to revive peace talks",
+        "- 2026-11-24 · The Times of Israel: Maritime agency: 3 vessels struck by projectiles in Strait of Hormuz yesterday, all crew accounted for",
+        "- 2026-11-24 · Crude Oil Prices Today | OilPrice.com: Oil Prices Hold Near Three-Month Lows Despite Hormuz Mine Claims",
+        "- 2026-11-24 · Al Jazeera: Hormuz oil traffic is down 40 percent: Are Iran’s tanker attacks working?",
+        "- 2026-11-24 · The Jerusalem Post: Projectiles strike three vessels in Strait of Hormuz on Monday, UKMTO says",
+        "- 2026-11-24 · CNBC: Oil touches three-month lows as rising supply offsets Hormuz threat",
+        "- 2026-11-24 · https://houseofsaud.com/: Iran’s Army Orders Hormuz Closed Further Each Day Until Conditions Met",
+        "- 2026-11-24 · investingLive: Crude oil consolidates at key support as Iran urges to tighten Hormuz management until conditions met",
+        "- 2026-11-24 · WANA News Agency: UKMTO: Three Vessels Hit in Strait of Hormuz"
       ]
     },
     {
@@ -73,81 +78,40 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-23 · TradingView: Nigeria's SEC approves Dangote refinery's IPO share distribution plan, sources say",
-        "- 2026-11-23 · Finimize: Nigeria’s SEC Approved Dangote Refinery’s Oversubscribed IPO Allocation",
-        "- 2026-11-23 · MLQ.ai: Nigeria's SEC approves Dangote refinery's IPO share allocation plan, clearing the way for a listing",
-        "- 2026-11-23 · Traders Union: Dangote refinery clears IPO allotment hurdle for NGX listing",
-        "- 2026-11-23 · Business News Nigeria: Dangote Refinery set for NGX listing as SEC clears IPO share allotment",
-        "- 2026-11-23 · Channel Africa: ‘Nigeria’s SEC approves Dangote refinery’s IPO share distribution plan’",
-        "- 2026-11-23 · The Guardian Nigeria News: Investors urged to monitor Dangote Refinery share allotment, refunds",
-        "- 2026-11-23 · Bénin Web TV: Nigeria: Approval granted for Dangote refinery share distribution, according to Reuters",
-        "- 2026-11-23 · Legit News: Dangote Refinery slashes petrol price by N99, announces new pump price",
-        "- 2026-11-22 · Zawya: Organization of the Petroleum Exporting Countries (OPEC), African Continental Free Trade Area (AfCFTA) and Dangote Refinery Join South Sudanese Ministers on the South Sudan Oil & Power (SSOP) 2026 Keynote Stage"
+        "- 2026-11-24 · African Energy: Nigeria: Dangote Refinery ups domestic crude intake",
+        "- 2026-11-24 · IntelliNews: Nigeria’s SEC clears Dangote refinery’s $2bn IPO share allocation plan",
+        "- 2026-11-24 · Global Advisory Experts: Dangote Refinery Flotation: Legal and Investor Guide",
+        "- 2026-11-24 · Business News Nigeria: SEC approves Dangote Refinery IPO share distribution after N5.85tn subscription rush",
+        "- 2026-11-24 · Business Post Nigeria: SEC Authorises Dangote Refinery Share Allocation Plan",
+        "- 2026-11-24 · News Agency of Nigeria: Stockbroker Projects Improved Market Liquidity After Dangote Refinery IPO Allotment",
+        "- 2026-11-24 · Nigerian NewsDirect: SEC approves Dangote Refinery share allocation plan",
+        "- 2026-11-24 · Business News Nigeria: Dangote Refinery eyes Dec. 1 for historic N65trn NGX listing",
+        "- 2026-11-24 · Latest news from Azerbaijan: Why is Nigeria's Dangote Refinery IPO attracting huge demand, and what happens next?",
+        "- 2026-11-24 · GhanaWeb: Dangote Refinery moves closer to stock market listing after SEC approval",
+        "- 2026-11-24 · Legit News: Dangote Refinery Secures SEC Approval for IPO Share Allocation, Moves Closer to Stock Market Debut",
+        "- 2026-11-24 · Business Hallmark: SEC clears Dangote Refinery’s share allotment after oversubscribed IPO",
+        "- 2026-11-24 · Nairametrics: Dangote Refinery IPO: what happens after the offer closes?",
+        "- 2026-11-24 · Nairametrics: Dangote Refinery moves closer to NGX listing as SEC clears share allocation",
+        "- 2026-11-24 · QED.NG: Dangote Refinery gets SEC approval for share allocation plan"
       ]
     },
     {
       "ref": "chokepoint/babelm",
       "kind": "story",
       "outcome": "nothing",
+      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-23 · CNBC: Yemen's Houthis claim attacks on Saudi oil refinery as Trump warns of new strikes next year",
-        "- 2026-11-23 · وكالة سبأ: Hodeida residents send livestock aid to support armed forces in Bab al-Mandab",
-        "- 2026-11-23 · EnergyNow: Houthis Say They Targeted Saudi East-West Oil Transport"
+        "- 2026-11-23 · EnergyNow.com: Yemen’s Houthis Reach Strategic Island at Mouth of Vital Shipping Lane",
+        "- 2026-11-23 · Hiiraan Online: Ganacsatada Soomaaliya oo raadinaya marinno cusub oo maraakiibta ah, kaddib xiisadaha Bab al-Mandab",
+        "- 2026-11-22 · Middle East Eye: Houthis say they attacked Saudi Arabia's Rabigh oil refinery"
       ]
     },
     {
       "ref": "field/gem-l100000312725",
       "kind": "story",
-      "outcome": "rejected",
-      "detail": "start \"\" isn't a date",
-      "draft": {
-        "action": "new_disruption",
-        "disruptionId": "",
-        "url": "https://egyptoil-gas.com/news/libyas-oil-output-loss-hits-350000-bbl-d-after-sharara-field-disruption/",
-        "publisher": "Egypt Oil & Gas",
-        "quote": "The NOC condemned the closure of a valve carrying oil from the Sharara field",
-        "cause": "sabotage",
-        "startedAt": "",
-        "summary": "Libya's National Oil Corporation says a valve carrying oil from the Sharara field has been closed by a group of outlaws for more than two weeks. The NOC says the closure has cut about 15,000 bbl/d and raised the country's total daily output loss to 350,000 bbl/d. The NOC condemned the closure and urged security forces to protect oil facilities.",
-        "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
-      },
-      "headlines": [
-        "- 2026-11-23 · Egypt Oil & Gas: Libya’s Oil Output Loss Hits 350,000 bbl/d After Sharara Field Disruption",
-        "- 2026-11-23 · The Libya Observer: NOC reopens Sharara oil pipeline and resumes pumping",
-        "- 2026-11-23 · News of Bahrain: Libya’s Sharara Oil Pipeline Reopens"
-      ]
-    },
-    {
-      "ref": "lng/gem-t100000130594-export",
-      "kind": "story",
       "outcome": "nothing",
-      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-23 · Kalkine Media: Woodside on the S&P/ASX 50: Why Did It Secure a Qatar LNG Deal?"
-      ]
-    },
-    {
-      "ref": "terminal/ust-luga",
-      "kind": "story",
-      "outcome": "unreadable",
-      "detail": "page answered 403",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "ust-luga-2026-11-11",
-        "url": "https://english.nv.ua/nation/leningrad-oblast-attacked-by-drones-on-nov-21-video-50661253.html",
-        "publisher": "The New Voice of Ukraine",
-        "quote": "Social media users said the Ust-Luga port was hit, BBC News Russian reported.",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-21",
-        "eventText": "Social media users say drones hit the Ust-Luga port during an attack on Leningrad Oblast."
-      },
-      "headlines": [
-        "- 2026-11-21 · The New Voice of Ukraine: Russia's Leningrad Oblast attacked by drones, online reports say Ust-Luga port was hit"
+        "- 2026-11-24 · Quantum Commodity Intelligence: Libya's Sharara oilfield back online after brief halt"
       ]
     }
   ]

@@ -99,6 +99,10 @@
     "file": "favicons/arabnews.com.png",
     "checkedAt": "2026-11-06"
   },
+  "arabnews.jp": {
+    "file": "favicons/arabnews.jp.png",
+    "checkedAt": "2026-11-24"
+  },
   "argaam.com": {
     "file": "favicons/argaam.com.ico",
     "checkedAt": "2026-11-09"
@@ -491,6 +495,10 @@
     "file": "favicons/en.ilsole24ore.com.ico",
     "checkedAt": "2026-11-07"
   },
+  "en.isna.ir": {
+    "file": null,
+    "checkedAt": "2026-11-24"
+  },
   "en.koreadaily.com": {
     "file": null,
     "checkedAt": "2026-11-20"
@@ -726,6 +734,14 @@
   "gcaptain.com": {
     "file": "favicons/gcaptain.com.jpg",
     "checkedAt": "2026-11-10"
+  },
+  "ghanaweb.com": {
+    "file": "favicons/ghanaweb.com.ico",
+    "checkedAt": "2026-11-24"
+  },
+  "globaladvisoryexperts.com": {
+    "file": "favicons/globaladvisoryexperts.com.ico",
+    "checkedAt": "2026-11-24"
   },
   "globalnation.inquirer.net": {
     "file": null,
@@ -1479,6 +1495,10 @@
     "file": "favicons/ottumwacourier.com.ico",
     "checkedAt": "2026-11-21"
   },
+  "oxfordenergy.org": {
+    "file": null,
+    "checkedAt": "2026-11-24"
+  },
   "ozarab.media": {
     "file": "favicons/ozarab.media.png",
     "checkedAt": "2026-11-23"
@@ -1546,6 +1566,10 @@
   "qcintel.com": {
     "file": "favicons/qcintel.com.ico",
     "checkedAt": "2026-11-06"
+  },
+  "qed.ng": {
+    "file": "favicons/qed.ng.gif",
+    "checkedAt": "2026-11-24"
   },
   "qodsna.com": {
     "file": "favicons/qodsna.com.ico",
