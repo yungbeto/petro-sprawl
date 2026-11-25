@@ -1,22 +1,21 @@
 {
-  "recordedAt": "2026-11-24T14:03:21.850Z",
+  "recordedAt": "2026-11-25T00:02:32.234Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 10,
-      "failed": 52,
-      "articles": 1,
+      "requests": 6,
+      "failed": 53,
+      "articles": 0,
       "errors": [
+        "fetch failed",
         "answered 429",
-        "answered 429",
-        "answered 429",
-        "fetch failed"
+        "answered 429"
       ]
     },
     "google-news": {
-      "requests": 63,
+      "requests": 59,
       "failed": 2,
-      "articles": 541,
+      "articles": 679,
       "errors": [
         "answered 429",
         "answered 429"
@@ -27,50 +26,68 @@
     "consecutiveFailures": 0,
     "lastOk": "2026-11-24"
   },
-  "stories": 16,
-  "candidates": 4,
+  "stories": 17,
+  "candidates": 7,
   "usage": {
-    "input": 37964,
-    "output": 2991,
-    "searches": 3
+    "input": 30932,
+    "output": 1720,
+    "searches": 1
   },
-  "estimatedCostUsd": 0.035,
+  "estimatedCostUsd": 0.014,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "rejected",
-      "detail": "page is older than 14 days",
+      "outcome": "committed",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.middleeasteye.net/live/live-israelis-head-polls-netanyahu-fights-political-life",
-        "publisher": "Middle East Eye",
-        "quote": "says another tanker has hit a naval mine in the Strait of Hormuz, bringing the reported total to four.",
+        "url": "https://gcaptain.com/four-more-ships-attacked-as-iran-widens-hormuz-crackdown-to-tugboats/",
+        "publisher": "gCaptain",
+        "quote": "The three tankers were struck by unidentified projectiles while transiting eastbound through the Strait of Hormuz.",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "",
-        "eventText": ""
+        "eventAt": "2026-11-22",
+        "eventText": "Three tankers and a bulk carrier are struck by unidentified projectiles in and near the Strait of Hormuz, according to UKMTO."
       },
       "headlines": [
-        "- 2026-11-24 · CNBC: Iran says three tankers hit mines in Hormuz despite U.S. escort, as Treasury widens sanctions",
-        "- 2026-11-24 · NPR: Oil slicks in the Strait of Hormuz are harming the environment",
-        "- 2026-11-24 · Reuters: Oil touches three-month lows before recovering on Hormuz threat",
-        "- 2026-11-24 · Middle East Eye: Iran says fourth tanker hits mine in Strait of Hormuz",
-        "- 2026-11-24 · Anadolu Ajansı: Qatar urges restoration of Hormuz navigation, return to US-Iran talks",
-        "- 2026-11-24 · Oxford Institute for Energy Studies: China’s Refining Sector: Impacts of the Strait of Hormuz Crisis",
-        "- 2026-11-24 · Euronews.com: Iran orders Hormuz shut 'further' as Qatar seeks to revive peace talks",
-        "- 2026-11-24 · The Times of Israel: Maritime agency: 3 vessels struck by projectiles in Strait of Hormuz yesterday, all crew accounted for",
-        "- 2026-11-24 · Crude Oil Prices Today | OilPrice.com: Oil Prices Hold Near Three-Month Lows Despite Hormuz Mine Claims",
-        "- 2026-11-24 · Al Jazeera: Hormuz oil traffic is down 40 percent: Are Iran’s tanker attacks working?",
-        "- 2026-11-24 · The Jerusalem Post: Projectiles strike three vessels in Strait of Hormuz on Monday, UKMTO says",
-        "- 2026-11-24 · CNBC: Oil touches three-month lows as rising supply offsets Hormuz threat",
-        "- 2026-11-24 · https://houseofsaud.com/: Iran’s Army Orders Hormuz Closed Further Each Day Until Conditions Met",
-        "- 2026-11-24 · investingLive: Crude oil consolidates at key support as Iran urges to tighten Hormuz management until conditions met",
-        "- 2026-11-24 · WANA News Agency: UKMTO: Three Vessels Hit in Strait of Hormuz"
+        "- 2026-11-24 · The Maritime Executive: Three Tankers Hit Within Minutes in Strait of Hormuz",
+        "- 2026-11-24 · Bloomberg.com: Iran Adds Tugboats to Hormuz Blacklist as Pressure on Shipping Grows",
+        "- 2026-11-24 · CNN: IMO chief: It is not safe to go through Strait of Hormuz",
+        "- 2026-11-24 · Marine News Magazine: Oil Prices Rise On Hormuz Vessel Attacks",
+        "- 2026-11-24 · Fox News: Trump pauses turkey pardon to salute US troops guarding Strait of Hormuz: 'Watch over and protect'",
+        "- 2026-11-24 · gCaptain: Four More Ships Attacked as Iran Widens Hormuz Crackdown to Tugboats",
+        "- 2026-11-24 · Anadolu Ajansı: Iran says 'offending vessel' targeted in southern Strait of Hormuz",
+        "- 2026-11-24 · Al-Monitor: Iran insists on 7 demands as Hormuz crisis deepens, IRGC targets tankers",
+        "- 2026-11-24 · شفق نيوز: Shafaq News..Trump says Hormuz oil shipments exceed prewar levels",
+        "- 2026-11-24 · Iran International: Persian Gulf oil exports near prewar levels despite Hormuz attacks",
+        "- 2026-11-24 · Middle East Eye: IRGC says it attacked container ship in Strait of Hormuz",
+        "- 2026-11-24 · Anadolu Ajansı: Iran blacklists 26 tugboats operating in Strait of Hormuz",
+        "- 2026-11-24 · GV Wire: Oil Rebounds From Three-Month Lows on Hormuz Threat",
+        "- 2026-11-24 · Oklahoma Energy Today: Energy briefs–oil traffic in the Strait of Hormuz",
+        "- 2026-11-24 · gCaptain: Used Supertankers Now Cost More Than New Ships as Hormuz War Upends Shipping Markets"
       ]
+    },
+    {
+      "ref": "chokepoint/hormuz",
+      "kind": "story",
+      "outcome": "review",
+      "detail": "event 2026-11-22",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "hormuz-2026-iran-restrictions",
+        "url": "https://gcaptain.com/four-more-ships-attacked-as-iran-widens-hormuz-crackdown-to-tugboats/",
+        "publisher": "gCaptain",
+        "quote": "The three tankers were struck by unidentified projectiles while transiting eastbound through the Strait of Hormuz.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-22",
+        "eventText": "Three tankers and a bulk carrier are struck by unidentified projectiles in and near the Strait of Hormuz, according to UKMTO."
+      }
     },
     {
       "ref": "refinery/ng-dangote",
@@ -78,21 +95,17 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-24 · African Energy: Nigeria: Dangote Refinery ups domestic crude intake",
-        "- 2026-11-24 · IntelliNews: Nigeria’s SEC clears Dangote refinery’s $2bn IPO share allocation plan",
-        "- 2026-11-24 · Global Advisory Experts: Dangote Refinery Flotation: Legal and Investor Guide",
-        "- 2026-11-24 · Business News Nigeria: SEC approves Dangote Refinery IPO share distribution after N5.85tn subscription rush",
-        "- 2026-11-24 · Business Post Nigeria: SEC Authorises Dangote Refinery Share Allocation Plan",
-        "- 2026-11-24 · News Agency of Nigeria: Stockbroker Projects Improved Market Liquidity After Dangote Refinery IPO Allotment",
-        "- 2026-11-24 · Nigerian NewsDirect: SEC approves Dangote Refinery share allocation plan",
+        "- 2026-11-24 · energynews.pro: Nigeria's SEC Reportedly Approves Share Allotment for Dangote Refinery IPO",
         "- 2026-11-24 · Business News Nigeria: Dangote Refinery eyes Dec. 1 for historic N65trn NGX listing",
-        "- 2026-11-24 · Latest news from Azerbaijan: Why is Nigeria's Dangote Refinery IPO attracting huge demand, and what happens next?",
-        "- 2026-11-24 · GhanaWeb: Dangote Refinery moves closer to stock market listing after SEC approval",
-        "- 2026-11-24 · Legit News: Dangote Refinery Secures SEC Approval for IPO Share Allocation, Moves Closer to Stock Market Debut",
-        "- 2026-11-24 · Business Hallmark: SEC clears Dangote Refinery’s share allotment after oversubscribed IPO",
-        "- 2026-11-24 · Nairametrics: Dangote Refinery IPO: what happens after the offer closes?",
-        "- 2026-11-24 · Nairametrics: Dangote Refinery moves closer to NGX listing as SEC clears share allocation",
-        "- 2026-11-24 · QED.NG: Dangote Refinery gets SEC approval for share allocation plan"
+        "- 2026-11-24 · Galaxy Television: Dangote Refinery targets Dec 1 for N65.2tn stock market debut",
+        "- 2026-11-24 · 21st CENTURY CHRONICLE: After 300% IPO subscription,SEC approves share allocation for Dangote Refinery",
+        "- 2026-11-24 · The Guardian Nigeria News: SEC clears Dangote Refinery share allocation, paving way for NGX listing",
+        "- 2026-11-24 · The Whistler Newspaper: SEC Clears Dangote Refinery IPO Share Allotment After N5.85trn Subscription",
+        "- 2026-11-24 · TheCable: SEC approves Dangote refinery’s share distribution plan after oversubscribed IPO",
+        "- 2026-11-24 · Business News Nigeria: Nigeria’s SEC approves Dangote refinery’s IPO share distribution plan, sources say",
+        "- 2026-11-24 · New Telegraph: SEC Approves Dangote Refinery’s Share Distribution Plan After Oversubscribed IPO",
+        "- 2026-11-24 · Investors King: Dangote Refinery Moves Closer to NGX Listing as SEC Reportedly Approves IPO Share Allotment",
+        "- 2026-11-24 · Daily Post Nigeria: SEC approves Dangote Refinery’s share allocation plan after oversubscribed IPO"
       ]
     },
     {
@@ -101,17 +114,46 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-23 · EnergyNow.com: Yemen’s Houthis Reach Strategic Island at Mouth of Vital Shipping Lane",
-        "- 2026-11-23 · Hiiraan Online: Ganacsatada Soomaaliya oo raadinaya marinno cusub oo maraakiibta ah, kaddib xiisadaha Bab al-Mandab",
-        "- 2026-11-22 · Middle East Eye: Houthis say they attacked Saudi Arabia's Rabigh oil refinery"
+        "- 2026-11-24 · Mereja: Assab and the Red Sea dispute explained: why the Eritrean port matters to Ethiopia",
+        "- 2026-11-22 · موقع مسبار: Does the Image Show a Houthi Military Convoy Targeted While Traveling From Bab al-Mandab to Ras al-Ara?"
       ]
     },
     {
-      "ref": "field/gem-l100000312725",
+      "ref": "pipeline/btc",
       "kind": "story",
       "outcome": "nothing",
+      "detail": "headlines only",
       "headlines": [
-        "- 2026-11-24 · Quantum Commodity Intelligence: Libya's Sharara oilfield back online after brief halt"
+        "- 2026-11-24 · PLAT.AZ: Over the course of 10 months, more than 161 million barrels of oil were transported through Turkey via the Baku-Tbilisi-Ceyhan (BTC) pipeline",
+        "- 2026-11-24 · BM.GE: Oil Shipments via Baku-Tbilisi-Ceyhan Pipeline Fall 7%, Kazakh and Turkmen Crude Account for 18%"
+      ]
+    },
+    {
+      "ref": "pipeline/east-west-crude",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-24 · Anadolu Ajansı: Saudi crown prince highlights East-West pipeline's role in securing global energy supplies"
+      ]
+    },
+    {
+      "ref": "pipeline/nord-stream-1",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-24 · EnergyNow.com: NABBED: Second Nord Stream Sabotage Suspect Arrested in Croatia",
+        "- 2026-11-24 · Inkorr: Ukrainian National Zhuravlyov Faces Sabotage Charges Over Nord Stream in Croatian Court"
+      ]
+    },
+    {
+      "ref": "terminal/ust-luga",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-24 · Estonian World: Ships anchored off Russia’s Ust-Luga port appear hundreds of kilometres inland on tracking maps"
       ]
     }
   ]
