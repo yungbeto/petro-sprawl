@@ -9,6 +9,13 @@
     "sources": [
       {
         "publisher": "Arab News",
+        "title": "Third tanker hits mine in Strait of Hormuz, Iran says",
+        "url": "https://www.arabnews.com/middle-east/third-tanker-hits-mine-in-strait-of-hormuz-iran-says-3013942",
+        "publishedAt": "2026-11-25",
+        "unreviewed": true
+      },
+      {
+        "publisher": "Arab News",
         "title": "IRGC Navy says two oil tankers hit mines, caught fire in Strait of Hormuz, state media",
         "url": "https://www.arabnews.com/middle-east/irgc-navy-says-two-oil-tankers-hit-mines-caught-fire-in-strait-of-hormuz-state-media-3013942",
         "publishedAt": "2026-11-25",
@@ -425,6 +432,13 @@
     "cause": "sabotage",
     "summary": "Underwater blasts ruptured both Nord Stream 1 pipes and one Nord Stream 2 pipe. Swedish and Danish seismic data showed two explosions; Denmark's prime minister said sabotage could not be ruled out. Reuters reported in March 2023 that the lines would be mothballed with no plan to repair them. On 14 October 2026 a former Ukrainian officer went on trial in Hamburg; German prosecutors accuse him of leading the operation for unidentified Ukrainian state entities. He and Ukraine's government deny involvement, and Russia denies blowing up the pipelines.",
     "sources": [
+      {
+        "publisher": "UA.NEWS",
+        "title": "Witnesses describe yacht crew behavior in Nord Stream case — Der Spiegel",
+        "url": "https://ua.news/en/dovkolo-svitu/svidki-opisali-divnu-povedinku-ekipazhu-iakhti-u-spravi-gazoprovodiv-nord-stream-der-spiegel",
+        "publishedAt": "2026-11-25",
+        "unreviewed": true
+      },
       {
         "publisher": "NPR, via OPB",
         "title": "Seismologists suspect explosions damaged undersea pipelines that carry Russian gas",
@@ -857,6 +871,13 @@
     "cause": "conflict",
     "summary": "Saudi Arabia contained a fire near Ras Tanura, its biggest oil export terminal, in the early hours of 27 October, near facilities operated by Saudi Aramco. The extent of the damage was not immediately clear. Aramco had been stepping up crude exports from the Gulf again in the preceding weeks.",
     "sources": [
+      {
+        "publisher": "Siasat",
+        "title": "Saudi oil hub Ras Tanura targeted in Houthi attack, fires reported",
+        "url": "https://www.siasat.com/saudi-oil-hub-ras-tanura-targeted-in-houthi-attack-fires-reported-3586632/",
+        "publishedAt": "2026-11-25",
+        "unreviewed": true
+      },
       {
         "publisher": "Maritime Executive",
         "title": "Riyadh, Hodeidah and Ras Tanura Hit in Saudi-Houthi Exchange of Fire",

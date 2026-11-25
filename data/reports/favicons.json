@@ -63,6 +63,10 @@
     "file": "favicons/akipress.com.png",
     "checkedAt": "2026-11-06"
   },
+  "al-monitor.com": {
+    "file": "favicons/al-monitor.com.png",
+    "checkedAt": "2026-11-25"
+  },
   "alhurra.com": {
     "file": "favicons/alhurra.com.jpg",
     "checkedAt": "2026-11-16"
@@ -371,6 +375,10 @@
     "file": null,
     "checkedAt": "2026-11-11"
   },
+  "dailypioneer.com": {
+    "file": "favicons/dailypioneer.com.ico",
+    "checkedAt": "2026-11-25"
+  },
   "dailypost.ng": {
     "file": "favicons/dailypost.ng.png",
     "checkedAt": "2026-11-07"
@@ -498,6 +506,10 @@
   "en.bloomingbit.io": {
     "file": "favicons/en.bloomingbit.io.png",
     "checkedAt": "2026-11-23"
+  },
+  "en.dailypakistan.com.pk": {
+    "file": "favicons/en.dailypakistan.com.pk.png",
+    "checkedAt": "2026-11-25"
   },
   "en.haberler.com": {
     "file": "favicons/en.haberler.com.ico",
@@ -674,6 +686,10 @@
   "finance.yahoo.com": {
     "file": "favicons/finance.yahoo.com.png",
     "checkedAt": "2026-11-11"
+  },
+  "financefeeds.com": {
+    "file": "favicons/financefeeds.com.png",
+    "checkedAt": "2026-11-25"
   },
   "finimize.com": {
     "file": null,
@@ -954,6 +970,10 @@
   "inspenet.com": {
     "file": "favicons/inspenet.com.png",
     "checkedAt": "2026-11-10"
+  },
+  "insurancejournal.com": {
+    "file": "favicons/insurancejournal.com.jpg",
+    "checkedAt": "2026-11-25"
   },
   "intellinews.com": {
     "file": null,
@@ -1365,7 +1385,7 @@
   },
   "news.az": {
     "file": null,
-    "checkedAt": "2026-11-06"
+    "checkedAt": "2026-11-25"
   },
   "news.cgtn.com": {
     "file": "favicons/news.cgtn.com.png",
@@ -1755,6 +1775,10 @@
     "file": "favicons/shippingtelegraph.com.png",
     "checkedAt": "2026-11-10"
   },
+  "siasat.com": {
+    "file": "favicons/siasat.com.png",
+    "checkedAt": "2026-11-25"
+  },
   "simplywall.st": {
     "file": "favicons/simplywall.st.png",
     "checkedAt": "2026-11-15"
@@ -1943,6 +1967,10 @@
     "file": null,
     "checkedAt": "2026-11-09"
   },
+  "thetimes.com": {
+    "file": "favicons/thetimes.com.png",
+    "checkedAt": "2026-11-25"
+  },
   "thetrumpet.ng": {
     "file": "favicons/thetrumpet.ng.webp",
     "checkedAt": "2026-11-09"
@@ -1982,6 +2010,10 @@
   "tmgm.com": {
     "file": "favicons/tmgm.com.ico",
     "checkedAt": "2026-11-17"
+  },
+  "today.lorientlejour.com": {
+    "file": "favicons/today.lorientlejour.com.ico",
+    "checkedAt": "2026-11-25"
   },
   "todaypress.tv": {
     "file": "favicons/todaypress.tv.png",

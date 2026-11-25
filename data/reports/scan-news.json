@@ -1,22 +1,27 @@
 {
-  "recordedAt": "2026-11-25T08:55:23.861Z",
+  "recordedAt": "2026-11-25T19:33:58.882Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 8,
-      "failed": 51,
-      "articles": 252,
+      "requests": 11,
+      "failed": 52,
+      "articles": 3,
       "errors": [
         "answered 429",
         "answered 429",
-        "answered 429"
+        "answered 429",
+        "fetch failed",
+        "fetch failed"
       ]
     },
     "google-news": {
-      "requests": 53,
-      "failed": 0,
-      "articles": 673,
-      "errors": []
+      "requests": 59,
+      "failed": 2,
+      "articles": 707,
+      "errors": [
+        "answered 429",
+        "answered 429"
+      ]
     }
   },
   "googleNews": {
@@ -24,13 +29,13 @@
     "lastOk": "2026-11-25"
   },
   "stories": 18,
-  "candidates": 7,
+  "candidates": 9,
   "usage": {
-    "input": 130649,
-    "output": 7317,
-    "searches": 5
+    "input": 144206,
+    "output": 10768,
+    "searches": 7
   },
-  "estimatedCostUsd": 0.067,
+  "estimatedCostUsd": 0.09,
   "results": [
     {
       "ref": "chokepoint/hormuz",
@@ -39,52 +44,33 @@
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.arabnews.com/middle-east/irgc-navy-says-two-oil-tankers-hit-mines-caught-fire-in-strait-of-hormuz-state-media-3013942",
+        "url": "https://www.arabnews.com/middle-east/third-tanker-hits-mine-in-strait-of-hormuz-iran-says-3013942",
         "publisher": "Arab News",
-        "quote": "Incident occurred in the Strait of Hormuz along an unauthorized route.",
+        "quote": "An oil tanker hit a naval mine and caught fire in a “restricted zone” in the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
         "endedAt": "",
-        "eventAt": "2026-11-25",
-        "eventText": "Two oil tankers hit naval mines and catch fire in the Strait of Hormuz, the Revolutionary Guards Navy says."
+        "eventAt": "",
+        "eventText": ""
       },
       "headlines": [
-        "- 2026-11-25 · arabnews.com: Arab News | IRGC Navy says two oil tankers hit mines , caught fire in Strait of Hormuz , state media <https://www.arabnews.com/middle-east/irgc-navy-says-two-oil-tankers-hit-mines-caught-fire-in-strait-of-hormuz-state-media-3013942>",
-        "- 2026-11-25 · aninews.in: Iran claims downing of US MQ - 9 , Lucas drones over Strait of Hormuz <https://aninews.in/news/world/middle-east/iran-claims-downing-of-us-mq-9-lucas-drones-over-strait-of-hormuz20261125101519/>",
-        "- 2026-11-25 · thehindubusinessline.com: Crude oil price today : Brent futures fall despite attacks on vessels in Strait of Hormuz <https://www.thehindubusinessline.com/markets/commodities/crude-oil-futures-fall-despite-attacks-on-vessels-in-strait-of-hormuz/article71741053.ece>",
-        "- 2026-11-25 · ualrpublicradio.org: Oil slicks in the Strait of Hormuz are harming the environment <https://www.ualrpublicradio.org/2026-11-24/oil-slicks-in-the-strait-of-hormuz-are-harming-the-environment>",
-        "- 2026-11-25 · wwno.org: Oil slicks in the Strait of Hormuz are harming the environment <https://www.wwno.org/2026-11-24/oil-slicks-in-the-strait-of-hormuz-are-harming-the-environment>",
-        "- 2026-11-25 · hngn.com: Iran Claims Hormuz Mine Hits as U . S . Probes Ship Cyberattacks <https://www.hngn.com/articles/273951/20261124/iran-claims-hormuz-mine-hits-us-probes-ship-cyberattacks.htm>",
-        "- 2026-11-25 · news.wjct.org: Oil slicks in the Strait of Hormuz are harming the environment <https://news.wjct.org/2026-11-24/oil-slicks-in-the-strait-of-hormuz-are-harming-the-environment>",
-        "- 2026-11-25 · hindustantimes.com: Iran expands Strait of Hormuz blacklist to tugboats , raising pressure on tanker support services <https://www.hindustantimes.com/world-news/iran-expands-strait-of-hormuz-blacklist-to-tugboats-raising-pressure-on-tanker-support-services-101795571639473.html>",
-        "- 2026-11-25 · news.antiwar.com: Iran Continues Targeting Ships in Strait of Hormuz as US Ramps Up Sanctions <https://news.antiwar.com/2026/11/24/iran-continues-targeting-ships-in-strait-of-hormuz-as-us-ramps-up-sanctions/>",
-        "- 2026-11-25 · news.az: Why are oil prices falling despite Strait of Hormuz threats , and what could happen next ? <https://news.az/news/why-are-oil-prices-falling-despite-strait-of-hormuz-threats-and-what-could-happen-next>",
-        "- 2026-11-25 · krcu.org: Oil slicks in the Strait of Hormuz are harming the environment <https://www.krcu.org/2026-11-24/oil-slicks-in-the-strait-of-hormuz-are-harming-the-environment>",
-        "- 2026-11-25 · wcbe.org: Oil slicks in the Strait of Hormuz are harming the environment <https://www.wcbe.org/2026-11-24/oil-slicks-in-the-strait-of-hormuz-are-harming-the-environment>",
-        "- 2026-11-25 · wnmufm.org: Oil slicks in the Strait of Hormuz are harming the environment <https://www.wnmufm.org/2026-11-24/oil-slicks-in-the-strait-of-hormuz-are-harming-the-environment>",
-        "- 2026-11-25 · ypradio.org: Oil slicks in the Strait of Hormuz are harming the environment <https://www.ypradio.org/2026-11-24/oil-slicks-in-the-strait-of-hormuz-are-harming-the-environment>",
-        "- 2026-11-25 · knau.org: Oil slicks in the Strait of Hormuz are harming the environment <https://www.knau.org/2026-11-24/oil-slicks-in-the-strait-of-hormuz-are-harming-the-environment>"
+        "- 2026-11-25 · The Hill: Iran tightening control over Strait of Hormuz, spokesperson says",
+        "- 2026-11-25 · UNEP - UN Environment Programme: Lewis Pugh, UN Patron of the Oceans, swims through the Strait of Hormuz to highlight the environmental devastation of war",
+        "- 2026-11-25 · The Jerusalem Post: British swimmer Lewis Pugh completes Strait of Hormuz swim amid war strikes",
+        "- 2026-11-25 · Arab News: Third tanker hits mine in Strait of Hormuz, Iran says",
+        "- 2026-11-25 · Marine News Magazine: Oil Falls as Supply Glut Concerns Overshadow Hormuz Shipping Risks",
+        "- 2026-11-25 · The Astana Times: IEA Says Hormuz Shock Could Reshape Oil Trade for Years",
+        "- 2026-11-25 · Global Trade Magazine: Four More Ships Attacked in Hormuz as Iran Expands Blacklist to Tugboats",
+        "- 2026-11-25 · The Times of Israel: LNG ship on fire after hitting naval mine in Strait of Hormuz, say Iran’s Revolutionary Guards",
+        "- 2026-11-25 · شفق نيوز: Shafaq News..Oil tanker catches fire after striking mine in Hormuz",
+        "- 2026-11-25 · Anadolu Ajansı: Oil tanker catches fire after hitting naval mine in Strait of Hormuz: Iranian Navy",
+        "- 2026-11-25 · Crude Oil Prices Today | OilPrice.com: Iran Reports Fresh Tanker Explosions as Hormuz Attacks Intensify",
+        "- 2026-11-25 · The Jerusalem Post: Iran warns vessels to coordinate passage amid claims of ships hitting mines in Hormuz",
+        "- 2026-11-25 · Anadolu Ajansı: Attacks on maritime traffic in the Strait of Hormuz at their highest levels since the start of the war with Iran",
+        "- 2026-11-25 · NewsCord: IRGC Navy Says Mines Exploded Two Oil Tankers and an LNG Carrier in Strait of Hormuz: 6 outlets compared",
+        "- 2026-11-25 · safety4sea: Three tankers attacked in Strait of Hormuz in quick succession"
       ]
-    },
-    {
-      "ref": "chokepoint/hormuz",
-      "kind": "story",
-      "outcome": "review",
-      "detail": "event 2026-11-25",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://www.arabnews.com/middle-east/irgc-navy-says-two-oil-tankers-hit-mines-caught-fire-in-strait-of-hormuz-state-media-3013942",
-        "publisher": "Arab News",
-        "quote": "Incident occurred in the Strait of Hormuz along an unauthorized route.",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-25",
-        "eventText": "Two oil tankers hit naval mines and catch fire in the Strait of Hormuz, the Revolutionary Guards Navy says."
-      }
     },
     {
       "ref": "refinery/ng-dangote",
@@ -92,16 +78,18 @@
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-25 · Bloomberg.com: Dangote Refinery Set to Become Africa’s Biggest Listed Company",
-        "- 2026-11-25 · Businessfront: Dangote refinery to beat South Africa’s Capitec, others to become Africa’s largest listed firm",
-        "- 2026-11-25 · Bloomberg.com: Watch Dangote Refinery Set to Start Trading in Lagos on Dec. 1",
-        "- 2026-11-25 · Arise News: Dangote Refinery Targets December Listing After SEC Approves $2bn Share Allotment",
-        "- 2026-11-25 · Business Post Nigeria: Dangote Refinery Eyes Early December NGX Listing After SEC Clearance |",
-        "- 2026-11-25 · Bloomberg.com: Watch Dangote Refinery Said to List in Lagos on December 1",
-        "- 2026-11-25 · Construction World: Kirloskar Brothers Secures Rs. 3.66 bn Dangote Refinery Orders",
-        "- 2026-11-25 · Daily Times Nigeria News: Dangote Refinery IPO: Small Investors Get Full Allocation",
-        "- 2026-11-24 · MSME Africa: Dangote Refinery Moves Closer to NGX Listing as SEC Approves Share Allotment",
-        "- 2026-11-24 · GhanaWeb: Dangote Refinery moves closer to stock market listing after SEC approval"
+        "- 2026-11-25 · Crude Oil Prices Today | OilPrice.com: Dangote Refinery Set to Become Africa's Most Valuable Listed Company",
+        "- 2026-11-25 · Briefs Finance: Dangote Refinery Lines up Dec. 1 Lagos Debut After Final Nod",
+        "- 2026-11-25 · UA.NEWS: Dangote refinery valued at $48bn ahead of Nigeria listing — OilPrice",
+        "- 2026-11-25 · THISDAYLIVE: Dangote Refinery Targets Early December Listing After SEC’s $2bn Allotment",
+        "- 2026-11-25 · Proshare: SEC Clears Dangote Refinery IPO Allotment, Paving Way for NGX Listing",
+        "- 2026-11-25 · LEADERSHIP Newspapers: Full Allotment For Investors Up To 10m Shares As Dangote Refinery Set For December 1 Listing",
+        "- 2026-11-25 · LEADERSHIP Newspapers: Dangote Refinery Set For Listing As SEC Approves IPO Allotment",
+        "- 2026-11-25 · Arbiterz: Dangote Refinery to List on NGX December 1",
+        "- 2026-11-25 · TheRadar: Applied for Dangote refinery shares? Allotment is reportedly cleared. What comes next",
+        "- 2026-11-25 · NewzTodays: Dangote Refinery to Become Africa’s Largest Listed Firm",
+        "- 2026-11-24 · Finimize: Dangote Refinery Shares Hit Nigeria’s Stock Market December 1st",
+        "- 2026-11-23 · Geeky Nigeria: Dangote refinery shares offer may let Nigerians hold more"
       ]
     },
     {
@@ -109,21 +97,21 @@
       "kind": "story",
       "outcome": "nothing",
       "headlines": [
-        "- 2026-11-25 · Seatrade Maritime News: Houthis threaten Saudi ports as four ships attacked near Hormuz",
-        "- 2026-11-25 · ASHARQ AL-AWSAT English: Saudi FM, Rubio Stress Importance of Freedom of Navigation in Hormuz and Bab al-Mandab Straits",
-        "- 2026-11-25 · TradeWinds News: Houthis attack Ras Tanura oil terminal in new round of tit-for-tat strikes with Saudi forces",
-        "- 2026-11-25 · Kurdistan24: Houthis Claim Attacks on Riyadh Financial District and Saudi Oil Refinery",
-        "- 2026-11-25 · Breakingthenews.net: Houthis claim strike on Aramco's Ras Tanura refinery",
-        "- 2026-11-25 · Anadolu Ajansı: Yemen’s Houthis claim attacks on Saudi oil refinery, Riyadh financial center",
-        "- 2026-11-25 · Upstream Online: Houthis attack Saudi oil terminal",
-        "- 2026-11-25 · Internazionale: Yemen’s Houthis say they attacked Saudi oil refinery and Riyadh financial district",
-        "- 2026-11-25 · MTV Lebanon: Houthis: We have targeted the Ras Tanura refinery in Saudi Arabia’s Eastern Province",
-        "- 2026-11-25 · https://www.businesstimes-bd.com/: Houthis Claim Attacks on Saudi Ras Tanura Refinery and Riyadh",
-        "- 2026-11-25 · The Straits Times: Yemen's Houthis say they attacked Saudi oil refinery and Riyadh financial district",
-        "- 2026-11-25 · Türkiye Today: Houthis target Saudi Arabia's Ras Tanura refinery, King Abdullah Economic City",
-        "- 2026-11-25 · NewsBytes: Houthi rebels hit Ras Tanura refinery and Riyadh financial district",
-        "- 2026-11-25 · Daijiworld: Saudi coalition strikes Hodeidah port as Houthis threaten Saudi Ports",
-        "- 2026-11-25 · ASHARQ AL-AWSAT English: Saudi FM, Rubio Stress Importance of Freedom of Navigation in Hormuz, Bab al-Mandab Straits"
+        "- 2026-11-25 · Newsquawk: [MARKET ANALYSIS] Crude climbs off lows as Houthis confirm strikes on Saudi's Ras Tanura refinery and Iran ramps up Hormuz rhetoric; spot gold remains pressured ahead of US PCE",
+        "- 2026-11-25 · Al-Monitor: Yemen's Houthis say they attacked Saudi Arabia's Ras Tanura refinery",
+        "- 2026-11-25 · Middle East Eye: Houthis say they attacked Saudi Arabia's largest oil refinery in retaliation for deadly strikes",
+        "- 2026-11-25 · Reuters: Yemen's Houthis claim attack on Saudi Arabia's largest refinery",
+        "- 2026-11-25 · Middle East Online: Houthis claim strike on Saudi Arabia’s largest oil refinery at Ras Tanura",
+        "- 2026-11-25 · Nacionale: Did the Houthis hit Saudi Arabia's Ras Tanura refinery? Saudi Arabia says it downed four drones",
+        "- 2026-11-25 · Newsquawk: [MARKET UPDATE] Crude benchmarks continue to climb, with Brent topping USD 88.50/bbl as markets focus on punchy rhetoric from Iranian officials and as the Houthis strike the Ras Tanura refinery",
+        "- 2026-11-25 · L'Orient Today: Houthis say they attacked Saudi Arabia's Ras Tanura refinery",
+        "- 2026-11-25 · Nacionale: Will the Houthis hit Saudi Red Sea ports next? What the Jeddah threat means for oil",
+        "- 2026-11-25 · Agenzia Nova: Saudi Arabia: Houthis Attack Ras Tanura Refinery and Riyadh's Financial District",
+        "- 2026-11-25 · marketscreener.com: Yemen's Houthis say they attacked Saudi Arabia's Ras Tanura refinery",
+        "- 2026-11-25 · Haberler.com: Drone attack on Saudi Arabia's oil facility! New threat from Houthis",
+        "- 2026-11-25 · FinanceFeeds: Brent Crude Price $92.41: Houthis Claim Ras Tanura Strike",
+        "- 2026-11-25 · Latest news from Azerbaijan: Houthi militants claim attacks on Aramco's Ras Tanura refinery, Riyadh financial district",
+        "- 2026-11-25 · The Insight International: Houthis claim strike on Saudi Arabia's Ras Tanura refinery as satellite images show heavy smoke"
       ]
     },
     {
@@ -133,9 +121,97 @@
       "draft": {
         "action": "add_source",
         "disruptionId": "ras-tanura-2026-10-fire",
-        "url": "https://maritime-executive.com/article/riyadh-hodeidah-and-ras-tanura-hit-in-saudi-houthi-exchange-of-fire",
-        "publisher": "Maritime Executive",
-        "quote": "Saudi forces reported a drone strike at Ras Tanura, an Arabian Gulf petroleum port that is home to one of the largest refining complexes and oil export terminals in the world.",
+        "url": "https://www.siasat.com/saudi-oil-hub-ras-tanura-targeted-in-houthi-attack-fires-reported-3586632/",
+        "publisher": "Siasat",
+        "quote": "Earlier on Wednesday, the Saudi-led coalition said its air defences had intercepted and destroyed four drones over Ras Tanura.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-25",
+        "eventText": "Houthis claim a strike on the Ras Tanura refinery that caused fires, while the Saudi-led coalition says it destroyed four drones over the site."
+      },
+      "headlines": [
+        "- 2026-11-25 · Crude Oil Prices Today | OilPrice.com: Oil Jumps Over 2% as Saudi Arabia Downs Drones Over Ras Tanura",
+        "- 2026-11-25 · https://houseofsaud.com/: Coalition Intercepts 4 Drones at Ras Tanura, Satellite Shows 600 sq km Smoke",
+        "- 2026-11-25 · Quantum Commodity Intelligence: West of Suez: Brent, LSGO cracks climb on Ras Tanura attacks",
+        "- 2026-11-25 · Middle East Online: Houthis claim strike on Saudi Arabia’s largest oil refinery at Ras Tanura",
+        "- 2026-11-25 · Energy News Beat: Houthis Claim Ras Tanura Strike and Iraq Disputes OPEC+ Capacity; Brent Recovers After a Dip to $90.96",
+        "- 2026-11-25 · The National: Saudi defences destroy drones in Ras Tanura as footage shows smoke from refinery",
+        "- 2026-11-25 · https://houseofsaud.com/: Coalition Intercepts 4 Drones Over Ras Tanura, Strikes Hodeidah Port Again",
+        "- 2026-11-25 · DNE Africa: Ras Tanura attack claimed by Houthis as Saudi coalition downs drones",
+        "- 2026-11-25 · TradingNEWS: WTI Jumps to $83.49 and Brent to $92.41 on Ras Tanura Claim; $86 WTI and $96 Brent Targets Before OPEC+ Sunday",
+        "- 2026-11-25 · FinanceFeeds: Brent Crude Price $92.41: Houthis Claim Ras Tanura Strike",
+        "- 2026-11-25 · Daily Times Of Bangladesh: Smoke over Ras Tanura as Saudi coalition hits Hodeidah port",
+        "- 2026-11-25 · The Siasat Daily: Saudi oil hub Ras Tanura targeted in Houthi attack, fires reported",
+        "- 2026-11-25 · The Pioneer: Houthis claim drone attack on Saudi Arabia's key Ras Tanura oil refinery",
+        "- 2026-11-25 · Daily Times: Saudi Arabia intercepts four drones in Ras Tanura",
+        "- 2026-11-25 · Daily Pakistan: Houthis Claim Another Attack on Saudi Arabia’s Ras Tanura Oil Refinery"
+      ]
+    },
+    {
+      "ref": "terminal/ras-tanura",
+      "kind": "story",
+      "outcome": "review",
+      "detail": "event 2026-11-25",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "ras-tanura-2026-10-fire",
+        "url": "https://www.siasat.com/saudi-oil-hub-ras-tanura-targeted-in-houthi-attack-fires-reported-3586632/",
+        "publisher": "Siasat",
+        "quote": "Earlier on Wednesday, the Saudi-led coalition said its air defences had intercepted and destroyed four drones over Ras Tanura.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-11-25",
+        "eventText": "Houthis claim a strike on the Ras Tanura refinery that caused fires, while the Saudi-led coalition says it destroyed four drones over the site."
+      }
+    },
+    {
+      "ref": "refinery/sa-ras-tanura",
+      "kind": "story",
+      "outcome": "rejected",
+      "detail": "the quote doesn't name the asset",
+      "draft": {
+        "action": "new_disruption",
+        "disruptionId": "",
+        "url": "https://theinsightinternational.com/houthis-claim-ras-tanura-refinery-strike-saudi-drones-intercepted-november-25/",
+        "publisher": "Insight International",
+        "quote": "Ras Tanura has a refining capacity of 550,000 barrels per day.",
+        "cause": "conflict",
+        "startedAt": "2026-11-25",
+        "summary": "Yemen's Houthis said they attacked the Ras Tanura refinery, causing fires, hours after the Saudi-led coalition said it downed four drones over Ras Tanura. The coalition did not say whether the refinery was hit, and Saudi Aramco and the government did not comment on any damage. NASA imagery reviewed by Reuters shows a smoke plume covering about 600 square kilometers.",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      },
+      "headlines": [
+        "- 2026-11-25 · Newsquawk: [MARKET ANALYSIS] Crude climbs off lows as Houthis confirm strikes on Saudi's Ras Tanura refinery and Iran ramps up Hormuz rhetoric; spot gold remains pressured ahead of US PCE",
+        "- 2026-11-25 · Al-Monitor: Yemen's Houthis say they attacked Saudi Arabia's Ras Tanura refinery",
+        "- 2026-11-25 · تسنیم: Yemen Announces Attacks on Ras Tanura Refinery, Riyadh Financial Center",
+        "- 2026-11-25 · Nacionale: Did the Houthis hit Saudi Arabia's Ras Tanura refinery? Saudi Arabia says it downed four drones",
+        "- 2026-11-25 · Newsquawk: [MARKET UPDATE] Crude benchmarks continue to climb, with Brent topping USD 88.50/bbl as markets focus on punchy rhetoric from Iranian officials and as the Houthis strike the Ras Tanura refinery",
+        "- 2026-11-25 · L'Orient Today: Houthis say they attacked Saudi Arabia's Ras Tanura refinery",
+        "- 2026-11-25 · Agenzia Nova: Saudi Arabia: Houthis Attack Ras Tanura Refinery and Riyadh's Financial District",
+        "- 2026-11-25 · marketscreener.com: Yemen's Houthis say they attacked Saudi Arabia's Ras Tanura refinery",
+        "- 2026-11-25 · Latest news from Azerbaijan: Houthi militants claim attacks on Aramco's Ras Tanura refinery, Riyadh financial district",
+        "- 2026-11-25 · خبرگزاری اطلس: Yemeni Armed Forces Conduct Two Attacks on Saudi Targets, Including Ras Tanura Refinery",
+        "- 2026-11-25 · The Insight International: Houthis claim strike on Saudi Arabia's Ras Tanura refinery as satellite images show heavy smoke",
+        "- 2026-11-24 · thecradle.co: Yemen strikes Ras Tanura refinery, Riyadh financial district in response to Saudi massacres"
+      ]
+    },
+    {
+      "ref": "lng/gem-t100000130594-export",
+      "kind": "story",
+      "outcome": "rejected",
+      "detail": "the quote doesn't name the asset",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "ras-laffan-north-2026-war",
+        "url": "https://www.insurancejournal.com/news/international/2026/11/25/893748.htm",
+        "publisher": "Insurance Journal",
+        "quote": "While November loading activity is on track to be the strongest since the outbreak of the conflict, exports remain at around 40% of pre-war levels, according to analysts.",
         "cause": "",
         "startedAt": "",
         "summary": "",
@@ -144,45 +220,50 @@
         "eventText": ""
       },
       "headlines": [
-        "- 2026-11-25 · The Maritime Executive: Riyadh, Hodeidah and Ras Tanura Hit in Saudi-Houthi Exchange of Fire",
-        "- 2026-11-25 · TradeWinds News: Houthis attack Ras Tanura oil terminal in new round of tit-for-tat strikes with Saudi forces",
-        "- 2026-11-25 · X: 🇸🇦 Drones have targeted Ras Tanura, home to one of Saudi Arabia’s largest oil refineries and one of the world's biggest crude export terminals. According to Saudi-led coalition forces, all four drones were successfully intercepted and only debris fell. Meanwhi",
-        "- 2026-11-25 · UA.NEWS: Saudi coalition says four drones destroyed over Ras Tanura — Anadolu Agency",
-        "- 2026-11-25 · وكالة الأنباء السعودية: Coalition: Air Defense Intercepts and Destroys Four UAVs in Ras Tanura",
-        "- 2026-11-25 · Qatar news agency: Coalition Says Air Defenses Intercepted and Destroyed 4 Drones in Saudi Arabia’s Ras Tanura",
-        "- 2026-11-25 · Saudi Gazette: 7 drones intercepted in Ras Tanura, Eastern Province",
-        "- 2026-11-25 · صحيفة سبق الإلكترونية: Air Defense Intercepts and Destroys 4 Drones in Ras Tanura"
+        "- 2026-11-25 · Insurance Journal: Qatar LNG Exports Hit Busiest Month Since Start of Iran War, Despite Insurance Costs",
+        "- 2026-11-25 · TradingView: Qatar LNG exports hit post-war high despite rising insurance costs",
+        "- 2026-11-25 · Investify: Qatar LNG exports hit post-war high despite rising insurance costs"
       ]
     },
     {
-      "ref": "refinery/sa-ras-tanura",
+      "ref": "pipeline/nord-stream-1",
       "kind": "story",
-      "outcome": "nothing",
+      "outcome": "committed",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "nord-stream-2022-blasts",
+        "url": "https://ua.news/en/dovkolo-svitu/svidki-opisali-divnu-povedinku-ekipazhu-iakhti-u-spravi-gazoprovodiv-nord-stream-der-spiegel",
+        "publisher": "UA.NEWS",
+        "quote": "It is dedicated to testimony in the trial concerning the attacks on the Nord Stream gas pipelines.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "",
+        "eventText": ""
+      },
       "headlines": [
-        "- 2026-11-25 · Breakingthenews.net: Houthis claim strike on Aramco's Ras Tanura refinery",
-        "- 2026-11-25 · MTV Lebanon: Houthis: We have targeted the Ras Tanura refinery in Saudi Arabia’s Eastern Province",
-        "- 2026-11-25 · Gulf Daily News (Bahrain): KSA: Saudi-led coalition intercepts drones over Ras Tanura refinery",
-        "- 2026-11-25 · https://www.businesstimes-bd.com/: Houthis Claim Attacks on Saudi Ras Tanura Refinery and Riyadh",
-        "- 2026-11-25 · Türkiye Today: Houthis target Saudi Arabia's Ras Tanura refinery, King Abdullah Economic City",
-        "- 2026-11-25 · NewsBytes: Houthi rebels hit Ras Tanura refinery and Riyadh financial district"
+        "- 2026-11-25 · UA.NEWS: Witnesses described strange behavior by yacht crew in Nord Stream pipeline case — Der Spiegel",
+        "- 2026-11-25 · upday News: Nord Stream AG Barred From Claiming Damages in Hamburg Sabotage Trial",
+        "- 2026-11-24 · The Times: War criminal or hero? The Ukrainian diver wanted for Nord Stream attack"
       ]
     },
     {
-      "ref": "lng/gem-t100000130594-export",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-25 · Oil & Gas Middle East: Qatar LNG exports: who relied on Gulf LNG before the 2026 shutdown"
-      ]
-    },
-    {
-      "ref": "pipeline/turkstream",
+      "ref": "terminal/mina-al-ahmadi",
       "kind": "story",
       "outcome": "nothing",
       "detail": "headlines only",
       "headlines": [
-        "- 2026-11-24 · streamlinefeed.co.ke: Suspected Tea Factory Discharge Turns Turkish Stream Red in Rize"
+        "- 2026-11-25 · Oil & Gas Middle East: Larsen & Toubro wins KNPC contract to replace Mina Al-Ahmadi FCC regenerator"
+      ]
+    },
+    {
+      "ref": "pipeline/east-west-crude",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-24 · Anadolu Ajansı: Saudi crown prince highlights East-West pipeline's role in securing global energy supplies"
       ]
     }
   ]
