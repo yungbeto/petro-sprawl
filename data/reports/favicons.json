@@ -243,6 +243,10 @@
     "file": "favicons/businesspost.ng.png",
     "checkedAt": "2026-11-11"
   },
+  "businesstimes-bd.com": {
+    "file": "favicons/businesstimes-bd.com.jpg",
+    "checkedAt": "2026-11-25"
+  },
   "businesstoday.com.my": {
     "file": "favicons/businesstoday.com.my.ico",
     "checkedAt": "2026-11-17"
@@ -823,6 +827,10 @@
     "file": "favicons/hirunews.lk.ico",
     "checkedAt": "2026-11-23"
   },
+  "hngn.com": {
+    "file": "favicons/hngn.com.png",
+    "checkedAt": "2026-11-25"
+  },
   "hometextilestoday.com": {
     "file": null,
     "checkedAt": "2026-11-24"
@@ -1351,6 +1359,10 @@
     "file": "favicons/newarab.com.ico",
     "checkedAt": "2026-11-08"
   },
+  "news.antiwar.com": {
+    "file": "favicons/news.antiwar.com.png",
+    "checkedAt": "2026-11-25"
+  },
   "news.az": {
     "file": null,
     "checkedAt": "2026-11-06"
@@ -1603,6 +1615,10 @@
     "file": "favicons/qed.ng.gif",
     "checkedAt": "2026-11-24"
   },
+  "qna.org.qa": {
+    "file": "favicons/qna.org.qa.png",
+    "checkedAt": "2026-11-25"
+  },
   "qodsna.com": {
     "file": "favicons/qodsna.com.ico",
     "checkedAt": "2026-11-22"
@@ -1751,6 +1767,10 @@
     "file": "favicons/sofx.com.png",
     "checkedAt": "2026-11-06"
   },
+  "spa.gov.sa": {
+    "file": "favicons/spa.gov.sa.png",
+    "checkedAt": "2026-11-25"
+  },
   "spglobal.com": {
     "file": null,
     "checkedAt": "2026-11-12"
@@ -1770,6 +1790,10 @@
   "straitstimes.com": {
     "file": "favicons/straitstimes.com.png",
     "checkedAt": "2026-11-21"
+  },
+  "streamlinefeed.co.ke": {
+    "file": "favicons/streamlinefeed.co.ke.png",
+    "checkedAt": "2026-11-25"
   },
   "streetinsider.com": {
     "file": "favicons/streetinsider.com.ico",
@@ -1985,7 +2009,7 @@
   },
   "tradewindsnews.com": {
     "file": null,
-    "checkedAt": "2026-11-10"
+    "checkedAt": "2026-11-25"
   },
   "tradingpedia.com": {
     "file": null,
@@ -2069,7 +2093,7 @@
   },
   "upstreamonline.com": {
     "file": null,
-    "checkedAt": "2026-11-09"
+    "checkedAt": "2026-11-25"
   },
   "utkarsh.com": {
     "file": "favicons/utkarsh.com.png",
