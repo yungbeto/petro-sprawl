@@ -231,6 +231,10 @@
     "file": "favicons/briefs.co.png",
     "checkedAt": "2026-11-08"
   },
+  "bsinews.id": {
+    "file": "favicons/bsinews.id.png",
+    "checkedAt": "2026-11-26"
+  },
   "business-standard.com": {
     "file": "favicons/business-standard.com.png",
     "checkedAt": "2026-11-12"
@@ -359,6 +363,10 @@
     "file": "favicons/cryptobriefing.com.ico",
     "checkedAt": "2026-11-19"
   },
+  "cwibc.co.id": {
+    "file": "favicons/cwibc.co.id.png",
+    "checkedAt": "2026-11-26"
+  },
   "dabafinance.com": {
     "file": "favicons/dabafinance.com.png",
     "checkedAt": "2026-11-12"
@@ -386,6 +394,10 @@
   "dailypost.ng": {
     "file": "favicons/dailypost.ng.png",
     "checkedAt": "2026-11-07"
+  },
+  "dailyreport.ng": {
+    "file": "favicons/dailyreport.ng.png",
+    "checkedAt": "2026-11-26"
   },
   "dailysabah.com": {
     "file": "favicons/dailysabah.com.ico",
@@ -462,6 +474,10 @@
   "donga.com": {
     "file": "favicons/donga.com.ico",
     "checkedAt": "2026-11-06"
+  },
+  "dubaieye1038.com": {
+    "file": "favicons/dubaieye1038.com.png",
+    "checkedAt": "2026-11-26"
   },
   "dynamitenews.com": {
     "file": "favicons/dynamitenews.com.png",
@@ -570,6 +586,10 @@
   "energynews.pro": {
     "file": "favicons/energynews.pro.png",
     "checkedAt": "2026-11-06"
+  },
+  "energynewsbeat.co": {
+    "file": "favicons/energynewsbeat.co.png",
+    "checkedAt": "2026-11-26"
   },
   "energynow.ca": {
     "file": "favicons/energynow.ca.ico",
@@ -807,6 +827,10 @@
     "file": "favicons/goshennews.com.ico",
     "checkedAt": "2026-11-21"
   },
+  "grassrootreporters.ng": {
+    "file": null,
+    "checkedAt": "2026-11-26"
+  },
   "greekreporter.com": {
     "file": "favicons/greekreporter.com.ico",
     "checkedAt": "2026-11-24"
@@ -890,6 +914,10 @@
   "idom.com": {
     "file": "favicons/idom.com.ico",
     "checkedAt": "2026-11-06"
+  },
+  "idomavoice.com": {
+    "file": "favicons/idomavoice.com.png",
+    "checkedAt": "2026-11-26"
   },
   "ieu-monitoring.com": {
     "file": "favicons/ieu-monitoring.com.png",
@@ -1347,6 +1375,10 @@
     "file": "favicons/naharnet.com.ico",
     "checkedAt": "2026-11-13"
   },
+  "naijanews.com": {
+    "file": "favicons/naijanews.com.png",
+    "checkedAt": "2026-11-26"
+  },
   "naijapreneur.com": {
     "file": "favicons/naijapreneur.com.jpg",
     "checkedAt": "2026-11-09"
@@ -1479,6 +1511,10 @@
     "file": "favicons/newztodays.com.png",
     "checkedAt": "2026-11-14"
   },
+  "ng.headtopics.com": {
+    "file": "favicons/ng.headtopics.com.png",
+    "checkedAt": "2026-11-26"
+  },
   "nigerianbulletin.com": {
     "file": "favicons/nigerianbulletin.com.webp",
     "checkedAt": "2026-11-15"
@@ -1502,6 +1538,10 @@
   "nz.news.yahoo.com": {
     "file": "favicons/nz.news.yahoo.com.ico",
     "checkedAt": "2026-11-18"
+  },
+  "ocean-energyresources.com": {
+    "file": "favicons/ocean-energyresources.com.ico",
+    "checkedAt": "2026-11-26"
   },
   "oceannews.com": {
     "file": "favicons/oceannews.com.webp",
@@ -1721,7 +1761,11 @@
   },
   "safety4sea.com": {
     "file": null,
-    "checkedAt": "2026-11-11"
+    "checkedAt": "2026-11-26"
+  },
+  "samaa.tv": {
+    "file": "favicons/samaa.tv.png",
+    "checkedAt": "2026-11-26"
   },
   "sana.sy": {
     "file": null,
@@ -1891,9 +1935,17 @@
     "file": "favicons/thedeepdive.ca.png",
     "checkedAt": "2026-11-11"
   },
+  "thedefensepost.com": {
+    "file": "favicons/thedefensepost.com.png",
+    "checkedAt": "2026-11-26"
+  },
   "theedgemalaysia.com": {
     "file": "favicons/theedgemalaysia.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "theenergyyear.com": {
+    "file": null,
+    "checkedAt": "2026-11-26"
   },
   "thefact.ng": {
     "file": null,
@@ -2057,7 +2109,7 @@
   },
   "tradingpedia.com": {
     "file": null,
-    "checkedAt": "2026-11-09"
+    "checkedAt": "2026-11-26"
   },
   "tradingview.com": {
     "file": "favicons/tradingview.com.ico",
