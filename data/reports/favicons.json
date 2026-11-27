@@ -131,6 +131,10 @@
     "file": null,
     "checkedAt": "2026-11-21"
   },
+  "arynews.tv": {
+    "file": "favicons/arynews.tv.ico",
+    "checkedAt": "2026-11-27"
+  },
   "asabametro.com": {
     "file": null,
     "checkedAt": "2026-11-20"
@@ -162,6 +166,10 @@
   "azernews.az": {
     "file": "favicons/azernews.az.png",
     "checkedAt": "2026-11-14"
+  },
+  "babel.ua": {
+    "file": "favicons/babel.ua.png",
+    "checkedAt": "2026-11-27"
   },
   "bairdmaritime.com": {
     "file": "favicons/bairdmaritime.com.ico",
@@ -1183,6 +1191,10 @@
     "file": "favicons/kuwaittimes.com.ico",
     "checkedAt": "2026-11-21"
   },
+  "kyivindependent.com": {
+    "file": "favicons/kyivindependent.com.png",
+    "checkedAt": "2026-11-27"
+  },
   "kyivpost.com": {
     "file": "favicons/kyivpost.com.png",
     "checkedAt": "2026-11-21"
@@ -1493,7 +1505,7 @@
   },
   "news.liga.net": {
     "file": null,
-    "checkedAt": "2026-11-06"
+    "checkedAt": "2026-11-27"
   },
   "news.metal.com": {
     "file": "favicons/news.metal.com.ico",
@@ -2161,7 +2173,7 @@
   },
   "tradefinanceglobal.com": {
     "file": null,
-    "checkedAt": "2026-11-06"
+    "checkedAt": "2026-11-27"
   },
   "tradersunion.com": {
     "file": "favicons/tradersunion.com.ico",
