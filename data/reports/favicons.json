@@ -111,6 +111,10 @@
     "file": "favicons/arabnews.jp.png",
     "checkedAt": "2026-11-24"
   },
+  "arabnews.pk": {
+    "file": "favicons/arabnews.pk.png",
+    "checkedAt": "2026-11-27"
+  },
   "argaam.com": {
     "file": "favicons/argaam.com.ico",
     "checkedAt": "2026-11-09"
@@ -142,6 +146,14 @@
   "asiatimes.com": {
     "file": "favicons/asiatimes.com.png",
     "checkedAt": "2026-11-06"
+  },
+  "astanatimes.com": {
+    "file": "favicons/astanatimes.com.ico",
+    "checkedAt": "2026-11-27"
+  },
+  "astig.ph": {
+    "file": "favicons/astig.ph.png",
+    "checkedAt": "2026-11-27"
   },
   "avi-go.com": {
     "file": "favicons/avi-go.com.ico",
@@ -178,6 +190,10 @@
   "benzinga.com": {
     "file": null,
     "checkedAt": "2026-11-12"
+  },
+  "bhaskarenglish.in": {
+    "file": "favicons/bhaskarenglish.in.ico",
+    "checkedAt": "2026-11-27"
   },
   "bioengineer.org": {
     "file": "favicons/bioengineer.org.png",
@@ -317,7 +333,11 @@
   },
   "chemanalyst.com": {
     "file": null,
-    "checkedAt": "2026-11-11"
+    "checkedAt": "2026-11-27"
+  },
+  "chemicals.economictimes.indiatimes.com": {
+    "file": null,
+    "checkedAt": "2026-11-27"
   },
   "chemindigest.com": {
     "file": "favicons/chemindigest.com.jpg",
@@ -470,6 +490,10 @@
   "dmarketforces.com": {
     "file": "favicons/dmarketforces.com.png",
     "checkedAt": "2026-11-15"
+  },
+  "dohanews.co": {
+    "file": null,
+    "checkedAt": "2026-11-27"
   },
   "dominicanrepublicpost.com": {
     "file": "favicons/dominicanrepublicpost.com.webp",
@@ -1019,6 +1043,10 @@
     "file": null,
     "checkedAt": "2026-11-24"
   },
+  "internationalfinance.com": {
+    "file": "favicons/internationalfinance.com.png",
+    "checkedAt": "2026-11-27"
+  },
   "internazionale.it": {
     "file": "favicons/internazionale.it.ico",
     "checkedAt": "2026-11-07"
@@ -1203,6 +1231,10 @@
     "file": "favicons/lngprime.com.png",
     "checkedAt": "2026-11-11"
   },
+  "logisticsmiddleeast.com": {
+    "file": null,
+    "checkedAt": "2026-11-27"
+  },
   "lokmattimes.com": {
     "file": "favicons/lokmattimes.com.png",
     "checkedAt": "2026-11-12"
@@ -1278,6 +1310,10 @@
   "meforum.org": {
     "file": null,
     "checkedAt": "2026-11-06"
+  },
+  "mepei.com": {
+    "file": null,
+    "checkedAt": "2026-11-27"
   },
   "mereja.com": {
     "file": "favicons/mereja.com.jpg",
@@ -1518,6 +1554,14 @@
   "newsweek.com": {
     "file": "favicons/newsweek.com.png",
     "checkedAt": "2026-11-12"
+  },
+  "newsworks.co.kr": {
+    "file": "favicons/newsworks.co.kr.ico",
+    "checkedAt": "2026-11-27"
+  },
+  "newtelegraphng.com": {
+    "file": "favicons/newtelegraphng.com.png",
+    "checkedAt": "2026-11-27"
   },
   "newztodays.com": {
     "file": "favicons/newztodays.com.png",
@@ -2286,6 +2330,10 @@
   "www3.nhk.or.jp": {
     "file": "favicons/www3.nhk.or.jp.png",
     "checkedAt": "2026-11-16"
+  },
+  "yaffaps.com": {
+    "file": "favicons/yaffaps.com.ico",
+    "checkedAt": "2026-11-27"
   },
   "yahoo.com": {
     "file": "favicons/yahoo.com.png",
