@@ -99,6 +99,10 @@
     "file": "favicons/apnews.com.png",
     "checkedAt": "2026-11-21"
   },
+  "arabcanadanews.ca": {
+    "file": null,
+    "checkedAt": "2026-11-27"
+  },
   "arabnews.com": {
     "file": "favicons/arabnews.com.png",
     "checkedAt": "2026-11-06"
@@ -1139,6 +1143,10 @@
     "file": "favicons/kt.kz.ico",
     "checkedAt": "2026-11-08"
   },
+  "kuna.net.kw": {
+    "file": null,
+    "checkedAt": "2026-11-27"
+  },
   "kurdistan24.net": {
     "file": "favicons/kurdistan24.net.ico",
     "checkedAt": "2026-11-07"
@@ -1178,6 +1186,10 @@
   "legit.ng": {
     "file": "favicons/legit.ng.png",
     "checkedAt": "2026-11-10"
+  },
+  "limapagi.id": {
+    "file": "favicons/limapagi.id.png",
+    "checkedAt": "2026-11-27"
   },
   "livemint.com": {
     "file": "favicons/livemint.com.png",
@@ -1313,7 +1325,7 @@
   },
   "mlq.ai": {
     "file": null,
-    "checkedAt": "2026-11-12"
+    "checkedAt": "2026-11-27"
   },
   "moderndiplomacy.eu": {
     "file": "favicons/moderndiplomacy.eu.png",
@@ -1522,6 +1534,10 @@
   "nigeriannewsdirect.com": {
     "file": null,
     "checkedAt": "2026-11-23"
+  },
+  "noticiasambientales.com": {
+    "file": null,
+    "checkedAt": "2026-11-27"
   },
   "nwitimes.com": {
     "file": "favicons/nwitimes.com.ico",
@@ -2030,6 +2046,10 @@
   "thesun.ng": {
     "file": null,
     "checkedAt": "2026-11-09"
+  },
+  "thetaiwantimes.com": {
+    "file": null,
+    "checkedAt": "2026-11-27"
   },
   "thetimes.com": {
     "file": "favicons/thetimes.com.png",
