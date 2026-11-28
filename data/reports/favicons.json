@@ -11,6 +11,10 @@
     "file": "favicons/aa.com.tr.ico",
     "checkedAt": "2026-11-06"
   },
+  "aaj.tv": {
+    "file": "favicons/aaj.tv.ico",
+    "checkedAt": "2026-11-28"
+  },
   "abc.net.au": {
     "file": "favicons/abc.net.au.png",
     "checkedAt": "2026-11-08"
@@ -206,6 +210,10 @@
   "bhaskarenglish.in": {
     "file": "favicons/bhaskarenglish.in.ico",
     "checkedAt": "2026-11-27"
+  },
+  "bignewsnetwork.com": {
+    "file": null,
+    "checkedAt": "2026-11-28"
   },
   "bioengineer.org": {
     "file": "favicons/bioengineer.org.png",
@@ -555,6 +563,10 @@
     "file": "favicons/egyptian-gazette.com.png",
     "checkedAt": "2026-11-07"
   },
+  "egyptindependent.com": {
+    "file": "favicons/egyptindependent.com.png",
+    "checkedAt": "2026-11-28"
+  },
   "egyptoil-gas.com": {
     "file": "favicons/egyptoil-gas.com.png",
     "checkedAt": "2026-11-09"
@@ -594,6 +606,10 @@
   "en.ilsole24ore.com": {
     "file": "favicons/en.ilsole24ore.com.ico",
     "checkedAt": "2026-11-07"
+  },
+  "en.interfax.com.ua": {
+    "file": "favicons/en.interfax.com.ua.png",
+    "checkedAt": "2026-11-28"
   },
   "en.isna.ir": {
     "file": null,
@@ -859,6 +875,10 @@
     "file": "favicons/ghanaweb.com.ico",
     "checkedAt": "2026-11-24"
   },
+  "glavnoe.in.ua": {
+    "file": "favicons/glavnoe.in.ua.png",
+    "checkedAt": "2026-11-28"
+  },
   "globaladvisoryexperts.com": {
     "file": "favicons/globaladvisoryexperts.com.ico",
     "checkedAt": "2026-11-24"
@@ -889,7 +909,7 @@
   },
   "guardian.ng": {
     "file": null,
-    "checkedAt": "2026-11-10"
+    "checkedAt": "2026-11-28"
   },
   "gulfbusiness.com": {
     "file": "favicons/gulfbusiness.com.ico",
@@ -1471,9 +1491,17 @@
     "file": "favicons/nairametrics.com.png",
     "checkedAt": "2026-11-06"
   },
+  "nashaniva.com": {
+    "file": "favicons/nashaniva.com.png",
+    "checkedAt": "2026-11-28"
+  },
   "nationalheraldindia.com": {
     "file": "favicons/nationalheraldindia.com.png",
     "checkedAt": "2026-11-08"
+  },
+  "nationalinterest.org": {
+    "file": null,
+    "checkedAt": "2026-11-28"
   },
   "nationthailand.com": {
     "file": "favicons/nationthailand.com.png",
