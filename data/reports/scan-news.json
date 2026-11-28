@@ -1,15 +1,13 @@
 {
-  "recordedAt": "2026-11-27T23:40:35.834Z",
+  "recordedAt": "2026-11-28T08:05:06.520Z",
   "model": "claude-haiku-5-5",
   "feeds": {
     "gdelt": {
-      "requests": 12,
-      "failed": 52,
-      "articles": 2,
+      "requests": 6,
+      "failed": 53,
+      "articles": 0,
       "errors": [
         "fetch failed",
-        "answered 429",
-        "answered 429",
         "fetch failed",
         "fetch failed"
       ]
@@ -17,111 +15,34 @@
     "google-news": {
       "requests": 53,
       "failed": 0,
-      "articles": 774,
+      "articles": 800,
       "errors": []
     }
   },
   "googleNews": {
     "consecutiveFailures": 0,
-    "lastOk": "2026-11-27"
+    "lastOk": "2026-11-28"
   },
   "stories": 23,
-  "candidates": 5,
+  "candidates": 4,
   "usage": {
-    "input": 112550,
-    "output": 6009,
-    "searches": 6
+    "input": 112364,
+    "output": 6254,
+    "searches": 8
   },
-  "estimatedCostUsd": 0.074,
+  "estimatedCostUsd": 0.094,
   "results": [
     {
       "ref": "chokepoint/hormuz",
       "kind": "story",
-      "outcome": "rejected",
-      "detail": "quote not found on the page",
+      "outcome": "unreadable",
+      "detail": "page answered 403",
       "draft": {
         "action": "add_source",
         "disruptionId": "hormuz-2026-iran-restrictions",
-        "url": "https://envantermedya.com/en/en-hormuz-iran-claims-tankers-hit-mines-oil-prices/",
-        "publisher": "Envanter Medya",
-        "quote": "Iran's navy says at least five tankers struck mines in Hormuz on 24 and 25 November",
-        "cause": "",
-        "startedAt": "",
-        "summary": "",
-        "endedAt": "",
-        "eventAt": "2026-11-24",
-        "eventText": "Iran's navy says at least five oil tankers struck naval mines in the Strait of Hormuz on 24 and 25 November."
-      },
-      "headlines": [
-        "- 2026-11-27 · Al-Monitor: Iran ramps up Hormuz attacks, testing White House patience",
-        "- 2026-11-27 · Radio Free Europe/Radio Liberty: British Swimmer Braves Strait Of Hormuz To Warn Of Iran War's Environmental Toll",
-        "- 2026-11-27 · The Jerusalem Post: Oil tanker hits naval mine while attempting to transit Strait of Hormuz, IRGC says - report",
-        "- 2026-11-27 · WANA News Agency: Strait of Hormuz Will Not Reopen, and Iran Will Not Allow US Naval Blockade to Continue",
-        "- 2026-11-27 · Kyiv Post: Ukraine Warns of a Black Sea ‘Hormuz’ as Attacks Threaten Food Aid to 3 Countries at Risk of Famine",
-        "- 2026-11-27 · Briefs Finance: Qatar LNG via Hormuz Eases South Asia Gas Costs",
-        "- 2026-11-27 · Palestine Chronicle: Tehran Refuses to Reopen Hormuz as IRGC Reports Tanker Explosion",
-        "- 2026-11-27 · Al-Monitor: How foreign navies could reshape Iran’s grip on Hormuz after the war",
-        "- 2026-11-27 · The Jerusalem Post: Senior IRGC officials vow to break US blockade on Strait of Hormuz, claim Iran's ports are 'open'",
-        "- 2026-11-27 · IranWire: IRGC Claims Sharp Drop in \"Unauthorized\" Tankers Passing Through Hormuz",
-        "- 2026-11-27 · LiveNOW from FOX: Iran claims tanker hit mine in Strait of Hormuz",
-        "- 2026-11-27 · https://houseofsaud.com/: Iran Claims Oil Tanker Explodes After Hitting Mine in Hormuz",
-        "- 2026-11-27 · timesdaily.com: Iran Strait of Hormuz",
-        "- 2026-11-27 · Energy Intelligence: Kuwait's KPC Eyes Access to UAE's Hormuz Bypass",
-        "- 2026-11-27 · Envanter Medya: Strait of Hormuz Flashpoint: Iran Claims Five Tankers Hit Naval Mines in 48 Hours as Oil Prices Jump"
-      ]
-    },
-    {
-      "ref": "refinery/ng-dangote",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-27 · Business Post Nigeria: NGX Confirms Listing of Dangote Refinery Shares December 1",
-        "- 2026-11-27 · Business News Nigeria: Dangote Refinery eyes Africa’s biggest stock market secondary listing in expansion move",
-        "- 2026-11-27 · Business News Nigeria: Dangote Refinery heads for historic Dec. 1 listing on NGX",
-        "- 2026-11-27 · innovation-village.com: Dangote Refinery’s $48bn Valuation Attracts JSE",
-        "- 2026-11-27 · Independent Newspaper Nigeria: “22 Sabotage Attempts” At Dangote Refinery Expose $19bn Rot Killing Nigeria’s State Refineries",
-        "- 2026-11-25 · Moneyweb: Dangote refinery set to become Africa’s biggest listed company",
-        "- 2026-11-25 · The Guardian Nigeria News: SEC okays Dangote Refinery share allocation"
-      ]
-    },
-    {
-      "ref": "chokepoint/babelm",
-      "kind": "story",
-      "outcome": "nothing",
-      "headlines": [
-        "- 2026-11-27 · ABNA English: Comprehensive Report on Recent Developments in Yemen; End of Bab al-Mandab Battle, Continuation of War in Taiz",
-        "- 2026-11-27 · EnergyNow.com: PERSPECTIVE: Oil Prices Unlikely to Fall as Houthi Attacks Threaten Saudi Export Routes, Middle East Expert Warns"
-      ]
-    },
-    {
-      "ref": "pipeline/nord-stream-1",
-      "kind": "story",
-      "outcome": "nothing",
-      "detail": "headlines only",
-      "headlines": [
-        "- 2026-11-27 · Kyiv Post: Ukrainian Diver Arrested on Nord Stream Film Set Wins Appeal in Croatia",
-        "- 2026-11-27 · Українські Національні Новини (УНН): Germany will not receive the suspect in the sabotage of the \"Nord Stream\" pipelines – Croatian court overturns extradition decision",
-        "- 2026-11-27 · The Kyiv Independent: Croatian court overturns extradition ruling against Ukrainian suspect in Nord Stream sabotage case",
-        "- 2026-11-27 · Mezha.net: Croatian court overturns decision to extradite Ukrainian man to Germany in Nord Stream case",
-        "- 2026-11-27 · The New Voice of Ukraine: Croatian court cancels extradition of Ukrainian Zhuravlov, wanted by Germany over Nord Stream blasts",
-        "- 2026-11-27 · LIGA.net: Croatia has suspended the extradition to Germany of a Ukrainian man suspected of blowing up the Nord Stream pipelines",
-        "- 2026-11-27 · Бабель: “Nord Stream” sabotage: A court in Croatia overturned the decision to extradite Volodymyr Zhuravlyov to Germany",
-        "- 2026-11-27 · Hromadske: Croatian court overturns decision to extradite Ukrainian Nord Stream suspect to Germany",
-        "- 2026-11-27 · UA.NEWS: A court in Croatia has overturned the extradition of Ukrainian national Zhuravlev in the Nord Stream case",
-        "- 2026-11-27 · Latest news from Azerbaijan: Croatia overturns extradition order for Ukrainian Nord Stream suspect"
-      ]
-    },
-    {
-      "ref": "lng/gem-t100000130594-export",
-      "kind": "story",
-      "outcome": "rejected",
-      "detail": "the quote doesn't name the asset",
-      "draft": {
-        "action": "add_source",
-        "disruptionId": "ras-laffan-north-2026-war",
-        "url": "https://www.thenationalnews.com/business/energy/2026/11/27/qatar-lng-exports-hit-highest-level-since-war-began-despite-disruption-in-strait-of-hormuz/",
-        "publisher": "The National",
-        "quote": "Qatar’s energy infrastructure has been severely damaged, with Iranian missile strikes in March destroying parts of the Ras Laffan industrial complex that supplies one fifth of the world's super-chilled fuel.",
+        "url": "https://timesofisrael.com/liveblog-november-28-2026",
+        "publisher": "Times of Israel",
+        "quote": "Two oil tankers were hit by mines near the Strait of Hormuz",
         "cause": "",
         "startedAt": "",
         "summary": "",
@@ -130,10 +51,86 @@
         "eventText": ""
       },
       "headlines": [
-        "- 2026-11-27 · Briefs Finance: Qatar LNG via Hormuz Eases South Asia Gas Costs",
-        "- 2026-11-27 · The National: Qatar LNG exports hit highest level since war began despite disruption in Strait of Hormuz",
-        "- 2026-11-27 · ARYnews.tv: Qatar LNG exports reach highest level since war began despite Strait of Hormuz risks"
+        "- 2026-11-28 · Financial Times: Iran hitting same ships twice to deter traffic from Strait of Hormuz",
+        "- 2026-11-28 · Middle East Eye: Centcom rejects Iran's claims on warship attack, Hormuz shipping charges",
+        "- 2026-11-28 · South China Morning Post: Chinese engineers defy Hormuz blockade to install Abu Dhabi drilling rigs",
+        "- 2026-11-28 · WANA News Agency: IRGC Reports Two Tanker Explosions Near Strait of Hormuz",
+        "- 2026-11-28 · Latin Times: Iran Says Two Tankers Caught Fire After Hitting Naval Mines Near the Strait of Hormuz",
+        "- 2026-11-28 · The New Region: US dismisses Iran’s Hormuz claims as ‘fabricated lies’",
+        "- 2026-11-28 · Digg: Iran struck at least six ships twice in Strait of Hormuz, Financial Times reports",
+        "- 2026-11-28 · The Times of Israel: Two tankers hit by mines near Hormuz, IRGC says",
+        "- 2026-11-28 · Riviera Maritime Media: VLCC Hormuz transit premium holds firm despite wider rate normalisation",
+        "- 2026-11-28 · Mehr News Agency: Iran controls from east of Hormuz to northern Indian Ocean",
+        "- 2026-11-28 · The Diplomatic Insight: CENTCOM Denies Iranian Claims of Tanker Seizures, Aircraft Carrier Attack and Hormuz Tolls",
+        "- 2026-11-28 · TelegraphHerald.com: Iran Strait of Hormuz",
+        "- 2026-11-28 · The Times of India: Xi To Enter Iran War? US Navy Strikes Chinese-Owned Vessel In Hormuz; 'Trump Crosses Red Line'",
+        "- 2026-11-28 · Xinhua: British swimmer witnesses war's toll on shipping and wildlife in Hormuz",
+        "- 2026-11-28 · 巴士的報: Two oil tankers catch fire after hitting mines in Strait of Hormuz"
       ]
+    },
+    {
+      "ref": "refinery/ng-dangote",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-28 · Traders Union: Dangote Refinery IPO tests market appetite ahead of potential $47 billion Lagos listing",
+        "- 2026-11-28 · THISDAYLIVE: Johannesburg Stock Exchange Courts Dangote Refinery for Listing in Expansion Push",
+        "- 2026-11-28 · www.tokenpost.com: Dangote Refinery IPO Implies $47 Billion Africa Listing Valuation",
+        "- 2026-11-28 · Nairametrics: JSE targets secondary listing of Dangote Refinery in Johannesburg",
+        "- 2026-11-25 · Club of Mozambique: Dangote refinery set to become Africa’s biggest listed company",
+        "- 2026-11-25 · marketscreener.com: Dangote Refinery Said to List in Lagos on December 1"
+      ]
+    },
+    {
+      "ref": "chokepoint/babelm",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-27 · EnergyNow: INSIGHT: Why is the Bab el-Mandeb Strait so Important?",
+        "- 2026-11-27 · EnergyNow: Yemen’s Houthis Reach Strategic Island at Mouth of Vital Shipping Lane"
+      ]
+    },
+    {
+      "ref": "pipeline/nord-stream-1",
+      "kind": "story",
+      "outcome": "nothing",
+      "detail": "headlines only",
+      "headlines": [
+        "- 2026-11-28 · Demócrata: Croatia revokes the delivery to Germany of the suspect of sabotage of the Nord Stream gas pipelines",
+        "- 2026-11-27 · SFG Media: Croatian Court Overturns Decision to Extradite Ukrainian Suspected of Nord Stream Pipeline Sabotage to Germany",
+        "- 2026-11-25 · SFG Media: Germany Considers the Nord Stream Pipeline Sabotage a War Crime, While a Polish Court Sees It as a Legitimate Act of Defense"
+      ]
+    },
+    {
+      "ref": "terminal/primorsk",
+      "kind": "end check",
+      "outcome": "rejected",
+      "detail": "page is older than 14 days",
+      "draft": {
+        "action": "add_source",
+        "disruptionId": "bps-1-2026-primorsk-strikes",
+        "url": "https://www.france24.com/en/europe/20260503-ukrainian-drones-strike-russia-baltic-sea-port-primorsk",
+        "publisher": "France 24",
+        "quote": "Ukrainian drones struck Russia's Primorsk port and a number of vessels in the Baltic Sea on Sunday as part of a wave of attacks targeting Russian energy infrastructure.",
+        "cause": "",
+        "startedAt": "",
+        "summary": "",
+        "endedAt": "",
+        "eventAt": "2026-05-03",
+        "eventText": "Ukrainian drones strike Russia's Primorsk port and several vessels in the Baltic Sea."
+      }
+    },
+    {
+      "ref": "lng/gem-t100000130601-export",
+      "kind": "end check",
+      "outcome": "nothing"
+    },
+    {
+      "ref": "pipeline/nord-stream-2",
+      "kind": "end check",
+      "outcome": "nothing"
     }
   ]
 }
