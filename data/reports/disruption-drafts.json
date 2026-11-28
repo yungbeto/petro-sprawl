@@ -5,15 +5,15 @@
     "action": "add_event",
     "disruptionId": "hormuz-2026-iran-restrictions",
     "source": {
-      "publisher": "The Mary Sue",
-      "title": "Pentagon says thousands of US troops are poised to strike Iran. Then reports emerge of what happened to five tankers in the Strait of Hormuz",
-      "url": "https://www.themarysue.com/pentagon-says-thousands-of-us-troops-are-poised-to-strike-iran-then-reports-emerge-of-what-happened-to-five-tankers-in-the-strait-of-hormuz/",
-      "publishedAt": "2026-11-06"
+      "publisher": "Anadolu",
+      "title": "Iran says 2 oil tankers explode, catch fire in Strait of Hormuz",
+      "url": "https://www.aa.com.tr/en/middle-east/-iran-says-2-oil-tankers-explode-catch-fire-in-strait-of-hormuz/4118745",
+      "publishedAt": "2026-11-10"
     },
     "event": {
-      "at": "2026-11-05",
-      "text": "Iranian forces say five oil tankers and a tugboat caught fire in the Strait of Hormuz after mine strikes.",
-      "source": "https://www.themarysue.com/pentagon-says-thousands-of-us-troops-are-poised-to-strike-iran-then-reports-emerge-of-what-happened-to-five-tankers-in-the-strait-of-hormuz/"
+      "at": "2026-11-10",
+      "text": "Iran's IRGC Navy says two oil tankers exploded and caught fire in the Strait of Hormuz after attempting an unauthorized route, one allegedly after striking a naval mine.",
+      "source": "https://www.aa.com.tr/en/middle-east/-iran-says-2-oil-tankers-explode-catch-fire-in-strait-of-hormuz/4118745"
     }
   },
   {
@@ -22,15 +22,383 @@
     "action": "add_event",
     "disruptionId": "hormuz-2026-iran-restrictions",
     "source": {
-      "publisher": "House of Saud",
-      "title": "IRGC Says 2 Tankers Hit Mines as US Disables M/V Huda",
-      "url": "https://houseofsaud.com/hormuz-mutual-enforcement-nov7/",
-      "publishedAt": "2026-11-08"
+      "publisher": "Riviera",
+      "title": "Tankers hit by projectiles in Strait of Hormuz; Iran reports further mine strikes",
+      "url": "https://www.rivieramm.com/news-content-hub/tankers-hit-by-projectiles-in-strait-of-hormuz-iran-reports-further-mine-strikes-90547",
+      "publishedAt": "2026-11-11"
     },
     "event": {
-      "at": "2026-11-07",
-      "text": "Iran's Revolutionary Guards say two oil tankers hit mines and caught fire in the Strait of Hormuz, hours after US forces disabled a cargo vessel in the Gulf of Oman.",
-      "source": "https://houseofsaud.com/hormuz-mutual-enforcement-nov7/"
+      "at": "2026-11-11",
+      "text": "A merchant vessel is struck by a projectile northeast of Lima, Oman, according to Ambrey.}",
+      "source": "https://www.rivieramm.com/news-content-hub/tankers-hit-by-projectiles-in-strait-of-hormuz-iran-reports-further-mine-strikes-90547"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "The New Arab",
+      "title": "Trump says no need for Iran deal as four tankers hit in Hormuz",
+      "url": "https://www.newarab.com/news/trump-says-no-need-iran-deal-four-tankers-hit-hormuz",
+      "publishedAt": "2026-11-12"
+    },
+    "event": {
+      "at": "2026-11-12",
+      "text": "Iran's armed forces say four tankers catch fire in the Strait of Hormuz, where Tehran is targeting ships transiting without its authorisation.",
+      "source": "https://www.newarab.com/news/trump-says-no-need-iran-deal-four-tankers-hit-hormuz"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "anews",
+      "title": "Iran says tanker carrying liquefied gas hit mine, exploded in Hormuz",
+      "url": "https://www.anews.com.tr/world/2026/11/13/iran-says-tanker-carrying-liquefied-gas-hit-mine-exploded-in-hormuz",
+      "publishedAt": "2026-11-13"
+    },
+    "event": {
+      "at": "2026-11-13",
+      "text": "Iran's Revolutionary Guards say a tanker carrying liquefied gas hit a naval mine and exploded in the Strait of Hormuz.",
+      "source": "https://www.anews.com.tr/world/2026/11/13/iran-says-tanker-carrying-liquefied-gas-hit-mine-exploded-in-hormuz"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "Anadolu",
+      "title": "Iran says 2 oil tankers hit mines near Strait of Hormuz, 1 sinks",
+      "url": "https://aa.com.tr/en/middle-east/iran-says-2-oil-tankers-hit-mines-near-strait-of-hormuz-1-sinks/4125887",
+      "publishedAt": "2026-11-15"
+    },
+    "event": {
+      "at": "2026-11-15",
+      "text": "Iran's IRGC says two oil tankers struck naval mines and caught fire in the southern Strait of Hormuz, and one supertanker sank.",
+      "source": "https://aa.com.tr/en/middle-east/iran-says-2-oil-tankers-hit-mines-near-strait-of-hormuz-1-sinks/4125887"
+    }
+  },
+  {
+    "ref": "chokepoint/babelm",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "babelm-2026-houthi-attacks",
+    "source": {
+      "publisher": "Inshorts",
+      "title": "Houthis seize control of Bab el-Mandeb Strait",
+      "url": "https://inshorts.com/en/news/houthis-seize-control-of-bab-el-mandeb-strait-1794737523009",
+      "publishedAt": "2026-11-15"
+    },
+    "event": {
+      "at": "2026-11-15",
+      "text": "Yemen's government-backed forces retreat from the Bab el-Mandeb Strait, ceding control to the Houthis.",
+      "source": "https://inshorts.com/en/news/houthis-seize-control-of-bab-el-mandeb-strait-1794737523009"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "Mehr News",
+      "title": "Two more oil tankers hit naval mines in Strait of Hormuz",
+      "url": "https://en.mehrnews.com/news/249438/Two-more-oil-tankers-hit-naval-mines-in-Strait-of-Hormuz",
+      "publishedAt": "2026-11-16"
+    },
+    "event": {
+      "at": "2026-11-16",
+      "text": "Two oil tankers explode and catch fire in the Strait of Hormuz after hitting naval mines, the IRGC Navy says.",
+      "source": "https://en.mehrnews.com/news/249438/Two-more-oil-tankers-hit-naval-mines-in-Strait-of-Hormuz"
+    }
+  },
+  {
+    "ref": "chokepoint/babelm",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "babelm-2026-houthi-attacks",
+    "source": {
+      "publisher": "SOFX",
+      "title": "Houthis Seize Perim Island After Saudi-Backed Retreat, Putting Ships in Boat Range | SOFX",
+      "url": "https://www.sofx.com/houthis-seize-perim-island-after-saudi-backed-retreat-putting-ships-in-boat-range/",
+      "publishedAt": "2026-11-16"
+    },
+    "event": {
+      "at": "2026-11-15",
+      "text": "Saudi-backed Yemeni forces announce their withdrawal from Dhubab and the Bab el-Mandeb area, ceding Perim Island to the Houthis.",
+      "source": "https://www.sofx.com/houthis-seize-perim-island-after-saudi-backed-retreat-putting-ships-in-boat-range/"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "WANA",
+      "title": "Tanker Catches Fire After Hitting Mine East of Strait of Hormuz -",
+      "url": "https://wanaen.com/tanker-catches-fire-after-hitting-mine-east-of-strait-of-hormuz/",
+      "publishedAt": "2026-11-15"
+    },
+    "event": {
+      "at": "2026-11-15",
+      "text": "Iran's Army Navy says a tanker caught fire after striking a naval mine in the eastern Strait of Hormuz.",
+      "source": "https://wanaen.com/tanker-catches-fire-after-hitting-mine-east-of-strait-of-hormuz/"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "Yahoo",
+      "title": "Iran reports fourth tanker damaged by mine near Strait of Hormuz",
+      "url": "https://www.yahoo.com/news/world/articles/iran-reports-fourth-tanker-damaged-004848151.html",
+      "publishedAt": "2026-11-17"
+    },
+    "event": {
+      "at": "2026-11-16",
+      "text": "Iranian state media report that a tanker caught fire after striking a naval mine near the Strait of Hormuz, the fourth tanker damaged in 24 hours.",
+      "source": "https://www.yahoo.com/news/world/articles/iran-reports-fourth-tanker-damaged-004848151.html"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "gCaptain",
+      "title": "Second Strike on LPG Tanker in Strait of Hormuz Leaves One Missing, Two Injured",
+      "url": "https://gcaptain.com/second-strike-on-lpg-tanker-in-strait-of-hormuz-leaves-one-missing-two-injured/",
+      "publishedAt": "2026-11-17"
+    },
+    "event": {
+      "at": "2026-11-16",
+      "text": "The Panama-flagged LPG tanker TARA GAS is struck in repeated attacks in the Strait of Hormuz, and its crew abandons ship.",
+      "source": "https://gcaptain.com/second-strike-on-lpg-tanker-in-strait-of-hormuz-leaves-one-missing-two-injured/"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "Al Jazeera",
+      "title": "Kuwait reports drone attacks as Iran, US trade attacks on Qeshm and Bahrain",
+      "url": "https://www.aljazeera.com/news/2026/11/17/kuwait-reports-drone-attacks-as-iran-us-trade-attacks-on-qeshm-and-bahrain",
+      "publishedAt": "2026-11-17"
+    },
+    "event": {
+      "at": "2026-11-17",
+      "text": "US fighter jets strike an IRGC missile launch site on Qeshm Island near the Strait of Hormuz, a US official says.",
+      "source": "https://www.aljazeera.com/news/2026/11/17/kuwait-reports-drone-attacks-as-iran-us-trade-attacks-on-qeshm-and-bahrain"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "NewsCord",
+      "title": "Iran’s Army Says Three Oil Tankers Struck Mines in Eastern Strait of Hormuz: who 8 outlets blamed | NewsCord",
+      "url": "https://newscord.org/article/irans-army-says-three-oil-tankers-struck-mines-in-eastern-strait-of-hormuz--Story_20261119_Twoviolatingsupertanfbd7c324",
+      "publishedAt": "2026-11-19"
+    },
+    "event": {
+      "at": "2026-11-18",
+      "text": "Iran's army says three oil tankers struck naval mines and caught fire in the eastern Strait of Hormuz.",
+      "source": "https://newscord.org/article/irans-army-says-three-oil-tankers-struck-mines-in-eastern-strait-of-hormuz--Story_20261119_Twoviolatingsupertanfbd7c324"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "gCaptain",
+      "title": "Another Tanker Hit in Strait of Hormuz as Maritime Attacks Surge Worldwide",
+      "url": "https://gcaptain.com/another-tanker-hit-in-strait-of-hormuz-as-maritime-attacks-surge-worldwide/",
+      "publishedAt": "2026-11-20"
+    },
+    "event": {
+      "at": "2026-11-20",
+      "text": "A projectile strikes a tanker in the Strait of Hormuz and sets it on fire, according to UKMTO.",
+      "source": "https://gcaptain.com/another-tanker-hit-in-strait-of-hormuz-as-maritime-attacks-surge-worldwide/"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "JPost",
+      "title": "Two tankers attacked in Strait of Hormuz near Oman, UKMTO says | The Jerusalem Post",
+      "url": "https://www.jpost.com/middle-east/article-915628",
+      "publishedAt": "2026-11-21"
+    },
+    "event": {
+      "at": "2026-11-21",
+      "text": "Two outbound tankers are hit by unidentified projectiles off Khasab, Oman, according to UKMTO.",
+      "source": "https://www.jpost.com/middle-east/article-915628"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "Arab News",
+      "title": "Maritime agency says 2 tankers struck in Hormuz, as Iran says ship on fire",
+      "url": "https://www.arabnews.com/middle-east/maritime-agency-says-2-tankers-struck-in-hormuz-as-iran-says-ship-on-fire-3013341",
+      "publishedAt": "2026-11-21"
+    },
+    "event": {
+      "at": "2026-11-21",
+      "text": "Two tankers are struck in the Strait of Hormuz, according to Britain's UKMTO maritime agency.",
+      "source": "https://www.arabnews.com/middle-east/maritime-agency-says-2-tankers-struck-in-hormuz-as-iran-says-ship-on-fire-3013341"
+    }
+  },
+  {
+    "ref": "field/gem-l100000312725",
+    "reason": "new disruption; zawya.com isn't on the trusted list",
+    "action": "new_disruption",
+    "source": {
+      "publisher": "Zawya",
+      "title": "Libya's NOC says 'unlawful' pipeline closure from Sharara oilfield to cut output by 350,000 bpd",
+      "url": "https://www.zawya.com/en/business/oil-gas/libyas-noc-says-unlawful-pipeline-closure-from-sharara-oilfield-to-cut-output-by-350000-bpd-2443364",
+      "publishedAt": "2026-11-23"
+    },
+    "disruption": {
+      "id": "gem-l100000312725-2026-11-23",
+      "assetKind": "field",
+      "assetId": "gem-l100000312725",
+      "startedAt": "2026-11-23",
+      "cause": "sabotage",
+      "summary": "Libya's National Oil Corporation said a valve on a pipeline from the Sharara oilfield was closed by an unlawful group, which it said would cut output by around 350,000 barrels per day. The NOC said a separate Hamada pipeline closure has cost about 15,000 bpd, bringing total losses to about 365,000 bpd. The article does not say who closed the valve or how long the shutdown will last.",
+      "sources": [
+        {
+          "publisher": "Zawya",
+          "title": "Libya's NOC says 'unlawful' pipeline closure from Sharara oilfield to cut output by 350,000 bpd",
+          "url": "https://www.zawya.com/en/business/oil-gas/libyas-noc-says-unlawful-pipeline-closure-from-sharara-oilfield-to-cut-output-by-350000-bpd-2443364",
+          "publishedAt": "2026-11-23"
+        }
+      ],
+      "recordedAt": "2026-11-23"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "gCaptain",
+      "title": "Four More Ships Attacked as Iran Widens Hormuz Crackdown to Tugboats",
+      "url": "https://gcaptain.com/four-more-ships-attacked-as-iran-widens-hormuz-crackdown-to-tugboats/",
+      "publishedAt": "2026-11-24"
+    },
+    "event": {
+      "at": "2026-11-22",
+      "text": "Three tankers and a bulk carrier are struck by unidentified projectiles in and near the Strait of Hormuz, according to UKMTO.",
+      "source": "https://gcaptain.com/four-more-ships-attacked-as-iran-widens-hormuz-crackdown-to-tugboats/"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "Arab News",
+      "title": "IRGC Navy says two oil tankers hit mines, caught fire in Strait of Hormuz, state media",
+      "url": "https://www.arabnews.com/middle-east/irgc-navy-says-two-oil-tankers-hit-mines-caught-fire-in-strait-of-hormuz-state-media-3013942",
+      "publishedAt": "2026-11-25"
+    },
+    "event": {
+      "at": "2026-11-25",
+      "text": "Two oil tankers hit naval mines and catch fire in the Strait of Hormuz, the Revolutionary Guards Navy says.",
+      "source": "https://www.arabnews.com/middle-east/irgc-navy-says-two-oil-tankers-hit-mines-caught-fire-in-strait-of-hormuz-state-media-3013942"
+    }
+  },
+  {
+    "ref": "terminal/ras-tanura",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "ras-tanura-2026-10-fire",
+    "source": {
+      "publisher": "Siasat",
+      "title": "Saudi oil hub Ras Tanura targeted in Houthi attack, fires reported",
+      "url": "https://www.siasat.com/saudi-oil-hub-ras-tanura-targeted-in-houthi-attack-fires-reported-3586632/",
+      "publishedAt": "2026-11-25"
+    },
+    "event": {
+      "at": "2026-11-25",
+      "text": "Houthis claim a strike on the Ras Tanura refinery that caused fires, while the Saudi-led coalition says it destroyed four drones over the site.",
+      "source": "https://www.siasat.com/saudi-oil-hub-ras-tanura-targeted-in-houthi-attack-fires-reported-3586632/"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "OilPrice.com",
+      "title": "Iran Says LNG Carrier Exploded After Hitting a Mine in Hormuz | OilPrice.com",
+      "url": "https://oilprice.com/Latest-Energy-News/World-News/Iran-Says-LNG-Carrier-Exploded-After-Hitting-a-Mine-in-Hormuz.html",
+      "publishedAt": "2026-11-26"
+    },
+    "event": {
+      "at": "2026-11-26",
+      "text": "Iran's IRGC Navy says an LNG carrier caught fire and exploded after hitting a mine in the Strait of Hormuz.",
+      "source": "https://oilprice.com/Latest-Energy-News/World-News/Iran-Says-LNG-Carrier-Exploded-After-Hitting-a-Mine-in-Hormuz.html"
+    }
+  },
+  {
+    "ref": "chokepoint/hormuz",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "hormuz-2026-iran-restrictions",
+    "source": {
+      "publisher": "Anadolu",
+      "title": "Iran says oil tanker explodes after hitting naval mine in Strait of Hormuz",
+      "url": "https://www.aa.com.tr/en/middle-east/iran-says-oil-tanker-explodes-after-hitting-naval-mine-in-strait-of-hormuz/4140346",
+      "publishedAt": "2026-11-27"
+    },
+    "event": {
+      "at": "2026-11-27",
+      "text": "Iran's IRGC Navy says an oil tanker explodes after striking a naval mine in the Strait of Hormuz, and another tanker turns back.",
+      "source": "https://www.aa.com.tr/en/middle-east/iran-says-oil-tanker-explodes-after-hitting-naval-mine-in-strait-of-hormuz/4140346"
+    }
+  },
+  {
+    "ref": "terminal/ras-tanura",
+    "reason": "adds a dated event",
+    "action": "add_event",
+    "disruptionId": "ras-tanura-2026-10-fire",
+    "source": {
+      "publisher": "astig.ph",
+      "title": "Two Saudi oil hubs were hit in two days, and Ras Tanura loadings stopped",
+      "url": "https://astig.ph/saudi-jazan-ras-tanura-houthi-oil-strikes-2026/",
+      "publishedAt": "2026-11-27"
+    },
+    "event": {
+      "at": "2026-11-25",
+      "text": "The Houthis say they struck Ras Tanura, and a shipping source says crude loadings there were suspended.",
+      "source": "https://astig.ph/saudi-jazan-ras-tanura-houthi-oil-strikes-2026/"
     }
   }
 ]
